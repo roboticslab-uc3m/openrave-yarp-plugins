@@ -114,6 +114,7 @@ protected:
 	 boost::shared_ptr<ForceSensorGeomData> _geom;
 
 	 KinBody::LinkConstPtr _sensorLink;
+     //This doesn't seem to do anything at this point. 
 	 KinBody::JointConstPtr _sensorJoint;
 
 	 mutable boost::mutex _mutexdata;

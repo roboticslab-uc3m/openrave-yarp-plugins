@@ -17,9 +17,7 @@ BaseXMLReader::ProcessElement ForceSensor::ForceSensorXMLReader::startElement(co
         return PE_Ignore;
     }
 
-    if( name != "sensor"
-						)
-    {
+    if( name != "sensor" ) {
         return PE_Pass;
     }
     ss.str("");
@@ -34,7 +32,7 @@ bool ForceSensor::ForceSensorXMLReader::endElement(const std::string& name)
         return false;
     }
     else if( name == "sensor" ){
-    	return true;
+        return true;
     }
     else
         RAVELOG_WARNA(str(boost::format("bad tag: %s")%name));
@@ -58,14 +56,14 @@ void ForceSensor::ForceSensorXMLReader::characters(const std::string& ch)
 //Tactile Sensor
 ForceSensor::ForceSensor(EnvironmentBasePtr penv) : SensorBase(penv)
 {
-	RAVELOG_INFOA("Creating a Force Sensor\n");
+    RAVELOG_INFOA("Creating a Force Sensor\n");
 
-	_data.reset(new Force6DSensorData());
-	_geom.reset(new ForceSensorGeomData());
+    _data.reset(new Force6DSensorData());
+    _geom.reset(new ForceSensorGeomData());
 
-	_bPower = false;
-	_bRenderData = false;
-	_firstStep = true;
+    _bPower = false;
+    _bRenderData = false;
+    _firstStep = true;
 
 
 }
@@ -73,37 +71,37 @@ ForceSensor::ForceSensor(EnvironmentBasePtr penv) : SensorBase(penv)
 //Sensor Interface
 bool ForceSensor::Init(const string& args){
 
-	//Get all sensor in robots and find the one with the same name
-	string name = this->GetName();
+    //Get all sensor in robots and find the one with the same name
+    string name = this->GetName();
 
-	RAVELOG_DEBUGA("SensorName: %s\n", name.c_str());
+    RAVELOG_DEBUGA("SensorName: %s\n", name.c_str());
 
-	if(strcmp(name.c_str(),"(NULL)")==0 || name == "" )
-	{
-		RAVELOG_INFOA("Sensor Name NULL!\n");
-		RAVELOG_WARNA("Failed to init force sensor: %s. Make sure you named the sensor. \n", name.c_str());
-	}
+    if(strcmp(name.c_str(),"(NULL)")==0 || name == "" )
+    {
+        RAVELOG_INFOA("Sensor Name NULL!\n");
+        RAVELOG_WARNA("Failed to init force sensor: %s. Make sure you named the sensor. \n", name.c_str());
+    }
 
-	else {
+    else {
 
-		this->Configure(SensorBase::CC_PowerOn, true);
+        this->Configure(SensorBase::CC_PowerOn, true);
 
-		vector<RobotBasePtr> vrobots;
-		GetEnv()->GetRobots(vrobots);
-		FOREACHC(itrobot, vrobots)
-		{
-			FOREACH(itsensor, (*itrobot)->GetAttachedSensors())
-			{
-				if(this->GetName() == (*itsensor)->GetSensor()->GetName())
-				{
-					_sensorLink = (*itsensor)->GetAttachingLink();
-				}
-			}
+        vector<RobotBasePtr> vrobots;
+        GetEnv()->GetRobots(vrobots);
+        FOREACHC(itrobot, vrobots)
+        {
+            FOREACH(itsensor, (*itrobot)->GetAttachedSensors())
+            {
+                if(this->GetName() == (*itsensor)->GetSensor()->GetName())
+                {
+                    _sensorLink = (*itsensor)->GetAttachingLink();
+                }
+            }
 
-		}
-	}
+        }
+    }
 
-	return true;
+    return true;
 };
 
 void ForceSensor::Reset(int options){
@@ -111,58 +109,59 @@ void ForceSensor::Reset(int options){
 };
 
 bool ForceSensor::SimulationStep(OpenRAVE::dReal fTimeElapsed){
+    
+    //What does this do?
+    if( _firstStep ) {
+        _firstStep = false;
+        if(!Init("ForceSensor"))
+            return false;
+    }
 
-	if( _firstStep ) {
-		_firstStep = false;
-		if(!Init("ForceSensor"))
-			return false;
-	}
+    if(GetEnv()->GetSimulationTime()<0.0) return false;
 
-	if(GetEnv()->GetSimulationTime()<0.0) return false;
+    // Read the force and torque in the joint
+    Vector force;
+    Vector torque;
+    GetEnv()->GetPhysicsEngine()->GetLinkForceTorque( _sensorLink, force,torque );
+    _data->force[0] = force[0];
+    _data->force[1] = force[1];
+    _data->force[2] = force[2];
 
-	// Read the force and torque in the joint
-	Vector force;
-	Vector torque;
-	GetEnv()->GetPhysicsEngine()->GetLinkForceTorque( _sensorLink, force,torque );
-	_data->force[0] = force[0];
-	_data->force[1] = force[1];
-	_data->force[2] = force[2];
+    _data->torque[0] = torque[0];
+    _data->torque[1] = torque[1];
+    _data->torque[2] = torque[2];
 
-	_data->torque[0] = torque[0];
-	_data->torque[1] = torque[1];
-	_data->torque[2] = torque[2];
-
-	return true;
+    return true;
 };
 
 SensorBase::SensorGeometryPtr ForceSensor::GetSensorGeometry(SensorType type){
-	 if( type == ST_Invalid || type == ST_Force6D ) {
+    if( type == ST_Invalid || type == ST_Force6D ) {
 
-		 ForceSensorGeomData* pgeom = new ForceSensorGeomData();
-		*pgeom = *_geom;
-		return SensorGeometryPtr(pgeom);
-	}
-	return SensorGeometryPtr();
+        ForceSensorGeomData* pgeom = new ForceSensorGeomData();
+        *pgeom = *_geom;
+        return SensorGeometryPtr(pgeom);
+    }
+    return SensorGeometryPtr();
 };
 
 SensorBase::SensorDataPtr ForceSensor::CreateSensorData(SensorType type){
-	if(( type == ST_Invalid) ||( type == ST_Force6D) ) {
-		return SensorDataPtr(new Force6DSensorData());
-	}
-	return SensorDataPtr();
+    if(( type == ST_Invalid) ||( type == ST_Force6D) ) {
+        return SensorDataPtr(new Force6DSensorData());
+    }
+    return SensorDataPtr();
 };
 
 bool ForceSensor::GetSensorData(SensorDataPtr psensordata){
-	 boost::mutex::scoped_lock lock(_mutexdata);
-	*boost::dynamic_pointer_cast<Force6DSensorData>(psensordata) = *_data;
+    boost::mutex::scoped_lock lock(_mutexdata);
+    *boost::dynamic_pointer_cast<Force6DSensorData>(psensordata) = *_data;
 
-	return true;
+    return true;
 };
 
 void ForceSensor::SetTransform(const Transform& trans){
-	_trans = trans;
+    _trans = trans;
 }
 
 Transform ForceSensor::GetTransform() {
-	return _trans;
+    return _trans;
 };
