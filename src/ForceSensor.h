@@ -9,6 +9,7 @@
 
 #include <rave/rave.h>
 #include <boost/bind.hpp>
+#include <boost/circular_buffer.hpp>
 
 using namespace OpenRAVE;
 using namespace std;
@@ -58,19 +59,12 @@ public:
 	virtual bool GetSensorData(SensorDataPtr psensordata);
 	virtual void SetTransform(const Transform& trans);
 	virtual Transform GetTransform();
+    bool SetHistoryLength(std::ostream& os, std::istream& is);
 
 	virtual bool Supports(SensorType type) { return type == ST_Force6D; }
 
-    bool MyCommand(std::ostream& sout, std::istream& sinput)
-    {
-        std::string input;
-        sinput >> input;
-        sout << "output";
-        return true;
-    }
-
     virtual int Configure(ConfigureCommand command, bool blocking)
-	{
+    {
 		switch(command) {
 		case CC_PowerOn:
 			_bPower = true;
@@ -108,9 +102,11 @@ protected:
 
      bool _firstStep;
 
+     //Doesn't do anything yet
 	 Transform _trans;
 
 	 boost::shared_ptr<Force6DSensorData> _data;
+     boost::circular_buffer<Force6DSensorData> _history;
 	 boost::shared_ptr<ForceSensorGeomData> _geom;
 
 	 KinBody::LinkConstPtr _sensorLink;

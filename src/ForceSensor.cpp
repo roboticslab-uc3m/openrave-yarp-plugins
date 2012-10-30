@@ -60,12 +60,28 @@ ForceSensor::ForceSensor(EnvironmentBasePtr penv) : SensorBase(penv)
 
     _data.reset(new Force6DSensorData());
     _geom.reset(new ForceSensorGeomData());
+    _history.resize(10,*_data);
 
     _bPower = false;
     _bRenderData = false;
     _firstStep = true;
+    RegisterCommand("histlen",boost::bind(&ForceSensor::SetHistoryLength,this,_1,_2),
+                "Format: histlen len\n Assign a history depth in solver steps to the internal circular buffer");
 
+}
 
+bool ForceSensor::SetHistoryLength(std::ostream& os, std::istream& is){
+    int l=0;
+    if (!_bPower && !!is){
+        is >> l;
+        if (l>0){
+            RAVELOG_DEBUG("Sensor off, changing history depth to %d\n",l);
+            _history.resize(l);
+            return true;
+        }
+        else   RAVELOG_DEBUG("Depth %d is invalid, ignoring...\n",l);
+    }
+    return false;
 }
 
 //Sensor Interface
@@ -109,7 +125,7 @@ void ForceSensor::Reset(int options){
 };
 
 bool ForceSensor::SimulationStep(OpenRAVE::dReal fTimeElapsed){
-    
+
     //What does this do?
     if( _firstStep ) {
         _firstStep = false;
@@ -119,19 +135,33 @@ bool ForceSensor::SimulationStep(OpenRAVE::dReal fTimeElapsed){
 
     if(GetEnv()->GetSimulationTime()<0.0) return false;
 
-    // Read the force and torque in the joint
+    // Read the force and torque applied to a given link
     Vector force;
     Vector torque;
-    GetEnv()->GetPhysicsEngine()->GetLinkForceTorque( _sensorLink, force,torque );
-    _data->force[0] = force[0];
-    _data->force[1] = force[1];
-    _data->force[2] = force[2];
+    //TODO: record a history of forces/ torques in a circular buffer
+    //TODO: Filter results on-demand based on FIR filter
+    if (_bPower ){
+        GetEnv()->GetPhysicsEngine()->GetLinkForceTorque( _sensorLink, force,torque );
+        _data->force[0] = force[0];
+        _data->force[1] = force[1];
+        _data->force[2] = force[2];
 
-    _data->torque[0] = torque[0];
-    _data->torque[1] = torque[1];
-    _data->torque[2] = torque[2];
+        _data->torque[0] = torque[0];
+        _data->torque[1] = torque[1];
+        _data->torque[2] = torque[2];
+    }
+    else {
 
+        _data->force[0] = 0;
+        _data->force[1] = 0;
+        _data->force[2] = 0;
+
+        _data->torque[0] = 0;
+        _data->torque[1] = 0;
+        _data->torque[2] = 0;
+    }
     return true;
+    
 };
 
 SensorBase::SensorGeometryPtr ForceSensor::GetSensorGeometry(SensorType type){
