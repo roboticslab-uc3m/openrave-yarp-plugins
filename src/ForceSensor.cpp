@@ -60,29 +60,19 @@ ForceSensor::ForceSensor(EnvironmentBasePtr penv) : SensorBase(penv)
 
     _data.reset(new Force6DSensorData());
     _geom.reset(new ForceSensorGeomData());
-    _history.resize(10,*_data);
+    _history.resize(10);
+    _timestamps.resize(10);
 
     _bPower = false;
     _bRenderData = false;
     _firstStep = true;
     RegisterCommand("histlen",boost::bind(&ForceSensor::SetHistoryLength,this,_1,_2),
                 "Format: histlen len\n Assign a history depth in solver steps to the internal circular buffer");
+    RegisterCommand("gethist",boost::bind(&ForceSensor::GetHistory,this,_1,_2),
+                "Format: gethist\n Serialize the data history and timestamps and return");
 
 }
 
-bool ForceSensor::SetHistoryLength(std::ostream& os, std::istream& is){
-    int l=0;
-    if (!_bPower && !!is){
-        is >> l;
-        if (l>0){
-            RAVELOG_DEBUG("Sensor off, changing history depth to %d\n",l);
-            _history.resize(l);
-            return true;
-        }
-        else   RAVELOG_DEBUG("Depth %d is invalid, ignoring...\n",l);
-    }
-    return false;
-}
 
 //Sensor Interface
 bool ForceSensor::Init(const string& args){
@@ -132,8 +122,9 @@ bool ForceSensor::SimulationStep(OpenRAVE::dReal fTimeElapsed){
         if(!Init("ForceSensor"))
             return false;
     }
+    dReal time=GetEnv()->GetSimulationTime();
 
-    if(GetEnv()->GetSimulationTime()<0.0) return false;
+    if(fTimeElapsed<0.0) return false;
 
     // Read the force and torque applied to a given link
     Vector force;
@@ -149,16 +140,8 @@ bool ForceSensor::SimulationStep(OpenRAVE::dReal fTimeElapsed){
         _data->torque[0] = torque[0];
         _data->torque[1] = torque[1];
         _data->torque[2] = torque[2];
-    }
-    else {
-
-        _data->force[0] = 0;
-        _data->force[1] = 0;
-        _data->force[2] = 0;
-
-        _data->torque[0] = 0;
-        _data->torque[1] = 0;
-        _data->torque[2] = 0;
+        _history.push_front(*_data);
+        _timestamps.push_front(time);
     }
     return true;
     
@@ -195,3 +178,45 @@ void ForceSensor::SetTransform(const Transform& trans){
 Transform ForceSensor::GetTransform() {
     return _trans;
 };
+
+bool ForceSensor::SetHistoryLength(std::ostream& os, std::istream& is){
+    int l=0;
+    if (!_bPower && !!is){
+        is >> l;
+        if (l>0){
+            RAVELOG_DEBUG("Sensor off, changing history depth to %d\n",l);
+            _history.resize(l);
+            _timestamps.resize(l);
+            return true;
+        }
+        else   RAVELOG_DEBUG("Depth %d is invalid, ignoring...\n",l);
+    }
+    return false;
+}
+
+inline void ForceSensor::CopyForce6DSensorData(const Force6DSensorData& from, Force6DSensorData& to){
+    //Pass by Reference vs shared pointers...does it matter?
+    to.force[0] = from.force[0];
+    to.force[1] = from.force[1];
+    to.force[2] = from.force[2];
+
+    to.torque[0] = from.torque[0];
+    to.torque[1] = from.torque[1];
+    to.torque[2] = from.torque[2];
+
+}
+
+bool ForceSensor::GetHistory(std::ostream& os, std::istream& is){
+    
+    //TODO:Lock this? could change halfway through..
+    for (size_t i = 0; i < _history.size();++i){
+        os << _timestamps[i] << " ";
+        os << _history[i].force[0] << " ";
+        os << _history[i].force[1] << " ";
+        os << _history[i].force[2] << " ";
+        os << _history[i].torque[0] << " ";
+        os << _history[i].torque[1] << " ";
+        os << _history[i].torque[2] << "\n";
+    }
+    return true;
+}

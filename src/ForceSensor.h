@@ -60,6 +60,7 @@ public:
 	virtual void SetTransform(const Transform& trans);
 	virtual Transform GetTransform();
     bool SetHistoryLength(std::ostream& os, std::istream& is);
+    bool GetHistory(std::ostream& os, std::istream& is);
 
 	virtual bool Supports(SensorType type) { return type == ST_Force6D; }
 
@@ -99,6 +100,7 @@ public:
 	}
 
 protected:
+    static inline void CopyForce6DSensorData(const Force6DSensorData& from, Force6DSensorData& to);
 
      bool _firstStep;
 
@@ -107,6 +109,7 @@ protected:
 
 	 boost::shared_ptr<Force6DSensorData> _data;
      boost::circular_buffer<Force6DSensorData> _history;
+     boost::circular_buffer<dReal> _timestamps;
 	 boost::shared_ptr<ForceSensorGeomData> _geom;
 
 	 KinBody::LinkConstPtr _sensorLink;
