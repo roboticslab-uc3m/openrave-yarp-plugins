@@ -14,6 +14,11 @@
 using namespace OpenRAVE;
 using namespace std;
 
+enum FilterTypes {None=0,
+    FirstOrderLowpass,
+    MovingAverage
+};
+
 class ForceSensor : public SensorBase
 {
 protected:
@@ -60,6 +65,7 @@ public:
 	virtual void SetTransform(const Transform& trans);
 	virtual Transform GetTransform();
     bool SetHistoryLength(std::ostream& os, std::istream& is);
+    bool SetFilter(std::ostream& os, std::istream& is);
     bool GetHistory(std::ostream& os, std::istream& is);
 
 	virtual bool Supports(SensorType type) { return type == ST_Force6D; }
@@ -118,6 +124,8 @@ protected:
 
 	 mutable boost::mutex _mutexdata;
 	 bool _bRenderData, _bRenderGeometry, _bPower;
+     FilterTypes _outfilt;
+     Force6DSensorData _movingsum;
 
 	 friend class ForceSensorXMLReader;
 };

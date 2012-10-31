@@ -61,7 +61,17 @@ ForceSensor::ForceSensor(EnvironmentBasePtr penv) : SensorBase(penv)
     _data.reset(new Force6DSensorData());
     _geom.reset(new ForceSensorGeomData());
     _history.resize(10);
+
+    _movingsum.force[0]=0;
+    _movingsum.force[1]=0;
+    _movingsum.force[2]=0;
+
+    _movingsum.torque[0]=0;
+    _movingsum.torque[1]=0;
+    _movingsum.torque[2]=0;
+
     _timestamps.resize(10);
+    _outfilt=None;
 
     _bPower = false;
     _bRenderData = false;
@@ -72,7 +82,6 @@ ForceSensor::ForceSensor(EnvironmentBasePtr penv) : SensorBase(penv)
                 "Format: gethist\n Serialize the data history and timestamps and return");
 
 }
-
 
 //Sensor Interface
 bool ForceSensor::Init(const string& args){
@@ -111,7 +120,14 @@ bool ForceSensor::Init(const string& args){
 };
 
 void ForceSensor::Reset(int options){
+    Vector zero (0,0,0);
+    _movingsum.force=zero;
+    _movingsum.torque=zero;
 
+    FOREACH(it,_history){
+        it->force=zero;
+        it->torque=zero;
+    }
 };
 
 bool ForceSensor::SimulationStep(OpenRAVE::dReal fTimeElapsed){
@@ -131,17 +147,24 @@ bool ForceSensor::SimulationStep(OpenRAVE::dReal fTimeElapsed){
     Vector torque;
     //TODO: record a history of forces/ torques in a circular buffer
     //TODO: Filter results on-demand based on FIR filter
+    Force6DSensorData data;
+
     if (_bPower ){
         GetEnv()->GetPhysicsEngine()->GetLinkForceTorque( _sensorLink, force,torque );
-        _data->force[0] = force[0];
-        _data->force[1] = force[1];
-        _data->force[2] = force[2];
+        data.force[0] = force[0];
+        data.force[1] = force[1];
+        data.force[2] = force[2];
 
-        _data->torque[0] = torque[0];
-        _data->torque[1] = torque[1];
-        _data->torque[2] = torque[2];
-        _history.push_front(*_data);
+        data.torque[0] = torque[0];
+        data.torque[1] = torque[1];
+        data.torque[2] = torque[2];
+        
+        _movingsum.force-=_history.back().force;
+        _movingsum.torque-=_history.back().torque;
+        _history.push_front(data);
         _timestamps.push_front(time);
+        _movingsum.force+=data.force;
+        _movingsum.torque+=data.torque;
     }
     return true;
     
@@ -165,6 +188,14 @@ SensorBase::SensorDataPtr ForceSensor::CreateSensorData(SensorType type){
 };
 
 bool ForceSensor::GetSensorData(SensorDataPtr psensordata){
+    //First, filter the data on demand based on enabled filter
+    _data->force[0]=_movingsum.force[0]/(dReal)_history.size();
+    _data->force[1]=_movingsum.force[1]/(dReal)_history.size();
+    _data->force[2]=_movingsum.force[2]/(dReal)_history.size();
+
+    _data->torque[0]=_movingsum.torque[0]/(dReal)_history.size();
+    _data->torque[1]=_movingsum.torque[1]/(dReal)_history.size();
+    _data->torque[2]=_movingsum.torque[2]/(dReal)_history.size();
     boost::mutex::scoped_lock lock(_mutexdata);
     *boost::dynamic_pointer_cast<Force6DSensorData>(psensordata) = *_data;
 
@@ -220,3 +251,4 @@ bool ForceSensor::GetHistory(std::ostream& os, std::istream& is){
     }
     return true;
 }
+
