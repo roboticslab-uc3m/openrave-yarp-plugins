@@ -62,13 +62,8 @@ ForceSensor::ForceSensor(EnvironmentBasePtr penv) : SensorBase(penv)
     _geom.reset(new ForceSensorGeomData());
     _history.resize(10);
 
-    _movingsum.force[0]=0;
-    _movingsum.force[1]=0;
-    _movingsum.force[2]=0;
-
-    _movingsum.torque[0]=0;
-    _movingsum.torque[1]=0;
-    _movingsum.torque[2]=0;
+    _movingsum.force=Vector(0,0,0);
+    _movingsum.torque=Vector(0,0,0);
 
     _timestamps.resize(10);
     _outfilt=None;
@@ -77,7 +72,7 @@ ForceSensor::ForceSensor(EnvironmentBasePtr penv) : SensorBase(penv)
     _bRenderData = false;
     _firstStep = true;
     RegisterCommand("histlen",boost::bind(&ForceSensor::SetHistoryLength,this,_1,_2),
-                "Format: histlen len\n Assign a history depth in solver steps to the internal circular buffer");
+                "Format: histlen len\n Assign a history depth in solver steps to the internal circular buffer. Note that this should not be done online");
     RegisterCommand("gethist",boost::bind(&ForceSensor::GetHistory,this,_1,_2),
                 "Format: gethist\n Serialize the data history and timestamps and return");
 
@@ -151,13 +146,8 @@ bool ForceSensor::SimulationStep(OpenRAVE::dReal fTimeElapsed){
 
     if (_bPower ){
         GetEnv()->GetPhysicsEngine()->GetLinkForceTorque( _sensorLink, force,torque );
-        data.force[0] = force[0];
-        data.force[1] = force[1];
-        data.force[2] = force[2];
-
-        data.torque[0] = torque[0];
-        data.torque[1] = torque[1];
-        data.torque[2] = torque[2];
+        data.force = force;
+        data.torque = torque;
         
         _movingsum.force-=_history.back().force;
         _movingsum.torque-=_history.back().torque;
@@ -189,13 +179,12 @@ SensorBase::SensorDataPtr ForceSensor::CreateSensorData(SensorType type){
 
 bool ForceSensor::GetSensorData(SensorDataPtr psensordata){
     //First, filter the data on demand based on enabled filter
-    _data->force[0]=_movingsum.force[0]/(dReal)_history.size();
-    _data->force[1]=_movingsum.force[1]/(dReal)_history.size();
-    _data->force[2]=_movingsum.force[2]/(dReal)_history.size();
+    _data->force=_movingsum.force;
+    _data->force/=(dReal)_history.size();
 
-    _data->torque[0]=_movingsum.torque[0]/(dReal)_history.size();
-    _data->torque[1]=_movingsum.torque[1]/(dReal)_history.size();
-    _data->torque[2]=_movingsum.torque[2]/(dReal)_history.size();
+    _data->torque=_movingsum.torque;
+    _data->torque/=(dReal)_history.size();
+
     boost::mutex::scoped_lock lock(_mutexdata);
     *boost::dynamic_pointer_cast<Force6DSensorData>(psensordata) = *_data;
 
@@ -223,18 +212,6 @@ bool ForceSensor::SetHistoryLength(std::ostream& os, std::istream& is){
         else   RAVELOG_DEBUG("Depth %d is invalid, ignoring...\n",l);
     }
     return false;
-}
-
-inline void ForceSensor::CopyForce6DSensorData(const Force6DSensorData& from, Force6DSensorData& to){
-    //Pass by Reference vs shared pointers...does it matter?
-    to.force[0] = from.force[0];
-    to.force[1] = from.force[1];
-    to.force[2] = from.force[2];
-
-    to.torque[0] = from.torque[0];
-    to.torque[1] = from.torque[1];
-    to.torque[2] = from.torque[2];
-
 }
 
 bool ForceSensor::GetHistory(std::ostream& os, std::istream& is){

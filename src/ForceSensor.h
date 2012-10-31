@@ -106,8 +106,6 @@ public:
 	}
 
 protected:
-    static inline void CopyForce6DSensorData(const Force6DSensorData& from, Force6DSensorData& to);
-
      bool _firstStep;
 
      //Doesn't do anything yet
