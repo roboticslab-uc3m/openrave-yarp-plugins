@@ -60,11 +60,21 @@ ForceSensor::ForceSensor(EnvironmentBasePtr penv) : SensorBase(penv)
 
     _data.reset(new Force6DSensorData());
     _geom.reset(new ForceSensorGeomData());
+    _history.resize(10);
+
+    _movingsum.force=Vector(0,0,0);
+    _movingsum.torque=Vector(0,0,0);
+
+    _timestamps.resize(10);
+    _outfilt=None;
 
     _bPower = false;
     _bRenderData = false;
     _firstStep = true;
-
+    RegisterCommand("histlen",boost::bind(&ForceSensor::SetHistoryLength,this,_1,_2),
+                "Format: histlen len\n Assign a history depth in solver steps to the internal circular buffer. Note that this should not be done online");
+    RegisterCommand("gethist",boost::bind(&ForceSensor::GetHistory,this,_1,_2),
+                "Format: gethist\n Serialize the data history and timestamps and return");
 
 }
 
@@ -105,33 +115,49 @@ bool ForceSensor::Init(const string& args){
 };
 
 void ForceSensor::Reset(int options){
+    Vector zero (0,0,0);
+    _movingsum.force=zero;
+    _movingsum.torque=zero;
 
+    FOREACH(it,_history){
+        it->force=zero;
+        it->torque=zero;
+    }
 };
 
 bool ForceSensor::SimulationStep(OpenRAVE::dReal fTimeElapsed){
-    
+
     //What does this do?
     if( _firstStep ) {
         _firstStep = false;
         if(!Init("ForceSensor"))
             return false;
     }
+    dReal time=GetEnv()->GetSimulationTime();
 
-    if(GetEnv()->GetSimulationTime()<0.0) return false;
+    if(fTimeElapsed<0.0) return false;
 
-    // Read the force and torque in the joint
+    // Read the force and torque applied to a given link
     Vector force;
     Vector torque;
-    GetEnv()->GetPhysicsEngine()->GetLinkForceTorque( _sensorLink, force,torque );
-    _data->force[0] = force[0];
-    _data->force[1] = force[1];
-    _data->force[2] = force[2];
+    //TODO: record a history of forces/ torques in a circular buffer
+    //TODO: Filter results on-demand based on FIR filter
+    Force6DSensorData data;
 
-    _data->torque[0] = torque[0];
-    _data->torque[1] = torque[1];
-    _data->torque[2] = torque[2];
-
+    if (_bPower ){
+        GetEnv()->GetPhysicsEngine()->GetLinkForceTorque( _sensorLink, force,torque );
+        data.force = force;
+        data.torque = torque;
+        
+        _movingsum.force-=_history.back().force;
+        _movingsum.torque-=_history.back().torque;
+        _history.push_front(data);
+        _timestamps.push_front(time);
+        _movingsum.force+=data.force;
+        _movingsum.torque+=data.torque;
+    }
     return true;
+    
 };
 
 SensorBase::SensorGeometryPtr ForceSensor::GetSensorGeometry(SensorType type){
@@ -152,6 +178,13 @@ SensorBase::SensorDataPtr ForceSensor::CreateSensorData(SensorType type){
 };
 
 bool ForceSensor::GetSensorData(SensorDataPtr psensordata){
+    //First, filter the data on demand based on enabled filter
+    _data->force=_movingsum.force;
+    _data->force/=(dReal)_history.size();
+
+    _data->torque=_movingsum.torque;
+    _data->torque/=(dReal)_history.size();
+
     boost::mutex::scoped_lock lock(_mutexdata);
     *boost::dynamic_pointer_cast<Force6DSensorData>(psensordata) = *_data;
 
@@ -165,3 +198,35 @@ void ForceSensor::SetTransform(const Transform& trans){
 Transform ForceSensor::GetTransform() {
     return _trans;
 };
+
+bool ForceSensor::SetHistoryLength(std::ostream& os, std::istream& is){
+    int l=0;
+    if (!_bPower && !!is){
+        is >> l;
+        if (l>0){
+            RAVELOG_DEBUG("Sensor off, changing history depth to %d\n",l);
+            _history.resize(l);
+            _timestamps.resize(l);
+            Reset(0);
+            return true;
+        }
+        else   RAVELOG_DEBUG("Depth %d is invalid, ignoring...\n",l);
+    }
+    return false;
+}
+
+bool ForceSensor::GetHistory(std::ostream& os, std::istream& is){
+    
+    //TODO:Lock this? could change halfway through..
+    for (size_t i = 0; i < _history.size();++i){
+        os << _timestamps[i] << " ";
+        os << _history[i].force[0] << " ";
+        os << _history[i].force[1] << " ";
+        os << _history[i].force[2] << " ";
+        os << _history[i].torque[0] << " ";
+        os << _history[i].torque[1] << " ";
+        os << _history[i].torque[2] << "\n";
+    }
+    return true;
+}
+
