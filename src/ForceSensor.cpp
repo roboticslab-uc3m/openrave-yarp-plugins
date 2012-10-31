@@ -207,6 +207,7 @@ bool ForceSensor::SetHistoryLength(std::ostream& os, std::istream& is){
             RAVELOG_DEBUG("Sensor off, changing history depth to %d\n",l);
             _history.resize(l);
             _timestamps.resize(l);
+            Reset(0);
             return true;
         }
         else   RAVELOG_DEBUG("Depth %d is invalid, ignoring...\n",l);
