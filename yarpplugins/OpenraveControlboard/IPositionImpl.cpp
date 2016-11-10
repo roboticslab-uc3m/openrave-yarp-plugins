@@ -21,7 +21,33 @@ bool teo::OpenraveControlboard::setPositionMode() {
 // -----------------------------------------------------------------------------
 
 bool teo::OpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("\n");
+    if ((unsigned int)j>axes) {
+        fprintf(stderr,"[FakeControlboardOR] error: axis index more than axes.\n");
+        return false;
+    }
+//    if(modePosVel!=0) {  // Check if we are in position mode.
+//        fprintf(stderr,"[FakeControlboardOR] warning: will not positionMove as not in positionMode\n");
+//        return false;
+//    }
+
+    //OpenRAVE::RobotBasePtr probot;
+    //std::vector< int > manipulatorIDs;
+
+    dEncRaw[ manipulatorIDs[j] ] = ref;
+
+    probot->SetJointValues(dEncRaw);  // More compatible with physics??
+
+    penv->StepSimulation(0.1);  // StepSimulation must be given in seconds
+
+    {
+        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
+        if(penv->CheckSelfCollision(probot)) {  // Check if we collide.
+            CD_WARNING("Collision!!!\n");
+            //return false;  // Bad strategy: we get trapped when we are already in collision!!
+        }
+    }
+
     return true;
 }
 
