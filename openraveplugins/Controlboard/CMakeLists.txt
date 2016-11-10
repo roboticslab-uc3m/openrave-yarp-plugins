@@ -29,7 +29,7 @@ macro(build_openrave_plugin name)
   set_target_properties(${name} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}")
   set_target_properties(${name} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
   target_link_libraries(${name} ${YARP_LIBRARIES} ${OpenRAVE_LIBRARIES} yarpplugins )
-  install(TARGETS ${name} DESTINATION bin )
+  install(TARGETS ${name} DESTINATION lib )
 endmacro(build_openrave_plugin)
 
 build_openrave_plugin(${KEYWORD})
