@@ -17,8 +17,12 @@ project(OPENRAVE-YARP-PLUGINS)
 
 ### options: cpp programs
 
+### options: cpp plugins
+option(ENABLE_openraveplugins "Enable/disable option openraveplugins" TRUE)
+option(ENABLE_yarpplugins "Enable/disable option yarpplugins" TRUE)
+
 ### options: force default
-option(ENABLE_exampleExtraOption "Enable/disable option exampleExtraOption" TRUE)
+option(ENABLE_yarpplugins_Controlboard "Enable/disable option yarpplugins_Controlboard" TRUE)
 
 if(MSVC)
   MESSAGE(STATUS "Running on windows")    
@@ -62,8 +66,10 @@ set(OPENRAVE-YARP-PLUGINS_LIBRARIES CACHE INTERNAL "appended libraries" FORCE)
 
 # add main contents
 add_subdirectory(share)
-add_subdirectory(libraries)
-add_subdirectory(programs)
+#add_subdirectory(libraries)
+#add_subdirectory(programs)
+add_subdirectory(openraveplugins)
+add_subdirectory(yarpplugins)
 
 # export our variables to a OPENRAVE-YARP-PLUGINSConfig.cmake creation
 set(OPENRAVE-YARP-PLUGINS_LINK_DIRS ${OPENRAVE-YARP-PLUGINS_LINK_DIRS} ${LIBRARY_OUTPUT_PATH})
