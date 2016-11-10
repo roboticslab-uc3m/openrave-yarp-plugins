@@ -6,6 +6,10 @@ IF (ENABLE_yarpplugins)
 
   option(ENABLE_launchyarpplugins "Choose if you want to compile launchTeoYarp" TRUE)
 
+if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+  add_definitions("-fno-strict-aliasing -Wall -fPIC")
+endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+
   find_package(YARP REQUIRED)
   include_directories(${YARP_INCLUDE_DIRS})
   list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})

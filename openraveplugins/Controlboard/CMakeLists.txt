@@ -12,7 +12,7 @@ find_package(OpenRAVE REQUIRED)
 find_package(YARP REQUIRED)
 
 if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
-  add_definitions("-fno-strict-aliasing -Wall")
+  add_definitions("-fno-strict-aliasing -Wall -fPIC")
 endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
 
 find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT COMPONENTS iostreams python thread)
@@ -28,7 +28,7 @@ macro(build_openrave_plugin name)
   add_library(${name} SHARED ${name}.cpp)
   set_target_properties(${name} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}")
   set_target_properties(${name} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
-  target_link_libraries(${name} ${YARP_LIBRARIES} ${OpenRAVE_LIBRARIES} TeoYarp )
+  target_link_libraries(${name} ${YARP_LIBRARIES} ${OpenRAVE_LIBRARIES} yarpplugins )
   install(TARGETS ${name} DESTINATION bin )
 endmacro(build_openrave_plugin)
 

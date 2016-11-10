@@ -6,8 +6,6 @@
 
 bool teo::OpenraveControlboard::open(yarp::os::Searchable& config) {
 
-    printf("here1\n");
-
     //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
     penv = *((OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob()));
 
@@ -24,27 +22,17 @@ bool teo::OpenraveControlboard::open(yarp::os::Searchable& config) {
         return false;
     }
 
-    printf("here2\n");
-
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
     penv->GetRobots(vectorOfRobotPtr);
     probot = vectorOfRobotPtr[robotIndex];
 
-    printf("here3\n");
-
     dEncRaw.resize( probot->GetDOF() );
     std::fill(dEncRaw.begin(), dEncRaw.end(), 0);
-
-    printf("here4\n");
 
     std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
     manipulatorIDs = vectorOfManipulatorPtr[manipulatorIndex]->GetArmIndices();
 
-    printf("here5\n");
-
     axes = manipulatorIDs.size();
-
-    printf("here6\n");
 
     return true;
 }

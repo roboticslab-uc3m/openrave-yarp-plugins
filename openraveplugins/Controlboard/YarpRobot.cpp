@@ -35,13 +35,13 @@
 using namespace std;
 using namespace OpenRAVE;
 
-YARP_DECLARE_PLUGINS(TeoYarp)
+YARP_DECLARE_PLUGINS(yarpplugins)
 
 class YarpRobot : public ModuleBase
 {
 public:
     YarpRobot(EnvironmentBasePtr penv) : ModuleBase(penv) {
-        YARP_REGISTER_PLUGINS(TeoYarp);
+        YARP_REGISTER_PLUGINS(yarpplugins);
         __description = "YarpRobot plugin.";
         RegisterCommand("open",boost::bind(&YarpRobot::Open, this,_1,_2),"opens port");
     }
@@ -58,9 +58,13 @@ public:
         return 0;
     }
 
-    bool Open(ostream& sout, istream& sinput) {
-
-        sout << "Hello" << endl;
+    bool Open(ostream& sout, istream& sinput)
+    {
+        if ( !yarp.checkNetwork() )
+        {
+            RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+            return false;
+        }
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBase* penv_raw = GetEnv().get();
@@ -92,21 +96,15 @@ public:
                 yarp::dev::PolyDriver* robotDevice = new yarp::dev::PolyDriver;
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
-                options.put("subdevice","FakeControlboardOR");
-                //options.put("device","FakeControlboardOR");
+                options.put("subdevice","OpenraveControlboard");
+                //options.put("device","OpenraveControlboard");
                 options.put("name", manipulatorPortName );
-
-                RAVELOG_INFO( " 1 \n" );
 
                 yarp::os::Value v(&penv_raw, sizeof(OpenRAVE::EnvironmentBase*));
                 options.put("penv",v);
 
-                RAVELOG_INFO( " 2 \n" );
-
                 options.put("robotIndex",static_cast<int>(robotPtrIdx));
                 options.put("manipulatorIndex",static_cast<int>(manipulatorPtrIdx));
-
-                RAVELOG_INFO( " 3 \n" );
 
                 robotDevice->open(options);
                 if( ! robotDevice->isValid() )
