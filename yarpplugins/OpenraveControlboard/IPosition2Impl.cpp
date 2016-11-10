@@ -1,10 +1,10 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "FakeControlboardOR.hpp"
+#include "OpenraveControlboard.hpp"
 
 // ------------------- IPositionControl2 Related --------------------------------
 
-bool teo::FakeControlboardOR::positionMove(const int n_joint, const int *joints, const double *refs)
+bool teo::OpenraveControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
 {
     CD_DEBUG("\n");
     // must implement mask!
@@ -13,7 +13,7 @@ bool teo::FakeControlboardOR::positionMove(const int n_joint, const int *joints,
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::relativeMove(const int n_joint, const int *joints, const double *deltas)
+bool teo::OpenraveControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
 {
     CD_DEBUG("\n");
     return true;
@@ -21,7 +21,7 @@ bool teo::FakeControlboardOR::relativeMove(const int n_joint, const int *joints,
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::checkMotionDone(const int n_joint, const int *joints, bool *flags)
+bool teo::OpenraveControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flags)
 {
     CD_DEBUG("\n");
     return true;
@@ -29,7 +29,7 @@ bool teo::FakeControlboardOR::checkMotionDone(const int n_joint, const int *join
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
+bool teo::OpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
 {
     CD_DEBUG("\n");
     return true;
@@ -37,7 +37,7 @@ bool teo::FakeControlboardOR::setRefSpeeds(const int n_joint, const int *joints,
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
+bool teo::OpenraveControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
 {
     CD_DEBUG("\n");
     return true;
@@ -45,7 +45,7 @@ bool teo::FakeControlboardOR::setRefAccelerations(const int n_joint, const int *
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::getRefSpeeds(const int n_joint, const int *joints, double *spds)
+bool teo::OpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
 {
     CD_DEBUG("\n");
     return true;
@@ -53,7 +53,7 @@ bool teo::FakeControlboardOR::getRefSpeeds(const int n_joint, const int *joints,
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::getRefAccelerations(const int n_joint, const int *joints, double *accs)
+bool teo::OpenraveControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
 {
     CD_DEBUG("\n");
     return true;
@@ -61,7 +61,7 @@ bool teo::FakeControlboardOR::getRefAccelerations(const int n_joint, const int *
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::stop(const int n_joint, const int *joints)
+bool teo::OpenraveControlboard::stop(const int n_joint, const int *joints)
 {
     CD_DEBUG("\n");
     return true;
@@ -69,7 +69,7 @@ bool teo::FakeControlboardOR::stop(const int n_joint, const int *joints)
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::getTargetPosition(const int joint, double *ref)
+bool teo::OpenraveControlboard::getTargetPosition(const int joint, double *ref)
 {
     CD_INFO("\n");
     return true;
@@ -77,7 +77,7 @@ bool teo::FakeControlboardOR::getTargetPosition(const int joint, double *ref)
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::getTargetPositions(double *refs)
+bool teo::OpenraveControlboard::getTargetPositions(double *refs)
 {
     CD_DEBUG("\n");
     return true;
@@ -85,7 +85,7 @@ bool teo::FakeControlboardOR::getTargetPositions(double *refs)
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::getTargetPositions(const int n_joint, const int *joints, double *refs)
+bool teo::OpenraveControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
 {
     CD_DEBUG("\n");
     return true;

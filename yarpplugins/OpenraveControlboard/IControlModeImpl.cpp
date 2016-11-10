@@ -1,10 +1,10 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "FakeControlboardOR.hpp"
+#include "OpenraveControlboard.hpp"
 
 // ------------------- IControlLimits Related ------------------------------------
 
-bool teo::FakeControlboardOR::setPositionMode(int j) {
+bool teo::OpenraveControlboard::setPositionMode(int j) {
     CD_INFO("(%d)\n",j);
     modePosVel = 0;
     return true;
@@ -12,7 +12,7 @@ bool teo::FakeControlboardOR::setPositionMode(int j) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setVelocityMode(int j) {
+bool teo::OpenraveControlboard::setVelocityMode(int j) {
     CD_INFO("(%d)\n",j);
     modePosVel = 1;  // Set flag to vel.
     return true;
@@ -20,35 +20,35 @@ bool teo::FakeControlboardOR::setVelocityMode(int j) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setTorqueMode(int j)  {
+bool teo::OpenraveControlboard::setTorqueMode(int j)  {
     CD_INFO("(%d)\n",j);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setImpedancePositionMode(int j) {
+bool teo::OpenraveControlboard::setImpedancePositionMode(int j) {
     CD_INFO("(%d)\n",j);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setImpedanceVelocityMode(int j) {
+bool teo::OpenraveControlboard::setImpedanceVelocityMode(int j) {
     CD_INFO("(%d)\n",j);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setOpenLoopMode(int j) {
+bool teo::OpenraveControlboard::setOpenLoopMode(int j) {
     CD_INFO("(%d)\n",j);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::getControlMode(int j, int *mode) {
+bool teo::OpenraveControlboard::getControlMode(int j, int *mode) {
     //CD_DEBUG("\n");  //-- Way too verbose.
     if(modePosVel == 0)
         *mode = VOCAB_CM_POSITION;
@@ -65,7 +65,7 @@ bool teo::FakeControlboardOR::getControlMode(int j, int *mode) {
 // -----------------------------------------------------------------------------
 
 
-bool teo::FakeControlboardOR::getControlModes(int *modes) {
+bool teo::OpenraveControlboard::getControlModes(int *modes) {
     CD_DEBUG("\n");
     bool ok = true;
     for(unsigned int i=0; i < axes; i++)

@@ -1,10 +1,10 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "FakeControlboardOR.hpp"
+#include "OpenraveControlboard.hpp"
 
 // ------------------ IVelocity Related ----------------------------------------
 
-bool teo::FakeControlboardOR::setVelocityMode() {
+bool teo::OpenraveControlboard::setVelocityMode() {
     CD_INFO("\n");
     if (modePosVel==1) return true;  // Simply return true if we were already in vel mode.
     // Do anything additional before setting flag to vel...
@@ -14,11 +14,11 @@ bool teo::FakeControlboardOR::setVelocityMode() {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::velocityMove(int j, double sp) {  // velExposed = sp;
+bool teo::OpenraveControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
     CD_INFO("\n");
     if ((unsigned int)j>axes) return false;
     if(modePosVel!=1) {  // Check if we are in velocity mode.
-        fprintf(stderr,"[FakeControlboardOR] fail: FakeControlboardOR will not velocityMove as not in velocityMode\n");
+        fprintf(stderr,"[OpenraveControlboard] fail: OpenraveControlboard will not velocityMove as not in velocityMode\n");
         return false;
     }
     velRaw[j] = (sp * velRawExposed[j]);
@@ -28,9 +28,9 @@ bool teo::FakeControlboardOR::velocityMove(int j, double sp) {  // velExposed = 
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::velocityMove(const double *sp) {
+bool teo::OpenraveControlboard::velocityMove(const double *sp) {
     CD_INFO("\n");
-    printf("[FakeControlboardOR] Vel:");
+    printf("[OpenraveControlboard] Vel:");
     for (unsigned int i=0; i<axes; i++) printf(" %+.6f",velRaw[i]);
     printf("\n");
     bool ok = true;

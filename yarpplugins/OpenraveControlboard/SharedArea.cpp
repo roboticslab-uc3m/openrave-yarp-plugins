@@ -1,10 +1,10 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "FakeControlboardOR.hpp"
+#include "OpenraveControlboard.hpp"
 
 // ----------------------------------------------------------------------------
 
-void teo::FakeControlboardOR::setEncRaw(const int Index, const double Position) {
+void teo::OpenraveControlboard::setEncRaw(const int Index, const double Position) {
     // printf("[SharedArea] setEncRaw.\n");
     encRawMutex.wait();
     encRaw[Index] = Position;
@@ -13,7 +13,7 @@ void teo::FakeControlboardOR::setEncRaw(const int Index, const double Position) 
 
 // ----------------------------------------------------------------------------
 
-double teo::FakeControlboardOR::getEncRaw(const int Index) {
+double teo::OpenraveControlboard::getEncRaw(const int Index) {
     // printf("[SharedArea] getEncRaw.\n");
     double Position;
     encRawMutex.wait();
@@ -24,7 +24,7 @@ double teo::FakeControlboardOR::getEncRaw(const int Index) {
 
 // ----------------------------------------------------------------------------
 
-double teo::FakeControlboardOR::getEncExposed(const int Index) {
+double teo::OpenraveControlboard::getEncExposed(const int Index) {
     double RawPosition;
     encRawMutex.wait();
     RawPosition = encRaw[Index];

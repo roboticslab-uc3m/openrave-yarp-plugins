@@ -1,10 +1,10 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "FakeControlboardOR.hpp"
+#include "OpenraveControlboard.hpp"
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool teo::FakeControlboardOR::open(yarp::os::Searchable& config) {
+bool teo::OpenraveControlboard::open(yarp::os::Searchable& config) {
 
     printf("here1\n");
 
@@ -51,8 +51,8 @@ bool teo::FakeControlboardOR::open(yarp::os::Searchable& config) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::close() {
-    printf("[FakeControlboardOR] close()\n");
+bool teo::OpenraveControlboard::close() {
+    printf("[OpenraveControlboard] close()\n");
     return true;
 }
 

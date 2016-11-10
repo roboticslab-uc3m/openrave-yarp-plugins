@@ -1,10 +1,10 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "FakeControlboardOR.hpp"
+#include "OpenraveControlboard.hpp"
 
 // ------------------- IPositionControl Related --------------------------------
 
-bool teo::FakeControlboardOR::getAxes(int *ax) {
+bool teo::OpenraveControlboard::getAxes(int *ax) {
     CD_INFO("\n");
     *ax = axes;
     CD_INFO("Reporting %d axes are present\n", *ax);
@@ -13,12 +13,12 @@ bool teo::FakeControlboardOR::getAxes(int *ax) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setPositionMode() {
+bool teo::OpenraveControlboard::setPositionMode() {
     CD_INFO("\n");
     if (modePosVel==0) return true;  // Simply return true if we were already in pos mode.
     // Do anything additional before setting flag to pos...
     if(!stop()) {
-        fprintf(stderr,"[FakeControlboardOR] warning: setPositionMode() return false; failed to stop\n");
+        fprintf(stderr,"[OpenraveControlboard] warning: setPositionMode() return false; failed to stop\n");
         return false;
     }
     modePosVel = 0;
@@ -27,14 +27,14 @@ bool teo::FakeControlboardOR::setPositionMode() {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::positionMove(int j, double ref) {  // encExposed = ref;
+bool teo::OpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
     CD_INFO("\n");
     if ((unsigned int)j>axes) {
-        fprintf(stderr,"[FakeControlboardOR] error: axis index more than axes.\n");
+        fprintf(stderr,"[OpenraveControlboard] error: axis index more than axes.\n");
         return false;
     }
     if(modePosVel!=0) {  // Check if we are in position mode.
-        fprintf(stderr,"[FakeControlboardOR] warning: will not positionMove as not in positionMode\n");
+        fprintf(stderr,"[OpenraveControlboard] warning: will not positionMove as not in positionMode\n");
         return false;
     }
 
@@ -60,41 +60,41 @@ bool teo::FakeControlboardOR::positionMove(int j, double ref) {  // encExposed =
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::positionMove(const double *refs) {  // encExposed = refs;
+bool teo::OpenraveControlboard::positionMove(const double *refs) {  // encExposed = refs;
     CD_INFO("\n");
     if(modePosVel!=0) {  // Check if we are in position mode.
-        fprintf(stderr,"[FakeControlboardOR] error: Will not positionMove as not in positionMode\n");
+        fprintf(stderr,"[OpenraveControlboard] error: Will not positionMove as not in positionMode\n");
         return false;
     }
 
-    printf("[FakeControlboardOR] positionMove() f[end]\n");
+    printf("[OpenraveControlboard] positionMove() f[end]\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::relativeMove(int j, double delta) {
+bool teo::OpenraveControlboard::relativeMove(int j, double delta) {
     CD_INFO("\n");
     if ((unsigned int)j>axes) return false;
     if(modePosVel!=0) {  // Check if we are in position mode.
-        printf("[fail] FakeControlboardOR will not relativeMove as not in positionMode\n");
+        printf("[fail] OpenraveControlboard will not relativeMove as not in positionMode\n");
         return false;
     }
-    printf("[FakeControlboardOR] relativeMove(%d,%f) f[begin]\n",j,delta);
+    printf("[OpenraveControlboard] relativeMove(%d,%f) f[begin]\n",j,delta);
     jointStatus[j]=2;
-    printf("[FakeControlboardOR] relativeMove(%d,%f) f[end]\n",j,delta);
+    printf("[OpenraveControlboard] relativeMove(%d,%f) f[end]\n",j,delta);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::relativeMove(const double *deltas) {  // encExposed = deltas + encExposed
+bool teo::OpenraveControlboard::relativeMove(const double *deltas) {  // encExposed = deltas + encExposed
     CD_INFO("\n");
     if(modePosVel!=0) {  // Check if we are in position mode.
-        fprintf(stderr,"[FakeControlboardOR] warning: will not relativeMove as not in positionMode\n");
+        fprintf(stderr,"[OpenraveControlboard] warning: will not relativeMove as not in positionMode\n");
         return false;
     }
-    printf("[FakeControlboardOR] relativeMove() f[begin]\n");
+    printf("[OpenraveControlboard] relativeMove() f[begin]\n");
     // Find out the maximum angle to move
     double max_dist = 0;
     double time_max_dist = 0;
@@ -104,13 +104,13 @@ bool teo::FakeControlboardOR::relativeMove(const double *deltas) {  // encExpose
             time_max_dist = max_dist/refSpeed[motor];  // the max_dist motor will be at refSpeed
         }
     // Set all the private parameters of the Rave class that correspond to this kind of movement!
-    printf("[FakeControlboardOR] relativeMove() f[end]\n");
+    printf("[OpenraveControlboard] relativeMove() f[end]\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::checkMotionDone(int j, bool *flag) {
+bool teo::OpenraveControlboard::checkMotionDone(int j, bool *flag) {
     CD_INFO("\n");
     if ((unsigned int)j>axes) return false;
     bool done = true;
@@ -121,7 +121,7 @@ bool teo::FakeControlboardOR::checkMotionDone(int j, bool *flag) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::checkMotionDone(bool *flag) {
+bool teo::OpenraveControlboard::checkMotionDone(bool *flag) {
     CD_INFO("\n");
     bool done = true;
     for (unsigned int i=0; i<axes; i++) {
@@ -133,7 +133,7 @@ bool teo::FakeControlboardOR::checkMotionDone(bool *flag) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setRefSpeed(int j, double sp) {
+bool teo::OpenraveControlboard::setRefSpeed(int j, double sp) {
     CD_INFO("\n");
     if ((unsigned int)j>axes) return false;
     refSpeed[j]=sp;
@@ -142,7 +142,7 @@ bool teo::FakeControlboardOR::setRefSpeed(int j, double sp) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setRefSpeeds(const double *spds) {
+bool teo::OpenraveControlboard::setRefSpeeds(const double *spds) {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
@@ -152,7 +152,7 @@ bool teo::FakeControlboardOR::setRefSpeeds(const double *spds) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setRefAcceleration(int j, double acc) {
+bool teo::OpenraveControlboard::setRefAcceleration(int j, double acc) {
     CD_INFO("\n");
     if ((unsigned int)j>axes) return false;
     refAcc[j]=acc;
@@ -161,7 +161,7 @@ bool teo::FakeControlboardOR::setRefAcceleration(int j, double acc) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::setRefAccelerations(const double *accs) {
+bool teo::OpenraveControlboard::setRefAccelerations(const double *accs) {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
@@ -171,7 +171,7 @@ bool teo::FakeControlboardOR::setRefAccelerations(const double *accs) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::getRefSpeed(int j, double *ref) {
+bool teo::OpenraveControlboard::getRefSpeed(int j, double *ref) {
     CD_INFO("\n");
     if ((unsigned int)j>axes) return false;
     *ref=refSpeed[j];
@@ -180,7 +180,7 @@ bool teo::FakeControlboardOR::getRefSpeed(int j, double *ref) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::getRefSpeeds(double *spds) {
+bool teo::OpenraveControlboard::getRefSpeeds(double *spds) {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
@@ -190,7 +190,7 @@ bool teo::FakeControlboardOR::getRefSpeeds(double *spds) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::getRefAcceleration(int j, double *acc) {
+bool teo::OpenraveControlboard::getRefAcceleration(int j, double *acc) {
     CD_INFO("\n");
     if ((unsigned int)j>axes) return false;
     *acc=refAcc[j];
@@ -199,7 +199,7 @@ bool teo::FakeControlboardOR::getRefAcceleration(int j, double *acc) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::getRefAccelerations(double *accs) {
+bool teo::OpenraveControlboard::getRefAccelerations(double *accs) {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
@@ -209,10 +209,10 @@ bool teo::FakeControlboardOR::getRefAccelerations(double *accs) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::stop(int j) {
+bool teo::OpenraveControlboard::stop(int j) {
     CD_INFO("\n");
     if ((unsigned int)j>axes) return false;
-    printf("[FakeControlboardOR] stop(%d)\n",j);
+    printf("[OpenraveControlboard] stop(%d)\n",j);
     velRaw[j]=0.0;
     jointStatus[j]=0;
     return true;
@@ -220,7 +220,7 @@ bool teo::FakeControlboardOR::stop(int j) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboardOR::stop() {
+bool teo::OpenraveControlboard::stop() {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
