@@ -6,7 +6,6 @@
 
 bool teo::OpenraveControlboard::setPositionMode(int j) {
     CD_INFO("(%d)\n",j);
-    modePosVel = 0;
     return true;
 }
 
@@ -14,7 +13,6 @@ bool teo::OpenraveControlboard::setPositionMode(int j) {
 
 bool teo::OpenraveControlboard::setVelocityMode(int j) {
     CD_INFO("(%d)\n",j);
-    modePosVel = 1;  // Set flag to vel.
     return true;
 }
 
@@ -49,16 +47,7 @@ bool teo::OpenraveControlboard::setOpenLoopMode(int j) {
 // -----------------------------------------------------------------------------
 
 bool teo::OpenraveControlboard::getControlMode(int j, int *mode) {
-    //CD_DEBUG("\n");  //-- Way too verbose.
-    if(modePosVel == 0)
-        *mode = VOCAB_CM_POSITION;
-    else if (modePosVel == 1)
-        *mode = VOCAB_CM_VELOCITY;
-    else
-    {
-        CD_ERROR("Currently unsupported mode.\n");
-        return false;
-    }
+    //CD_DEBUG("NOTHING TO DO\n");  //-- Way too verbose.
     return true;
 }
 
