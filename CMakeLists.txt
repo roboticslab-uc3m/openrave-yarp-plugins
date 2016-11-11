@@ -23,6 +23,7 @@ option(ENABLE_yarpplugins "Enable/disable option yarpplugins" TRUE)
 
 ### options: force default
 option(ENABLE_yarpplugins_YarpOpenraveControlboard "Enable/disable option yarpplugins_YarpOpenraveControlboard" TRUE)
+option(ENABLE_yarpplugins_YarpOpenraveControlboardCollision "Enable/disable option yarpplugins_YarpOpenraveControlboardCollision" TRUE)
 
 if(MSVC)
   MESSAGE(STATUS "Running on windows")    

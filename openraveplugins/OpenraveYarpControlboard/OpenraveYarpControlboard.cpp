@@ -37,16 +37,16 @@ using namespace OpenRAVE;
 
 YARP_DECLARE_PLUGINS(yarpplugins)
 
-class YarpRobot : public ModuleBase
+class OpenraveYarpControlboard : public ModuleBase
 {
 public:
-    YarpRobot(EnvironmentBasePtr penv) : ModuleBase(penv) {
+    OpenraveYarpControlboard(EnvironmentBasePtr penv) : ModuleBase(penv) {
         YARP_REGISTER_PLUGINS(yarpplugins);
-        __description = "YarpRobot plugin.";
-        RegisterCommand("open",boost::bind(&YarpRobot::Open, this,_1,_2),"opens port");
+        __description = "OpenraveYarpControlboard plugin.";
+        RegisterCommand("open",boost::bind(&OpenraveYarpControlboard::Open, this,_1,_2),"opens port");
     }
 
-    virtual ~YarpRobot() {
+    virtual ~OpenraveYarpControlboard() {
     }
 
     void Destroy() {
@@ -91,13 +91,13 @@ public:
                 manipulatorPortName += vectorOfRobotPtr[robotPtrIdx]->GetName();
                 manipulatorPortName += "/";
                 manipulatorPortName += vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName();
-                RAVELOG_INFO( "* manipulatorPortName: %s\n",manipulatorPortName.c_str() );
+                RAVELOG_INFO( "* cdmanipulatorPortName: %s\n",manipulatorPortName.c_str() );
 
                 yarp::dev::PolyDriver* robotDevice = new yarp::dev::PolyDriver;
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
-                options.put("subdevice","OpenraveControlboard");
-                //options.put("device","OpenraveControlboard");
+                options.put("subdevice","YarpOpenraveControlboardCollision");
+                //options.put("device","YarpOpenraveControlboardCollision");
                 options.put("name", manipulatorPortName );
 
                 yarp::os::Value v(&penv_raw, sizeof(OpenRAVE::EnvironmentBase*));
@@ -124,14 +124,14 @@ private:
 };
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
-    if( type == PT_Module && interfacename == "yarprobot" ) {
-        return InterfaceBasePtr(new YarpRobot(penv));
+    if( type == PT_Module && interfacename == "openraveyarpcontrolboard" ) {
+        return InterfaceBasePtr(new OpenraveYarpControlboard(penv));
     }
     return InterfaceBasePtr();
 }
 
 void GetPluginAttributesValidated(PLUGININFO& info) {
-    info.interfacenames[PT_Module].push_back("YarpRobot");
+    info.interfacenames[PT_Module].push_back("OpenraveYarpControlboard");
 }
 
 OPENRAVE_PLUGIN_API void DestroyPlugin() {
