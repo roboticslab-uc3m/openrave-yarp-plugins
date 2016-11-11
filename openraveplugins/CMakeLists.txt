@@ -4,7 +4,7 @@
 
 IF (ENABLE_openraveplugins)
 
-add_subdirectory(Controlboard)
+add_subdirectory(OpenraveYarpControlboard)
 
 ENDIF (ENABLE_openraveplugins)
 
