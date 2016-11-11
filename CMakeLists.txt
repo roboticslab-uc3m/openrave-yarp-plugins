@@ -22,7 +22,7 @@ option(ENABLE_openraveplugins "Enable/disable option openraveplugins" TRUE)
 option(ENABLE_yarpplugins "Enable/disable option yarpplugins" TRUE)
 
 ### options: force default
-option(ENABLE_yarpplugins_OpenraveControlboard "Enable/disable option yarpplugins_OpenraveControlboard" TRUE)
+option(ENABLE_yarpplugins_YarpOpenraveControlboard "Enable/disable option yarpplugins_YarpOpenraveControlboard" TRUE)
 
 if(MSVC)
   MESSAGE(STATUS "Running on windows")    

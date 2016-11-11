@@ -17,7 +17,7 @@ endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
 
 
   yarp_begin_plugin_library(yarpplugins)
-    add_subdirectory(OpenraveControlboard)
+    add_subdirectory(YarpOpenraveControlboard)
   yarp_end_plugin_library(yarpplugins)
   
   IF (ENABLE_launchyarpplugins)

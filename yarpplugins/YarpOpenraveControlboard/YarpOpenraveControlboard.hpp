@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __OPENRAVE_CONTROLBOARD_HPP__
-#define __OPENRAVE_CONTROLBOARD_HPP__
+#ifndef __YARP_OPENRAVE_CONTROLBOARD_HPP__
+#define __YARP_OPENRAVE_CONTROLBOARD_HPP__
 
 #include <yarp/os/all.h>
 #include <yarp/os/Semaphore.h>
@@ -28,30 +28,30 @@ namespace teo
 
 /**
  * @ingroup TeoYarp
- * \defgroup OpenraveControlboard
+ * \defgroup YarpOpenraveControlboard
  *
- * @brief Contains teo::OpenraveControlboard.
+ * @brief Contains teo::YarpOpenraveControlboard.
  *
- * @section OpenraveControlboard_install Installation
+ * @section YarpOpenraveControlboard_install Installation
  *
- * The plugin is compiled when ENABLE_TeoYarp_OpenraveControlboard is activated (not default). For further
+ * The plugin is compiled when ENABLE_TeoYarp_YarpOpenraveControlboard is activated (not default). For further
  * installation steps refer to <a class="el" href="pages.html">your own system installation guidelines</a>.
  */
 
 /**
- * @ingroup OpenraveControlboard
+ * @ingroup YarpOpenraveControlboard
  * @brief Implements the YARP_dev IPositionControl, IVelocityControl, IEncodersTimed, etc.
  * interface class member functions.
  */
 // Note: IEncodersTimed inherits from IEncoders
 // Note: IPositionControl2 inherits from IPositionControl
 // Note: IVelocityControl2 inherits from IVelocityControl
-class OpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
+class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
         public yarp::dev::IControlLimits, public yarp::dev::IControlMode, public yarp::dev::ITorqueControl {
     public:
 
         // Set the Thread Rate in the class constructor
-        OpenraveControlboard() {}
+        YarpOpenraveControlboard() {}
 
         // ------- IPositionControl declarations. Implementation in IPositionImpl.cpp -------
 
@@ -788,4 +788,4 @@ class OpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::dev::I
 
         }  // namespace teo
 
-        #endif  // __OPENRAVE_CONTROLBOARD_HPP__
+        #endif  // __YARP_OPENRAVE_CONTROLBOARD_HPP__
