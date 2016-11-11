@@ -41,8 +41,7 @@ bool teo::YarpOpenraveControlboardCollision::setEncoders(const double *vals) {
 
 bool teo::YarpOpenraveControlboardCollision::getEncoder(int j, double *v) {
     //CD_INFO("\n");  //-- Way too verbose
-    *v = 0;
-    return true;
+    return iEncoders->getEncoder(j,v);
 }
 
 // -----------------------------------------------------------------------------
