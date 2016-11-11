@@ -50,6 +50,11 @@ public:
     }
 
     void Destroy() {
+        for(int i=0;i<robotDevices.size();i++)
+        {
+            robotDevices[i]->close();
+            delete robotDevices[i];
+        }
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
@@ -94,6 +99,7 @@ public:
                 RAVELOG_INFO( "* cdmanipulatorPortName: %s\n",manipulatorPortName.c_str() );
 
                 yarp::dev::PolyDriver* robotDevice = new yarp::dev::PolyDriver;
+                robotDevices.push_back( robotDevice );
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
                 options.put("subdevice","YarpOpenraveControlboardCollision");
