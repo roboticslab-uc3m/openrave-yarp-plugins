@@ -102,9 +102,18 @@ public:
                 robotDevices.push_back( robotDevice );
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
-                options.put("subdevice","YarpOpenraveControlboardCollision");
-                //options.put("device","YarpOpenraveControlboardCollision");
+
+#define YarpOpenraveControlboardCollision 1
+
+#ifdef YarpOpenraveControlboard
+                options.put("subdevice","YarpOpenraveControlboard");
                 options.put("name", manipulatorPortName );
+#elif YarpOpenraveControlboardCollision
+                options.put("subdevice","YarpOpenraveControlboardCollision");
+                std::string safe("/safe");
+                options.put("name", safe+manipulatorPortName );
+                options.put("remote", manipulatorPortName );
+#endif
 
                 yarp::os::Value v(&penv_raw, sizeof(OpenRAVE::EnvironmentBase*));
                 options.put("penv",v);

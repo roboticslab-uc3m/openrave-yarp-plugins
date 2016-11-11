@@ -22,6 +22,7 @@
 #include "ColorDebug.hpp"
 
 #define DEFAULT_AXES 5
+#define DEFAULT_REMOTE "/teo/rightArm"
 
 namespace teo
 {
@@ -783,6 +784,10 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
                 std::vector< int > manipulatorIDs;
                 std::vector<OpenRAVE::dReal> dEncRaw;
 
+                // remote robot
+                yarp::dev::PolyDriver remoteDevice;
+                yarp::dev::IEncoders *iEncoders;
+                yarp::dev::IPositionControl *iPositionControl;
 
         };
 

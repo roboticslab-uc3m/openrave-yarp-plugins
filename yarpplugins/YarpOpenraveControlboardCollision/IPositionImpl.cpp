@@ -32,7 +32,7 @@ bool teo::YarpOpenraveControlboardCollision::positionMove(int j, double ref) {  
     dEncRawKeep=dEncRaw[ manipulatorIDs[j] ];
 
     //Update new position
-    dEncRaw[ manipulatorIDs[j] ] = ref;
+    dEncRaw[ manipulatorIDs[j] ] = ref * M_PI / 180.0;
 
     probot->SetJointValues(dEncRaw);  // More compatible with physics??
 
@@ -54,7 +54,7 @@ bool teo::YarpOpenraveControlboardCollision::positionMove(int j, double ref) {  
         }
     }
 
-    return true;
+    return iPositionControl->positionMove(j,ref);
 }
 
 // -----------------------------------------------------------------------------

@@ -34,6 +34,28 @@ bool teo::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config) 
 
     axes = manipulatorIDs.size();
 
+    //-- connect to remote robot
+    std::string remoteStr = config.check("remote",yarp::os::Value(DEFAULT_REMOTE),"remote robot").asString();
+    CD_INFO("remote: %s [%s]\n",remoteStr.c_str(),DEFAULT_REMOTE);
+    yarp::os::Property options;
+    options.put("device","remote_controlboard");
+    std::string YarpOpenraveControlboardStr("/YarpOpenraveControlboard");
+    options.put("local",YarpOpenraveControlboardStr+remoteStr);
+    options.put("remote",remoteStr);  //-- Hard-code for now
+    remoteDevice.open(options);
+    if( ! remoteDevice.isValid() ) {
+        CD_ERROR("robot remote not valid: %s.\n",remoteStr.c_str());
+        return false;
+    }
+    if( ! remoteDevice.view(iEncoders) ) {
+        CD_ERROR("Could not view iEncoders in: %s.\n",remoteStr.c_str());
+        return false;
+    }
+    if( ! remoteDevice.view(iPositionControl) ) {
+        CD_ERROR("Could not view iPositionControl in: %s.\n",remoteStr.c_str());
+        return false;
+    }
+
     return true;
 }
 
