@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 from openravepy import *
 RaveInitialize()
-RaveLoadPlugin('./YarpRobot')
+
+if not RaveLoadPlugin('./OpenraveYarpControlboard'):
+    raveLogError("Plugin not correctly loaded")
+    
 try:
     env=Environment()
     env.Load('robots/barrettwam.robot.xml')
-    YarpRobot = RaveCreateModule(env,'YarpRobot')
+    YarpRobot = RaveCreateModule(env,'OpenraveYarpControlboard')
     print YarpRobot.SendCommand('open')
     while 1:
         pass
