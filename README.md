@@ -8,7 +8,7 @@ The main approach is to develop OpenRAVE plugins, which internally load YARP plu
 - Plus, whatever other information the "subdevice" YARP plugin requires (e.g. which manipulator of which robot it will control).
 
 # Tutorials: (How to use the openrave-yarp-plugins for collision avoidance with teoSim)
-The following commands explain how to use the openrave-yarp-plugins for collision avoidance using teoSim as the remote robot. The idea of the following steps is to use the real robot, instead of teoSim.
+The following commands explain how to use the openrave-yarp-plugins for collision avoidance using teoSim as the remote robot. Note that here, teoSim can be replaced for the real robot.
 
 ```bash
 yarpserver
