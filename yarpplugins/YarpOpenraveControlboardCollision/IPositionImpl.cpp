@@ -7,8 +7,8 @@
 bool teo::YarpOpenraveControlboardCollision::getAxes(int *ax) {
     CD_INFO("\n");
     *ax = axes;
-    CD_INFO("Reporting %d axes are present\n", *ax);
-    return true;
+    CD_INFO("Reporting %d axes are present in the local robot\n", *ax);
+    return iPositionControl->getAxes(ax);
 }
 
 // -----------------------------------------------------------------------------
@@ -140,7 +140,7 @@ bool teo::YarpOpenraveControlboardCollision::getRefSpeeds(double *spds) {
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= getRefSpeed(i,&spds[i]);
-    return ok;
+    return iPositionControl->getRefSpeeds(spds);
 }
 
 // -----------------------------------------------------------------------------
@@ -157,7 +157,7 @@ bool teo::YarpOpenraveControlboardCollision::getRefAccelerations(double *accs) {
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= getRefAcceleration(i,&accs[i]);
-    return ok;
+    return iPositionControl->getRefAccelerations(accs);
 }
 
 // -----------------------------------------------------------------------------

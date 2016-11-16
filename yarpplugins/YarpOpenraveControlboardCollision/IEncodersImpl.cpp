@@ -51,7 +51,7 @@ bool teo::YarpOpenraveControlboardCollision::getEncoders(double *encs) {
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= getEncoder(i,&encs[i]);
-    return ok;
+    return iEncoders->getEncoders(encs);
 }
 
 // -----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ bool teo::YarpOpenraveControlboardCollision::getEncoderSpeed(int j, double *sp) 
     //CD_INFO("\n");  //-- Way too verbose
     // Make it easy, give the current reference speed.
     *sp = 0;  // begins to look like we should use semaphores.
-    return true;
+    return iEncoders->getEncoderSpeed(j, sp);
 }
 
 // -----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ bool teo::YarpOpenraveControlboardCollision::getEncoderSpeeds(double *spds) {
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= getEncoderSpeed(i,&spds[i]);
-    return ok;
+    return iEncoders->getEncoders(spds);
 }
 
 // -----------------------------------------------------------------------------

@@ -32,7 +32,7 @@ try:
     
     print 'Starting visualization of the convexdecomposition model'
     cdmodel.show()
-    print 'Finished loading visualization'
+    #print 'Finished loading visualization'
 
     while 1:
         pass
