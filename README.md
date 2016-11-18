@@ -9,6 +9,14 @@ The main approach is to develop OpenRAVE plugins, which internally load YARP plu
 
 ![Block Diagram1](doc/readme/Diagram1.png)
 
+- **Openrave Base**: Is in charge of initializing openrave, generate the ConvexDecomposition model of the robot, and start the plugin.
+
+- **Openrave-YarpRobot plugin**: This module is in charge of performing the collision avoidance process. It receives the commmands from YARP, and if there are no collisions, this commands are sent to the real robot. Here is where the local simulation of the system take place. 
+
+- **teoSim/Real robot**: This module corresponds to the real robot or the teoSim Simulation.
+
+- **YARP**: Used by the user to send the commmands to the system.
+
 # Tutorials: (How to use the openrave-yarp-plugins for collision avoidance with teoSim)
 The following commands explain how to use the openrave-yarp-plugins for collision avoidance using teoSim as the remote robot. Note that here, teoSim can be replaced for the real robot.
 
