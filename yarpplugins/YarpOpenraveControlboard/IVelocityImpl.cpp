@@ -5,14 +5,14 @@
 // ------------------ IVelocity Related ----------------------------------------
 
 bool teo::YarpOpenraveControlboard::setVelocityMode() {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
@@ -21,7 +21,7 @@ bool teo::YarpOpenraveControlboard::velocityMove(int j, double sp) {  // velExpo
 bool teo::YarpOpenraveControlboard::velocityMove(const double *sp) {
     CD_INFO("\n");
     printf("[YarpOpenraveControlboard] Vel:");
-    CD_INFO("NOTHING TO DO");
+    CD_INFO("Doing nothing.");
     printf("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)

@@ -47,7 +47,7 @@ bool teo::YarpOpenraveControlboard::setOpenLoopMode(int j) {
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboard::getControlMode(int j, int *mode) {
-    //CD_DEBUG("NOTHING TO DO\n");  //-- Way too verbose.
+    //CD_DEBUG("Doing nothing.\n");  //-- Way too verbose.
     return true;
 }
 

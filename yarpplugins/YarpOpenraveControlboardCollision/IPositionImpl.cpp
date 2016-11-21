@@ -12,7 +12,7 @@ bool teo::YarpOpenraveControlboardCollision::getAxes(int *ax) {
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::setPositionMode() {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
@@ -58,42 +58,42 @@ bool teo::YarpOpenraveControlboardCollision::positionMove(int j, double ref) {  
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::positionMove(const double *refs) {  // encExposed = refs;
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::relativeMove(int j, double delta) {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::relativeMove(const double *deltas) {  // encExposed = deltas + encExposed
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::checkMotionDone(int j, bool *flag) {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::checkMotionDone(bool *flag) {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::setRefSpeed(int j, double sp) {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
@@ -110,7 +110,7 @@ bool teo::YarpOpenraveControlboardCollision::setRefSpeeds(const double *spds) {
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::setRefAcceleration(int j, double acc) {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
@@ -127,7 +127,7 @@ bool teo::YarpOpenraveControlboardCollision::setRefAccelerations(const double *a
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::getRefSpeed(int j, double *ref) {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
@@ -141,7 +141,7 @@ bool teo::YarpOpenraveControlboardCollision::getRefSpeeds(double *spds) {
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::getRefAcceleration(int j, double *acc) {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
@@ -155,7 +155,7 @@ bool teo::YarpOpenraveControlboardCollision::getRefAccelerations(double *accs) {
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::stop(int j) {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 

@@ -5,14 +5,14 @@
 // ------------------- IControlLimits Related ------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::setLimits(int axis, double min, double max) {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboardCollision::getLimits(int axis, double *min, double *max) {
-    CD_INFO("NOTHING TO DO\n");
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
