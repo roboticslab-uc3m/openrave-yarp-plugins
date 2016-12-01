@@ -18,4 +18,16 @@ bool teo::YarpOpenraveControlboard::getLimits(int axis, double *min, double *max
 
 // -----------------------------------------------------------------------------
 
+bool teo::YarpOpenraveControlboard::setVelLimits(int axis, double min, double max) {
+    CD_INFO("Doing nothing.\n");
+    return true;
+}
 
+// -----------------------------------------------------------------------------
+
+bool teo::YarpOpenraveControlboard::getVelLimits(int axis, double *min, double *max) {
+    CD_INFO("Doing nothing.\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------
