@@ -6,6 +6,7 @@
 #include <yarp/os/all.h>
 #include <yarp/os/Semaphore.h>
 #include <yarp/dev/all.h>
+
 #include <openrave-core.h>
 
 #include <boost/make_shared.hpp>
@@ -42,8 +43,9 @@ namespace teo
 // Note: IEncodersTimed inherits from IEncoders
 // Note: IPositionControl2 inherits from IPositionControl
 // Note: IVelocityControl2 inherits from IVelocityControl
+// Note: IControlLimits2 inherits from IControlLimits
 class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
-        public yarp::dev::IControlLimits, public yarp::dev::IControlMode, public yarp::dev::ITorqueControl {
+        public yarp::dev::IControlLimits2, public yarp::dev::IControlMode, public yarp::dev::ITorqueControl {
     public:
 
         // Set the Thread Rate in the class constructor
