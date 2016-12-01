@@ -96,7 +96,7 @@ public:
                 manipulatorPortName += vectorOfRobotPtr[robotPtrIdx]->GetName();
                 manipulatorPortName += "/";
                 manipulatorPortName += vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName();
-                RAVELOG_INFO( "* cdmanipulatorPortName: %s\n",manipulatorPortName.c_str() );
+                RAVELOG_INFO( "* manipulatorPortName: %s\n",manipulatorPortName.c_str() );
 
                 yarp::dev::PolyDriver* robotDevice = new yarp::dev::PolyDriver;
                 robotDevices.push_back( robotDevice );

@@ -48,7 +48,7 @@ bool teo::YarpOpenraveControlboardCollision::setOpenLoopMode(int j) {
 
 bool teo::YarpOpenraveControlboardCollision::getControlMode(int j, int *mode) {
     //CD_DEBUG("Doing nothing.\n");  //-- Way too verbose.
-    return true;
+    return iControlMode->getControlMode(j,mode);
 }
 
 // -----------------------------------------------------------------------------
