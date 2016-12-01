@@ -9,7 +9,7 @@ if not RaveLoadPlugin('./OpenraveYarpControlboard'):
 try:
     env=Environment()
     env.SetViewer('qtcoin')
-    env.Load('/home/raul/repos/teo-main/share/openrave/teo/teo.robot.xml')
+    env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.xml')
     teo_robot = env.GetRobots()[0]
 
     OpenraveYarpControlboard = RaveCreateModule(env,'OpenraveYarpControlboard')
