@@ -8,7 +8,6 @@
 #include <yarp/dev/ControlBoardInterfaces.h>
 #include <yarp/dev/Drivers.h>
 #include <yarp/dev/PolyDriver.h>
-#include <yarp/sig/all.h>
 
 #include <openrave-core.h>
 
