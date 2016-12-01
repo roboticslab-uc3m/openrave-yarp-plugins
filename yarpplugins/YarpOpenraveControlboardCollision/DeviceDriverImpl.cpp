@@ -39,7 +39,7 @@ bool teo::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config) 
     CD_INFO("remote: %s [%s]\n",remoteStr.c_str(),DEFAULT_REMOTE);
     yarp::os::Property options;
     options.put("device","remote_controlboard");
-    std::string YarpOpenraveControlboardStr("/YarpOpenraveControlboard");
+    std::string YarpOpenraveControlboardStr("/YarpOpenraveControlboardCollision");
     options.put("local",YarpOpenraveControlboardStr+remoteStr);
     options.put("remote",remoteStr);  //-- Hard-code for now
     remoteDevice.open(options);
