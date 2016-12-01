@@ -18,4 +18,16 @@ bool teo::YarpOpenraveControlboardCollision::getLimits(int axis, double *min, do
 
 // -----------------------------------------------------------------------------
 
+bool teo::YarpOpenraveControlboardCollision::setVelLimits(int axis, double min, double max) {
+    CD_INFO("Doing nothing.\n");
+    return true;
+}
 
+// -----------------------------------------------------------------------------
+
+bool teo::YarpOpenraveControlboardCollision::getVelLimits(int axis, double *min, double *max) {
+    CD_INFO("Doing nothing.\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------

@@ -471,6 +471,25 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
                  */
                 virtual bool getLimits(int axis, double *min, double *max);
 
+                /**
+                 * Set the software speed limits for a particular axis, the behavior of the
+                 * control card when these limits are exceeded, depends on the implementation.
+                 * @param axis joint number
+                 * @param min the value of the lower limit
+                 * @param max the value of the upper limit
+                 * @return true or false on success or failure
+                 */
+                virtual bool setVelLimits(int axis, double min, double max);
+
+                /**
+                 * Get the software speed limits for a particular axis.
+                 * @param axis joint number
+                 * @param min pointer to store the value of the lower limit
+                 * @param max pointer to store the value of the upper limit
+                 * @return true if everything goes fine, false otherwise.
+                 */
+                virtual bool getVelLimits(int axis, double *min, double *max);
+
             //  --------- IControlMode Declarations. Implementation in IControlModeImpl.cpp ---------
 
                 /**
