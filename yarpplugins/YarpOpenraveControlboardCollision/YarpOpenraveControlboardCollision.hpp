@@ -805,6 +805,7 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
                 yarp::dev::PolyDriver remoteDevice;
                 yarp::dev::IEncoders *iEncoders;
                 yarp::dev::IPositionControl *iPositionControl;
+                yarp::dev::IControlLimits2 *iControlLimits2;
 
         };
 

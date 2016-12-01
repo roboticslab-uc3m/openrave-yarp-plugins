@@ -55,6 +55,10 @@ bool teo::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config) 
         CD_ERROR("Could not view iPositionControl in: %s.\n",remoteStr.c_str());
         return false;
     }
+    if( ! remoteDevice.view(iControlLimits2) ) {
+        CD_ERROR("Could not view iControlLimits2 in: %s.\n",remoteStr.c_str());
+        return false;
+    }
 
     return true;
 }
