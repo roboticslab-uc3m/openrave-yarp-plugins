@@ -18,6 +18,8 @@ yarpserver
 # new terminal
 cd; cd repos/openrave-yarp-plugins/build/lib
 python ../../examples/openrave-YarpRobot.py
+# Then the robot can be commanded via yarp with:
+yarp rpc /teoSim/[kinematic chain name]/rpc:i
 ```
 
 # Tutorials: (How to use the openrave-yarp-plugins for collision avoidance)
