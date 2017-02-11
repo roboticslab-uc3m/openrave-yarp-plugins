@@ -1,7 +1,11 @@
 # Copyright: (C) 2013 Universidad Carlos III de Madrid
 # Author: Juan G. Victores
 
-yarp_prepare_plugin(YarpOpenraveControlboard CATEGORY device TYPE teo::YarpOpenraveControlboard INCLUDE YarpOpenraveControlboard.hpp WRAPPER controlboardwrapper2)
+yarp_prepare_plugin(YarpOpenraveControlboard
+                    CATEGORY device
+                    TYPE teo::YarpOpenraveControlboard
+                    INCLUDE YarpOpenraveControlboard.hpp
+                    WRAPPER controlboardwrapper2)
 
 IF (NOT SKIP_YarpOpenraveControlboard)
 
