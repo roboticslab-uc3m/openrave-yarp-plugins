@@ -58,10 +58,10 @@ public:
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
-    int main(const string& cmd) {
+    /*int main(const string& cmd) {
         RAVELOG_INFO("module initialized cmd; %s\n", cmd.c_str());
         return 0;
-    }
+    }*/
 
     bool Open(ostream& sout, istream& sinput)
     {
