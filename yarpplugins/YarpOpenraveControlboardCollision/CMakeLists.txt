@@ -1,7 +1,7 @@
 # Copyright: (C) 2013 Universidad Carlos III de Madrid
 # Author: Juan G. Victores
 
-YARP_PREPARE_DEVICE(YarpOpenraveControlboardCollision TYPE teo::YarpOpenraveControlboardCollision INCLUDE YarpOpenraveControlboardCollision.hpp WRAPPER controlboardwrapper2)
+yarp_prepare_device(YarpOpenraveControlboardCollision TYPE teo::YarpOpenraveControlboardCollision INCLUDE YarpOpenraveControlboardCollision.hpp WRAPPER controlboardwrapper2)
 
 IF (NOT SKIP_YarpOpenraveControlboardCollision)
 
