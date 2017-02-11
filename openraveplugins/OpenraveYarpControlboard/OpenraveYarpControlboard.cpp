@@ -58,13 +58,17 @@ public:
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
-    int main(const string& cmd) {
+    /*int main(const string& cmd) {
         RAVELOG_INFO("module initialized cmd; %s\n", cmd.c_str());
         return 0;
-    }
+    }*/
 
     bool Open(ostream& sout, istream& sinput)
     {
+        string funcionArg;
+        sinput >> funcionArg;
+        RAVELOG_INFO("Open (%s)\n", funcionArg.c_str());
+
         if ( !yarp.checkNetwork() )
         {
             RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
@@ -103,17 +107,18 @@ public:
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
 
-                #define YarpOpenraveControlboardCollision 1
-
-                #ifdef YarpOpenraveControlboard
-                    options.put("subdevice","YarpOpenraveControlboard");
-                    options.put("name", manipulatorPortName );
-                #elif YarpOpenraveControlboardCollision
+                if (funcionArg == "bridge")
+                {
                     options.put("subdevice","YarpOpenraveControlboardCollision");
                     std::string safe("/safe");
                     options.put("name", safe+manipulatorPortName );
                     options.put("remote", manipulatorPortName );
-                #endif
+                }
+                else
+                {
+                    options.put("subdevice","YarpOpenraveControlboard");
+                    options.put("name", manipulatorPortName );
+                }
 
                 yarp::os::Value v(&penv_raw, sizeof(OpenRAVE::EnvironmentBase*));
                 options.put("penv",v);
