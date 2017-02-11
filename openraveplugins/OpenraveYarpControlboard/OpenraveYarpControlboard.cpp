@@ -107,17 +107,18 @@ public:
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
 
-                #define YarpOpenraveControlboardCollision 1
-
-                #ifdef YarpOpenraveControlboard
-                    options.put("subdevice","YarpOpenraveControlboard");
-                    options.put("name", manipulatorPortName );
-                #elif YarpOpenraveControlboardCollision
+                if (funcionArg == "bridge")
+                {
                     options.put("subdevice","YarpOpenraveControlboardCollision");
                     std::string safe("/safe");
                     options.put("name", safe+manipulatorPortName );
                     options.put("remote", manipulatorPortName );
-                #endif
+                }
+                else
+                {
+                    options.put("subdevice","YarpOpenraveControlboard");
+                    options.put("name", manipulatorPortName );
+                }
 
                 yarp::os::Value v(&penv_raw, sizeof(OpenRAVE::EnvironmentBase*));
                 options.put("penv",v);
