@@ -65,6 +65,10 @@ public:
 
     bool Open(ostream& sout, istream& sinput)
     {
+        string funcionArg;
+        sinput >> funcionArg;
+        RAVELOG_INFO("Open (%s)\n", funcionArg.c_str());
+
         if ( !yarp.checkNetwork() )
         {
             RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
