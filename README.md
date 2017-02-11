@@ -16,8 +16,7 @@ Technically, the OpenRAVE plugin contains one or many `yarp::dev::PolyDriver`, a
 ```bash
 yarpserver
 # new terminal
-cd; cd repos/openrave-yarp-plugins/build/lib
-python ../../examples/openrave-YarpRobot.py
+python repos/openrave-yarp-plugins/examples/openrave-YarpRobot.py
 # Then the robot can be commanded via yarp with:
 yarp rpc /teoSim/[kinematic chain name]/rpc:i
 ```
@@ -27,8 +26,7 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 
 ```bash
 # new terminal
-cd; cd repos/openrave-yarp-plugins/build/lib
-python ../../examples/openrave-YarpRobot-collision.py
+python repos/openrave-yarp-plugins/examples/openrave-YarpRobot-collision.py
 # wait for the system to load the padding model
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teoSim/[kinematic chain name]/rpc:i
