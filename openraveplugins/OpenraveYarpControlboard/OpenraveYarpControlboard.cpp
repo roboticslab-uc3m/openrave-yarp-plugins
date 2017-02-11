@@ -68,6 +68,14 @@ public:
         string funcionArg;
         sinput >> funcionArg;
         RAVELOG_INFO("Open (%s)\n", funcionArg.c_str());
+        if (funcionArg == "collision")
+        {
+            RAVELOG_INFO("Will open YarpOpenraveControlboardCollision");
+        }
+        else
+        {
+            RAVELOG_INFO("Will open YarpOpenraveControlboard");
+        }
 
         if ( !yarp.checkNetwork() )
         {
