@@ -107,7 +107,7 @@ public:
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
 
-                if (funcionArg == "bridge")
+                if (funcionArg == "collision")
                 {
                     options.put("subdevice","YarpOpenraveControlboardCollision");
                     std::string safe("/safe");
