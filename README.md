@@ -11,16 +11,22 @@ Technically, the OpenRAVE plugin contains one or many `yarp::dev::PolyDriver`, a
 - "penv": A C-style pointer to the `OpenRAVE::Environment` to be used by the "subdevice".
 - Plus, whatever other information the "subdevice" YARP plugin requires (e.g. which manipulator of which robot it will control).
 
-# Tutorials: (How to use the openrave-yarp-plugins for collision avoidance with teoSim)
-The following commands explain how to use the openrave-yarp-plugins for collision avoidance using teoSim as the remote robot. Note that here, teoSim can be replaced for the real robot.
+# Tutorials: (How to use the openrave-yarp-plugins as a replacement of teoSim)
 
 ```bash
 yarpserver
-# new terminal 
-teoSim
 # new terminal
 cd; cd repos/openrave-yarp-plugins/build/lib
 python ../../examples/openrave-YarpRobot.py
+```
+
+# Tutorials: (How to use the openrave-yarp-plugins for collision avoidance)
+The following commands explain how to use the openrave-yarp-plugins for collision avoidance, using the previous instance of openrave-yarp-plugins as the remote robot.
+
+```bash
+# new terminal
+cd; cd repos/openrave-yarp-plugins/build/lib
+python ../../examples/openrave-YarpRobot-collision.py
 # wait for the system to load the padding model
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teoSim/[kinematic chain name]/rpc:i
