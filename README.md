@@ -20,7 +20,7 @@ yarpserver
 teoSim
 # new terminal
 cd; cd repos/openrave-yarp-plugins/build/lib
-python ../../examples/openrave-YarpRobot.py
+python ../../examples/openrave-YarpRobot-collision.py
 # wait for the system to load the padding model
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teoSim/[kinematic chain name]/rpc:i
