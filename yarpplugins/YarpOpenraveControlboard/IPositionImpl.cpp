@@ -34,7 +34,7 @@ bool teo::YarpOpenraveControlboard::positionMove(int j, double ref) {  // encExp
     //OpenRAVE::RobotBasePtr probot;
     //std::vector< int > manipulatorIDs;
 
-    dEncRaw[ manipulatorIDs[j] ] = ref;
+    dEncRaw[ manipulatorIDs[j] ] = ref * M_PI / 180.0;
 
     probot->SetJointValues(dEncRaw);  // More compatible with physics??
 
