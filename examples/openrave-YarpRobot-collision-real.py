@@ -13,7 +13,7 @@ try:
     teo_robot = env.GetRobots()[0]
 
     OpenraveYarpControlboard = RaveCreateModule(env,'OpenraveYarpControlboard')
-    print OpenraveYarpControlboard.SendCommand('Open collision')
+    print OpenraveYarpControlboard.SendCommand('open collision /teo')
 	
     # Convex Decomposition padding
     cdmodel = databases.convexdecomposition.ConvexDecompositionModel(teo_robot)
