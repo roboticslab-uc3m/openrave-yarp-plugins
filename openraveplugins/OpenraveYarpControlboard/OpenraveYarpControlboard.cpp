@@ -47,14 +47,15 @@ public:
     }
 
     virtual ~OpenraveYarpControlboard() {
-    }
-
-    void Destroy() {
         for(int i=0;i<robotDevices.size();i++)
         {
             robotDevices[i]->close();
             delete robotDevices[i];
         }
+    }
+
+    virtual void Destroy() {
+
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
