@@ -10,12 +10,12 @@ try:
     env=Environment()
     env.SetViewer('qtcoin')
     env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml')
-    teo_robot = env.GetRobots()[0]
 
     OpenraveYarpControlboard = RaveCreateModule(env,'OpenraveYarpControlboard')
     print OpenraveYarpControlboard.SendCommand('open collision')
 	
     # Convex Decomposition padding
+    teo_robot = env.GetRobots()[0]
     cdmodel = databases.convexdecomposition.ConvexDecompositionModel(teo_robot)
     
     # Load the ConvexDecomposition model, if it does not exit in the database generate it.
