@@ -7,7 +7,7 @@
 bool teo::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config) {
 
     //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
-    penv = *((OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob()));
+    penv = *((OpenRAVE::EnvironmentBasePtr*)(config.find("penv").asBlob()));
 
     int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
     if( robotIndex < 0 )  // a.k.a. -1 one line above
