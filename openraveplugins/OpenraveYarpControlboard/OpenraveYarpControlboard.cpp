@@ -75,7 +75,6 @@ public:
             sinput >> funcionArg;
             funcionArgs.push_back(funcionArg);
         }
-        //RAVELOG_INFO("Open (%s)\n", funcionArg.c_str());
 
         if (funcionArgs.size() > 0)
         {
