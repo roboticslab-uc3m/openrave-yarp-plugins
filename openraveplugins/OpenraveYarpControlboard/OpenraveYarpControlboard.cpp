@@ -65,12 +65,37 @@ public:
 
     bool Open(ostream& sout, istream& sinput)
     {
-        string funcionArg;
-        sinput >> funcionArg;
-        RAVELOG_INFO("Open (%s)\n", funcionArg.c_str());
-        if (funcionArg == "collision")
+        bool collision = false;
+        bool alternativeRobotName = false;
+
+        vector<string> funcionArgs;
+        while(sinput)
         {
-            RAVELOG_INFO("Will open YarpOpenraveControlboardCollision");
+            string funcionArg;
+            sinput >> funcionArg;
+            funcionArgs.push_back(funcionArg);
+        }
+        //RAVELOG_INFO("Open (%s)\n", funcionArg.c_str());
+
+        if (funcionArgs.size() > 0)
+        {
+            if (funcionArgs[0] == "collision")
+            {
+                RAVELOG_INFO("Will open YarpOpenraveControlboardCollision");
+                collision = true;
+                if (funcionArgs.size() > 1)
+                {
+                    if( funcionArgs[1][0] == '/')
+                    {
+                        RAVELOG_INFO("Will use alternativeRobotName: %s",funcionArgs[1]);
+                        alternativeRobotName = true;
+                    }
+                    else
+                    {
+                        RAVELOG_INFO("Will not use alternativeRobotName that does not begin with '/': %s",funcionArgs[1]);
+                    }
+                }
+            }
         }
         else
         {
@@ -104,8 +129,16 @@ public:
                 RAVELOG_INFO( "* Manipulators[%zu]: %s\n",manipulatorPtrIdx,vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName().c_str() );
 
                 //-- Formulate the manipulator port name
-                std::string manipulatorPortName("/");
-                manipulatorPortName += vectorOfRobotPtr[robotPtrIdx]->GetName();
+                std::string manipulatorPortName;
+                if(alternativeRobotName)
+                {
+                    manipulatorPortName += funcionArgs[1];
+                }
+                else
+                {
+                    manipulatorPortName += "/";
+                    manipulatorPortName += vectorOfRobotPtr[robotPtrIdx]->GetName();
+                }
                 manipulatorPortName += "/";
                 manipulatorPortName += vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName();
                 RAVELOG_INFO( "* manipulatorPortName: %s\n",manipulatorPortName.c_str() );
@@ -115,7 +148,7 @@ public:
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
 
-                if (funcionArg == "collision")
+                if (collision)
                 {
                     options.put("subdevice","YarpOpenraveControlboardCollision");
                     std::string safe("/safe");
