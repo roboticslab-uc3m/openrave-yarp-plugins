@@ -144,7 +144,6 @@ public:
                 RAVELOG_INFO( "* manipulatorPortName: %s\n",manipulatorPortName.c_str() );
 
                 yarp::dev::PolyDriver* robotDevice = new yarp::dev::PolyDriver;
-                robotDevices.push_back( robotDevice );
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
 
