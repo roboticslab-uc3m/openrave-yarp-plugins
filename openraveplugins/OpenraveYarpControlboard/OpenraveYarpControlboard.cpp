@@ -47,14 +47,15 @@ public:
     }
 
     virtual ~OpenraveYarpControlboard() {
-    }
-
-    void Destroy() {
         for(int i=0;i<robotDevices.size();i++)
         {
             robotDevices[i]->close();
             delete robotDevices[i];
         }
+    }
+
+    virtual void Destroy() {
+
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
@@ -143,7 +144,6 @@ public:
                 RAVELOG_INFO( "* manipulatorPortName: %s\n",manipulatorPortName.c_str() );
 
                 yarp::dev::PolyDriver* robotDevice = new yarp::dev::PolyDriver;
-                robotDevices.push_back( robotDevice );
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
 
