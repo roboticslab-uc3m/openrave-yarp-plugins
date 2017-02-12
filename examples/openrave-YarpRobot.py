@@ -19,10 +19,6 @@ try:
     while 1:
 	pass
 
-except openrave_exception,e:
-    print e
-    RaveDestroy()
-
-except KeyboardInterrupt:
+finally:
     RaveDestroy()
 
