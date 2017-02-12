@@ -17,7 +17,7 @@ try:
     print OpenraveYarpControlboard.SendCommand('open')
 
     while 1:
-	pass
+        pass
 
 finally:
     RaveDestroy()

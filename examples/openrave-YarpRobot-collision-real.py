@@ -1,19 +1,21 @@
 #!/usr/bin/env python
+
 import openravepy
 from openravepy import *
-RaveInitialize()
 
-if not RaveLoadPlugin('./OpenraveYarpControlboard'):
-    raveLogError("Plugin not correctly loaded")
-   
 try:
+    RaveInitialize()
+
+    if not RaveLoadPlugin('OpenraveYarpControlboard'):
+        raveLogError("Plugin not correctly loaded")
+
     env=Environment()
     env.SetViewer('qtcoin')
     env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml')
 
     OpenraveYarpControlboard = RaveCreateModule(env,'OpenraveYarpControlboard')
     print OpenraveYarpControlboard.SendCommand('open collision /teo')
-	
+
     # Convex Decomposition padding
     teo_robot = env.GetRobots()[0]
     cdmodel = databases.convexdecomposition.ConvexDecompositionModel(teo_robot)
