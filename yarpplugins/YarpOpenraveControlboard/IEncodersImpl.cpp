@@ -41,7 +41,7 @@ bool teo::YarpOpenraveControlboard::setEncoders(const double *vals) {
 
 bool teo::YarpOpenraveControlboard::getEncoder(int j, double *v) {
     //CD_INFO("\n");  //-- Way too verbose
-    *v = 0;
+    *v = dEncRaw[ manipulatorIDs[j] ] * 180.0 / M_PI;
     return true;
 }
 
