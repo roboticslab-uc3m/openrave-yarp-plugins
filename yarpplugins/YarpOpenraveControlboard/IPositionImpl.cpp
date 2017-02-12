@@ -47,8 +47,11 @@ bool teo::YarpOpenraveControlboard::positionMove(int j, double ref) {  // encExp
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboard::positionMove(const double *refs) {  // encExposed = refs;
-    CD_INFO("Doing nothing.\n");
-    return true;
+    CD_INFO("\n");
+    bool ok = true;
+    for(unsigned int i=0;i<axes;i++)
+        ok &= positionMove(i,refs[i]);
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
