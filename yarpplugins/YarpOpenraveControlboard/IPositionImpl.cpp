@@ -22,8 +22,9 @@ bool teo::YarpOpenraveControlboard::setPositionMode() {
 
 bool teo::YarpOpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
     CD_INFO("\n");
-    if ((unsigned int)j>axes) {
-        fprintf(stderr,"[FakeControlboardOR] error: axis index more than axes.\n");
+    if ((unsigned int)j>axes)
+    {
+        CD_ERROR("axis index more than axes.\n");
         return false;
     }
 //    if(modePosVel!=0) {  // Check if we are in position mode.
