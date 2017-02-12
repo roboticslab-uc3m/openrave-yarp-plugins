@@ -108,7 +108,7 @@ public:
         }
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
-        OpenRAVE::EnvironmentBase* penv_raw = GetEnv().get();
+        OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
         //-- Get robots
         std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
@@ -160,7 +160,7 @@ public:
                     options.put("name", manipulatorPortName );
                 }
 
-                yarp::os::Value v(&penv_raw, sizeof(OpenRAVE::EnvironmentBase*));
+                yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
                 options.put("penv",v);
 
                 options.put("robotIndex",static_cast<int>(robotPtrIdx));

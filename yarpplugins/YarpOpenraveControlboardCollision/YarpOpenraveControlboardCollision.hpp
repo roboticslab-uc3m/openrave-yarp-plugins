@@ -796,7 +796,7 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
 
 
                 //OpenRAVE//
-                OpenRAVE::EnvironmentBase* penv;
+                OpenRAVE::EnvironmentBasePtr penv;
                 OpenRAVE::RobotBasePtr probot;
                 std::vector< int > manipulatorIDs;
                 std::vector<OpenRAVE::dReal> dEncRaw;
