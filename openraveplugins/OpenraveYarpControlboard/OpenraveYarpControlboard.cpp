@@ -87,12 +87,12 @@ public:
                 {
                     if( funcionArgs[1][0] == '/')
                     {
-                        RAVELOG_INFO("Will use alternativeRobotName: %s",funcionArgs[1]);
+                        RAVELOG_INFO("Will use alternativeRobotName: %s",funcionArgs[1].c_str());
                         alternativeRobotName = true;
                     }
                     else
                     {
-                        RAVELOG_INFO("Will not use alternativeRobotName that does not begin with '/': %s",funcionArgs[1]);
+                        RAVELOG_INFO("Will not use alternativeRobotName that does not begin with '/': %s",funcionArgs[1].c_str());
                     }
                 }
             }
