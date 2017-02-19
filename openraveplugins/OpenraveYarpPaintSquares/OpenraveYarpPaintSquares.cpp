@@ -171,7 +171,8 @@ public:
         double T_base_object_z = T_base_object.trans.z;
 
         //Update psqpainted to the new values
-        for(int i=0; i<(NSQUARES); i++){
+        for(int i=0; i<(NSQUARES); i++)
+        {
             stringstream ss;
             ss << "square" << i;
             Transform pos_square = _wall->GetLink(ss.str())->GetGeometry(0)->GetTransform();
@@ -183,24 +184,20 @@ public:
                                       + pow(T_base_object_y-pos_square_y,2)
                                       + pow(T_base_object_z-pos_square_z,2) );
 
-            if (dist < 0.13){
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
-
-                //for(int i=0;i<NSQUARES;i++){ //Ugly way of delimiting the size of sqpainted in the loop
-                //    std::cout<<psqPainted[i]<<" ";
-                //}
-             //   std::cout<<"<"<<std::endl;
+            if (dist < 0.13)
+            {
                 sqPainted[i]=1;
-    //            for(int i=0;i<NSQUARES;i++){ //Ugly way of delimiting the size of sqpainted in the loop
-    //                std::cout<<psqPainted->operator[](i)<<" ";
-    //            }
-    //            std::cout<<">"<<std::endl;
-               // std::cout<<"I have painted a happy little tree \n"<<std::endl;
             }
-            else{
-              //  std::cout<<"NO HAPPY TREE"<<std::endl;
+
+            if( sqPainted[i] == 1 )
+            {
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
             }
-            ss.str("");
+            else
+            {
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.5, 0.5, 0.5));
+            }
+
         }
 
     }
