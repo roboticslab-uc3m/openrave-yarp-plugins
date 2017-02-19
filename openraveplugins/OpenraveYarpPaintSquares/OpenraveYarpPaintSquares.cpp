@@ -39,6 +39,19 @@
 using namespace std;
 using namespace OpenRAVE;
 
+class DataProcessor : public yarp::os::PortReader {
+
+    virtual bool read(yarp::os::ConnectionReader& in) {
+        yarp::os::Bottle request, response;
+        if (!request.read(in)) return false;
+        printf("Request: %s\n", request.toString().c_str());
+        yarp::os::ConnectionWriter *out = in.getWriter();
+        if (out==NULL) return true;
+        response.addString("ok");
+        return response.write(*out);
+    }
+};
+
 class OpenraveYarpPaintSquares : public ModuleBase, public yarp::os::RateThread
 {
 public:
@@ -78,15 +91,13 @@ public:
             if( funcionArgs[0][0] == '/')
                 portName = funcionArgs[0];
         }
+        RAVELOG_INFO("portName: %s\n",portName.c_str());
 
         if ( !yarp.checkNetwork() )
         {
             RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
             return false;
         }
-
-        RAVELOG_INFO("portName: %s\n",portName.c_str());
-        rpcServer.open(portName);
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
@@ -109,6 +120,9 @@ public:
         probot->Grab(_objPtr);
 
         psqPainted.resize(NSQUARES);
+
+        rpcServer.setReader(processor);
+        rpcServer.open(portName);
 
         this->start();  // start yarp::os::RateThread (calls run periodically)
 
@@ -163,6 +177,7 @@ public:
 private:
     yarp::os::Network yarp;
     yarp::os::RpcServer rpcServer;
+    DataProcessor processor;
 
     vector<int> psqPainted;
     Transform T_base_object;
