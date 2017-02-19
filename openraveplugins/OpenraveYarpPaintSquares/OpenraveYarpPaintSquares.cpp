@@ -171,7 +171,7 @@ public:
         double T_base_object_z = T_base_object.trans.z;
 
         //Update psqpainted to the new values
-        for(int i=0; i<(NSQUARES); i++)
+        for(int i=0; i<(sqPainted.size()); i++)
         {
             stringstream ss;
             ss << "square" << i;
