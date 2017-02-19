@@ -47,6 +47,7 @@ public:
     }
 
     virtual ~OpenraveYarpPaintSquares() {
+        rpcServer.close();
     }
 
     virtual void Destroy() {
@@ -61,11 +62,28 @@ public:
 
     bool Open(ostream& sout, istream& sinput)
     {
+        vector<string> funcionArgs;
+        while(sinput)
+        {
+            string funcionArg;
+            sinput >> funcionArg;
+            funcionArgs.push_back(funcionArg);
+        }
+
+        string portName("/openraveYarpPaintSquares/rpc:s");
+
+        if (funcionArgs.size() > 0)
+        {
+            portName = funcionArgs[0];
+        }
+
         if ( !yarp.checkNetwork() )
         {
             RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
             return false;
         }
+
+        rpcServer.open(portName);
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
@@ -75,6 +93,7 @@ public:
 
 private:
     yarp::os::Network yarp;
+    yarp::os::RpcServer rpcServer;
 };
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
