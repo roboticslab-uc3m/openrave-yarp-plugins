@@ -41,15 +41,36 @@ using namespace OpenRAVE;
 
 class DataProcessor : public yarp::os::PortReader {
 
-    virtual bool read(yarp::os::ConnectionReader& in) {
+public:
+    void setPsqPainted(vector<int>* psqPainted) {
+        this->psqPainted = psqPainted;
+    }
+
+private:
+
+    vector<int>* psqPainted;
+
+    virtual bool read(yarp::os::ConnectionReader& in)
+    {
         yarp::os::Bottle request, response;
         if (!request.read(in)) return false;
         printf("Request: %s\n", request.toString().c_str());
         yarp::os::ConnectionWriter *out = in.getWriter();
         if (out==NULL) return true;
-        response.addString("ok");
+
+        //--
+        if( request.get(0).asString() == "get" )
+        {
+            for(int i=0; i<psqPainted->size();i++)
+                response.addInt(psqPainted->operator[](i));
+            return response.write(*out);
+        }
+
+        response.addString("unknown command");
         return response.write(*out);
     }
+
+
 };
 
 class OpenraveYarpPaintSquares : public ModuleBase, public yarp::os::RateThread
@@ -119,8 +140,9 @@ public:
         probot->SetActiveManipulator("rightArm");
         probot->Grab(_objPtr);
 
-        psqPainted.resize(NSQUARES);
+        sqPainted.resize(NSQUARES);
 
+        processor.setPsqPainted(&sqPainted);
         rpcServer.setReader(processor);
         rpcServer.open(portName);
 
@@ -159,7 +181,7 @@ public:
                 //    std::cout<<psqPainted[i]<<" ";
                 //}
              //   std::cout<<"<"<<std::endl;
-                psqPainted[i]=1;
+                sqPainted[i]=1;
     //            for(int i=0;i<NSQUARES;i++){ //Ugly way of delimiting the size of sqpainted in the loop
     //                std::cout<<psqPainted->operator[](i)<<" ";
     //            }
@@ -179,7 +201,7 @@ private:
     yarp::os::RpcServer rpcServer;
     DataProcessor processor;
 
-    vector<int> psqPainted;
+    vector<int> sqPainted;
     Transform T_base_object;
     KinBodyPtr _objPtr;
     KinBodyPtr _wall;
