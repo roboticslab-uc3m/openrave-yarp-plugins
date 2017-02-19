@@ -45,10 +45,14 @@ public:
     void setPsqPainted(vector<int>* psqPainted) {
         this->psqPainted = psqPainted;
     }
+    void setPsqPaintedSemaphore(yarp::os::Semaphore* psqPaintedSemaphore) {
+        this->psqPaintedSemaphore = psqPaintedSemaphore;
+    }
 
 private:
 
     vector<int>* psqPainted;
+    yarp::os::Semaphore* psqPaintedSemaphore;
 
     virtual bool read(yarp::os::ConnectionReader& in)
     {
@@ -61,16 +65,28 @@ private:
         //--
         if ( request.get(0).asString() == "get" )
         {
+            psqPaintedSemaphore->wait();
             for(int i=0; i<psqPainted->size();i++)
                 response.addInt(psqPainted->operator[](i));
+            psqPaintedSemaphore->post();
             return response.write(*out);
         }
-        else if ( request.get(0).asString() == "set" )
+        else if ( request.get(0).asString() == "paint" )
         {
+
+            psqPaintedSemaphore->wait();
             for(int i=0; i<psqPainted->size();i++)
-            {
-                psqPainted->operator[](i) = request.get(i+1).asInt();
-            }
+                psqPainted->operator[](i) |= request.get(i+1).asInt();  // logic OR
+            psqPaintedSemaphore->post();
+            response.addString("ok");
+            return response.write(*out);
+        }
+        else if ( request.get(0).asString() == "reset" )
+        {
+            psqPaintedSemaphore->wait();
+            for(int i=0; i<psqPainted->size();i++)
+                psqPainted->operator[](i) = 0;
+            psqPaintedSemaphore->post();
             response.addString("ok");
             return response.write(*out);
         }
@@ -152,6 +168,7 @@ public:
         sqPainted.resize(NSQUARES);
 
         processor.setPsqPainted(&sqPainted);
+        processor.setPsqPaintedSemaphore(&sqPaintedSemaphore);
         rpcServer.setReader(processor);
         rpcServer.open(portName);
 
@@ -186,10 +203,16 @@ public:
 
             if (dist < 0.13)
             {
+                sqPaintedSemaphore.wait();
                 sqPainted[i]=1;
+                sqPaintedSemaphore.post();
             }
 
-            if( sqPainted[i] == 1 )
+            sqPaintedSemaphore.wait();
+            int sqPaintedValue = sqPainted[i];
+            sqPaintedSemaphore.post();
+
+            if( sqPaintedValue == 1 )
             {
                 _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
             }
@@ -208,6 +231,8 @@ private:
     DataProcessor processor;
 
     vector<int> sqPainted;
+    yarp::os::Semaphore sqPaintedSemaphore;
+
     Transform T_base_object;
     KinBodyPtr _objPtr;
     KinBodyPtr _wall;
