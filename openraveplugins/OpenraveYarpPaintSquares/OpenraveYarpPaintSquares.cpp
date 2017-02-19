@@ -74,7 +74,8 @@ public:
 
         if (funcionArgs.size() > 0)
         {
-            portName = funcionArgs[0];
+            if( funcionArgs[0][0] == '/')
+                portName = funcionArgs[0];
         }
 
         if ( !yarp.checkNetwork() )
@@ -83,6 +84,7 @@ public:
             return false;
         }
 
+        RAVELOG_INFO("portName: %s\n",portName.c_str());
         rpcServer.open(portName);
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
@@ -97,7 +99,7 @@ private:
 };
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
-    if( type == PT_Module && interfacename == "openraveyarpcontrolboard" ) {
+    if( type == PT_Module && interfacename == "openraveyarppaintsquares" ) {
         return InterfaceBasePtr(new OpenraveYarpPaintSquares(penv));
     }
     return InterfaceBasePtr();
