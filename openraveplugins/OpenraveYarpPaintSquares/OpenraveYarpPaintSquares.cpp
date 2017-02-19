@@ -59,10 +59,19 @@ private:
         if (out==NULL) return true;
 
         //--
-        if( request.get(0).asString() == "get" )
+        if ( request.get(0).asString() == "get" )
         {
             for(int i=0; i<psqPainted->size();i++)
                 response.addInt(psqPainted->operator[](i));
+            return response.write(*out);
+        }
+        else if ( request.get(0).asString() == "set" )
+        {
+            for(int i=0; i<psqPainted->size();i++)
+            {
+                psqPainted->operator[](i) = request.get(i+1).asInt();
+            }
+            response.addString("ok");
             return response.write(*out);
         }
 
