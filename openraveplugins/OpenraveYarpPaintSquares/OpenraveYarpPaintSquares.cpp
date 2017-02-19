@@ -90,6 +90,16 @@ public:
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
+        std::vector<RobotBasePtr> robots;
+        penv->GetRobots(robots);
+        std::cout << "Robot 0: " << robots.at(0)->GetName() << std::endl;  // default: teo
+        RobotBasePtr probot = robots.at(0);
+        KinBodyPtr objPtr = penv->GetKinBody("object");
+        if(!objPtr) printf("fail grab\n");
+        else printf("good grab\n");
+        probot->SetActiveManipulator("rightArm");
+        probot->Grab(objPtr);
+
         return true;
     }
 
