@@ -21,7 +21,7 @@ bool teo::YarpOpenraveControlboard::setPositionMode() {
 // -----------------------------------------------------------------------------
 
 bool teo::YarpOpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
-    CD_INFO("\n");
+//    CD_INFO("\n");
     if ((unsigned int)j>axes)
     {
         CD_ERROR("axis index more than axes.\n");

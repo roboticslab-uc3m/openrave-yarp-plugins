@@ -32,7 +32,7 @@
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
 
-#define DEFAULT_RATE_MS 20.0
+#define DEFAULT_RATE_MS 10.0
 #define NSQUARES 16
 
 
