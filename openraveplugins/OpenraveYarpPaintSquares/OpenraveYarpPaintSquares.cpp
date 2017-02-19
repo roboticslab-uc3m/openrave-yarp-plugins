@@ -39,13 +39,10 @@
 using namespace std;
 using namespace OpenRAVE;
 
-YARP_DECLARE_PLUGINS(yarpplugins)
-
 class OpenraveYarpPaintSquares : public ModuleBase, public yarp::os::RateThread
 {
 public:
     OpenraveYarpPaintSquares(EnvironmentBasePtr penv) : ModuleBase(penv), RateThread(DEFAULT_RATE_MS) {
-        YARP_REGISTER_PLUGINS(yarpplugins);
         __description = "OpenraveYarpPaintSquares plugin.";
         RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens port");
     }
