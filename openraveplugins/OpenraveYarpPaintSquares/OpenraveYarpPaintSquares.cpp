@@ -32,15 +32,19 @@
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
 
+#define DEFAULT_RATE_MS 20.0
+#define NSQUARES 16
+
+
 using namespace std;
 using namespace OpenRAVE;
 
 YARP_DECLARE_PLUGINS(yarpplugins)
 
-class OpenraveYarpPaintSquares : public ModuleBase
+class OpenraveYarpPaintSquares : public ModuleBase, public yarp::os::RateThread
 {
 public:
-    OpenraveYarpPaintSquares(EnvironmentBasePtr penv) : ModuleBase(penv) {
+    OpenraveYarpPaintSquares(EnvironmentBasePtr penv) : ModuleBase(penv), RateThread(DEFAULT_RATE_MS) {
         YARP_REGISTER_PLUGINS(yarpplugins);
         __description = "OpenraveYarpPaintSquares plugin.";
         RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens port");
@@ -90,22 +94,83 @@ public:
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
+        _objPtr = penv->GetKinBody("object");
+        if(!_objPtr) {
+            fprintf(stderr,"error: object \"object\" does not exist.\n");
+        } else printf("sucess: object \"object\" exists.\n");
+
+        _wall = penv->GetKinBody("wall");
+        if(!_wall) {
+            fprintf(stderr,"error: object \"wall\" does not exist.\n");
+        } else printf("sucess: object \"wall\" exists.\n");
+
         std::vector<RobotBasePtr> robots;
         penv->GetRobots(robots);
         std::cout << "Robot 0: " << robots.at(0)->GetName() << std::endl;  // default: teo
         RobotBasePtr probot = robots.at(0);
-        KinBodyPtr objPtr = penv->GetKinBody("object");
-        if(!objPtr) printf("fail grab\n");
-        else printf("good grab\n");
         probot->SetActiveManipulator("rightArm");
-        probot->Grab(objPtr);
+        probot->Grab(_objPtr);
+
+        psqPainted.resize(NSQUARES);
+
+        this->start();  // start yarp::os::RateThread (calls run periodically)
 
         return true;
+    }
+
+    virtual void run()
+    {
+        //RAVELOG_INFO("thread\n");
+
+        //Get new object (pen) position
+        T_base_object = _objPtr->GetTransform();
+        double T_base_object_x = T_base_object.trans.x;
+        double T_base_object_y = T_base_object.trans.y;
+        double T_base_object_z = T_base_object.trans.z;
+
+        //Update psqpainted to the new values
+        for(int i=0; i<(NSQUARES); i++){
+            stringstream ss;
+            ss << "square" << i;
+            Transform pos_square = _wall->GetLink(ss.str())->GetGeometry(0)->GetTransform();
+
+            double pos_square_x = pos_square.trans.x;
+            double pos_square_y = pos_square.trans.y;
+            double pos_square_z = pos_square.trans.z;
+            double dist = sqrt(pow(T_base_object_x-pos_square_x,2)
+                                      + pow(T_base_object_y-pos_square_y,2)
+                                      + pow(T_base_object_z-pos_square_z,2) );
+
+            if (dist < 0.13){
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
+
+                //for(int i=0;i<NSQUARES;i++){ //Ugly way of delimiting the size of sqpainted in the loop
+                //    std::cout<<psqPainted[i]<<" ";
+                //}
+             //   std::cout<<"<"<<std::endl;
+                psqPainted[i]=1;
+    //            for(int i=0;i<NSQUARES;i++){ //Ugly way of delimiting the size of sqpainted in the loop
+    //                std::cout<<psqPainted->operator[](i)<<" ";
+    //            }
+    //            std::cout<<">"<<std::endl;
+               // std::cout<<"I have painted a happy little tree \n"<<std::endl;
+            }
+            else{
+              //  std::cout<<"NO HAPPY TREE"<<std::endl;
+            }
+            ss.str("");
+        }
+
     }
 
 private:
     yarp::os::Network yarp;
     yarp::os::RpcServer rpcServer;
+
+    vector<int> psqPainted;
+    Transform T_base_object;
+    KinBodyPtr _objPtr;
+    KinBodyPtr _wall;
 };
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
