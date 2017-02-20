@@ -14,7 +14,7 @@ try:
 
     env=Environment()
     env.SetViewer('qtcoin')
-    env.Load('/home/raul/repos/xgnitive/share/models/teo_cgda_iros.env.xml')  #ugly way of loading the environment
+    env.Load('/usr/local/share/xgnitive/contexts/models/teo_cgda_iros.env.xml')  # assumes XGNITIVE installed
 
     OpenraveYarpControlboard = RaveCreateModule(env,'OpenraveYarpControlboard')
     print OpenraveYarpControlboard.SendCommand('open')
