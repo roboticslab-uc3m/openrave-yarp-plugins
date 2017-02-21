@@ -27,7 +27,8 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 ```bash
 # new terminal to open the simulated robot
 python ~/repos/openrave-yarp-plugins/examples/openrave-YarpRobot.py
-# new terminal to open the collision avoidance simulator (expect LONG wait to load the padding model)
+# new terminal to open the collision avoidance simulator 
+# NOTE: Expect LONG wait to load the padding model
 python ~/repos/openrave-yarp-plugins/examples/openrave-YarpRobot-collision-sim.py
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teoSim/[kinematic chain name]/rpc:i
