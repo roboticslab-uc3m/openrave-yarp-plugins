@@ -3,7 +3,7 @@
 
 cmake_minimum_required (VERSION 2.6.0)
 
-set(KEYWORD "YarpRobot")
+set(KEYWORD "OpenraveYarpPaintSquares")
 
 project(${KEYWORD})
 
@@ -29,7 +29,11 @@ macro(build_openrave_plugin name)
   set_target_properties(${name} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}")
   set_target_properties(${name} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
   target_link_libraries(${name} ${YARP_LIBRARIES} ${OpenRAVE_LIBRARIES} yarpplugins )
-  install(TARGETS ${name} DESTINATION bin )
+  # install(TARGETS ${name} DESTINATION lib )
+  # install(TARGETS ${name} DESTINATION ${OpenRAVE_LIBRARY_DIRS}/${OpenRAVE_LIBRARIES}-plugins)
+  execute_process(COMMAND openrave-config --plugins-dir OUTPUT_VARIABLE OPENRAVE_PLUGINS_INSTALL_DIR)
+  string(REGEX REPLACE "\n$" "" OPENRAVE_PLUGINS_INSTALL_DIR "${OPENRAVE_PLUGINS_INSTALL_DIR}")
+  install(TARGETS ${name} DESTINATION ${OPENRAVE_PLUGINS_INSTALL_DIR} )
 endmacro(build_openrave_plugin)
 
 build_openrave_plugin(${KEYWORD})

@@ -1,14 +1,11 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __OPENRAVE_CONTROLBOARD_HPP__
-#define __OPENRAVE_CONTROLBOARD_HPP__
+#ifndef __YARP_OPENRAVE_CONTROLBOARD_COLLISION_HPP__
+#define __YARP_OPENRAVE_CONTROLBOARD_COLLISION_HPP__
 
 #include <yarp/os/all.h>
 #include <yarp/os/Semaphore.h>
-#include <yarp/dev/ControlBoardInterfaces.h>
-#include <yarp/dev/Drivers.h>
-#include <yarp/dev/PolyDriver.h>
-#include <yarp/sig/all.h>
+#include <yarp/dev/all.h>
 
 #include <openrave-core.h>
 
@@ -22,36 +19,38 @@
 #include "ColorDebug.hpp"
 
 #define DEFAULT_AXES 5
+#define DEFAULT_REMOTE "/teo/rightArm"
 
 namespace teo
 {
 
 /**
  * @ingroup TeoYarp
- * \defgroup OpenraveControlboard
+ * \defgroup YarpOpenraveControlboardCollision
  *
- * @brief Contains teo::OpenraveControlboard.
+ * @brief Contains teo::YarpOpenraveControlboardCollision.
  *
- * @section OpenraveControlboard_install Installation
+ * @section YarpOpenraveControlboardCollision_install Installation
  *
- * The plugin is compiled when ENABLE_TeoYarp_OpenraveControlboard is activated (not default). For further
+ * The plugin is compiled when ENABLE_TeoYarp_YarpOpenraveControlboardCollision is activated (not default). For further
  * installation steps refer to <a class="el" href="pages.html">your own system installation guidelines</a>.
  */
 
 /**
- * @ingroup OpenraveControlboard
+ * @ingroup YarpOpenraveControlboardCollision
  * @brief Implements the YARP_dev IPositionControl, IVelocityControl, IEncodersTimed, etc.
  * interface class member functions.
  */
 // Note: IEncodersTimed inherits from IEncoders
 // Note: IPositionControl2 inherits from IPositionControl
 // Note: IVelocityControl2 inherits from IVelocityControl
-class OpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
-        public yarp::dev::IControlLimits, public yarp::dev::IControlMode, public yarp::dev::ITorqueControl {
+// Note: IControlLimits2 inherits from IControlLimits
+class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
+        public yarp::dev::IControlLimits2, public yarp::dev::IControlMode, public yarp::dev::ITorqueControl {
     public:
 
         // Set the Thread Rate in the class constructor
-        OpenraveControlboard() {}
+        YarpOpenraveControlboardCollision() {}
 
         // ------- IPositionControl declarations. Implementation in IPositionImpl.cpp -------
 
@@ -472,6 +471,25 @@ class OpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::dev::I
                  */
                 virtual bool getLimits(int axis, double *min, double *max);
 
+                /**
+                 * Set the software speed limits for a particular axis, the behavior of the
+                 * control card when these limits are exceeded, depends on the implementation.
+                 * @param axis joint number
+                 * @param min the value of the lower limit
+                 * @param max the value of the upper limit
+                 * @return true or false on success or failure
+                 */
+                virtual bool setVelLimits(int axis, double min, double max);
+
+                /**
+                 * Get the software speed limits for a particular axis.
+                 * @param axis joint number
+                 * @param min pointer to store the value of the lower limit
+                 * @param max pointer to store the value of the upper limit
+                 * @return true if everything goes fine, false otherwise.
+                 */
+                virtual bool getVelLimits(int axis, double *min, double *max);
+
             //  --------- IControlMode Declarations. Implementation in IControlModeImpl.cpp ---------
 
                 /**
@@ -778,14 +796,20 @@ class OpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::dev::I
 
 
                 //OpenRAVE//
-                OpenRAVE::EnvironmentBase* penv;
+                OpenRAVE::EnvironmentBasePtr penv;
                 OpenRAVE::RobotBasePtr probot;
                 std::vector< int > manipulatorIDs;
                 std::vector<OpenRAVE::dReal> dEncRaw;
 
+                // remote robot
+                yarp::dev::PolyDriver remoteDevice;
+                yarp::dev::IEncoders *iEncoders;
+                yarp::dev::IPositionControl *iPositionControl;
+                yarp::dev::IControlLimits2 *iControlLimits2;
+                yarp::dev::IControlMode *iControlMode;
 
         };
 
         }  // namespace teo
 
-        #endif  // __OPENRAVE_CONTROLBOARD_HPP__
+        #endif  // __YARP_OPENRAVE_CONTROLBOARD_COLLISION_HPP__

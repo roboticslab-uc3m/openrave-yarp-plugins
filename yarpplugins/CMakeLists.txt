@@ -4,7 +4,7 @@
 
 IF (ENABLE_yarpplugins)
 
-  option(ENABLE_launchyarpplugins "Choose if you want to compile launchTeoYarp" TRUE)
+  option(ENABLE_launchyarpPlugins "Choose if you want to compile launchyarpPlugins" TRUE)
 
 if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
   add_definitions("-fno-strict-aliasing -Wall -fPIC")
@@ -17,17 +17,18 @@ endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
 
 
   yarp_begin_plugin_library(yarpplugins)
-    add_subdirectory(OpenraveControlboard)
+    add_subdirectory(YarpOpenraveControlboard)
+    add_subdirectory(YarpOpenraveControlboardCollision)
   yarp_end_plugin_library(yarpplugins)
   
-  IF (ENABLE_launchyarpplugins)
+  IF (ENABLE_launchyarpPlugins)
 
     link_directories(${TEO_LINK_DIRS})
     
-    yarp_add_plugin_yarpdev_executable(launchyarpplugins yarpplugins)
-    install(TARGETS launchyarpplugins DESTINATION bin)
+    yarp_add_plugin_yarpdev_executable(launchyarpPlugins yarpplugins)
+    install(TARGETS launchyarpPlugins DESTINATION bin)
 
-  ENDIF (ENABLE_launchyarpplugins)
+  ENDIF (ENABLE_launchyarpPlugins)
 
 ENDIF (ENABLE_yarpplugins)
 

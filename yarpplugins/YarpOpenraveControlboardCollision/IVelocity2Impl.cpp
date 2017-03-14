@@ -1,10 +1,10 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "OpenraveControlboard.hpp"
+#include "YarpOpenraveControlboardCollision.hpp"
 
 // ------------------ IVelocity2 Related ----------------------------------------
 
-bool teo::OpenraveControlboard::velocityMove(const int n_joint, const int *joints, const double *spds)
+bool teo::YarpOpenraveControlboardCollision::velocityMove(const int n_joint, const int *joints, const double *spds)
 {
     CD_DEBUG("\n");
     // must implement mask!
@@ -13,7 +13,7 @@ bool teo::OpenraveControlboard::velocityMove(const int n_joint, const int *joint
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getRefVelocity(const int joint, double *vel)
+bool teo::YarpOpenraveControlboardCollision::getRefVelocity(const int joint, double *vel)
 {
     CD_DEBUG("\n");
     return true;
@@ -21,7 +21,7 @@ bool teo::OpenraveControlboard::getRefVelocity(const int joint, double *vel)
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getRefVelocities(double *vels)
+bool teo::YarpOpenraveControlboardCollision::getRefVelocities(double *vels)
 {
     CD_DEBUG("\n");
     return true;
@@ -29,7 +29,7 @@ bool teo::OpenraveControlboard::getRefVelocities(double *vels)
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getRefVelocities(const int n_joint, const int *joints, double *vels)
+bool teo::YarpOpenraveControlboardCollision::getRefVelocities(const int n_joint, const int *joints, double *vels)
 {
     CD_DEBUG("\n");
     return true;
@@ -37,7 +37,7 @@ bool teo::OpenraveControlboard::getRefVelocities(const int n_joint, const int *j
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setVelPid(int j, const yarp::dev::Pid &pid)
+bool teo::YarpOpenraveControlboardCollision::setVelPid(int j, const yarp::dev::Pid &pid)
 {
     CD_DEBUG("\n");
     return true;
@@ -45,7 +45,7 @@ bool teo::OpenraveControlboard::setVelPid(int j, const yarp::dev::Pid &pid)
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setVelPids(const yarp::dev::Pid *pids)
+bool teo::YarpOpenraveControlboardCollision::setVelPids(const yarp::dev::Pid *pids)
 {
     CD_DEBUG("\n");
     return true;
@@ -53,7 +53,7 @@ bool teo::OpenraveControlboard::setVelPids(const yarp::dev::Pid *pids)
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getVelPid(int j, yarp::dev::Pid *pid)
+bool teo::YarpOpenraveControlboardCollision::getVelPid(int j, yarp::dev::Pid *pid)
 {
     CD_DEBUG("\n");
     return true;
@@ -61,7 +61,7 @@ bool teo::OpenraveControlboard::getVelPid(int j, yarp::dev::Pid *pid)
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getVelPids(yarp::dev::Pid *pids)
+bool teo::YarpOpenraveControlboardCollision::getVelPids(yarp::dev::Pid *pids)
 {
     CD_DEBUG("\n");
     return true;

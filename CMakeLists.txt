@@ -22,7 +22,10 @@ option(ENABLE_openraveplugins "Enable/disable option openraveplugins" TRUE)
 option(ENABLE_yarpplugins "Enable/disable option yarpplugins" TRUE)
 
 ### options: force default
-option(ENABLE_yarpplugins_OpenraveControlboard "Enable/disable option yarpplugins_OpenraveControlboard" TRUE)
+option(ENABLE_yarpplugins_YarpOpenraveControlboard "Enable/disable option yarpplugins_YarpOpenraveControlboard" TRUE)
+option(ENABLE_yarpplugins_YarpOpenravePaintSquares "Enable/disable option yarpplugins_YarpOpenravePaintSquares" TRUE)
+option(ENABLE_yarpplugins_YarpOpenraveControlboardCollision "Enable/disable option yarpplugins_YarpOpenraveControlboardCollision" TRUE)
+
 
 if(MSVC)
   MESSAGE(STATUS "Running on windows")    
@@ -59,6 +62,14 @@ mark_as_advanced(CMAKE_BACKWARDS_COMPATIBILITY)
 set(OPENRAVE-YARP-PLUGINS_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 # let cmake use them
 list(APPEND CMAKE_MODULE_PATH ${OPENRAVE-YARP-PLUGINS_MODULE_PATH})
+
+# Bootstrap YCM
+include(YCMBootstrap)
+
+# Superbuild phase
+include(FindOrBuildPackage)
+
+find_or_build_package(COLOR_DEBUG)
 
 set(OPENRAVE-YARP-PLUGINS_INCLUDE_DIRS CACHE INTERNAL "appended header dirs" FORCE)
 set(OPENRAVE-YARP-PLUGINS_LINK_DIRS CACHE INTERNAL "appended link dirs" FORCE)

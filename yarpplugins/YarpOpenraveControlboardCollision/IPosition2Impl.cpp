@@ -1,10 +1,10 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "OpenraveControlboard.hpp"
+#include "YarpOpenraveControlboardCollision.hpp"
 
 // ------------------- IPositionControl2 Related --------------------------------
 
-bool teo::OpenraveControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
+bool teo::YarpOpenraveControlboardCollision::positionMove(const int n_joint, const int *joints, const double *refs)
 {
     CD_DEBUG("\n");
     // must implement mask!
@@ -13,7 +13,7 @@ bool teo::OpenraveControlboard::positionMove(const int n_joint, const int *joint
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
+bool teo::YarpOpenraveControlboardCollision::relativeMove(const int n_joint, const int *joints, const double *deltas)
 {
     CD_DEBUG("\n");
     return true;
@@ -21,7 +21,7 @@ bool teo::OpenraveControlboard::relativeMove(const int n_joint, const int *joint
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flags)
+bool teo::YarpOpenraveControlboardCollision::checkMotionDone(const int n_joint, const int *joints, bool *flags)
 {
     CD_DEBUG("\n");
     return true;
@@ -29,7 +29,7 @@ bool teo::OpenraveControlboard::checkMotionDone(const int n_joint, const int *jo
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
+bool teo::YarpOpenraveControlboardCollision::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
 {
     CD_DEBUG("\n");
     return true;
@@ -37,7 +37,7 @@ bool teo::OpenraveControlboard::setRefSpeeds(const int n_joint, const int *joint
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
+bool teo::YarpOpenraveControlboardCollision::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
 {
     CD_DEBUG("\n");
     return true;
@@ -45,7 +45,7 @@ bool teo::OpenraveControlboard::setRefAccelerations(const int n_joint, const int
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
+bool teo::YarpOpenraveControlboardCollision::getRefSpeeds(const int n_joint, const int *joints, double *spds)
 {
     CD_DEBUG("\n");
     return true;
@@ -53,7 +53,7 @@ bool teo::OpenraveControlboard::getRefSpeeds(const int n_joint, const int *joint
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
+bool teo::YarpOpenraveControlboardCollision::getRefAccelerations(const int n_joint, const int *joints, double *accs)
 {
     CD_DEBUG("\n");
     return true;
@@ -61,7 +61,7 @@ bool teo::OpenraveControlboard::getRefAccelerations(const int n_joint, const int
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::stop(const int n_joint, const int *joints)
+bool teo::YarpOpenraveControlboardCollision::stop(const int n_joint, const int *joints)
 {
     CD_DEBUG("\n");
     return true;
@@ -69,7 +69,7 @@ bool teo::OpenraveControlboard::stop(const int n_joint, const int *joints)
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTargetPosition(const int joint, double *ref)
+bool teo::YarpOpenraveControlboardCollision::getTargetPosition(const int joint, double *ref)
 {
     CD_INFO("\n");
     return true;
@@ -77,7 +77,7 @@ bool teo::OpenraveControlboard::getTargetPosition(const int joint, double *ref)
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTargetPositions(double *refs)
+bool teo::YarpOpenraveControlboardCollision::getTargetPositions(double *refs)
 {
     CD_DEBUG("\n");
     return true;
@@ -85,7 +85,7 @@ bool teo::OpenraveControlboard::getTargetPositions(double *refs)
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
+bool teo::YarpOpenraveControlboardCollision::getTargetPositions(const int n_joint, const int *joints, double *refs)
 {
     CD_DEBUG("\n");
     return true;

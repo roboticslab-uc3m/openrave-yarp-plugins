@@ -4,7 +4,8 @@
 
 IF (ENABLE_openraveplugins)
 
-add_subdirectory(Controlboard)
+add_subdirectory(OpenraveYarpControlboard)
+add_subdirectory(OpenraveYarpPaintSquares)
 
 ENDIF (ENABLE_openraveplugins)
 

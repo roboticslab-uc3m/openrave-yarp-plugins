@@ -1,32 +1,32 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "OpenraveControlboard.hpp"
+#include "YarpOpenraveControlboard.hpp"
 
 // ------------------- IForceControl Related ------------------------------------
 
 
-bool teo::OpenraveControlboard::setTorqueMode() {
+bool teo::YarpOpenraveControlboard::setTorqueMode() {
     CD_INFO("setTorqueMode()\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getRefTorques(double *t){
+bool teo::YarpOpenraveControlboard::getRefTorques(double *t){
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getRefTorque(int j, double *t) {
+bool teo::YarpOpenraveControlboard::getRefTorque(int j, double *t) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setRefTorques(const double *t) {
+bool teo::YarpOpenraveControlboard::setRefTorques(const double *t) {
     CD_INFO("\n");
     return true;
 }
@@ -34,35 +34,35 @@ bool teo::OpenraveControlboard::setRefTorques(const double *t) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setRefTorque(int j, double t) {
+bool teo::YarpOpenraveControlboard::setRefTorque(int j, double t) {
     CD_INFO("joint: %d, refTorque: %f.\n",j,t);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getBemfParam(int j, double *bemf) {
+bool teo::YarpOpenraveControlboard::getBemfParam(int j, double *bemf) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setBemfParam(int j, double bemf) {
+bool teo::YarpOpenraveControlboard::setBemfParam(int j, double bemf) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setTorquePid(int j, const yarp::dev::Pid &pid) {
+bool teo::YarpOpenraveControlboard::setTorquePid(int j, const yarp::dev::Pid &pid) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorque(int j, double *t) {
+bool teo::YarpOpenraveControlboard::getTorque(int j, double *t) {
     //CD_INFO("joint: %d.\n",j);  //-- Way too verbose
     *t = 0;
     return true;
@@ -70,126 +70,126 @@ bool teo::OpenraveControlboard::getTorque(int j, double *t) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorques(double *t) {
+bool teo::YarpOpenraveControlboard::getTorques(double *t) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorqueRange(int j, double *min, double *max) {
+bool teo::YarpOpenraveControlboard::getTorqueRange(int j, double *min, double *max) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorqueRanges(double *min, double *max) {
+bool teo::YarpOpenraveControlboard::getTorqueRanges(double *min, double *max) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setTorquePids(const yarp::dev::Pid *pids) {
+bool teo::YarpOpenraveControlboard::setTorquePids(const yarp::dev::Pid *pids) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setTorqueErrorLimit(int j, double limit) {
+bool teo::YarpOpenraveControlboard::setTorqueErrorLimit(int j, double limit) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setTorqueErrorLimits(const double *limits) {
+bool teo::YarpOpenraveControlboard::setTorqueErrorLimits(const double *limits) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorqueError(int j, double *err) {
+bool teo::YarpOpenraveControlboard::getTorqueError(int j, double *err) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorqueErrors(double *errs) {
+bool teo::YarpOpenraveControlboard::getTorqueErrors(double *errs) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorquePidOutput(int j, double *out) {
+bool teo::YarpOpenraveControlboard::getTorquePidOutput(int j, double *out) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorquePidOutputs(double *outs) {
+bool teo::YarpOpenraveControlboard::getTorquePidOutputs(double *outs) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorquePid(int j, yarp::dev::Pid *pid) {
+bool teo::YarpOpenraveControlboard::getTorquePid(int j, yarp::dev::Pid *pid) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorquePids(yarp::dev::Pid *pids){
+bool teo::YarpOpenraveControlboard::getTorquePids(yarp::dev::Pid *pids){
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorqueErrorLimit(int j, double *limit) {
+bool teo::YarpOpenraveControlboard::getTorqueErrorLimit(int j, double *limit) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getTorqueErrorLimits(double *limits) {
+bool teo::YarpOpenraveControlboard::getTorqueErrorLimits(double *limits) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::resetTorquePid(int j) {
+bool teo::YarpOpenraveControlboard::resetTorquePid(int j) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::disableTorquePid(int j) {
+bool teo::YarpOpenraveControlboard::disableTorquePid(int j) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::enableTorquePid(int j) {
+bool teo::YarpOpenraveControlboard::enableTorquePid(int j) {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setTorqueOffset(int j, double v) {
+bool teo::YarpOpenraveControlboard::setTorqueOffset(int j, double v) {
     CD_INFO("\n");
     return true;
 }

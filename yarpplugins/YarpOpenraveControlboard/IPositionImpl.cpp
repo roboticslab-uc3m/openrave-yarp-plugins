@@ -1,10 +1,10 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "OpenraveControlboard.hpp"
+#include "YarpOpenraveControlboard.hpp"
 
 // ------------------- IPositionControl Related --------------------------------
 
-bool teo::OpenraveControlboard::getAxes(int *ax) {
+bool teo::YarpOpenraveControlboard::getAxes(int *ax) {
     CD_INFO("\n");
     *ax = axes;
     CD_INFO("Reporting %d axes are present\n", *ax);
@@ -13,17 +13,18 @@ bool teo::OpenraveControlboard::getAxes(int *ax) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setPositionMode() {
-    CD_INFO("NOTHING TO DO\n");
+bool teo::YarpOpenraveControlboard::setPositionMode() {
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
-    CD_INFO("\n");
-    if ((unsigned int)j>axes) {
-        fprintf(stderr,"[FakeControlboardOR] error: axis index more than axes.\n");
+bool teo::YarpOpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
+//    CD_INFO("\n");
+    if ((unsigned int)j>axes)
+    {
+        CD_ERROR("axis index more than axes.\n");
         return false;
     }
 //    if(modePosVel!=0) {  // Check if we are in position mode.
@@ -34,68 +35,63 @@ bool teo::OpenraveControlboard::positionMove(int j, double ref) {  // encExposed
     //OpenRAVE::RobotBasePtr probot;
     //std::vector< int > manipulatorIDs;
 
-    dEncRaw[ manipulatorIDs[j] ] = ref;
+    dEncRaw[ manipulatorIDs[j] ] = ref * M_PI / 180.0;
 
     probot->SetJointValues(dEncRaw);  // More compatible with physics??
 
     penv->StepSimulation(0.1);  // StepSimulation must be given in seconds
 
-    {
-        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
-        if(penv->CheckSelfCollision(probot)) {  // Check if we collide.
-            CD_WARNING("Collision!!!\n");
-            //return false;  // Bad strategy: we get trapped when we are already in collision!!
-        }
-    }
-
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::positionMove(const double *refs) {  // encExposed = refs;
-    CD_INFO("NOTHING TO DO\n");
+bool teo::YarpOpenraveControlboard::positionMove(const double *refs) {  // encExposed = refs;
+    CD_INFO("\n");
+    bool ok = true;
+    for(unsigned int i=0;i<axes;i++)
+        ok &= positionMove(i,refs[i]);
+    return ok;
+}
+
+// -----------------------------------------------------------------------------
+
+bool teo::YarpOpenraveControlboard::relativeMove(int j, double delta) {
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::relativeMove(int j, double delta) {
-    CD_INFO("NOTHING TO DO\n");
+bool teo::YarpOpenraveControlboard::relativeMove(const double *deltas) {  // encExposed = deltas + encExposed
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::relativeMove(const double *deltas) {  // encExposed = deltas + encExposed
-    CD_INFO("NOTHING TO DO\n");
+bool teo::YarpOpenraveControlboard::checkMotionDone(int j, bool *flag) {
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::checkMotionDone(int j, bool *flag) {
-    CD_INFO("NOTHING TO DO\n");
+bool teo::YarpOpenraveControlboard::checkMotionDone(bool *flag) {
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::checkMotionDone(bool *flag) {
-    CD_INFO("NOTHING TO DO\n");
+bool teo::YarpOpenraveControlboard::setRefSpeed(int j, double sp) {
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setRefSpeed(int j, double sp) {
-    CD_INFO("NOTHING TO DO\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool teo::OpenraveControlboard::setRefSpeeds(const double *spds) {
+bool teo::YarpOpenraveControlboard::setRefSpeeds(const double *spds) {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
@@ -105,14 +101,14 @@ bool teo::OpenraveControlboard::setRefSpeeds(const double *spds) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setRefAcceleration(int j, double acc) {
-    CD_INFO("NOTHING TO DO\n");
+bool teo::YarpOpenraveControlboard::setRefAcceleration(int j, double acc) {
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::setRefAccelerations(const double *accs) {
+bool teo::YarpOpenraveControlboard::setRefAccelerations(const double *accs) {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
@@ -122,14 +118,14 @@ bool teo::OpenraveControlboard::setRefAccelerations(const double *accs) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getRefSpeed(int j, double *ref) {
-    CD_INFO("NOTHING TO DO\n");
+bool teo::YarpOpenraveControlboard::getRefSpeed(int j, double *ref) {
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getRefSpeeds(double *spds) {
+bool teo::YarpOpenraveControlboard::getRefSpeeds(double *spds) {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
@@ -139,14 +135,14 @@ bool teo::OpenraveControlboard::getRefSpeeds(double *spds) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getRefAcceleration(int j, double *acc) {
-    CD_INFO("NOTHING TO DO\n");
+bool teo::YarpOpenraveControlboard::getRefAcceleration(int j, double *acc) {
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::getRefAccelerations(double *accs) {
+bool teo::YarpOpenraveControlboard::getRefAccelerations(double *accs) {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
@@ -156,14 +152,14 @@ bool teo::OpenraveControlboard::getRefAccelerations(double *accs) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::stop(int j) {
-    CD_INFO("NOTHING TO DO\n");
+bool teo::YarpOpenraveControlboard::stop(int j) {
+    CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::stop() {
+bool teo::YarpOpenraveControlboard::stop() {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)

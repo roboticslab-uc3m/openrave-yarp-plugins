@@ -1,13 +1,13 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "OpenraveControlboard.hpp"
+#include "YarpOpenraveControlboard.hpp"
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool teo::OpenraveControlboard::open(yarp::os::Searchable& config) {
+bool teo::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
     //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
-    penv = *((OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob()));
+    penv = *((OpenRAVE::EnvironmentBasePtr*)(config.find("penv").asBlob()));
 
     int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
     if( robotIndex < 0 )  // a.k.a. -1 one line above
@@ -39,8 +39,8 @@ bool teo::OpenraveControlboard::open(yarp::os::Searchable& config) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::OpenraveControlboard::close() {
-    printf("[OpenraveControlboard] close()\n");
+bool teo::YarpOpenraveControlboard::close() {
+    printf("[YarpOpenraveControlboard] close()\n");
     return true;
 }
 
