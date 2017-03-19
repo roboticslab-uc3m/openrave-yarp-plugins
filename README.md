@@ -1,5 +1,8 @@
 # openrave-yarp-plugins
+
 OpenRAVE plugins to interface OpenRAVE with YARP.
+
+Link to Doxygen generated documentation: http://robots.uc3m.es/dox-openrave-yarp-plugins
 
 The main approach is to develop OpenRAVE plugins (contained in the [openraveplugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/openraveplugins) folder), which internally load YARP plugins (contained in the [yarpplugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/yarpplugins) folder) that open ports thanks to their network wrappers. This can be seen in the following figure.
 
