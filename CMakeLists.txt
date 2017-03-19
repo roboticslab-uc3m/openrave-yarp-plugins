@@ -14,8 +14,10 @@ endif(COMMAND cmake_policy)
 project(OPENRAVE-YARP-PLUGINS)
 
 ### options: cpp libraries
+option(ENABLE_FakeControlboard "Enable/disable compilation of FakeControlboard" TRUE)
 
 ### options: cpp programs
+option(ENABLE_teoSim "Choose if you want to compile (deprecated) teoSim" TRUE)
 
 ### options: cpp plugins
 option(ENABLE_openraveplugins "Enable/disable option openraveplugins" TRUE)
@@ -77,7 +79,7 @@ set(OPENRAVE-YARP-PLUGINS_LIBRARIES CACHE INTERNAL "appended libraries" FORCE)
 
 # add main contents
 #add_subdirectory(libraries)
-#add_subdirectory(programs)
+add_subdirectory(programs)
 add_subdirectory(yarpplugins)
 add_subdirectory(openraveplugins)
 
