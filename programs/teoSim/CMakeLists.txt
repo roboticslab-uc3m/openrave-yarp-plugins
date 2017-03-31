@@ -12,7 +12,7 @@ project(${KEYWORD})
 #set(CMAKE_BUILD_TYPE Debug)#RelWithDebInfo)
 FIND_PACKAGE(OpenRAVE REQUIRED)
 FIND_PACKAGE(YARP REQUIRED)
-FIND_PACKAGE(COLOR_DEBUG REQUIRED)
+FIND_PACKAGE(COLOR_DEBUG)
 
 # Search for source code.
 file(GLOB folder_source *.cpp *.cc *.c)
