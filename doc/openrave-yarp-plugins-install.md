@@ -7,7 +7,7 @@ First install the dependencies:
 
 ### Install openrave-yarp-plugins on Ubuntu (working on all tested versions)
 
-Our software integrates the previous dependencies. Note that you will be prompted for your password upon using '''sudo''' a couple of times:
+Our software integrates the previous dependencies. Note that you will be prompted for your password upon using `sudo` a couple of times:
 
 ```bash
 cd  # go home
