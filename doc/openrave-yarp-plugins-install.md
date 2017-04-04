@@ -14,7 +14,7 @@ cd  # go home
 mkdir -p repos; cd repos  # create $HOME/repos if it does not exist; then, enter it
 git clone https://github.com/roboticslab-uc3m/openrave-yarp-plugins.git  # Download openrave-yarp-plugins software from the repository
 cd openrave-yarp-plugins; mkdir build; cd build; cmake ..  # Configure the openrave-yarp-plugins software
-make  # Compile
+make -j$(nproc)  # Compile
 sudo make install  # Install :-)
 cp ../scripts/gnome/openrave-yarp-plugins.desktop $HOME/Desktop
 ```
