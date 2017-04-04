@@ -16,7 +16,7 @@ git clone https://github.com/roboticslab-uc3m/openrave-yarp-plugins.git  # Downl
 cd openrave-yarp-plugins; mkdir build; cd build; cmake ..  # Configure the openrave-yarp-plugins software
 make -j$(nproc)  # Compile
 sudo make install  # Install :-)
-cp ../scripts/gnome/openrave-yarp-plugins.desktop $HOME/Desktop
+cd  # go home
 ```
 
 For CMake `find_package(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS REQUIRED)`, you may also be interested in adding the following to your `~/.bashrc` or `~/.profile`:
