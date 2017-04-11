@@ -1,7 +1,11 @@
 # Copyright: (C) 2017 Universidad Carlos III de Madrid
 # Author: Juan G. Victores & Raul de Santos Rico
 
-YARP_PREPARE_PLUGIN(FakeControlboard CATEGORY device TYPE teo::FakeControlboard INCLUDE FakeControlboard.hpp WRAPPER controlboardwrapper2)
+YARP_PREPARE_PLUGIN(FakeControlboard
+                    CATEGORY device
+                    TYPE teo::FakeControlboard
+                    INCLUDE FakeControlboard.hpp
+                    WRAPPER controlboardwrapper2)
 
 IF (NOT SKIP_FakeControlboard)
 
@@ -29,7 +33,7 @@ set(OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS ${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS} ${C
 
   yarp_install(FILES FakeControlboard.ini
               COMPONENT runtime
-DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
+              DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
 
 ENDIF (NOT SKIP_FakeControlboard)
 
