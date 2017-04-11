@@ -18,11 +18,11 @@ set(BUILD_SHARED_LIBS TRUE CACHE INTERNAL "hide this!")
 ### options: cpp libraries (yarp plugins)
 option(ENABLE_FakeControlboard "Enable/disable compilation of FakeControlboard" TRUE)
 option(ENABLE_YarpOpenraveControlboard "Enable/disable option YarpOpenraveControlboard" TRUE)
-option(ENABLE_YarpOpenravePaintSquares "Enable/disable option YarpOpenravePaintSquares" TRUE)
 option(ENABLE_YarpOpenraveControlboardCollision "Enable/disable option YarpOpenraveControlboardCollision" TRUE)
 
 ### options: cpp libraries (openrave plugins)
-option(ENABLE_openraveplugins "Enable/disable option openraveplugins" TRUE)
+option(ENABLE_OpenraveYarpControlboard "Enable/disable option OpenraveYarpControlboard" TRUE)
+option(ENABLE_OpenraveYarpPaintSquares "Enable/disable option OpenraveYarpPaintSquares" TRUE)
 
 ### options: cpp programs
 option(ENABLE_teoSim "Choose if you want to compile (deprecated) teoSim" TRUE)
