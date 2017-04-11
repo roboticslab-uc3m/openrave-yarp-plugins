@@ -16,8 +16,6 @@ LINK_DIRECTORIES(${ROBOTICSLAB_KINEMATICS_DYNAMICS_LINK_DIRS})
 YARP_ADD_PLUGIN(FakeControlboard FakeControlboard.hpp DeviceDriverImpl.cpp IControlLimitsImpl.cpp IControlModeImpl.cpp IEncodersImpl.cpp IEncodersTimedImpl.cpp IPositionImpl.cpp IPosition2Impl.cpp IVelocityImpl.cpp IVelocity2Impl.cpp ITorqueImpl.cpp SharedArea.cpp RateThreadImpl.cpp)
 TARGET_LINK_LIBRARIES(FakeControlboard ${YARP_LIBRARIES})
 
-install(TARGETS FakeControlboard DESTINATION lib)
-
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
 set(ROBOTICSLAB_KINEMATICS_DYNAMICS_INCLUDE_DIRS ${ROBOTICSLAB_KINEMATICS_DYNAMICS_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")
 # set(ROBOTICSLAB_KINEMATICS_DYNAMICS_LIBRARIES ${ROBOTICSLAB_KINEMATICS_DYNAMICS_LIBRARIES} TeoYarp FakeControlboard CACHE INTERNAL "appended libraries") 
