@@ -6,9 +6,9 @@
 find_package(YARP REQUIRED)
 list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
 include(YarpInstallationHelpers)
-yarp_configure_external_installation(openrave-yarp-plugins)
+yarp_configure_external_installation(roboticslab-openrave-yarp-plugins)
 
 ### Go through single applications
 
-#add_subdirectory(openrave)
+add_subdirectory(teoSim)
 

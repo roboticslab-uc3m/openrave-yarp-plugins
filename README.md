@@ -1,5 +1,37 @@
 # openrave-yarp-plugins
+
 OpenRAVE plugins to interface OpenRAVE with YARP.
+
+Link to Doxygen generated documentation: http://robots.uc3m.es/dox-openrave-yarp-plugins
+
+## Installation
+
+Installation instructions for installing from source can be found [here](doc/openrave-yarp-plugins-install.md).
+
+## Contributing
+
+#### Posting Issues
+
+1. Read [CONTRIBUTING.md](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/master/CONTRIBUTING.md)
+2. [Post an issue / Feature request / Specific documentation request](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues)
+
+#### Fork & Pull Request
+
+1. [Fork the repository](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/fork)
+2. Create your feature branch (`git checkout -b my-new-feature`) off the `develop` branch, following the [GitFlow git workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+3. Commit your changes
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
+
+## Status
+
+[![Build Status (Linux/OSX)](https://img.shields.io/travis/roboticslab-uc3m/openrave-yarp-plugins/master.svg?label=Build Status (Linux/OSX))](https://travis-ci.org/roboticslab-uc3m/openrave-yarp-plugins)
+
+[![Coverage Status](https://coveralls.io/repos/roboticslab-uc3m/openrave-yarp-plugins/badge.svg)](https://coveralls.io/r/roboticslab-uc3m/openrave-yarp-plugins)
+
+[![Issues](https://img.shields.io/github/issues/roboticslab-uc3m/openrave-yarp-plugins.svg?label=Issues)](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues)
+
+## Description
 
 The main approach is to develop OpenRAVE plugins (contained in the [openraveplugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/openraveplugins) folder), which internally load YARP plugins (contained in the [yarpplugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/yarpplugins) folder) that open ports thanks to their network wrappers. This can be seen in the following figure.
 
