@@ -1,22 +1,28 @@
+language: cpp
+dist: trusty
+sudo: required
+
 os:
   - linux
-
-language:
-  - cpp
 
 compiler:
   - gcc
   - clang
 
 before_install:
-  - sudo add-apt-repository --yes ppa:kalakris/cmake
-  - sudo apt-get update -qq  # -qq No output except for errors
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update; fi
   - if [ ! `git config --get user.email` ]; then `git config --global user.email 'user@example.com'`; fi
   - if [ ! `git config --get user.name` ]; then `git config --global user.name 'Travis CI'`; fi
+  #-- Install cmake
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install cmake; fi
+  #-- Install YARP and KDL deps
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install libeigen3-dev; fi  # Needed for creating YARP lib_math
+  #-- Install OpenRAVE deps
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; sudo apt-get install libboost-all-dev; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; sudo apt-get install libqt4-dev qt4-dev-tools libxml2-dev libode-dev; fi # libfcl-dev not on Trusty used in this travis
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; sudo apt-get install libsoqt4-dev libcoin80-dev; fi
 
 install:
-  #-- Install cmake
-  - sudo apt-get install cmake
   #-- Install yarp
   - git clone https://github.com/robotology/yarp
   - cd yarp && mkdir build && cd build
@@ -33,9 +39,6 @@ install:
   - sudo make install
   - cd ../../..
   #-- Install OpenRAVE
-  - sudo apt-get install libboost-dev libboost-date-time-dev libboost-thread-dev
-  - sudo apt-get install libqt4-dev qt4-dev-tools libxml2-dev libode-dev # libfcl-dev not on travis as of Oct 2016
-  - sudo apt-get install libsoqt4-dev libcoin60-dev  # libcoin80-dev is not supported by current default travis
   - git clone --branch latest_stable https://github.com/rdiankov/openrave.git
   - cd openrave && mkdir build && cd build
   - cmake .. -DOPENRAVE_PLUGIN_FCLRAVE=OFF
@@ -56,9 +59,7 @@ script:
   - make
   - sudo make install
   - sudo ldconfig
-  - bin/testKdlSolver
-  - bin/testKdlSolverFromFile
-  - bin/testBasicCartesianControl
+  #- bin/test
 
 after_success:
   #  - cd ${TRAVIS_BUILD_DIR}
