@@ -32,12 +32,12 @@ endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
 
 find_package(Boost COMPONENTS iostreams python thread system)
 
-include_directories(${ROBOTICSLAB_KINEMATICS_DYNAMICS_INCLUDE_DIRS} ${OpenRAVE_INCLUDE_DIRS} ${YARP_INCLUDE_DIRS} ${COLOR_DEBUG_INCLUDE_DIRS})
+include_directories(${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS} ${OpenRAVE_INCLUDE_DIRS} ${YARP_INCLUDE_DIRS} ${COLOR_DEBUG_INCLUDE_DIRS})
 if( Boost_INCLUDE_DIRS )
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
-link_directories(${ROBOTICSLAB_KINEMATICS_DYNAMICS_LINK_DIRS})
+link_directories(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
 
 # Set up our main executable.
 if (folder_source)
