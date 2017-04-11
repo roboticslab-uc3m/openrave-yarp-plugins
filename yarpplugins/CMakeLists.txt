@@ -10,6 +10,10 @@ if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
   add_definitions("-fno-strict-aliasing -Wall -fPIC")
 endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  add_definitions("-fPIC")
+endif ()
+
   find_package(YARP REQUIRED)
   include_directories(${YARP_INCLUDE_DIRS})
   list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
