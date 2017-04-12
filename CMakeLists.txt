@@ -13,21 +13,20 @@ endif(COMMAND cmake_policy)
 
 project(OPENRAVE_YARP_PLUGINS)
 
-### options: cpp libraries
+set(BUILD_SHARED_LIBS TRUE CACHE INTERNAL "hide this!")
+
+### options: cpp libraries (yarp plugins)
 option(ENABLE_FakeControlboard "Enable/disable compilation of FakeControlboard" TRUE)
+option(ENABLE_YarpOpenraveControlboard "Enable/disable option YarpOpenraveControlboard" TRUE)
+option(ENABLE_YarpOpenraveControlboardCollision "Enable/disable option YarpOpenraveControlboardCollision" TRUE)
+
+### options: cpp libraries (openrave plugins)
+option(ENABLE_OpenraveYarpControlboard "Enable/disable option OpenraveYarpControlboard" TRUE)
+option(ENABLE_OpenraveYarpPaintSquares "Enable/disable option OpenraveYarpPaintSquares" TRUE)
 
 ### options: cpp programs
 option(ENABLE_teoSim "Choose if you want to compile (deprecated) teoSim" TRUE)
 
-### options: cpp plugins
-option(ENABLE_openraveplugins "Enable/disable option openraveplugins" TRUE)
-option(ENABLE_yarpplugins "Enable/disable option yarpplugins" TRUE)
-
-### options: force default
-option(ENABLE_yarpplugins_YarpOpenraveControlboard "Enable/disable option yarpplugins_YarpOpenraveControlboard" TRUE)
-option(ENABLE_yarpplugins_YarpOpenravePaintSquares "Enable/disable option yarpplugins_YarpOpenravePaintSquares" TRUE)
-option(ENABLE_yarpplugins_YarpOpenraveControlboardCollision "Enable/disable option yarpplugins_YarpOpenraveControlboardCollision" TRUE)
-option(ENABLE_yarpplugins_FakeControlboard "Enable/disable option yarpplugins_FakeControlboard" TRUE)
 
 if(MSVC)
   MESSAGE(STATUS "Running on windows")    

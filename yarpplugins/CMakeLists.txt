@@ -2,9 +2,9 @@
 # Author: Juan G. Victores, Raul Fernandez-Fernandez
 # CopyPolicy: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
 
-IF (ENABLE_yarpplugins)
+#IF (ENABLE_yarpplugins)
 
-  option(ENABLE_launchyarpPlugins "Choose if you want to compile launchyarpPlugins" TRUE)
+#  option(ENABLE_launchyarpPlugins "Choose if you want to compile launchyarpPlugins" TRUE)
 
 if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
   add_definitions("-fno-strict-aliasing -Wall -fPIC")
@@ -20,20 +20,20 @@ endif ()
   include(YarpPlugin)
 
 
-  yarp_begin_plugin_library(yarpplugins)
+#  yarp_begin_plugin_library(yarpplugins)
     add_subdirectory(YarpOpenraveControlboard)
     add_subdirectory(YarpOpenraveControlboardCollision)
     add_subdirectory(FakeControlboard)
-  yarp_end_plugin_library(yarpplugins)
+#  yarp_end_plugin_library(yarpplugins)
   
-  IF (ENABLE_launchyarpPlugins)
+#  IF (ENABLE_launchyarpPlugins)
 
-    link_directories(${TEO_LINK_DIRS})
+#    link_directories(${TEO_LINK_DIRS})
     
-    yarp_add_plugin_yarpdev_executable(launchyarpPlugins yarpplugins)
-    install(TARGETS launchyarpPlugins DESTINATION bin)
+#    yarp_add_plugin_yarpdev_executable(launchyarpPlugins yarpplugins)
+#    install(TARGETS launchyarpPlugins DESTINATION bin)
 
-  ENDIF (ENABLE_launchyarpPlugins)
+#  ENDIF (ENABLE_launchyarpPlugins)
 
-ENDIF (ENABLE_yarpplugins)
+#ENDIF (ENABLE_yarpplugins)
 

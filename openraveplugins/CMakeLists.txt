@@ -2,10 +2,10 @@
 # Author: Juan G. Victores, Raul Fernandez-Fernandez
 # CopyPolicy: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
 
-IF (ENABLE_openraveplugins)
+#IF (ENABLE_openraveplugins)
 
 add_subdirectory(OpenraveYarpControlboard)
 add_subdirectory(OpenraveYarpPaintSquares)
 
-ENDIF (ENABLE_openraveplugins)
+#ENDIF (ENABLE_openraveplugins)
 

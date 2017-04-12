@@ -24,18 +24,27 @@ if( Boost_INCLUDE_DIRS )
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
-LINK_DIRECTORIES(${TEO_LINK_DIRS})
+LINK_DIRECTORIES(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
 
 YARP_ADD_PLUGIN(YarpOpenraveControlboard YarpOpenraveControlboard.hpp DeviceDriverImpl.cpp IControlLimits2Impl.cpp IControlModeImpl.cpp IEncodersImpl.cpp IEncodersTimedImpl.cpp IPositionImpl.cpp IPosition2Impl.cpp IVelocityImpl.cpp IVelocity2Impl.cpp ITorqueImpl.cpp)
 set_target_properties(${KEYWORD} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
 set_target_properties(${KEYWORD} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 TARGET_LINK_LIBRARIES(YarpOpenraveControlboard ${OpenRAVE_LIBRARIES} ${OpenRAVE_CORE_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${YARP_LIBRARIES})
 
-install(TARGETS YarpOpenraveControlboard DESTINATION lib)
-
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
 set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")
 set(TEO_LIBRARIES ${TEO_LIBRARIES} TeoYarp YarpOpenraveControlboard CACHE INTERNAL "appended libraries")
+
+  #install(TARGETS YarpOpenraveControlboard DESTINATION lib)
+  yarp_install(TARGETS YarpOpenraveControlboard
+             EXPORT YARP
+             COMPONENT runtime
+             LIBRARY DESTINATION ${YARP_DYNAMIC_PLUGINS_INSTALL_DIR}
+             ARCHIVE DESTINATION ${YARP_STATIC_PLUGINS_INSTALL_DIR})
+
+  yarp_install(FILES YarpOpenraveControlboard.ini
+              COMPONENT runtime
+              DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
 
 ENDIF (NOT SKIP_YarpOpenraveControlboard)
 

@@ -58,11 +58,11 @@
 #include "TeoSim.hpp"
 
 
-YARP_DECLARE_PLUGINS(yarpplugins)
+//YARP_DECLARE_PLUGINS(yarpplugins)
 
 int main(int argc, char *argv[]) {
 
-    YARP_REGISTER_PLUGINS(yarpplugins);
+    //YARP_REGISTER_PLUGINS(yarpplugins);
 
     yarp::os::ResourceFinder rf;
     rf.setVerbose(true);
