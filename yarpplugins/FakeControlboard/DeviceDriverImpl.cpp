@@ -124,7 +124,7 @@ bool teo::FakeControlboard::open(yarp::os::Searchable& config) {
 // -----------------------------------------------------------------------------
 
 bool teo::FakeControlboard::close() {
-    this->stop();
+    RateThread::stop();
     printf("[FakeControlboard] close()\n");
     return true;
 }
