@@ -32,5 +32,9 @@
 *.user
 *.swp
 
-#Folders
-build/
+# Folders
+**/build*/
+
+# IDEs
+.project
+.cproject
