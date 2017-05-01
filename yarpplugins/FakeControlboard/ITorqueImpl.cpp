@@ -4,14 +4,6 @@
 
 // ------------------- IForceControl Related ------------------------------------
 
-
-bool teo::FakeControlboard::setTorqueMode() {
-    CD_INFO("setTorqueMode()\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
 bool teo::FakeControlboard::getRefTorques(double *t){
     return true;
 }
@@ -27,7 +19,6 @@ bool teo::FakeControlboard::getRefTorque(int j, double *t) {
 bool teo::FakeControlboard::setRefTorques(const double *t) {
     return true;
 }
-
 
 // -----------------------------------------------------------------------------
 

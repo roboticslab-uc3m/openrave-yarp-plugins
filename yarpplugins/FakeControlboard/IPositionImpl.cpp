@@ -12,20 +12,6 @@ bool teo::FakeControlboard::getAxes(int *ax) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setPositionMode() {
-    CD_INFO("\n");
-    if (modePosVel==0) return true;  // Simply return true if we were already in pos mode.
-    // Do anything additional before setting flag to pos...
-    if(!stop()) {
-        fprintf(stderr,"[FakeControlboard] warning: setPositionMode() return false; failed to stop\n");
-        return false;
-    }
-    modePosVel = 0;
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
 bool teo::FakeControlboard::positionMove(int j, double ref) {  // encExposed = ref;
     if ((unsigned int)j>axes) {
         fprintf(stderr,"[FakeControlboard] error: axis index more than axes.\n");

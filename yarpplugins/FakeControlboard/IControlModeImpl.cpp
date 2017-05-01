@@ -6,6 +6,12 @@
 
 bool teo::FakeControlboard::setPositionMode(int j) {
     CD_INFO("(%d)\n",j);
+    if (modePosVel==0) return true;  // Simply return true if we were already in pos mode.
+    // Do anything additional before setting flag to pos...
+    if(!stop(j)) {
+        fprintf(stderr,"[FakeControlboard] warning: setPositionMode() return false; failed to stop joint %d\n",j);
+        return false;
+    }
     modePosVel = 0;
     return true;
 }
