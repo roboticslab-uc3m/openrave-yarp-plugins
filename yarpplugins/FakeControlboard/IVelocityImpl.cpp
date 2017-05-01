@@ -4,16 +4,6 @@
 
 // ------------------ IVelocity Related ----------------------------------------
 
-bool teo::FakeControlboard::setVelocityMode() {
-    CD_INFO("\n");
-    if (modePosVel==1) return true;  // Simply return true if we were already in vel mode.
-    // Do anything additional before setting flag to vel...
-    modePosVel = 1;  // Set flag to vel.
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
 bool teo::FakeControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
     if ((unsigned int)j>axes) return false;
     if(modePosVel!=1) {  // Check if we are in velocity mode.
