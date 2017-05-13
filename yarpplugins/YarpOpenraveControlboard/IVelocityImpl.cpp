@@ -4,13 +4,6 @@
 
 // ------------------ IVelocity Related ----------------------------------------
 
-bool teo::YarpOpenraveControlboard::setVelocityMode() {
-    CD_INFO("Doing nothing.\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
 bool teo::YarpOpenraveControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
     CD_INFO("Doing nothing.\n");
     return true;

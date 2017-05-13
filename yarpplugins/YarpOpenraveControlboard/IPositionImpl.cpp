@@ -13,13 +13,6 @@ bool teo::YarpOpenraveControlboard::getAxes(int *ax) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::setPositionMode() {
-    CD_INFO("Doing nothing.\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
 bool teo::YarpOpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
 //    CD_INFO("\n");
     if ((unsigned int)j>axes)

@@ -4,14 +4,6 @@
 
 // ------------------- IForceControl Related ------------------------------------
 
-
-bool teo::YarpOpenraveControlboard::setTorqueMode() {
-    CD_INFO("setTorqueMode()\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
 bool teo::YarpOpenraveControlboard::getRefTorques(double *t){
     CD_INFO("\n");
     return true;
@@ -30,7 +22,6 @@ bool teo::YarpOpenraveControlboard::setRefTorques(const double *t) {
     CD_INFO("\n");
     return true;
 }
-
 
 // -----------------------------------------------------------------------------
 

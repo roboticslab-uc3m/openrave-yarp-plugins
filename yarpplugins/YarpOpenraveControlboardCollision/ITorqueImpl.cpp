@@ -5,13 +5,6 @@
 // ------------------- IForceControl Related ------------------------------------
 
 
-bool teo::YarpOpenraveControlboardCollision::setTorqueMode() {
-    CD_INFO("setTorqueMode()\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
 bool teo::YarpOpenraveControlboardCollision::getRefTorques(double *t){
     CD_INFO("\n");
     return true;

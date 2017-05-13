@@ -61,14 +61,6 @@ class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::de
                  */
                 virtual bool getAxes(int *ax);
 
-                /** Set position mode. This command
-                 * is required by control boards implementing different
-                 * control methods (e.g. velocity/torque), in some cases
-                 * it can be left empty.
-                 * return true/false on success/failure
-                 */
-                virtual bool setPositionMode();
-
                 /** Set new reference point for a single axis.
                  * @param j joint number
                  * @param ref specifies the new ref point
@@ -364,15 +356,6 @@ class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::de
             //  --------- IVelocityControl Declarations. Implementation in IVelocityImpl.cpp ---------
 
                 /**
-                 * Set velocity mode. This command
-                 * is required by control boards implementing different
-                 * control methods (e.g. velocity/torque), in some cases
-                 * it can be left empty.
-                 * @return true/false on success failure
-                 */
-                virtual bool setVelocityMode();
-
-                /**
                  * Start motion at a given speed, single joint.
                  * @param j joint number
                  * @param sp speed value
@@ -549,15 +532,6 @@ class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::de
                 virtual bool getControlModes(int *modes);
 
             // -------- ITorqueControl declarations. Implementation in ITorqueImpl.cpp --------
-
-                /**
-                 * Set torque control mode. This command
-                 * is required by control boards implementing different
-                 * control methods (e.g. velocity/torque), in some cases
-                 * it can be left empty.
-                 * @return true/false on success/failure
-                 */
-                virtual bool setTorqueMode();
 
                /** Get the reference value of the torque for all joints.
                  * This is NOT the feedback (see getTorques instead).

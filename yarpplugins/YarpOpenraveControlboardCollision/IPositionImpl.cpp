@@ -11,13 +11,6 @@ bool teo::YarpOpenraveControlboardCollision::getAxes(int *ax) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::setPositionMode() {
-    CD_INFO("Doing nothing.\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
 bool teo::YarpOpenraveControlboardCollision::positionMove(int j, double ref) {  // encExposed = ref;
     CD_INFO("\n");
     if ((unsigned int)j>axes) {
