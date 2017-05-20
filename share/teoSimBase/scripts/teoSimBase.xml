@@ -1,5 +1,5 @@
 <application>
-    <name>teoSim App</name>
+    <name>teoSimBase App</name>
 
     <module>
         <name>teoSim</name>
