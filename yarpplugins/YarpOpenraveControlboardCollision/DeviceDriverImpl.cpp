@@ -4,7 +4,7 @@
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config) {
+bool roboticslab::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config) {
 
     //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
     penv = *((OpenRAVE::EnvironmentBasePtr*)(config.find("penv").asBlob()));
@@ -69,7 +69,7 @@ bool teo::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config) 
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::close() {
+bool roboticslab::YarpOpenraveControlboardCollision::close() {
     printf("[YarpOpenraveControlboardCollision] close()\n");
     return true;
 }

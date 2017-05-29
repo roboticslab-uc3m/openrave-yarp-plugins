@@ -4,7 +4,7 @@
 
 // ------------------- IPositionControl Related --------------------------------
 
-bool teo::FakeControlboard::getAxes(int *ax) {
+bool roboticslab::FakeControlboard::getAxes(int *ax) {
     *ax = axes;
     CD_INFO("Reporting %d axes are present\n", *ax);
     return true;
@@ -12,7 +12,7 @@ bool teo::FakeControlboard::getAxes(int *ax) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::positionMove(int j, double ref) {  // encExposed = ref;
+bool roboticslab::FakeControlboard::positionMove(int j, double ref) {  // encExposed = ref;
     if ((unsigned int)j>axes) {
         fprintf(stderr,"[FakeControlboard] error: axis index more than axes.\n");
         return false;
@@ -42,7 +42,7 @@ bool teo::FakeControlboard::positionMove(int j, double ref) {  // encExposed = r
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::positionMove(const double *refs) {  // encExposed = refs;
+bool roboticslab::FakeControlboard::positionMove(const double *refs) {  // encExposed = refs;
     if(modePosVel!=0) {  // Check if we are in position mode.
         fprintf(stderr,"[FakeControlboard] error: Will not positionMove as not in positionMode\n");
         return false;
@@ -77,7 +77,7 @@ bool teo::FakeControlboard::positionMove(const double *refs) {  // encExposed = 
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::relativeMove(int j, double delta) {
+bool roboticslab::FakeControlboard::relativeMove(int j, double delta) {
     if ((unsigned int)j>axes) return false;
     if(modePosVel!=0) {  // Check if we are in position mode.
         printf("[fail] FakeControlboard will not relativeMove as not in positionMode\n");
@@ -104,7 +104,7 @@ bool teo::FakeControlboard::relativeMove(int j, double delta) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::relativeMove(const double *deltas) {  // encExposed = deltas + encExposed
+bool roboticslab::FakeControlboard::relativeMove(const double *deltas) {  // encExposed = deltas + encExposed
     if(modePosVel!=0) {  // Check if we are in position mode.
         fprintf(stderr,"[FakeControlboard] warning: will not relativeMove as not in positionMode\n");
         return false;
@@ -131,7 +131,7 @@ bool teo::FakeControlboard::relativeMove(const double *deltas) {  // encExposed 
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::checkMotionDone(int j, bool *flag) {
+bool roboticslab::FakeControlboard::checkMotionDone(int j, bool *flag) {
     if ((unsigned int)j>axes) return false;
     bool done = true;
     if (jointStatus[j]>0) done=false;
@@ -141,7 +141,7 @@ bool teo::FakeControlboard::checkMotionDone(int j, bool *flag) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::checkMotionDone(bool *flag) {
+bool roboticslab::FakeControlboard::checkMotionDone(bool *flag) {
     bool done = true;
     for (unsigned int i=0; i<axes; i++) {
         if (jointStatus[i]>0) done = false;
@@ -152,7 +152,7 @@ bool teo::FakeControlboard::checkMotionDone(bool *flag) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setRefSpeed(int j, double sp) {
+bool roboticslab::FakeControlboard::setRefSpeed(int j, double sp) {
     if ((unsigned int)j>axes) return false;
     refSpeed[j]=sp;
     return true;
@@ -160,7 +160,7 @@ bool teo::FakeControlboard::setRefSpeed(int j, double sp) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setRefSpeeds(const double *spds) {
+bool roboticslab::FakeControlboard::setRefSpeeds(const double *spds) {
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= setRefSpeed(i,spds[i]);
@@ -169,7 +169,7 @@ bool teo::FakeControlboard::setRefSpeeds(const double *spds) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setRefAcceleration(int j, double acc) {
+bool roboticslab::FakeControlboard::setRefAcceleration(int j, double acc) {
     if ((unsigned int)j>axes) return false;
     refAcc[j]=acc;
     return true;
@@ -177,7 +177,7 @@ bool teo::FakeControlboard::setRefAcceleration(int j, double acc) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setRefAccelerations(const double *accs) {
+bool roboticslab::FakeControlboard::setRefAccelerations(const double *accs) {
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= setRefAcceleration(i,accs[i]);
@@ -186,7 +186,7 @@ bool teo::FakeControlboard::setRefAccelerations(const double *accs) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getRefSpeed(int j, double *ref) {
+bool roboticslab::FakeControlboard::getRefSpeed(int j, double *ref) {
     if ((unsigned int)j>axes) return false;
     *ref=refSpeed[j];
     return true;
@@ -194,7 +194,7 @@ bool teo::FakeControlboard::getRefSpeed(int j, double *ref) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getRefSpeeds(double *spds) {
+bool roboticslab::FakeControlboard::getRefSpeeds(double *spds) {
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= getRefSpeed(i,&spds[i]);
@@ -203,7 +203,7 @@ bool teo::FakeControlboard::getRefSpeeds(double *spds) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getRefAcceleration(int j, double *acc) {
+bool roboticslab::FakeControlboard::getRefAcceleration(int j, double *acc) {
     if ((unsigned int)j>axes) return false;
     *acc=refAcc[j];
     return true;
@@ -211,7 +211,7 @@ bool teo::FakeControlboard::getRefAcceleration(int j, double *acc) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getRefAccelerations(double *accs) {
+bool roboticslab::FakeControlboard::getRefAccelerations(double *accs) {
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= getRefAcceleration(i,&accs[i]);
@@ -220,7 +220,7 @@ bool teo::FakeControlboard::getRefAccelerations(double *accs) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::stop(int j) {
+bool roboticslab::FakeControlboard::stop(int j) {
     if ((unsigned int)j>axes) return false;
     printf("[FakeControlboard] stop(%d)\n",j);
     velRaw[j]=0.0;
@@ -230,7 +230,7 @@ bool teo::FakeControlboard::stop(int j) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::stop() {
+bool roboticslab::FakeControlboard::stop() {
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= stop(i);

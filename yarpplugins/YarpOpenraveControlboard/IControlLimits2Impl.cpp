@@ -4,28 +4,28 @@
 
 // ------------------- IControlLimits Related ------------------------------------
 
-bool teo::YarpOpenraveControlboard::setLimits(int axis, double min, double max) {
+bool roboticslab::YarpOpenraveControlboard::setLimits(int axis, double min, double max) {
     CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::getLimits(int axis, double *min, double *max) {
+bool roboticslab::YarpOpenraveControlboard::getLimits(int axis, double *min, double *max) {
     CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::setVelLimits(int axis, double min, double max) {
+bool roboticslab::YarpOpenraveControlboard::setVelLimits(int axis, double min, double max) {
     CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::getVelLimits(int axis, double *min, double *max) {
+bool roboticslab::YarpOpenraveControlboard::getVelLimits(int axis, double *min, double *max) {
     CD_INFO("Doing nothing.\n");
     return true;
 }

@@ -23,7 +23,7 @@
 #define DEFAULT_EXTERN_OBJ "none"
 //#define DEFAULT_EXTERN_OBJ "redCan"  // loads plugin
 
-namespace teo
+namespace roboticslab
 {
 
 /**
@@ -140,7 +140,7 @@ class TeoSimRateThread : public yarp::os::RateThread {
         std::vector < ControlboardContainer* > * ptrVectorOfManipulatorWrapperPtr;
 };
 
-}  // namespace teo
+}  // namespace roboticslab
 
 #endif  // __TEO_SIM_HPP__
 

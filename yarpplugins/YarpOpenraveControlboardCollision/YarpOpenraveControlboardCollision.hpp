@@ -21,7 +21,7 @@
 #define DEFAULT_AXES 5
 #define DEFAULT_REMOTE "/teo/rightArm"
 
-namespace teo
+namespace roboticslab
 {
 
 /**
@@ -784,6 +784,6 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
 
         };
 
-        }  // namespace teo
+        }  // namespace roboticslab
 
         #endif  // __YARP_OPENRAVE_CONTROLBOARD_COLLISION_HPP__

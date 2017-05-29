@@ -4,50 +4,50 @@
 
 // ------------------- IForceControl Related ------------------------------------
 
-bool teo::FakeControlboard::getRefTorques(double *t){
+bool roboticslab::FakeControlboard::getRefTorques(double *t){
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getRefTorque(int j, double *t) {
+bool roboticslab::FakeControlboard::getRefTorque(int j, double *t) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setRefTorques(const double *t) {
+bool roboticslab::FakeControlboard::setRefTorques(const double *t) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setRefTorque(int j, double t) {
+bool roboticslab::FakeControlboard::setRefTorque(int j, double t) {
     CD_INFO("joint: %d, refTorque: %f.\n",j,t);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getBemfParam(int j, double *bemf) {
+bool roboticslab::FakeControlboard::getBemfParam(int j, double *bemf) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setBemfParam(int j, double bemf) {
+bool roboticslab::FakeControlboard::setBemfParam(int j, double bemf) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setTorquePid(int j, const yarp::dev::Pid &pid) {
+bool roboticslab::FakeControlboard::setTorquePid(int j, const yarp::dev::Pid &pid) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorque(int j, double *t) {
+bool roboticslab::FakeControlboard::getTorque(int j, double *t) {
     //CD_INFO("joint: %d.\n",j);  //-- Way too verbose
     *t = 0;
     return true;
@@ -55,109 +55,109 @@ bool teo::FakeControlboard::getTorque(int j, double *t) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorques(double *t) {
+bool roboticslab::FakeControlboard::getTorques(double *t) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorqueRange(int j, double *min, double *max) {
+bool roboticslab::FakeControlboard::getTorqueRange(int j, double *min, double *max) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorqueRanges(double *min, double *max) {
+bool roboticslab::FakeControlboard::getTorqueRanges(double *min, double *max) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setTorquePids(const yarp::dev::Pid *pids) {
+bool roboticslab::FakeControlboard::setTorquePids(const yarp::dev::Pid *pids) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setTorqueErrorLimit(int j, double limit) {
+bool roboticslab::FakeControlboard::setTorqueErrorLimit(int j, double limit) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setTorqueErrorLimits(const double *limits) {
+bool roboticslab::FakeControlboard::setTorqueErrorLimits(const double *limits) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorqueError(int j, double *err) {
+bool roboticslab::FakeControlboard::getTorqueError(int j, double *err) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorqueErrors(double *errs) {
+bool roboticslab::FakeControlboard::getTorqueErrors(double *errs) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorquePidOutput(int j, double *out) {
+bool roboticslab::FakeControlboard::getTorquePidOutput(int j, double *out) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorquePidOutputs(double *outs) {
+bool roboticslab::FakeControlboard::getTorquePidOutputs(double *outs) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorquePid(int j, yarp::dev::Pid *pid) {
+bool roboticslab::FakeControlboard::getTorquePid(int j, yarp::dev::Pid *pid) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorquePids(yarp::dev::Pid *pids){
+bool roboticslab::FakeControlboard::getTorquePids(yarp::dev::Pid *pids){
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorqueErrorLimit(int j, double *limit) {
+bool roboticslab::FakeControlboard::getTorqueErrorLimit(int j, double *limit) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTorqueErrorLimits(double *limits) {
+bool roboticslab::FakeControlboard::getTorqueErrorLimits(double *limits) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::resetTorquePid(int j) {
+bool roboticslab::FakeControlboard::resetTorquePid(int j) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::disableTorquePid(int j) {
+bool roboticslab::FakeControlboard::disableTorquePid(int j) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::enableTorquePid(int j) {
+bool roboticslab::FakeControlboard::enableTorquePid(int j) {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setTorqueOffset(int j, double v) {
+bool roboticslab::FakeControlboard::setTorqueOffset(int j, double v) {
     return true;
 }
 

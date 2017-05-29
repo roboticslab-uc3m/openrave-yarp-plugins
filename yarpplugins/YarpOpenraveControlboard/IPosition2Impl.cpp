@@ -4,7 +4,7 @@
 
 // ------------------- IPositionControl2 Related --------------------------------
 
-bool teo::YarpOpenraveControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
+bool roboticslab::YarpOpenraveControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
 {
     CD_DEBUG("\n");
     // must implement mask!
@@ -13,7 +13,7 @@ bool teo::YarpOpenraveControlboard::positionMove(const int n_joint, const int *j
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
+bool roboticslab::YarpOpenraveControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
 {
     CD_DEBUG("\n");
     return true;
@@ -21,7 +21,7 @@ bool teo::YarpOpenraveControlboard::relativeMove(const int n_joint, const int *j
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flags)
+bool roboticslab::YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flags)
 {
     CD_DEBUG("\n");
     return true;
@@ -29,7 +29,7 @@ bool teo::YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
+bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
 {
     CD_DEBUG("\n");
     return true;
@@ -37,7 +37,7 @@ bool teo::YarpOpenraveControlboard::setRefSpeeds(const int n_joint, const int *j
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
+bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
 {
     CD_DEBUG("\n");
     return true;
@@ -45,7 +45,7 @@ bool teo::YarpOpenraveControlboard::setRefAccelerations(const int n_joint, const
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
+bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
 {
     CD_DEBUG("\n");
     return true;
@@ -53,7 +53,7 @@ bool teo::YarpOpenraveControlboard::getRefSpeeds(const int n_joint, const int *j
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
+bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
 {
     CD_DEBUG("\n");
     return true;
@@ -61,7 +61,7 @@ bool teo::YarpOpenraveControlboard::getRefAccelerations(const int n_joint, const
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::stop(const int n_joint, const int *joints)
+bool roboticslab::YarpOpenraveControlboard::stop(const int n_joint, const int *joints)
 {
     CD_DEBUG("\n");
     return true;
@@ -69,7 +69,7 @@ bool teo::YarpOpenraveControlboard::stop(const int n_joint, const int *joints)
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::getTargetPosition(const int joint, double *ref)
+bool roboticslab::YarpOpenraveControlboard::getTargetPosition(const int joint, double *ref)
 {
     CD_INFO("\n");
     return true;
@@ -77,7 +77,7 @@ bool teo::YarpOpenraveControlboard::getTargetPosition(const int joint, double *r
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::getTargetPositions(double *refs)
+bool roboticslab::YarpOpenraveControlboard::getTargetPositions(double *refs)
 {
     CD_DEBUG("\n");
     return true;
@@ -85,7 +85,7 @@ bool teo::YarpOpenraveControlboard::getTargetPositions(double *refs)
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
+bool roboticslab::YarpOpenraveControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
 {
     CD_DEBUG("\n");
     return true;

@@ -25,7 +25,7 @@
 #define DEFAULT_PHYSICS "none"
 #define DEFAULT_VIEWER 1
 
-namespace teo
+namespace roboticslab
 {
 
 /**
@@ -110,7 +110,7 @@ class TeoSim : public yarp::os::RFModule {
         std::vector < ControlboardContainer* > vectorOfControlboardContainerPtr;
 };
 
-}  // namespace teo
+}  // namespace roboticslab
 
 #endif  // __TEO_SIM_HPP__
 

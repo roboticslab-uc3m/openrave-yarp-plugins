@@ -4,14 +4,14 @@
 
 // ------------------ IVelocity Related ----------------------------------------
 
-bool teo::YarpOpenraveControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
+bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
     CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboard::velocityMove(const double *sp) {
+bool roboticslab::YarpOpenraveControlboard::velocityMove(const double *sp) {
     CD_INFO("\n");
     printf("[YarpOpenraveControlboard] Vel:");
     CD_INFO("Doing nothing.");

@@ -4,7 +4,7 @@
 
 // ------------------- IControlLimits Related ------------------------------------
 
-bool teo::FakeControlboard::setLimits(int axis, double min, double max) {
+bool roboticslab::FakeControlboard::setLimits(int axis, double min, double max) {
     if(axis>=int(axes)) return false;
     minLimit[axis] = min;
     maxLimit[axis] = max;
@@ -14,7 +14,7 @@ bool teo::FakeControlboard::setLimits(int axis, double min, double max) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getLimits(int axis, double *min, double *max) {
+bool roboticslab::FakeControlboard::getLimits(int axis, double *min, double *max) {
     if(axis>=int(axes)) return false;
     *min = minLimit[axis];
     *max = maxLimit[axis];

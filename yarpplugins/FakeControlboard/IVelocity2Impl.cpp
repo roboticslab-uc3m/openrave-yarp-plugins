@@ -4,7 +4,7 @@
 
 // ------------------ IVelocity2 Related ----------------------------------------
 
-bool teo::FakeControlboard::velocityMove(const int n_joint, const int *joints, const double *spds)
+bool roboticslab::FakeControlboard::velocityMove(const int n_joint, const int *joints, const double *spds)
 {
     CD_DEBUG("\n");
     // must implement mask!
@@ -13,7 +13,7 @@ bool teo::FakeControlboard::velocityMove(const int n_joint, const int *joints, c
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getRefVelocity(const int joint, double *vel)
+bool roboticslab::FakeControlboard::getRefVelocity(const int joint, double *vel)
 {
     CD_DEBUG("\n");
     return true;
@@ -21,7 +21,7 @@ bool teo::FakeControlboard::getRefVelocity(const int joint, double *vel)
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getRefVelocities(double *vels)
+bool roboticslab::FakeControlboard::getRefVelocities(double *vels)
 {
     CD_DEBUG("\n");
     return true;
@@ -29,7 +29,7 @@ bool teo::FakeControlboard::getRefVelocities(double *vels)
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getRefVelocities(const int n_joint, const int *joints, double *vels)
+bool roboticslab::FakeControlboard::getRefVelocities(const int n_joint, const int *joints, double *vels)
 {
     CD_DEBUG("\n");
     return true;
@@ -37,7 +37,7 @@ bool teo::FakeControlboard::getRefVelocities(const int n_joint, const int *joint
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setVelPid(int j, const yarp::dev::Pid &pid)
+bool roboticslab::FakeControlboard::setVelPid(int j, const yarp::dev::Pid &pid)
 {
     CD_DEBUG("\n");
     return true;
@@ -45,7 +45,7 @@ bool teo::FakeControlboard::setVelPid(int j, const yarp::dev::Pid &pid)
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setVelPids(const yarp::dev::Pid *pids)
+bool roboticslab::FakeControlboard::setVelPids(const yarp::dev::Pid *pids)
 {
     CD_DEBUG("\n");
     return true;
@@ -53,7 +53,7 @@ bool teo::FakeControlboard::setVelPids(const yarp::dev::Pid *pids)
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getVelPid(int j, yarp::dev::Pid *pid)
+bool roboticslab::FakeControlboard::getVelPid(int j, yarp::dev::Pid *pid)
 {
     CD_DEBUG("\n");
     return true;
@@ -61,7 +61,7 @@ bool teo::FakeControlboard::getVelPid(int j, yarp::dev::Pid *pid)
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getVelPids(yarp::dev::Pid *pids)
+bool roboticslab::FakeControlboard::getVelPids(yarp::dev::Pid *pids)
 {
     CD_DEBUG("\n");
     return true;

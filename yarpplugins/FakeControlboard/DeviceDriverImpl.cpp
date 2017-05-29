@@ -4,7 +4,7 @@
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool teo::FakeControlboard::open(yarp::os::Searchable& config) {
+bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config) {
 
     axes = config.check("axes",DEFAULT_AXES,"number of axes to control").asInt();
     double genInitPos = config.check("genInitPos",DEFAULT_GEN_INIT_POS,"general initialization positions").asDouble();
@@ -123,7 +123,7 @@ bool teo::FakeControlboard::open(yarp::os::Searchable& config) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::close() {
+bool roboticslab::FakeControlboard::close() {
     RateThread::stop();
     printf("[FakeControlboard] close()\n");
     return true;

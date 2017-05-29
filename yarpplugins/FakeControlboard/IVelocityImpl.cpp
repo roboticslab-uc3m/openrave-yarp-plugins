@@ -4,7 +4,7 @@
 
 // ------------------ IVelocity Related ----------------------------------------
 
-bool teo::FakeControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
+bool roboticslab::FakeControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
     if ((unsigned int)j>axes) return false;
     if(modePosVel!=1) {  // Check if we are in velocity mode.
         fprintf(stderr,"[FakeControlboard] fail: FakeControlboard will not velocityMove as not in velocityMode\n");
@@ -17,7 +17,7 @@ bool teo::FakeControlboard::velocityMove(int j, double sp) {  // velExposed = sp
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::velocityMove(const double *sp) {
+bool roboticslab::FakeControlboard::velocityMove(const double *sp) {
     printf("[FakeControlboard] Vel:");
     for (unsigned int i=0; i<axes; i++) printf(" %+.6f",velRaw[i]);
     printf("\n");

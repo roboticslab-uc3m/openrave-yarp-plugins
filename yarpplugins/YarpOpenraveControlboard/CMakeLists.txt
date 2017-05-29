@@ -3,7 +3,7 @@
 
 yarp_prepare_plugin(YarpOpenraveControlboard
                     CATEGORY device
-                    TYPE teo::YarpOpenraveControlboard
+                    TYPE roboticslab::YarpOpenraveControlboard
                     INCLUDE YarpOpenraveControlboard.hpp
                     WRAPPER controlboardwrapper2)
 

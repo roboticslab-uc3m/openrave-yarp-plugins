@@ -34,7 +34,7 @@
 
 
 
-namespace teo
+namespace roboticslab
 {
 
 /**
@@ -778,6 +778,6 @@ class FakeControlboard : public yarp::dev::DeviceDriver, public yarp::dev::IPosi
         double jmcMs, jmcMsAcc;
 };
 
-}  // namespace teo
+}  // namespace roboticslab
 
 #endif  // __FAKE_CONTROLBOARD_HPP__

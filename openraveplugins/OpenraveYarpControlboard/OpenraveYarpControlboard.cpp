@@ -143,6 +143,7 @@ public:
                 manipulatorPortName += vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName();
                 RAVELOG_INFO( "* manipulatorPortName: %s\n",manipulatorPortName.c_str() );
 
+                //--
                 yarp::dev::PolyDriver* robotDevice = new yarp::dev::PolyDriver;
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports

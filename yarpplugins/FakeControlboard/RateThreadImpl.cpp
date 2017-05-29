@@ -4,7 +4,7 @@
 
 // ------------------- RateThread Related ------------------------------------
 
-bool teo::FakeControlboard::threadInit() {
+bool roboticslab::FakeControlboard::threadInit() {
     printf("[FakeControlboard] success: threadInit()\n");
     lastTime = yarp::os::Time::now();
     return true;
@@ -12,7 +12,7 @@ bool teo::FakeControlboard::threadInit() {
 
 // -----------------------------------------------------------------------------
 
-void teo::FakeControlboard::run() {
+void roboticslab::FakeControlboard::run() {
     for(unsigned int motor=0;motor<axes;motor++){
         setEncRaw(motor, getEncRaw(motor)+(velRaw[motor])*(yarp::os::Time::now()-lastTime));
         if((jointStatus[motor]==1)||(jointStatus[motor]==2)||(jointStatus[motor]==3)) {  // if set to move...

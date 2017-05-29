@@ -6,7 +6,7 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername,
 
 // ------------------- RFModule Related ------------------------------------
 
-bool teo::TeoSim::configure(yarp::os::ResourceFinder &rf) {
+bool roboticslab::TeoSim::configure(yarp::os::ResourceFinder &rf) {
 
     const double defautTr = M_PI/180.0;
     std::string env = DEFAULT_ENV;
@@ -226,20 +226,20 @@ bool teo::TeoSim::configure(yarp::os::ResourceFinder &rf) {
 
 // -----------------------------------------------------------------------------
 
-double teo::TeoSim::getPeriod() {
+double roboticslab::TeoSim::getPeriod() {
     return 5.0;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::TeoSim::updateModule() {
+bool roboticslab::TeoSim::updateModule() {
     CD_INFO("Alive...\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::TeoSim::close() {
+bool roboticslab::TeoSim::close() {
     printf("[TeoSim] begin: close(). Ask thread to stop...\n");
     teoSimRateThread.askToStop();
     printf("[TeoSim] Done. Closing devices...\n");

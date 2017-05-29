@@ -4,28 +4,28 @@
 
 // ------------------- IControlLimits Related ------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::setLimits(int axis, double min, double max) {
+bool roboticslab::YarpOpenraveControlboardCollision::setLimits(int axis, double min, double max) {
     CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::getLimits(int axis, double *min, double *max)
+bool roboticslab::YarpOpenraveControlboardCollision::getLimits(int axis, double *min, double *max)
 {
     return iControlLimits2->getLimits(axis, min, max);
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::setVelLimits(int axis, double min, double max) {
+bool roboticslab::YarpOpenraveControlboardCollision::setVelLimits(int axis, double min, double max) {
     CD_INFO("Doing nothing.\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::getVelLimits(int axis, double *min, double *max) {
+bool roboticslab::YarpOpenraveControlboardCollision::getVelLimits(int axis, double *min, double *max) {
     CD_INFO("Doing nothing.\n");
     return true;
 }

@@ -20,7 +20,7 @@
 
 #define DEFAULT_AXES 5
 
-namespace teo
+namespace roboticslab
 {
 
 /**
@@ -777,6 +777,6 @@ class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::de
 
         };
 
-        }  // namespace teo
+        }  // namespace roboticslab
 
         #endif  // __YARP_OPENRAVE_CONTROLBOARD_HPP__

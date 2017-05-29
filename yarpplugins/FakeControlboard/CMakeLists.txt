@@ -3,7 +3,7 @@
 
 YARP_PREPARE_PLUGIN(FakeControlboard
                     CATEGORY device
-                    TYPE teo::FakeControlboard
+                    TYPE roboticslab::FakeControlboard
                     INCLUDE FakeControlboard.hpp
                     WRAPPER controlboardwrapper2)
 

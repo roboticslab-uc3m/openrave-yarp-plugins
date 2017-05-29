@@ -4,7 +4,7 @@
 
 // ------------------- IPositionControl2 Related --------------------------------
 
-bool teo::FakeControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
+bool roboticslab::FakeControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
 {
     CD_DEBUG("\n");
     // must implement mask!
@@ -13,7 +13,7 @@ bool teo::FakeControlboard::positionMove(const int n_joint, const int *joints, c
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
+bool roboticslab::FakeControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
 {
     CD_DEBUG("\n");
     return true;
@@ -21,7 +21,7 @@ bool teo::FakeControlboard::relativeMove(const int n_joint, const int *joints, c
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flags)
+bool roboticslab::FakeControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flags)
 {
     CD_DEBUG("\n");
     return true;
@@ -29,7 +29,7 @@ bool teo::FakeControlboard::checkMotionDone(const int n_joint, const int *joints
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
+bool roboticslab::FakeControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
 {
     CD_DEBUG("\n");
     return true;
@@ -37,7 +37,7 @@ bool teo::FakeControlboard::setRefSpeeds(const int n_joint, const int *joints, c
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
+bool roboticslab::FakeControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
 {
     CD_DEBUG("\n");
     return true;
@@ -45,7 +45,7 @@ bool teo::FakeControlboard::setRefAccelerations(const int n_joint, const int *jo
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
+bool roboticslab::FakeControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
 {
     CD_DEBUG("\n");
     return true;
@@ -53,7 +53,7 @@ bool teo::FakeControlboard::getRefSpeeds(const int n_joint, const int *joints, d
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
+bool roboticslab::FakeControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
 {
     CD_DEBUG("\n");
     return true;
@@ -61,7 +61,7 @@ bool teo::FakeControlboard::getRefAccelerations(const int n_joint, const int *jo
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::stop(const int n_joint, const int *joints)
+bool roboticslab::FakeControlboard::stop(const int n_joint, const int *joints)
 {
     CD_DEBUG("\n");
     return true;
@@ -69,14 +69,14 @@ bool teo::FakeControlboard::stop(const int n_joint, const int *joints)
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTargetPosition(const int joint, double *ref)
+bool roboticslab::FakeControlboard::getTargetPosition(const int joint, double *ref)
 {
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTargetPositions(double *refs)
+bool roboticslab::FakeControlboard::getTargetPositions(double *refs)
 {
     CD_DEBUG("\n");
     return true;
@@ -84,7 +84,7 @@ bool teo::FakeControlboard::getTargetPositions(double *refs)
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
+bool roboticslab::FakeControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
 {
     CD_DEBUG("\n");
     return true;

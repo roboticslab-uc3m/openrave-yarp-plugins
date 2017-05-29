@@ -4,7 +4,7 @@
 
 // ------------------ IEncoders Related -----------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::resetEncoder(int j) {
+bool roboticslab::YarpOpenraveControlboardCollision::resetEncoder(int j) {
     CD_INFO("\n");
     if ((unsigned int)j>axes) return false;
     return setEncoder(j,0.0);
@@ -12,7 +12,7 @@ bool teo::YarpOpenraveControlboardCollision::resetEncoder(int j) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::resetEncoders() {
+bool roboticslab::YarpOpenraveControlboardCollision::resetEncoders() {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
@@ -22,14 +22,14 @@ bool teo::YarpOpenraveControlboardCollision::resetEncoders() {
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::setEncoder(int j, double val) {  // encExposed = val;
+bool roboticslab::YarpOpenraveControlboardCollision::setEncoder(int j, double val) {  // encExposed = val;
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::setEncoders(const double *vals) {
+bool roboticslab::YarpOpenraveControlboardCollision::setEncoders(const double *vals) {
     CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
@@ -39,21 +39,21 @@ bool teo::YarpOpenraveControlboardCollision::setEncoders(const double *vals) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::getEncoder(int j, double *v) {
+bool roboticslab::YarpOpenraveControlboardCollision::getEncoder(int j, double *v) {
     //CD_INFO("\n");  //-- Way too verbose
     return iEncoders->getEncoder(j,v);
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::getEncoders(double *encs) {
+bool roboticslab::YarpOpenraveControlboardCollision::getEncoders(double *encs) {
     CD_INFO("\n");
     return iEncoders->getEncoders(encs);
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::getEncoderSpeed(int j, double *sp) {
+bool roboticslab::YarpOpenraveControlboardCollision::getEncoderSpeed(int j, double *sp) {
     //CD_INFO("\n");  //-- Way too verbose
     // Make it easy, give the current reference speed.
     return iEncoders->getEncoderSpeed(j, sp);
@@ -61,21 +61,21 @@ bool teo::YarpOpenraveControlboardCollision::getEncoderSpeed(int j, double *sp) 
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::getEncoderSpeeds(double *spds) {
+bool roboticslab::YarpOpenraveControlboardCollision::getEncoderSpeeds(double *spds) {
     CD_INFO("\n");
     return iEncoders->getEncoders(spds);
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::getEncoderAcceleration(int j, double *spds) {
+bool roboticslab::YarpOpenraveControlboardCollision::getEncoderAcceleration(int j, double *spds) {
     //CD_INFO("\n");  //-- Way too verbose
     return false;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::getEncoderAccelerations(double *accs) {
+bool roboticslab::YarpOpenraveControlboardCollision::getEncoderAccelerations(double *accs) {
     CD_INFO("\n");
     return false;
 }

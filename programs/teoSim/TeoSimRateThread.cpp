@@ -4,7 +4,7 @@
 
 // ------------------- RateThread Related ------------------------------------
 
-bool teo::TeoSimRateThread::threadInit() {
+bool roboticslab::TeoSimRateThread::threadInit() {
     printf("[TeoSimRateThread] begin: threadInit()\n");
     jmcMs = this->getRate();
 
@@ -30,7 +30,7 @@ bool teo::TeoSimRateThread::threadInit() {
 
 // -----------------------------------------------------------------------------
 
-void teo::TeoSimRateThread::run() {
+void roboticslab::TeoSimRateThread::run() {
     //printf("[TeoSimRateThread] run()\n");
 
     for(size_t i=0;i<ptrVectorOfRobotPtr->size();i++) {  // For each robot

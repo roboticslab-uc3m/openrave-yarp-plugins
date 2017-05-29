@@ -3,7 +3,7 @@
 
 yarp_prepare_plugin(YarpOpenraveControlboardCollision
                     CATEGORY device
-                    TYPE teo::YarpOpenraveControlboardCollision
+                    TYPE roboticslab::YarpOpenraveControlboardCollision
                     INCLUDE YarpOpenraveControlboardCollision.hpp
                     WRAPPER controlboardwrapper2)
 

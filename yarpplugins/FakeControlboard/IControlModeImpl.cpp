@@ -4,7 +4,7 @@
 
 // ------------------- IControlLimits Related ------------------------------------
 
-bool teo::FakeControlboard::setPositionMode(int j) {
+bool roboticslab::FakeControlboard::setPositionMode(int j) {
     CD_INFO("(%d)\n",j);
     if (modePosVel==0) return true;  // Simply return true if we were already in pos mode.
     // Do anything additional before setting flag to pos...
@@ -18,7 +18,7 @@ bool teo::FakeControlboard::setPositionMode(int j) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setVelocityMode(int j) {
+bool roboticslab::FakeControlboard::setVelocityMode(int j) {
     CD_INFO("(%d)\n",j);
     modePosVel = 1;  // Set flag to vel.
     return true;
@@ -26,35 +26,35 @@ bool teo::FakeControlboard::setVelocityMode(int j) {
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setTorqueMode(int j)  {
+bool roboticslab::FakeControlboard::setTorqueMode(int j)  {
     CD_INFO("(%d)\n",j);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setImpedancePositionMode(int j) {
+bool roboticslab::FakeControlboard::setImpedancePositionMode(int j) {
     CD_INFO("(%d)\n",j);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setImpedanceVelocityMode(int j) {
+bool roboticslab::FakeControlboard::setImpedanceVelocityMode(int j) {
     CD_INFO("(%d)\n",j);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::setOpenLoopMode(int j) {
+bool roboticslab::FakeControlboard::setOpenLoopMode(int j) {
     CD_INFO("(%d)\n",j);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool teo::FakeControlboard::getControlMode(int j, int *mode) {
+bool roboticslab::FakeControlboard::getControlMode(int j, int *mode) {
     // CD_DEBUG("\n");  //-- Way too verbose.
     if(modePosVel == 0)
         *mode = VOCAB_CM_POSITION;
@@ -71,7 +71,7 @@ bool teo::FakeControlboard::getControlMode(int j, int *mode) {
 // -----------------------------------------------------------------------------
 
 
-bool teo::FakeControlboard::getControlModes(int *modes) {
+bool roboticslab::FakeControlboard::getControlModes(int *modes) {
     CD_DEBUG("\n");
     bool ok = true;
     for(unsigned int i=0; i < axes; i++)

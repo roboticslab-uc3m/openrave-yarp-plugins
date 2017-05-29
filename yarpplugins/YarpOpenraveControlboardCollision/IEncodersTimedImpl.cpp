@@ -4,7 +4,7 @@
 
 // ------------------ IEncodersTimed Related -----------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::getEncodersTimed(double *encs, double *time) {
+bool roboticslab::YarpOpenraveControlboardCollision::getEncodersTimed(double *encs, double *time) {
     //CD_INFO("\n");  //-- Way too verbose
     bool ok = true;
     for(unsigned int i=0; i < axes; i++)
@@ -14,7 +14,7 @@ bool teo::YarpOpenraveControlboardCollision::getEncodersTimed(double *encs, doub
 
 // -----------------------------------------------------------------------------
 
-bool teo::YarpOpenraveControlboardCollision::getEncoderTimed(int j, double *encs, double *time) {
+bool roboticslab::YarpOpenraveControlboardCollision::getEncoderTimed(int j, double *encs, double *time) {
     //CD_INFO("(%d)\n",j);  //-- Way too verbose
 
     getEncoder(j, encs);
