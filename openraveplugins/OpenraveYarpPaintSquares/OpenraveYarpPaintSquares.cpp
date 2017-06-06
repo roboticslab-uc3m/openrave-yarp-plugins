@@ -108,6 +108,7 @@ public:
 
     virtual ~OpenraveYarpPaintSquares() {
         rpcServer.close();
+        rpcClient.close();
     }
 
     virtual void Destroy() {
@@ -130,14 +131,21 @@ public:
             funcionArgs.push_back(funcionArg);
         }
 
-        string portName("/openraveYarpPaintSquares/rpc:s");
+        string serverPortName("/openraveYarpPaintSquares/rpc:s");
+        string clientPortName("/openraveYarpPaintSquares/rpc:c");
 
         if (funcionArgs.size() > 0)
         {
             if( funcionArgs[0][0] == '/')
-                portName = funcionArgs[0];
+            {
+                serverPortName = funcionArgs[0];
+                serverPortName.append("/rpc:s");
+                clientPortName = funcionArgs[0];
+                clientPortName.append("/rpc:c");
+            }
         }
-        RAVELOG_INFO("portName: %s\n",portName.c_str());
+        RAVELOG_INFO("serverPortName: %s\n",serverPortName.c_str());
+        RAVELOG_INFO("clientPortName: %s\n",clientPortName.c_str());
 
         if ( !yarp.checkNetwork() )
         {
@@ -170,7 +178,8 @@ public:
         processor.setPsqPainted(&sqPainted);
         processor.setPsqPaintedSemaphore(&sqPaintedSemaphore);
         rpcServer.setReader(processor);
-        rpcServer.open(portName);
+        rpcServer.open(serverPortName);
+        rpcClient.open(clientPortName);
 
         this->start();  // start yarp::os::RateThread (calls run periodically)
 
@@ -215,6 +224,12 @@ public:
             if( sqPaintedValue == 1 )
             {
                 _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
+                int y = 3-(i%4);
+                int x = (i-3+y)/4;
+                yarp::os::Bottle cmd, res;
+                cmd.addInt(x);
+                cmd.addInt(y);
+                rpcClient.write(cmd,res);
             }
             else
             {
@@ -228,6 +243,7 @@ public:
 private:
     yarp::os::Network yarp;
     yarp::os::RpcServer rpcServer;
+    yarp::os::RpcClient rpcClient;
     DataProcessor processor;
 
     vector<int> sqPainted;
