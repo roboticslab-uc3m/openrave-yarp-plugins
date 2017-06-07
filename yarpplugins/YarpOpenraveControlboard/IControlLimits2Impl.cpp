@@ -5,7 +5,16 @@
 // ------------------- IControlLimits Related ------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setLimits(int axis, double min, double max) {
-    CD_INFO("Doing nothing.\n");
+
+    std::vector<OpenRAVE::dReal> vLowerLimit;
+    std::vector<OpenRAVE::dReal> vUpperLimit;
+
+    //-- Our joints always have ony 1 DoF, therefore safe to use only [0].
+    vLowerLimit.push_back(min*M_PI/180.0);
+    vUpperLimit.push_back(max*M_PI/180.0);
+
+    vectorOfJointPtr[axis]->SetLimits(vLowerLimit,vUpperLimit);
+
     return true;
 }
 
