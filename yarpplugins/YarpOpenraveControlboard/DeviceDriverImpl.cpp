@@ -40,15 +40,6 @@ bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         vectorOfJointPtr.push_back(jointPtr);
     }
 
-    for(size_t i=0; i<manipulatorIDs.size(); i++)
-    {
-        std::vector<OpenRAVE::dReal> vLowerLimit;
-        std::vector<OpenRAVE::dReal> vUpperLimit;
-        vectorOfJointPtr[i]->GetLimits(vLowerLimit,vUpperLimit);
-        CD_INFO("Limits %d: [%f,%f]\n",i,vLowerLimit[0]*180.0/M_PI,vUpperLimit[0]*180.0/M_PI);
-    }
-
-
     return true;
 }
 
