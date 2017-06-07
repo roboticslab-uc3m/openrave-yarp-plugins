@@ -34,6 +34,12 @@ bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
     axes = manipulatorIDs.size();
 
+    for(size_t i=0; i<manipulatorIDs.size(); i++)
+    {
+        OpenRAVE::RobotBase::JointPtr jointPtr = probot->GetJointFromDOFIndex(manipulatorIDs[i]);
+        vectorOfJointPtr.push_back(jointPtr);
+    }
+
     return true;
 }
 
