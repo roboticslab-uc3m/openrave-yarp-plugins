@@ -37,15 +37,17 @@ bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     for(int i=0; i<axes; i++)
     {
         OpenRAVE::RobotBase::JointPtr jointPtr = probot->GetJointFromDOFIndex(manipulatorIDs[i]);
-
-        std::vector<OpenRAVE::dReal> vLowerLimit;
-        std::vector<OpenRAVE::dReal> vUpperLimit;
-        jointPtr->GetLimits(vLowerLimit,vUpperLimit);
-
-        CD_INFO("Limits %d: [%f,%f]\n",i,vLowerLimit[0]*180.0/M_PI,vUpperLimit[0]*180.0/M_PI);
-
         vectorOfJointPtr.push_back(jointPtr);
     }
+
+    for(int i=0; i<axes; i++)
+    {
+        std::vector<OpenRAVE::dReal> vLowerLimit;
+        std::vector<OpenRAVE::dReal> vUpperLimit;
+        vectorOfJointPtr[i]->GetLimits(vLowerLimit,vUpperLimit);
+        CD_INFO("Limits %d: [%f,%f]\n",i,vLowerLimit[0]*180.0/M_PI,vUpperLimit[0]*180.0/M_PI);
+    }
+
 
     return true;
 }
