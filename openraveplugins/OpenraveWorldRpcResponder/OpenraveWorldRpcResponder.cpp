@@ -13,8 +13,6 @@
 using namespace yarp::os;
 using namespace OpenRAVE;
 
-//#define DEFAULT_RATE_MS 10.0
-//#define NSQUARES 16
 
 using namespace std;
 
@@ -26,22 +24,19 @@ public:
     int robotDraw;
     double drawRadius, drawR, drawG, drawB;
 
-    /**
-    * Register an OpenRAVE environment.
-    */
-    /************************************************************************/
+    // Register an OpenRAVE environment.
 
     void setEnvironment(EnvironmentBasePtr _pEnv) {
         pEnv = _pEnv;
     }
 
-    /************************************************************************/
+    // ---------------------------------------------
 
     void setRobot(RobotBasePtr _pRobot) {
         pRobot = _pRobot;
     }
 
-    /************************************************************************/
+    // ----------------------------------------------
 
     void setRobotManip(RobotBase::ManipulatorPtr _pRobotManip) {
         pRobotManip = _pRobotManip;
@@ -69,9 +64,8 @@ private:
 
 
 
-    /**
-    * Implement the actual responder (callback on RPC).
-    */
+
+    // Implement the actual responder (callback on RPC).
 
     virtual bool read(yarp::os::ConnectionReader& connection)
     {
@@ -386,6 +380,8 @@ private:
 
 };
 
+
+
 class OpenraveWorldRpcResponder : public ModuleBase
 {
 public:
@@ -396,7 +392,7 @@ public:
     }
 
     virtual ~OpenraveWorldRpcResponder() {
-        rpcServer.close();
+        worldRpcServer.close();
     }
 
     virtual void Destroy() {
@@ -421,7 +417,7 @@ public:
             funcionArgs.push_back(funcionArg);
         }
 
-        string portName("/OpenraveWorldRpcResponder/rpc:s");
+        string portName("/worldRpcResponder/rpc:s");
 
         if (funcionArgs.size() > 0)
         {
@@ -439,34 +435,22 @@ public:
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
-/*
 
-        _objPtr = penv->GetKinBody("object");
-        if(!_objPtr) {
-            fprintf(stderr,"error: object \"object\" does not exist.\n");
-        } else printf("sucess: object \"object\" exists.\n");
 
-        _wall = penv->GetKinBody("wall");
-        if(!_wall) {
-            fprintf(stderr,"error: object \"wall\" does not exist.\n");
-        } else printf("sucess: object \"wall\" exists.\n");
-
+        //-- Get the robot
         std::vector<RobotBasePtr> robots;
         penv->GetRobots(robots);
-        std::cout << "Robot 0: " << robots.at(0)->GetName() << std::endl;  // default: teo
-        RobotBasePtr probot = robots.at(0);
-        probot->SetActiveManipulator("rightArm");
-        probot->Grab(_objPtr);
+        //-- Robot 0
+        probot = robots.at(0);  // which is a RobotBasePtr
+        printf("OpenRaveWorldRpcResponder using robot 0 (%s) as main robot.\n", probot->GetName().c_str());
 
-        sqPainted.resize(NSQUARES);
+        //-- processor
+        processor.setEnvironment(penv);
+        processor.setRobot(probot);
 
-        processor.setPsqPainted(&sqPainted);
-        processor.setPsqPaintedSemaphore(&sqPaintedSemaphore);
-        */
-        rpcServer.setReader(processor);
-        rpcServer.open(portName);
-
-        //this->start();  // start yarp::os::RateThread (calls run periodically)
+        //-- world rpc server
+        worldRpcServer.open(portName);
+        worldRpcServer.setReader(processor);
 
         return true;
 
@@ -474,19 +458,15 @@ public:
 
 private:
     yarp::os::Network yarp;
-    yarp::os::RpcServer rpcServer;
+    yarp::os::RpcServer worldRpcServer;
     DataProcessor processor;
 
-    vector<int> sqPainted;
-    yarp::os::Semaphore sqPaintedSemaphore;
+    RobotBasePtr probot;
 
-    Transform T_base_object;
-    KinBodyPtr _objPtr;
-    KinBodyPtr _wall;
 };
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
-    if( type == PT_Module && interfacename == "OpenraveWorldRpcResponder" ) {
+    if( type == PT_Module && interfacename == "openraveworldrpcresponder" ) {
         return InterfaceBasePtr(new OpenraveWorldRpcResponder(penv));
     }
     return InterfaceBasePtr();
