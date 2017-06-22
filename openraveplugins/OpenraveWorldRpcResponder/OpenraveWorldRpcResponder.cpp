@@ -77,22 +77,25 @@ private:
         ConstString choice = in.get(0).asString();
         if (in.get(0).getCode() != BOTTLE_TAG_STRING) choice="";
         if (choice=="help") {  ///////////////////////////////// help /////////////////////////////////
-            out.addString("Available commands: help, info (robots information), world del all, world mk box/sbox (three params for size) (three params for pos), world mk ssph (radius) (three params for pos), world mk scyl (radius height) (three params for pos), world mk mesh (no params yet), world mk obj (absolute path), world mv (name) (three params for pos), world grab (obj) (manipulator) (num) 0/1, world grab obj (name) 0/1, world whereis obj (name), world whereis tcp, world draw 0/1 (radius r g b).");
+            out.addString("Available commands: help, info (robots and environment information), world del all, world mk box/sbox (three params for size) (three params for pos), world mk ssph (radius) (three params for pos), world mk scyl (radius height) (three params for pos), world mk mesh (no params yet), world mk obj (absolute path), world mv (name) (three params for pos), world grab (manipulator) (obj) (num) 0/1, world whereis obj (name), world whereis tcp, world draw 0/1 (radius r g b).");
             out.write(*returnToSender);
             return true;
         }
         else if (choice == "info")
         {
+
+            //-- Variable to save info
+            std::stringstream info;
+
             //-- Get robots
             std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
             pEnv->GetRobots(vectorOfRobotPtr);
 
             //-- For each robot
             for(size_t robotPtrIdx=0;robotPtrIdx<vectorOfRobotPtr.size();robotPtrIdx++)
-            {
-                std::stringstream robotInfo;
-                robotInfo << "Robot ["<< robotPtrIdx <<"]"<<" named ["<<vectorOfRobotPtr[robotPtrIdx]->GetName().c_str()<<"]";
-                robotInfo <<" with manipulators: ";
+            {                
+                info << "Robot ["<< robotPtrIdx <<"]"<<" named ["<<vectorOfRobotPtr[robotPtrIdx]->GetName().c_str()<<"]";
+                info <<" with manipulators: ";
 
                 //-- Get manipulators
                 std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[robotPtrIdx]->GetManipulators();
@@ -100,27 +103,25 @@ private:
                 //-- For each manipulator
                 for(size_t manipulatorPtrIdx=0;manipulatorPtrIdx<vectorOfManipulatorPtr.size();manipulatorPtrIdx++)
                 {
-                    robotInfo <<"("<<manipulatorPtrIdx<<")"<<vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName().c_str()<<" ";
-                }
-
-              out.addString(robotInfo.str());
-              out.addString(".\n");
+                    info <<"("<<manipulatorPtrIdx<<")"<<vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName().c_str()<<" ";
+                }              
             }
+
+            info << "// "; // -- to separate information!!
 
             // -- Get bodies
             std::vector<OpenRAVE::KinBodyPtr> vectorOfBodiesPtr;
             pEnv->GetBodies(vectorOfBodiesPtr);
-            std::stringstream totalBodies;
-            totalBodies << "Total bodies in the environment: ";
+
+            info << "Total bodies in the environment: ";
 
             // -- For each body
             for(size_t bodiesPtrIdx=0;bodiesPtrIdx<vectorOfBodiesPtr.size();bodiesPtrIdx++)
             {
-                totalBodies << "("<< bodiesPtrIdx <<")"<<vectorOfBodiesPtr[bodiesPtrIdx]->GetName().c_str()<<" ";
+                info << "("<< bodiesPtrIdx <<")"<<vectorOfBodiesPtr[bodiesPtrIdx]->GetName().c_str()<<" ";
             }
 
-            out.addString(totalBodies.str());
-
+            out.addString(info.str());
             out.write(*returnToSender);
             return true;
 
@@ -301,19 +302,21 @@ private:
                 out.addVocab(VOCAB_OK);
             } else if (in.get(1).asString()=="grab") {
 
-                // -- You've to write: world + grab + "part of robot" + name object + index + 0
-                // --                    0       1           2              3           4     5
+                // -- rpc command to write: world + grab + "part of robot" + name object + index + 0
+                // --                         0       1           2              3           4     5
 
                     if(in.get(3).asString()=="box") {
                         int inIndex = (in.get(4).asInt()); // -- index of the object
                         if ( (inIndex>=1) && (inIndex<=(int)boxKinBodyPtrs.size()) ) {
                             if (in.get(5).asInt()==1) {
-                                pRobot->SetActiveManipulator(in.get(2).asString()); // "rightArm del XML ahora tiene que coincidir con in.get(2).asString()"
-                                pRobot->Grab(boxKinBodyPtrs[inIndex-1]); // boxKinBodyPtrs[inIndex-1] -> objeto caja creada
+                                pRobot->SetActiveManipulator(in.get(2).asString()); // <in.get(2).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
+                                pRobot->Grab(boxKinBodyPtrs[inIndex-1]);
+                                printf("The box is grabbed!!\n");
                                 out.addVocab(VOCAB_OK);
                             } else if (in.get(5).asInt()==0) {
                                 pRobot->SetActiveManipulator(in.get(2).asString());
                                 pRobot->Release(boxKinBodyPtrs[inIndex-1]);
+                                printf("The box is released!!\n");
                                 out.addVocab(VOCAB_OK);
                             } else out.addVocab(VOCAB_FAILED);
                         } else out.addVocab(VOCAB_FAILED);
@@ -323,10 +326,12 @@ private:
                             if (in.get(5).asInt()==1) {
                                 pRobot->SetActiveManipulator(in.get(2).asString());
                                 pRobot->Grab(sboxKinBodyPtrs[inIndex-1]);
+                                printf("The sbox is grabbed!!\n");
                                 out.addVocab(VOCAB_OK);
                             } else if (in.get(5).asInt()==0) {
                                 pRobot->SetActiveManipulator(in.get(2).asString());
                                 pRobot->Release(sboxKinBodyPtrs[inIndex-1]);
+                                printf("The sbox is released!!\n");
                                 out.addVocab(VOCAB_OK);
                             } else out.addVocab(VOCAB_FAILED);
                         } else out.addVocab(VOCAB_FAILED);
@@ -336,10 +341,12 @@ private:
                             if (in.get(5).asInt()==1) {
                                 pRobot->SetActiveManipulator(in.get(2).asString());
                                 pRobot->Grab(ssphKinBodyPtrs[inIndex-1]);
+                                printf("The sphere is grabbed!!\n");
                                 out.addVocab(VOCAB_OK);
                             } else if (in.get(5).asInt()==0) {
                                 pRobot->SetActiveManipulator(in.get(2).asString());
                                 pRobot->Release(ssphKinBodyPtrs[inIndex-1]);
+                                printf("The sphere is released!!\n");
                                 out.addVocab(VOCAB_OK);
                             } else out.addVocab(VOCAB_FAILED);
                         } else out.addVocab(VOCAB_FAILED);
@@ -349,10 +356,12 @@ private:
                             if (in.get(5).asInt()==1) {
                                 pRobot->SetActiveManipulator(in.get(2).asString());
                                 pRobot->Grab(scylKinBodyPtrs[inIndex-1]);
+                                printf("The cylinder is grabbed!!\n");
                                 out.addVocab(VOCAB_OK);
                             } else if (in.get(5).asInt()==0) {
                                 pRobot->SetActiveManipulator(in.get(2).asString());
                                 pRobot->Release(scylKinBodyPtrs[inIndex-1]);
+                                printf("The cylinder is released!!\n");
                                 out.addVocab(VOCAB_OK);
                             } else out.addVocab(VOCAB_FAILED);
                         } else out.addVocab(VOCAB_FAILED);
@@ -362,10 +371,12 @@ private:
                             printf("[WorldRpcResponder] success: object %s exists.\n", in.get(4).asString().c_str());
                             if (in.get(5).asInt()==1) {
                                 pRobot->SetActiveManipulator(in.get(2).asString());
+                                printf("The cylinder is grabbed!!\n");
                                 pRobot->Grab(objPtr);
                                 out.addVocab(VOCAB_OK);
                             } else if (in.get(5).asInt()==0) {
                                 pRobot->SetActiveManipulator(in.get(2).asString());
+                                printf("The cylinder is released!!\n");
                                 pRobot->Release(objPtr);
                                 out.addVocab(VOCAB_OK);
                             } else out.addVocab(VOCAB_FAILED);
@@ -376,6 +387,7 @@ private:
                     } else out.addVocab(VOCAB_FAILED);
 
             // --------------------------------------------------
+
             } else if (in.get(1).asString()=="whereis") {
                 if (in.get(2).asString()=="obj") {
                     KinBodyPtr objPtr = pEnv->GetKinBody(in.get(3).asString().c_str());
