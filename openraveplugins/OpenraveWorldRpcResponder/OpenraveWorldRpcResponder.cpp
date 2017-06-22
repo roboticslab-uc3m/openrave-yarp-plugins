@@ -77,7 +77,7 @@ private:
         ConstString choice = in.get(0).asString();
         if (in.get(0).getCode() != BOTTLE_TAG_STRING) choice="";
         if (choice=="help") {  ///////////////////////////////// help /////////////////////////////////
-            out.addString("Available commands: help, info (robots and environment information), world del all, world mk box/sbox (three params for size) (three params for pos), world mk ssph (radius) (three params for pos), world mk scyl (radius height) (three params for pos), world mk mesh (no params yet), world mk obj (absolute path), world mv (name) (three params for pos), world grab (manipulator) (obj) (num) 0/1, world whereis obj (name), world whereis tcp, world draw 0/1 (radius r g b).");
+            out.addString("Available commands: help, info (robots and environment information), world del all, world mk box/sbox (three params for size) (three params for pos), world mk ssph (radius) (three params for pos), world mk scyl (radius height) (three params for pos), world mk obj (absolute path), world mv (name) (three params for pos), world grab (manipulator) (obj) (num) 0/1, world whereis obj (name), world whereis tcp (manipulator).");
             out.write(*returnToSender);
             return true;
         }
@@ -219,41 +219,6 @@ private:
                     scylKinBodyPtrs.push_back(scylKinBodyPtr);
                     }  // the environment is not locked anymore
                     out.addVocab(VOCAB_OK);
-                } else if (in.get(2).asString() == "mesh") {
-                    { // lock the environment!
-                    OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
-                    KinBodyPtr meshKinBodyPtr = RaveCreateKinBody(pEnv,"");
-                    ConstString meshName("mesh_");
-                    std::ostringstream s;  // meshName += std::to_string(meshKinBodyPtrs.size()+1);  // C++11 only
-                    s << meshKinBodyPtrs.size()+1;
-                    meshName += s.str();
-                    meshKinBodyPtr->SetName(meshName.c_str());
-                    //
-                    //std::vector<AABB> boxes(1);
-                    //boxes[0].extents = Vector(in.get(3).asDouble(), in.get(4).asDouble(), in.get(5).asDouble());
-                    //boxes[0].pos = Vector(in.get(6).asDouble(), in.get(7).asDouble(), in.get(8).asDouble());
-                    OpenRAVE::KinBody::Link::TRIMESH raveMesh;
-                    raveMesh.indices.resize(6);
-                    raveMesh.indices[0]=0;
-                    raveMesh.indices[1]=1;
-                    raveMesh.indices[2]=2;
-                    raveMesh.indices[3]=3;
-                    raveMesh.indices[4]=4;
-                    raveMesh.indices[5]=5;
-                    raveMesh.vertices.resize(6);
-                    raveMesh.vertices[0] = Vector(1.0,1.0,1.0);
-                    raveMesh.vertices[1] = Vector(1.0,1.5,1.0);
-                    raveMesh.vertices[2] = Vector(1.5,1.0,1.0);
-                    raveMesh.vertices[3] = Vector(1.0,1.5,1.0);
-                    raveMesh.vertices[4] = Vector(1.5,1.0,1.0);
-                    raveMesh.vertices[5] = Vector(1.5,1.5,1.5);
-                    meshKinBodyPtr->InitFromTrimesh(raveMesh,true);
-                    //
-                    pEnv->Add(meshKinBodyPtr,true);
-                    meshKinBodyPtrs.push_back(meshKinBodyPtr);
-                    }  // the environment is not locked anymore
-                    out.addVocab(VOCAB_OK);
-
                 } else if (in.get(2).asString() == "obj") {
                     { // lock the environment!
                     OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
@@ -391,6 +356,7 @@ private:
             } else if (in.get(1).asString()=="whereis") {
                 if (in.get(2).asString()=="obj") {
                     KinBodyPtr objPtr = pEnv->GetKinBody(in.get(3).asString().c_str());
+                    printf("We want to know where is ->> %s\n", objPtr->GetName().c_str());
                     if(objPtr) {
                         //Transform t = objPtr->GetTransform();
                         Vector tr = objPtr->GetTransform().trans;
@@ -406,12 +372,17 @@ private:
                         out.addVocab(VOCAB_FAILED);
                     }
                 } else if (in.get(2).asString()=="tcp") {
+                    std::vector<RobotBasePtr> robots;
+                    pEnv->GetRobots(robots);
+                    RobotBasePtr robotPtr = robots.at(0);  //-- For now, we use only the first robot
+                    pRobotManip = robotPtr->GetManipulator(in.get(3).asString()); //-- <in.get(3).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
                     Transform ee = pRobotManip->GetEndEffector()->GetTransform();
                     Transform tool;
-                    tool.trans = Vector(0.0,0.0,1.3);
-                    //tool.rot = quatFromAxisAngle(Vector(0,0,0));
+                    //tool.trans = Vector(0.0,0.0,1.3);
+                    tool.rot = quatFromAxisAngle(Vector(0,0,0)); //-- Converts an axis-angle rotation into a quaternion.
                     tool.rot = ee.rot;
                     Transform tcp = ee * tool;
+                    //Transform tcp = ee;
                     printf("[WorldRpcResponder] success: TCP at %f, %f, %f.\n", tcp.trans.x, tcp.trans.y, tcp.trans.z);
                     Bottle trans;
                     trans.addDouble(tcp.trans.x);
@@ -423,23 +394,9 @@ private:
                     printf("[WorldRpcResponder] warning: where is what?\n");
                     out.addVocab(VOCAB_FAILED);
                 }
-            } else if (in.get(1).asString()=="draw") {
-                if (in.get(2).asInt() == 0) {
-                    printf("[WorldRpcResponder] success: Turning draw OFF.\n");
-                    robotDraw = 0;
-                    out.addVocab(VOCAB_OK);
-                } else {
-                    printf("[WorldRpcResponder] success: Turning draw ON.\n");
-                    robotDraw = in.get(2).asInt();
-                    if (in.size() >= 4) drawRadius = in.get(3).asDouble();
-                    if (in.size() >= 7) {
-                        drawR = in.get(4).asDouble();
-                        drawG = in.get(5).asDouble();
-                        drawB = in.get(6).asDouble();
-                    }
-                    out.addVocab(VOCAB_OK);
-                }
-            } else out.addVocab(VOCAB_FAILED);
+            }
+
+            else out.addVocab(VOCAB_FAILED);
             out.write(*returnToSender);
             return true;
         }
