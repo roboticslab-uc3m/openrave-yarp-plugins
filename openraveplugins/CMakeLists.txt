@@ -6,6 +6,7 @@
 
 add_subdirectory(OpenraveYarpControlboard)
 add_subdirectory(OpenraveYarpPaintSquares)
+add_subdirectory(OpenraveWorldRpcResponder)
 
 #ENDIF (ENABLE_openraveplugins)
 
