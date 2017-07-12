@@ -17,7 +17,7 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${OPENRAVE_YARP_PLUGINS_INCLUDE_
 
 LINK_DIRECTORIES(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
 
-YARP_ADD_PLUGIN(FakeControlboard FakeControlboard.hpp DeviceDriverImpl.cpp IControlLimitsImpl.cpp IControlModeImpl.cpp IEncodersImpl.cpp IEncodersTimedImpl.cpp IPositionImpl.cpp IPosition2Impl.cpp IVelocityImpl.cpp IVelocity2Impl.cpp ITorqueImpl.cpp SharedArea.cpp RateThreadImpl.cpp)
+YARP_ADD_PLUGIN(FakeControlboard FakeControlboard.hpp DeviceDriverImpl.cpp IControlLimitsImpl.cpp IControlLimits2Impl.cpp IControlModeImpl.cpp IEncodersImpl.cpp IEncodersTimedImpl.cpp IPositionImpl.cpp IPosition2Impl.cpp IVelocityImpl.cpp IVelocity2Impl.cpp ITorqueImpl.cpp SharedArea.cpp RateThreadImpl.cpp)
 TARGET_LINK_LIBRARIES(FakeControlboard ${YARP_LIBRARIES})
 
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
