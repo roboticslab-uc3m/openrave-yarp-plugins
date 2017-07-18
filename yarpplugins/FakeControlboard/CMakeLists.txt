@@ -11,13 +11,13 @@ IF (NOT SKIP_FakeControlboard)
 
 SET(CMAKE_MODULE_PATH ${OPENRAVE_YARP_PLUGINS_MODULE_PATH} ${CMAKE_MODULE_PATH})
 FIND_PACKAGE(YARP REQUIRED)
-FIND_PACKAGE(COLOR_DEBUG)
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS} ${COLOR_DEBUG_INCLUDE_DIRS})  # kdl name depends on version
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS})  # kdl name depends on version
 
 LINK_DIRECTORIES(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
 
 YARP_ADD_PLUGIN(FakeControlboard FakeControlboard.hpp DeviceDriverImpl.cpp IControlLimitsImpl.cpp IControlLimits2Impl.cpp IControlModeImpl.cpp IEncodersImpl.cpp IEncodersTimedImpl.cpp IPositionImpl.cpp IPosition2Impl.cpp IVelocityImpl.cpp IVelocity2Impl.cpp ITorqueImpl.cpp SharedArea.cpp RateThreadImpl.cpp)
+add_dependencies(FakeControlboard COLOR_DEBUG)
 TARGET_LINK_LIBRARIES(FakeControlboard ${YARP_LIBRARIES})
 
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 

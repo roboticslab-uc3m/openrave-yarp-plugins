@@ -4,12 +4,11 @@
 
 # Exploit new cmake 2.6 features (export). 
 
-# reduce warning level with cmake 2.6
-cmake_minimum_required(VERSION 2.6)
-#cmake policies
-if(COMMAND cmake_policy)
-  cmake_policy(SET CMP0003 NEW)
-endif(COMMAND cmake_policy)
+cmake_minimum_required(VERSION 2.8.9)
+
+# Safety check against missing dummy library for system-available COLOR_DEBUG.
+# Remove if cmake_minimum_required() above is set to 3.0 or later.
+cmake_policy(SET CMP0046 NEW)
 
 project(OPENRAVE_YARP_PLUGINS)
 
@@ -45,6 +44,8 @@ endif(MSVC)
 
 ######################
 
+include(GNUInstallDirs)
+
 ### this makes everything go in $OPENRAVE_YARP_PLUGINS_DIR/lib and $OPENRAVE_YARP_PLUGINS_DIR/bin
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
@@ -74,6 +75,18 @@ include(YCMBootstrap)
 include(FindOrBuildPackage)
 
 find_or_build_package(COLOR_DEBUG)
+
+# find_or_build_package() doesn't bring into scope COLOR_DEBUG_INCLUDE_DIRS
+# nor other config variables. If a system copy is found, we have to call the
+# find_package() command and proceed as usual.
+if(USE_SYSTEM_COLOR_DEBUG)
+    find_package(COLOR_DEBUG QUIET)
+
+    if(COLOR_DEBUG_FOUND)
+        include_directories(${COLOR_DEBUG_INCLUDE_DIRS})
+        add_library(COLOR_DEBUG UNKNOWN IMPORTED)
+    endif()
+endif()
 
 set(OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS CACHE INTERNAL "appended header dirs" FORCE)
 set(OPENRAVE_YARP_PLUGINS_LINK_DIRS CACHE INTERNAL "appended link dirs" FORCE)

@@ -12,7 +12,6 @@ project(${KEYWORD})
 #set(CMAKE_BUILD_TYPE Debug)#RelWithDebInfo)
 FIND_PACKAGE(OpenRAVE REQUIRED)
 FIND_PACKAGE(YARP REQUIRED)
-FIND_PACKAGE(COLOR_DEBUG)
 
 # Search for source code.
 file(GLOB folder_source *.cpp *.cc *.c)
@@ -32,7 +31,7 @@ endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
 
 find_package(Boost COMPONENTS iostreams python thread system)
 
-include_directories(${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS} ${OpenRAVE_INCLUDE_DIRS} ${YARP_INCLUDE_DIRS} ${COLOR_DEBUG_INCLUDE_DIRS})
+include_directories(${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS} ${OpenRAVE_INCLUDE_DIRS} ${YARP_INCLUDE_DIRS})
 if( Boost_INCLUDE_DIRS )
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
@@ -42,6 +41,7 @@ link_directories(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
 # Set up our main executable.
 if (folder_source)
   add_executable(${KEYWORD} ${folder_source} ${folder_header})
+  add_dependencies(${KEYWORD} COLOR_DEBUG)
   set_target_properties(${KEYWORD} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
   set_target_properties(${KEYWORD} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
   target_link_libraries(${KEYWORD} ${OpenRAVE_LIBRARIES} ${OpenRAVE_CORE_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${YARP_LIBRARIES})
