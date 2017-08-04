@@ -2,6 +2,8 @@
 
 #include "FakeControlboard.hpp"
 
+#include <ColorDebug.hpp>
+
 // ------------------- IForceControl Related ------------------------------------
 
 bool roboticslab::FakeControlboard::getRefTorques(double *t){
@@ -23,7 +25,7 @@ bool roboticslab::FakeControlboard::setRefTorques(const double *t) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::FakeControlboard::setRefTorque(int j, double t) {
-    CD_INFO("joint: %d, refTorque: %f.\n",j,t);
+    CD_DEBUG("joint: %d, refTorque: %f.\n",j,t);
     return true;
 }
 
@@ -48,7 +50,7 @@ bool roboticslab::FakeControlboard::setTorquePid(int j, const yarp::dev::Pid &pi
 // -----------------------------------------------------------------------------
 
 bool roboticslab::FakeControlboard::getTorque(int j, double *t) {
-    //CD_INFO("joint: %d.\n",j);  //-- Way too verbose
+    //CD_DEBUG("joint: %d.\n",j);  //-- Way too verbose
     *t = 0;
     return true;
 }

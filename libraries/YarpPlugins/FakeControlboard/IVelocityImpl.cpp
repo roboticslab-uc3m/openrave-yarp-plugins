@@ -2,12 +2,14 @@
 
 #include "FakeControlboard.hpp"
 
+#include <ColorDebug.hpp>
+
 // ------------------ IVelocity Related ----------------------------------------
 
 bool roboticslab::FakeControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
     if ((unsigned int)j>axes) return false;
     if(modePosVel!=1) {  // Check if we are in velocity mode.
-        fprintf(stderr,"[FakeControlboard] fail: FakeControlboard will not velocityMove as not in velocityMode\n");
+        CD_ERROR("FakeControlboard will not velocityMove as not in velocityMode\n");
         return false;
     }
     velRaw[j] = (sp * velRawExposed[j]);
@@ -18,9 +20,9 @@ bool roboticslab::FakeControlboard::velocityMove(int j, double sp) {  // velExpo
 // -----------------------------------------------------------------------------
 
 bool roboticslab::FakeControlboard::velocityMove(const double *sp) {
-    printf("[FakeControlboard] Vel:");
-    for (unsigned int i=0; i<axes; i++) printf(" %+.6f",velRaw[i]);
-    printf("\n");
+    CD_DEBUG("Vel:");
+    for (unsigned int i=0; i<axes; i++) CD_DEBUG_NO_HEADER(" %+.6f",velRaw[i]);
+    CD_DEBUG_NO_HEADER("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= velocityMove(i,sp[i]);

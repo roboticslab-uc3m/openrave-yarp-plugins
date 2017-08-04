@@ -2,6 +2,8 @@
 
 #include "FakeControlboard.hpp"
 
+#include <ColorDebug.hpp>
+
 // ------------------ IVelocity2 Related ----------------------------------------
 
 bool roboticslab::FakeControlboard::velocityMove(const int n_joint, const int *joints, const double *spds)

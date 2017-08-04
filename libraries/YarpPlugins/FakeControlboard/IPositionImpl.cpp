@@ -2,6 +2,8 @@
 
 #include "FakeControlboard.hpp"
 
+#include <ColorDebug.hpp>
+
 // ------------------- IPositionControl Related --------------------------------
 
 bool roboticslab::FakeControlboard::getAxes(int *ax) {
@@ -14,19 +16,19 @@ bool roboticslab::FakeControlboard::getAxes(int *ax) {
 
 bool roboticslab::FakeControlboard::positionMove(int j, double ref) {  // encExposed = ref;
     if ((unsigned int)j>axes) {
-        fprintf(stderr,"[FakeControlboard] error: axis index more than axes.\n");
+        CD_ERROR("axis index more than axes.\n");
         return false;
     }
     if(modePosVel!=0) {  // Check if we are in position mode.
-        fprintf(stderr,"[FakeControlboard] warning: will not positionMove as not in positionMode\n");
+        CD_WARNING("will not positionMove as not in positionMode\n");
         return false;
     }
-    printf("[FakeControlboard] positionMove(%d,%f) f[begin]\n",j,ref);
+    CD_INFO("positionMove(%d,%f) f[begin]\n",j,ref);
     // Set all the private parameters of the Rave class that correspond to this kind of movement!
     targetExposed[j] = ref;
     if (fabs(targetExposed[j]-getEncExposed(j))<jointTol[j]) {
         stop(j);  // puts jointStatus[j]=0;
-        printf("[FakeControlboard] Joint q%d reached target.\n",j+1);
+        CD_INFO("Joint q%d reached target.\n",j+1);
         return true;
     } else if ( ref > getEncExposed(j) ) {
         //if(!velocityMove(j, refSpeed[j])) return false;
@@ -36,7 +38,7 @@ bool roboticslab::FakeControlboard::positionMove(int j, double ref) {  // encExp
         velRaw[j] = -(refSpeed[j] * velRawExposed[j]);
     }
     jointStatus[j] = 1;
-    printf("[FakeControlboard] positionMove(%d,%f) f[end]\n",j,ref);
+    CD_INFO("positionMove(%d,%f) f[end]\n",j,ref);
     return true;
 }
 
@@ -44,34 +46,34 @@ bool roboticslab::FakeControlboard::positionMove(int j, double ref) {  // encExp
 
 bool roboticslab::FakeControlboard::positionMove(const double *refs) {  // encExposed = refs;
     if(modePosVel!=0) {  // Check if we are in position mode.
-        fprintf(stderr,"[FakeControlboard] error: Will not positionMove as not in positionMode\n");
+        CD_ERROR("Will not positionMove as not in positionMode\n");
         return false;
     }
-    printf("[FakeControlboard] positionMove() f[begin]\n");
+    CD_INFO("positionMove() f[begin]\n");
     // Find out the maximum time to move
     double max_time = 0;
     for(unsigned int motor=0;motor<axes;motor++) {
-        printf("[FakeControlboard] dist[%d]: %f\n",motor,fabs(refs[motor]-getEncExposed(motor)));
-        printf("[FakeControlboard] refSpeed[%d]: %f\n",motor,refSpeed[motor]);
+        CD_INFO("dist[%d]: %f\n",motor,fabs(refs[motor]-getEncExposed(motor)));
+        CD_INFO("refSpeed[%d]: %f\n",motor,refSpeed[motor]);
         if (fabs((refs[motor]-getEncExposed(motor))/refSpeed[motor])>max_time) {
             max_time = fabs((refs[motor]-getEncExposed(motor))/refSpeed[motor]);
-            printf("[FakeControlboard] -->candidate: %f\n",max_time);
+            CD_INFO(" -->candidate: %f\n",max_time);
         }
     }
-    printf("[FakeControlboard] max_time[final]: %f\n",max_time);
+    CD_INFO("max_time[final]: %f\n",max_time);
     // Set all the private parameters of the Rave class that correspond to this kind of movement!
     for(unsigned int motor=0;motor<axes;motor++) {
         targetExposed[motor]=refs[motor];
         velRaw[motor] = ((refs[motor]-getEncExposed(motor))/max_time)*velRawExposed[motor];
         if(velRaw[motor] != velRaw[motor]) velRaw[motor] = 0;  // protect against NaN
-        printf("[FakeControlboard] velRaw[%d]: %f\n",motor,velRaw[motor]);
+        CD_INFO("velRaw[%d]: %f\n",motor,velRaw[motor]);
         jointStatus[motor]=1;
         if (fabs(targetExposed[motor]-getEncExposed(motor))<jointTol[motor]) {
             stop(motor);  // puts jointStatus[motor]=0;
-            printf("[FakeControlboard] Joint q%d reached target.\n",motor+1);
+            CD_INFO("Joint q%d reached target.\n",motor+1);
         }
     }
-    printf("[FakeControlboard] positionMove() f[end]\n");
+    CD_INFO("positionMove() f[end]\n");
     return true;
 }
 
@@ -80,15 +82,15 @@ bool roboticslab::FakeControlboard::positionMove(const double *refs) {  // encEx
 bool roboticslab::FakeControlboard::relativeMove(int j, double delta) {
     if ((unsigned int)j>axes) return false;
     if(modePosVel!=0) {  // Check if we are in position mode.
-        printf("[fail] FakeControlboard will not relativeMove as not in positionMode\n");
+        CD_ERROR("FakeControlboard will not relativeMove as not in positionMode\n");
         return false;
     }
-    printf("[FakeControlboard] relativeMove(%d,%f) f[begin]\n",j,delta);
+    CD_INFO("relativeMove(%d,%f) f[begin]\n",j,delta);
     // Set all the private parameters of the Rave class that correspond to this kind of movement!
     targetExposed[j]=getEncExposed(j)+delta;
     if (fabs(targetExposed[j]-getEncExposed(j))<jointTol[j]) {
         stop(j);  // puts jointStatus[j]=0;
-        printf("[FakeControlboard] Joint q%d already at target.\n",j+1);
+        CD_INFO("Joint q%d already at target.\n",j+1);
         return true;
     } else if ( targetExposed[j] > getEncExposed(j) ) {
         // if(!velocityMove(j, refSpeed[j])) return false;
@@ -98,7 +100,7 @@ bool roboticslab::FakeControlboard::relativeMove(int j, double delta) {
         velRaw[j] = -(refSpeed[j] * velRawExposed[j]);
     }
     jointStatus[j]=2;
-    printf("[FakeControlboard] relativeMove(%d,%f) f[end]\n",j,delta);
+    CD_INFO("relativeMove(%d,%f) f[end]\n",j,delta);
     return true;
 }
 
@@ -106,10 +108,10 @@ bool roboticslab::FakeControlboard::relativeMove(int j, double delta) {
 
 bool roboticslab::FakeControlboard::relativeMove(const double *deltas) {  // encExposed = deltas + encExposed
     if(modePosVel!=0) {  // Check if we are in position mode.
-        fprintf(stderr,"[FakeControlboard] warning: will not relativeMove as not in positionMode\n");
+        CD_ERROR("will not relativeMove as not in positionMode\n");
         return false;
     }
-    printf("[FakeControlboard] relativeMove() f[begin]\n");
+    CD_INFO("relativeMove() f[begin]\n");
     // Find out the maximum angle to move
     double max_dist = 0;
     double time_max_dist = 0;
@@ -122,10 +124,10 @@ bool roboticslab::FakeControlboard::relativeMove(const double *deltas) {  // enc
     for(unsigned int motor=0; motor<axes; motor++) {
       targetExposed[motor]=getEncExposed(motor)+deltas[motor];
       velRaw[motor] = ((deltas[motor])/time_max_dist)*velRawExposed[motor];
-      printf("velRaw[%d]: %f\n",motor,velRaw[motor]);
+      CD_INFO("velRaw[%d]: %f\n",motor,velRaw[motor]);
       jointStatus[motor]=2;
     }
-    printf("[FakeControlboard] relativeMove() f[end]\n");
+    CD_INFO("relativeMove() f[end]\n");
     return true;
 }
 
@@ -222,7 +224,7 @@ bool roboticslab::FakeControlboard::getRefAccelerations(double *accs) {
 
 bool roboticslab::FakeControlboard::stop(int j) {
     if ((unsigned int)j>axes) return false;
-    printf("[FakeControlboard] stop(%d)\n",j);
+    CD_DEBUG("stop(%d)\n",j);
     velRaw[j]=0.0;
     jointStatus[j]=0;
     return true;

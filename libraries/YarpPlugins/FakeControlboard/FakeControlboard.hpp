@@ -16,8 +16,6 @@
 #include <sstream>
 #include <vector>
 
-#include "ColorDebug.hpp"
-
 #define DEFAULT_AXES 5
 
 #define DEFAULT_EXTRA_ROBOT "none"

@@ -2,6 +2,8 @@
 
 #include "FakeControlboard.hpp"
 
+#include <ColorDebug.hpp>
+
 // ------------------- DeviceDriver Related ------------------------------------
 
 bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config) {
@@ -19,65 +21,65 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config) {
     yarp::os::Bottle* initPoss;
     if (config.check("initPoss")) {
         initPoss = config.find("initPoss").asList();
-        printf("FakeControlboard using individual initPoss: %s\n",initPoss->toString().c_str());
-        if(initPoss->size() != axes) printf("[warning] initPoss->size() != axes\n");
+        CD_INFO("FakeControlboard using individual initPoss: %s\n",initPoss->toString().c_str());
+        if(initPoss->size() != axes) CD_INFO("[warning] initPoss->size() != axes\n");
     } else {
         initPoss = 0;
-        printf("FakeControlboard not using individual initPoss, defaulting to genInitPos.\n");
+        CD_INFO("FakeControlboard not using individual initPoss, defaulting to genInitPos.\n");
     }
     yarp::os::Bottle* jointTols;
     if (config.check("jointTols")) {
         jointTols = config.find("jointTols").asList();
-        printf("FakeControlboard using individual jointTols: %s\n",jointTols->toString().c_str());
-        if(jointTols->size() != axes) printf("[warning] jointTols->size() != axes\n");
+        CD_INFO("FakeControlboard using individual jointTols: %s\n",jointTols->toString().c_str());
+        if(jointTols->size() != axes) CD_INFO("[warning] jointTols->size() != axes\n");
     } else {
         jointTols = 0;
-        printf("FakeControlboard not using individual jointTols, defaulting to genJointTol.\n");
+        CD_INFO("FakeControlboard not using individual jointTols, defaulting to genJointTol.\n");
     }
     yarp::os::Bottle* maxLimits;
     if (config.check("maxLimits")) {
         maxLimits = config.find("maxLimits").asList();
-        printf("FakeControlboard using individual maxLimits: %s\n",maxLimits->toString().c_str());
-        if(maxLimits->size() != axes) printf("[warning] maxLimits->size() != axes\n");
+        CD_INFO("FakeControlboard using individual maxLimits: %s\n",maxLimits->toString().c_str());
+        if(maxLimits->size() != axes) CD_INFO("[warning] maxLimits->size() != axes\n");
     } else {
         maxLimits = 0;
-        printf("FakeControlboard not using individual maxLimits, defaulting to genMaxLimit.\n");
+        CD_INFO("FakeControlboard not using individual maxLimits, defaulting to genMaxLimit.\n");
     }
     yarp::os::Bottle* minLimits;
     if (config.check("minLimits")) {
         minLimits = config.find("minLimits").asList();
-        printf("FakeControlboard using individual minLimits: %s\n",minLimits->toString().c_str());
-        if(minLimits->size() != axes) printf("[warning] minLimits->size() != axes\n");
+        CD_INFO("FakeControlboard using individual minLimits: %s\n",minLimits->toString().c_str());
+        if(minLimits->size() != axes) CD_INFO("[warning] minLimits->size() != axes\n");
     } else {
         minLimits = 0;
-        printf("FakeControlboard not using individual minLimits, defaulting to genMinLimit.\n");
+        CD_INFO("FakeControlboard not using individual minLimits, defaulting to genMinLimit.\n");
     }
     yarp::os::Bottle* refSpeeds;
     if (config.check("refSpeeds")) {
         refSpeeds = config.find("refSpeeds").asList();
-        printf("FakeControlboard using individual refSpeeds: %s\n",refSpeeds->toString().c_str());
-        if(refSpeeds->size() != axes) printf("[warning] refSpeeds->size() != axes\n");
+        CD_INFO("FakeControlboard using individual refSpeeds: %s\n",refSpeeds->toString().c_str());
+        if(refSpeeds->size() != axes) CD_INFO("[warning] refSpeeds->size() != axes\n");
     } else {
         refSpeeds = 0;
-        printf("FakeControlboard not using individual refSpeeds, defaulting to genRefSpeed.\n");
+        CD_INFO("FakeControlboard not using individual refSpeeds, defaulting to genRefSpeed.\n");
     }
     yarp::os::Bottle* encRawExposeds;
     if (config.check("encRawExposeds")) {
         encRawExposeds = config.find("encRawExposeds").asList();
-        printf("FakeControlboard using individual encRawExposeds: %s\n",encRawExposeds->toString().c_str());
-        if(encRawExposeds->size() != axes) printf("[warning] encRawExposeds->size() != axes\n");
+        CD_INFO("FakeControlboard using individual encRawExposeds: %s\n",encRawExposeds->toString().c_str());
+        if(encRawExposeds->size() != axes) CD_INFO("[warning] encRawExposeds->size() != axes\n");
     } else {
         encRawExposeds = 0;
-        printf("FakeControlboard not using individual encRawExposeds, defaulting to genEncRawExposed.\n");
+        CD_INFO("FakeControlboard not using individual encRawExposeds, defaulting to genEncRawExposed.\n");
     }
     yarp::os::Bottle* velRawExposeds;
     if (config.check("velRawExposeds")) {
         velRawExposeds = config.find("velRawExposeds").asList();
-        printf("FakeControlboard using individual velRawExposeds: %s\n",velRawExposeds->toString().c_str());
-        if(velRawExposeds->size() != axes) printf("[warning] velRawExposeds->size() != axes\n");
+        CD_INFO("FakeControlboard using individual velRawExposeds: %s\n",velRawExposeds->toString().c_str());
+        if(velRawExposeds->size() != axes) CD_INFO("[warning] velRawExposeds->size() != axes\n");
     } else {
         velRawExposeds = 0;
-        printf("FakeControlboard not using individual velRawExposeds, defaulting to genVelRawExposed.\n");
+        CD_INFO("FakeControlboard not using individual velRawExposeds, defaulting to genVelRawExposed.\n");
     }
 
     encRawExposed.resize(axes);
@@ -125,7 +127,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config) {
 
 bool roboticslab::FakeControlboard::close() {
     RateThread::stop();
-    printf("[FakeControlboard] close()\n");
+    CD_INFO("[FakeControlboard] close()\n");
     return true;
 }
 

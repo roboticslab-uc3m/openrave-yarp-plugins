@@ -2,14 +2,16 @@
 
 #include "FakeControlboard.hpp"
 
+#include <ColorDebug.hpp>
+
 // ------------------- IControlLimits Related ------------------------------------
 
 bool roboticslab::FakeControlboard::setPositionMode(int j) {
-    CD_INFO("(%d)\n",j);
+    CD_DEBUG("(%d)\n",j);
     if (modePosVel==0) return true;  // Simply return true if we were already in pos mode.
     // Do anything additional before setting flag to pos...
     if(!stop(j)) {
-        fprintf(stderr,"[FakeControlboard] warning: setPositionMode() return false; failed to stop joint %d\n",j);
+        CD_WARNING("failed to stop joint %d\n",j);
         return false;
     }
     modePosVel = 0;
@@ -19,7 +21,7 @@ bool roboticslab::FakeControlboard::setPositionMode(int j) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::FakeControlboard::setVelocityMode(int j) {
-    CD_INFO("(%d)\n",j);
+    CD_DEBUG("(%d)\n",j);
     modePosVel = 1;  // Set flag to vel.
     return true;
 }
@@ -27,14 +29,14 @@ bool roboticslab::FakeControlboard::setVelocityMode(int j) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::FakeControlboard::setTorqueMode(int j)  {
-    CD_INFO("(%d)\n",j);
+    CD_DEBUG("(%d)\n",j);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::FakeControlboard::setImpedancePositionMode(int j) {
-    CD_INFO("(%d)\n",j);
+    CD_DEBUG("(%d)\n",j);
     return true;
 }
 
@@ -48,7 +50,7 @@ bool roboticslab::FakeControlboard::setImpedanceVelocityMode(int j) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::FakeControlboard::setOpenLoopMode(int j) {
-    CD_INFO("(%d)\n",j);
+    CD_DEBUG("(%d)\n",j);
     return true;
 }
 

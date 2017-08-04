@@ -2,6 +2,8 @@
 
 #include "FakeControlboard.hpp"
 
+#include <ColorDebug.hpp>
+
 // ------------------- IControlLimits2 Related ------------------------------------
 
 bool roboticslab::FakeControlboard::setVelLimits(int axis, double min, double max) {

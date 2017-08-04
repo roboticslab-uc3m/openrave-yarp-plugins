@@ -2,6 +2,8 @@
 
 #include "FakeControlboard.hpp"
 
+#include <ColorDebug.hpp>
+
 // ------------------- IPositionControl2 Related --------------------------------
 
 bool roboticslab::FakeControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
