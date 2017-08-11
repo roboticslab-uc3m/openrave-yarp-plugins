@@ -1,0 +1,63 @@
+// -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
+
+#include "FakeControlboard.hpp"
+
+#include <ColorDebug.hpp>
+
+// ------------------- IControlMode2 Related ------------------------------------
+
+bool roboticslab::FakeControlboard::getControlModes(const int n_joint, const int *joints, int *modes) {
+    CD_INFO("(%d)\n",n_joint);
+    bool ok = true;
+    for(unsigned int i=0; i < n_joint; i++)
+        ok &= getControlMode(joints[i],&modes[i]);
+    return ok;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::FakeControlboard::setControlMode(const int j, const int mode) {
+    CD_INFO("(%d)\n",j);
+
+    if ((unsigned int)j>axes) {
+        CD_ERROR("axis index more than axes.\n");
+        return false;
+    }
+
+    if( mode == VOCAB_CM_POSITION )
+        return setPositionMode(j);
+    else if( mode == VOCAB_CM_VELOCITY )
+        return setVelocityMode(j);
+    else if( mode == VOCAB_CM_TORQUE )
+        return setTorqueMode(j);
+    else if( mode == VOCAB_CM_IMPEDANCE_POS )
+        return setImpedancePositionMode(j);
+    else if( mode == VOCAB_CM_IMPEDANCE_VEL )
+        return setImpedanceVelocityMode(j);
+    else if( mode == VOCAB_CM_OPENLOOP )
+        return setOpenLoopMode(j);
+
+    return false;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::FakeControlboard::setControlModes(const int n_joint, const int *joints, int *modes)  {
+    CD_INFO("(%d)\n",n_joint);
+    bool ok = true;
+    for(int j=0; j<n_joint; j++)
+        ok &= setControlMode(joints[j],modes[j]);
+    return ok;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::FakeControlboard::setControlModes(int *modes) {
+    CD_INFO("\n");
+    bool ok = true;
+    for(unsigned int i=0; i<axes; i++)
+        ok &= setControlMode(i,modes[i]);
+    return ok;
+}
+
+// -----------------------------------------------------------------------------
