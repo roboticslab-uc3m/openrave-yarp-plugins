@@ -51,7 +51,7 @@ bool roboticslab::FakeControlboard::setImpedanceVelocityMode(int j) {
 
 bool roboticslab::FakeControlboard::setOpenLoopMode(int j) {
     CD_DEBUG("(%d)\n",j);
-    return true;
+    return false;  // removed in YARP 2.3.70
 }
 
 // -----------------------------------------------------------------------------

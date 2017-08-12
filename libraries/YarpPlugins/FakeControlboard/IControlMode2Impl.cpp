@@ -9,7 +9,7 @@
 bool roboticslab::FakeControlboard::getControlModes(const int n_joint, const int *joints, int *modes) {
     CD_INFO("(%d)\n",n_joint);
     bool ok = true;
-    for(unsigned int i=0; i < n_joint; i++)
+    for(int i=0; i < n_joint; i++)
         ok &= getControlMode(joints[i],&modes[i]);
     return ok;
 }
@@ -34,8 +34,6 @@ bool roboticslab::FakeControlboard::setControlMode(const int j, const int mode) 
         return setImpedancePositionMode(j);
     else if( mode == VOCAB_CM_IMPEDANCE_VEL )
         return setImpedanceVelocityMode(j);
-    else if( mode == VOCAB_CM_OPENLOOP )
-        return setOpenLoopMode(j);
 
     return false;
 }
