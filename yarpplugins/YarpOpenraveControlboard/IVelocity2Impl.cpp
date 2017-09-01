@@ -6,9 +6,11 @@
 
 bool roboticslab::YarpOpenraveControlboard::velocityMove(const int n_joint, const int *joints, const double *spds)
 {
-    CD_DEBUG("\n");
-    // must implement mask!
-    return velocityMove(spds);
+    CD_INFO("\n");
+    bool ok = true;
+    for(unsigned int i=0;i<n_joint;i++)
+        ok &= velocityMove(joints[i],spds[i]);
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
