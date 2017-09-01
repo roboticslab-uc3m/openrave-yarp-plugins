@@ -41,7 +41,8 @@ bool roboticslab::YarpOpenraveControlboard::setEncoders(const double *vals) {
 
 bool roboticslab::YarpOpenraveControlboard::getEncoder(int j, double *v) {
     //CD_INFO("\n");  //-- Way too verbose
-    *v = dEncRaw[ manipulatorIDs[j] ] * 180.0 / M_PI;
+    *v = vectorOfJointPtr[j]->GetValue(0)  * 180.0 / M_PI;
+
     return true;
 }
 
