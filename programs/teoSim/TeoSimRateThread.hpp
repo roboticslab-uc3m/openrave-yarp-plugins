@@ -20,8 +20,8 @@
 
 #define NULL_JMC_MS 20
 
-#define DEFAULT_EXTERN_OBJ "none"
-//#define DEFAULT_EXTERN_OBJ "redCan"  // loads plugin
+#define DEFAULT_PLUGIN "none"
+//#define DEFAULT_PLUGIN "OpenraveWorldRpcResponder"  // loads plugin
 
 namespace roboticslab
 {
