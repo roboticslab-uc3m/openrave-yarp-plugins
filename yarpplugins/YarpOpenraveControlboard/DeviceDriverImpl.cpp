@@ -40,6 +40,17 @@ bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         vectorOfJointPtr.push_back(jointPtr);
     }
 
+    //-- Create the controller, make sure to lock environment!
+    {
+        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
+
+        pcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");
+        probot->SetController(pcontrol,manipulatorIDs,0); // control all manipulator joints
+        penv->StopSimulation();
+        penv->StartSimulation(0.001);
+        probot->SetActiveDOFs(manipulatorIDs);
+    }
+
     return true;
 }
 
