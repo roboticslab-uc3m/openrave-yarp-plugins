@@ -35,7 +35,115 @@
 using namespace std;
 using namespace OpenRAVE;
 
+
+#define NULL_JMC_MS 20
+
 //YARP_DECLARE_PLUGINS(yarpplugins)
+
+
+class TeoSimRateThread : public yarp::os::RateThread {
+     public:
+
+        // Set the Thread Rate in the class constructor
+        TeoSimRateThread() : RateThread(NULL_JMC_MS) {}  // In ms
+
+        void setEnvironmentPtr(const OpenRAVE::EnvironmentBasePtr& environmentPtr) {
+            this->environmentPtr = environmentPtr;
+        }
+
+        void setPtrVectorOfRobotPtr(std::vector< OpenRAVE::RobotBasePtr > * ptrVectorOfRobotPtr) {
+            this->ptrVectorOfRobotPtr = ptrVectorOfRobotPtr;
+        }
+
+        void setPtrVectorOfSensorPtrForCameras(std::vector< OpenRAVE::SensorBasePtr > * ptrVectorOfSensorPtrForCameras) {
+            this->ptrVectorOfSensorPtrForCameras = ptrVectorOfSensorPtrForCameras;
+        }
+
+        void setPtrVectorOfSensorPtrForLasers(std::vector< OpenRAVE::SensorBasePtr > * ptrVectorOfSensorPtrForLasers) {
+            this->ptrVectorOfSensorPtrForLasers = ptrVectorOfSensorPtrForLasers;
+        }
+
+        void setPtrVectorOfSensorPtrForForce6Ds(std::vector< OpenRAVE::SensorBasePtr > * ptrVectorOfSensorPtrForForce6Ds) {
+            this->ptrVectorOfSensorPtrForForce6Ds = ptrVectorOfSensorPtrForForce6Ds;
+        }
+
+        void setPtrVectorOfCameraSensorDataPtr(std::vector< boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> > * ptrVectorOfCameraSensorDataPtr) {
+            this->ptrVectorOfCameraSensorDataPtr = ptrVectorOfCameraSensorDataPtr;
+        }
+
+        void setPtrVectorOfLaserSensorDataPtr(std::vector< boost::shared_ptr<OpenRAVE::SensorBase::LaserSensorData> > * setPtrVectorOfLaserSensorDataPtr) {
+            this->ptrVectorOfLaserSensorDataPtr = setPtrVectorOfLaserSensorDataPtr;
+        }
+
+        void setPtrVectorOfForce6DSensorDataPtr(std::vector< boost::shared_ptr<OpenRAVE::SensorBase::Force6DSensorData> > * setPtrVectorOfForce6DSensorDataPtr) {
+            this->ptrVectorOfForce6DSensorDataPtr = setPtrVectorOfForce6DSensorDataPtr;
+        }
+
+        void setPtrVectorOfCameraWidth(std::vector<int> * ptrVectorOfCameraWidth) {
+            this->ptrVectorOfCameraWidth = ptrVectorOfCameraWidth;
+        }
+
+        void setPtrVectorOfCameraHeight(std::vector<int> * ptrVectorOfCameraHeight) {
+            this->ptrVectorOfCameraHeight = ptrVectorOfCameraHeight;
+        }
+
+        void setPtrVectorOfRgbPortPtr(std::vector< yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >* > * ptrVectorOfRgbPortPtr) {
+            this->ptrVectorOfRgbPortPtr = ptrVectorOfRgbPortPtr;
+        }
+
+        void setPtrVectorOfIntPortPtr(std::vector< yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelInt> >* > * ptrVectorOfIntPortPtr) {
+            this->ptrVectorOfIntPortPtr = ptrVectorOfIntPortPtr;
+        }
+
+        void setPtrVectorOfForce6DPortPtr(std::vector< yarp::os::BufferedPort<yarp::os::Bottle >* > * ptrVectorOfForce6DPortPtr) {
+            this->ptrVectorOfForce6DPortPtr = ptrVectorOfForce6DPortPtr;
+        }
+
+
+    // -------- RateThread declarations. Implementation in RateThreadImpl.cpp --------
+
+        /**
+         * Initialization method. The thread executes this function
+         * when it starts and before "run". This is a good place to
+         * perform initialization tasks that need to be done by the
+         * thread itself (device drivers initialization, memory
+         * allocation etc). If the function returns false the thread
+         * quits and never calls "run". The return value of threadInit()
+         * is notified to the class and passed as a parameter
+         * to afterStart(). Note that afterStart() is called by the
+         * same thread that is executing the "start" method.
+         */
+        bool threadInit();
+
+        /**
+         * Loop function. This is the thread itself.
+         */
+        void run();
+
+    // ------------------------------- Protected -------------------------------------
+    protected:
+        //
+        double jmcMs;
+        double lastTime;
+        //
+        // Rave-specific //
+        OpenRAVE::EnvironmentBasePtr environmentPtr;
+        std::vector<OpenRAVE::RobotBasePtr> * ptrVectorOfRobotPtr;
+        //
+        std::vector< OpenRAVE::SensorBasePtr > * ptrVectorOfSensorPtrForCameras;
+        std::vector< OpenRAVE::SensorBasePtr > * ptrVectorOfSensorPtrForLasers;
+        std::vector< OpenRAVE::SensorBasePtr > * ptrVectorOfSensorPtrForForce6Ds;
+        std::vector< boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> > * ptrVectorOfCameraSensorDataPtr;
+        std::vector< boost::shared_ptr<OpenRAVE::SensorBase::LaserSensorData> > * ptrVectorOfLaserSensorDataPtr;
+        std::vector< boost::shared_ptr<OpenRAVE::SensorBase::Force6DSensorData> > * ptrVectorOfForce6DSensorDataPtr;
+        std::vector<int> * ptrVectorOfCameraWidth;
+        std::vector<int> * ptrVectorOfCameraHeight;
+        std::vector< yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >* > * ptrVectorOfRgbPortPtr;
+        std::vector< yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelInt> >* > * ptrVectorOfIntPortPtr;
+        std::vector< yarp::os::BufferedPort<yarp::os::Bottle >* > * ptrVectorOfForce6DPortPtr;
+        //
+};
+
 
 class OpenraveYarpForce : public ModuleBase
 {
@@ -169,6 +277,26 @@ public:
                 } else printf("Sensor %d not supported.\n", robotIter);
             }
         }
+
+        // Start the RateThread
+        teoSimRateThread.setEnvironmentPtr(penv);
+        teoSimRateThread.setPtrVectorOfRobotPtr(&vectorOfRobotPtr);
+
+        teoSimRateThread.setPtrVectorOfSensorPtrForCameras(&vectorOfSensorPtrForCameras);
+        teoSimRateThread.setPtrVectorOfCameraSensorDataPtr(&vectorOfCameraSensorDataPtr);
+        teoSimRateThread.setPtrVectorOfRgbPortPtr(&vectorOfRgbPortPtr);
+        teoSimRateThread.setPtrVectorOfIntPortPtr(&vectorOfIntPortPtr);
+        teoSimRateThread.setPtrVectorOfForce6DPortPtr(&vectorOfForce6DPortPtr);
+        teoSimRateThread.setPtrVectorOfCameraWidth(&vectorOfCameraWidth);
+        teoSimRateThread.setPtrVectorOfCameraHeight(&vectorOfCameraHeight);
+        teoSimRateThread.setPtrVectorOfSensorPtrForLasers(&vectorOfSensorPtrForLasers);
+        teoSimRateThread.setPtrVectorOfLaserSensorDataPtr(&vectorOfLaserSensorDataPtr);
+        teoSimRateThread.setPtrVectorOfSensorPtrForForce6Ds(&vectorOfSensorPtrForForce6Ds);
+        teoSimRateThread.setPtrVectorOfForce6DSensorDataPtr(&vectorOfForce6DSensorDataPtr);
+
+
+        teoSimRateThread.start();
+
         return true;
     }
 
@@ -186,11 +314,13 @@ private:
     std::vector< yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >* > vectorOfRgbPortPtr;
     std::vector< yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelInt> >* > vectorOfIntPortPtr;
     std::vector< yarp::os::BufferedPort<yarp::os::Bottle >* > vectorOfForce6DPortPtr;
+    //
+    TeoSimRateThread teoSimRateThread;
 
 };
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
-    if( type == PT_Module && interfacename == "openraveyarpcontrolboard" ) {
+    if( type == PT_Module && interfacename == "openraveyarpforce" ) {
         return InterfaceBasePtr(new OpenraveYarpForce(penv));
     }
     return InterfaceBasePtr();
