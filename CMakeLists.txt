@@ -23,6 +23,7 @@ option(ENABLE_YarpOpenraveControlboardCollision "Enable/disable option YarpOpenr
 option(ENABLE_OpenraveYarpControlboard "Enable/disable option OpenraveYarpControlboard" TRUE)
 option(ENABLE_OpenraveYarpPaintSquares "Enable/disable option OpenraveYarpPaintSquares" TRUE)
 option(ENABLE_OpenraveWorldRpcResponder "Enable/disable option OpenraveWorldRpcResponder" TRUE)
+option(ENABLE_OpenraveYarpForce "Enable/disable option OpenraveYarpForce" TRUE)
 
 ### options: cpp programs
 option(ENABLE_teoSim "Choose if you want to compile (deprecated) teoSim" TRUE)

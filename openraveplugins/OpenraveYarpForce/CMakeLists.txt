@@ -51,3 +51,4 @@ endmacro(build_openrave_plugin)
 build_openrave_plugin(${KEYWORD})
 
 ENDIF (ENABLE_OpenraveYarpForce)
+
