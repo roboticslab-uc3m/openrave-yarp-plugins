@@ -11,7 +11,7 @@ try:
 
     env=Environment()
     env.SetViewer('qtcoin')
-    env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml')
+    env.Load('/home/yo/repos/textiles/textiles/ironing/manipulation/ironingSim/ironingSim.env.xml')
 
     OpenraveYarpControlboard = RaveCreateModule(env,'OpenraveYarpControlboard')
     print OpenraveYarpControlboard.SendCommand('open')

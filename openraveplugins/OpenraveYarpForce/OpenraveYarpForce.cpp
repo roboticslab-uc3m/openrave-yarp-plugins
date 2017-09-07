@@ -134,7 +134,7 @@ class TeoSimRateThread : public yarp::os::RateThread {
 void TeoSimRateThread::run() {
     //printf("[TeoSimRateThread] run()\n");
 
-    environmentPtr->StepSimulation(jmcMs/1000.0);  // StepSimulation must be given in seconds
+//    environmentPtr->StepSimulation(jmcMs/1000.0);  // StepSimulation must be given in seconds
 
     for(unsigned int camIter = 0; camIter<ptrVectorOfSensorPtrForCameras->size(); camIter++ ) {
         ptrVectorOfSensorPtrForCameras->at(camIter)->GetSensorData(ptrVectorOfCameraSensorDataPtr->at(camIter));
@@ -377,6 +377,9 @@ public:
         teoSimRateThread.setPtrVectorOfLaserSensorDataPtr(&vectorOfLaserSensorDataPtr);
         teoSimRateThread.setPtrVectorOfSensorPtrForForce6Ds(&vectorOfSensorPtrForForce6Ds);
         teoSimRateThread.setPtrVectorOfForce6DSensorDataPtr(&vectorOfForce6DSensorDataPtr);
+
+        //penv->StepSimulation(NULL_JMC_MS/100.0);  // StepSimulation must be given in seconds
+        penv->StepSimulation(1.0);  // StepSimulation must be given in seconds
 
 
         teoSimRateThread.start();
