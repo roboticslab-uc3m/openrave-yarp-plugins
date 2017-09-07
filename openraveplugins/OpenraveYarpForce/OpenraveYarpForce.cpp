@@ -66,7 +66,6 @@ public:
 
     bool Open(ostream& sout, istream& sinput)
     {
-        bool collision = false;
         bool alternativeRobotName = false;
 
         vector<string> funcionArgs;
@@ -77,30 +76,6 @@ public:
             funcionArgs.push_back(funcionArg);
         }
 
-        if (funcionArgs.size() > 0)
-        {
-            if (funcionArgs[0] == "collision")
-            {
-                RAVELOG_INFO("Will open YarpOpenraveControlboardCollision");
-                collision = true;
-                if (funcionArgs.size() > 1)
-                {
-                    if( funcionArgs[1][0] == '/')
-                    {
-                        RAVELOG_INFO("Will use alternativeRobotName: %s",funcionArgs[1].c_str());
-                        alternativeRobotName = true;
-                    }
-                    else
-                    {
-                        RAVELOG_INFO("Will not use alternativeRobotName that does not begin with '/': %s",funcionArgs[1].c_str());
-                    }
-                }
-            }
-        }
-        else
-        {
-            RAVELOG_INFO("Will open YarpOpenraveControlboard");
-        }
 
         if ( !yarp.checkNetwork() )
         {
@@ -115,65 +90,83 @@ public:
         std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
         GetEnv()->GetRobots(vectorOfRobotPtr);
 
-        //-- For each robot
-        for(size_t robotPtrIdx=0;robotPtrIdx<vectorOfRobotPtr.size();robotPtrIdx++)
-        {
-            RAVELOG_INFO( "Robots[%zu]: %s\n",robotPtrIdx,vectorOfRobotPtr[robotPtrIdx]->GetName().c_str());
-
-            //-- Get manipulators
-            std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[robotPtrIdx]->GetManipulators();
-
-            //-- For each manipulator
-            for(size_t manipulatorPtrIdx=0;manipulatorPtrIdx<vectorOfManipulatorPtr.size();manipulatorPtrIdx++)
-            {
-                RAVELOG_INFO( "* Manipulators[%zu]: %s\n",manipulatorPtrIdx,vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName().c_str() );
-
-                //-- Formulate the manipulator port name
-                std::string manipulatorPortName;
-                if(alternativeRobotName)
-                {
-                    manipulatorPortName += funcionArgs[1];
-                }
-                else
-                {
-                    manipulatorPortName += "/";
-                    manipulatorPortName += vectorOfRobotPtr[robotPtrIdx]->GetName();
-                }
-                manipulatorPortName += "/";
-                manipulatorPortName += vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName();
-                RAVELOG_INFO( "* manipulatorPortName: %s\n",manipulatorPortName.c_str() );
-
-                //--
-                yarp::dev::PolyDriver* robotDevice = new yarp::dev::PolyDriver;
-                yarp::os::Property options;
-                options.put("device","controlboardwrapper2");  //-- ports
-
-                if (collision)
-                {
-                    options.put("subdevice","YarpOpenraveControlboardCollision");
-                    std::string safe("/safe");
-                    options.put("name", safe+manipulatorPortName );
-                    options.put("remote", manipulatorPortName );
-                }
-                else
-                {
-                    options.put("subdevice","YarpOpenraveControlboard");
-                    options.put("name", manipulatorPortName );
-                }
-
-                yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
-                options.put("penv",v);
-
-                options.put("robotIndex",static_cast<int>(robotPtrIdx));
-                options.put("manipulatorIndex",static_cast<int>(manipulatorPtrIdx));
-
-                robotDevice->open(options);
-                if( ! robotDevice->isValid() )
-                {
-                    RAVELOG_INFO("Bad\n");
-                    return false;
-                }
-                robotDevices.push_back( robotDevice );
+        for ( unsigned int robotIter = 0; robotIter<vectorOfRobotPtr.size(); robotIter++ ) {
+            std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> sensors = vectorOfRobotPtr.at(robotIter)->GetAttachedSensors();
+            printf("Sensors found on robot %d (%s): %d.\n",robotIter,vectorOfRobotPtr.at(robotIter)->GetName().c_str(),(int)sensors.size());
+            for ( unsigned int sensorIter = 0; sensorIter<sensors.size(); sensorIter++ ) {
+                OpenRAVE::SensorBasePtr psensorbase = sensors.at(sensorIter)->GetSensor();
+                std::string tipo = psensorbase->GetName();
+                printf("Sensor %d name: %s\n",sensorIter,tipo.c_str());
+                // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
+                if (psensorbase->Supports(OpenRAVE::SensorBase::ST_Camera)) {
+                    printf("Sensor %d supports ST_Camera.\n", sensorIter);
+                    // Activate the camera
+                    psensorbase->Configure(OpenRAVE::SensorBase::CC_PowerOn);
+                    // Show the camera image in a separate window
+                    // pcamerasensorbase->Configure(SensorBase::CC_RenderDataOn);
+                    // Get some camera parameter info
+                    boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> pcamerageomdata = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(psensorbase->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
+                    // printf("Camera width: %d, height: %d.\n",pcamerageomdata->width,pcamerageomdata->height);
+                    vectorOfCameraWidth.push_back(pcamerageomdata->width);
+                    vectorOfCameraHeight.push_back(pcamerageomdata->height);
+                    // Get a pointer to access the camera data stream
+                    vectorOfCameraSensorDataPtr.push_back(boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(psensorbase->CreateSensorData(OpenRAVE::SensorBase::ST_Camera)));
+                    vectorOfSensorPtrForCameras.push_back(psensorbase);  // "save"
+                    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >* tmpPort = new yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >;
+                    yarp::os::ConstString tmpName("/");
+                    yarp::os::ConstString cameraSensorString(psensorbase->GetName());
+                    size_t pos = cameraSensorString.find("imageMap");
+                    if ( pos != std::string::npos) {
+                        tmpName += cameraSensorString.substr (0,pos-1);
+                        tmpName += "/imageMap:o";
+                    } else {
+                        tmpName += cameraSensorString.c_str();
+                        tmpName += "/img:o";
+                    }
+                    tmpPort->open(tmpName);
+                    vectorOfRgbPortPtr.push_back(tmpPort);
+                } else if (psensorbase->Supports(OpenRAVE::SensorBase::ST_Laser)) {
+                    printf("Sensor %d supports ST_Laser.\n", sensorIter);
+                    // Activate the sensor
+                    psensorbase->Configure(OpenRAVE::SensorBase::CC_PowerOn);
+                    // Paint the rays in the OpenRAVE viewer
+                    psensorbase->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
+                    // Get some laser parameter info
+                    // boost::shared_ptr<SensorBase::LaserGeomData> plasergeomdata = boost::dynamic_pointer_cast<SensorBase::LaserGeomData>(psensorbase->GetSensorGeometry(SensorBase::ST_Laser));
+                    // printf("Laser resolution: %f   %f.\n",plasergeomdata->resolution[0],plasergeomdata->resolution[1]);
+                    // printf("Laser min_angle: %f   %f.\n",plasergeomdata->min_angle[0],plasergeomdata->min_angle[1]);
+                    // printf("Laser max_angle: %f   %f.\n",plasergeomdata->max_angle[0],plasergeomdata->max_angle[1]);
+                    // Get a pointer to access the laser data stream
+                    vectorOfLaserSensorDataPtr.push_back(boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserSensorData>(psensorbase->CreateSensorData(OpenRAVE::SensorBase::ST_Laser)));
+                    vectorOfSensorPtrForLasers.push_back(psensorbase);  // "save"
+                    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelInt> >* tmpPort = new yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelInt> >;
+                    yarp::os::ConstString tmpName("/");
+                    yarp::os::ConstString depthSensorString(psensorbase->GetName());
+                    size_t pos = depthSensorString.find("depthMap");
+                    if ( pos != std::string::npos) {
+                        tmpName += depthSensorString.substr (0,pos-1);
+                        tmpName += "/depthMap:o";
+                    } else {
+                        tmpName += depthSensorString.c_str();
+                        tmpName += "/depth:o";
+                    }
+                    tmpPort->open(tmpName);
+                    vectorOfIntPortPtr.push_back(tmpPort);
+                } else if (psensorbase->Supports(OpenRAVE::SensorBase::ST_Force6D)) {
+                    printf("Sensor %d supports ST_Force6D.\n", sensorIter);
+                    // Activate the sensor
+                    psensorbase->Configure(OpenRAVE::SensorBase::CC_PowerOn);
+                    // Get a pointer to access the force6D data stream
+                    vectorOfForce6DSensorDataPtr.push_back(boost::dynamic_pointer_cast<OpenRAVE::SensorBase::Force6DSensorData>(psensorbase->CreateSensorData(OpenRAVE::SensorBase::ST_Force6D)));
+                    vectorOfSensorPtrForForce6Ds.push_back(psensorbase);  // "save"
+                    yarp::os::BufferedPort<yarp::os::Bottle > * tmpPort = new yarp::os::BufferedPort<yarp::os::Bottle >;
+                    std::string sensorName = psensorbase->GetName();
+                    size_t pos = sensorName.find(":");
+                    std::string portName("/");
+                    portName += sensorName.substr (pos+1,sensorName.size());
+                    tmpPort->open(portName);
+                    vectorOfForce6DPortPtr.push_back(tmpPort);
+                } else printf("Sensor %d not supported.\n", robotIter);
             }
         }
         return true;
@@ -182,6 +175,18 @@ public:
 private:
     yarp::os::Network yarp;
     std::vector< yarp::dev::PolyDriver* > robotDevices;
+    std::vector< OpenRAVE::SensorBasePtr > vectorOfSensorPtrForCameras;
+    std::vector< OpenRAVE::SensorBasePtr > vectorOfSensorPtrForLasers;
+    std::vector< OpenRAVE::SensorBasePtr > vectorOfSensorPtrForForce6Ds;
+    std::vector< boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> > vectorOfCameraSensorDataPtr;
+    std::vector< boost::shared_ptr<OpenRAVE::SensorBase::LaserSensorData> >  vectorOfLaserSensorDataPtr;
+    std::vector< boost::shared_ptr<OpenRAVE::SensorBase::Force6DSensorData> >  vectorOfForce6DSensorDataPtr;
+    std::vector<int> vectorOfCameraWidth;
+    std::vector<int> vectorOfCameraHeight;
+    std::vector< yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >* > vectorOfRgbPortPtr;
+    std::vector< yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelInt> >* > vectorOfIntPortPtr;
+    std::vector< yarp::os::BufferedPort<yarp::os::Bottle >* > vectorOfForce6DPortPtr;
+
 };
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
