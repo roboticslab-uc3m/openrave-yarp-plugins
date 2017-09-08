@@ -26,9 +26,6 @@ bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     penv->GetRobots(vectorOfRobotPtr);
     probot = vectorOfRobotPtr[robotIndex];
 
-    dEncRaw.resize( probot->GetDOF() );
-    std::fill(dEncRaw.begin(), dEncRaw.end(), 0);
-
     std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
     manipulatorIDs = vectorOfManipulatorPtr[manipulatorIndex]->GetArmIndices();
 

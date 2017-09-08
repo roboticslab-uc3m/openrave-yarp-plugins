@@ -774,7 +774,6 @@ class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::de
                 OpenRAVE::ControllerBasePtr pcontrol;
                 std::vector< int > manipulatorIDs;
                 std::vector<OpenRAVE::dReal> manipulatorTargets;
-                std::vector<OpenRAVE::dReal> dEncRaw;
                 std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
 
         };
