@@ -31,9 +31,9 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-        //dEncRaw[ manipulatorIDs[j] ] = ref * M_PI / 180.0;
+        manipulatorTargets[ j ] = ref * M_PI / 180.0;
 
-        OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
+        /*OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
         probot->SetActiveDOFs(manipulatorIDs);
         //ptraj->Init(probot->GetActiveConfigurationSpecification());
         OpenRAVE::ConfigurationSpecification spec = probot->GetActiveConfigurationSpecification();
@@ -43,9 +43,10 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         probot->GetActiveDOFValues(q); // get current values
         q[j] = ref * M_PI / 180.0;
         ptraj->Insert(0,q);
-        pcontrol->SetPath(ptraj);
+        pcontrol->SetPath(ptraj);*/
         //OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot);
         //probot->GetController()->SetPath(ptraj);
+        pcontrol->SetDesired(manipulatorTargets);
 
     }
     //penv->StepSimulation(0.1);  // StepSimulation must be given in seconds
