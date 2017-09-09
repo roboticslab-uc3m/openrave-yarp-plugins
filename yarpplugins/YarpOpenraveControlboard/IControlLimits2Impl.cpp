@@ -32,7 +32,7 @@ bool roboticslab::YarpOpenraveControlboard::getLimits(int axis, double *min, dou
     *min = vLowerLimit[0]*180.0/M_PI;
     *max = vUpperLimit[0]*180.0/M_PI;
 
-    CD_INFO("Limits %d: [%f,%f]\n",axis,*min,*max);
+    CD_INFO("Limits %d: [%f, %f]\n",axis,*min,*max);
 
     return true;
 }
