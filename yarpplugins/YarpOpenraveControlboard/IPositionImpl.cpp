@@ -81,14 +81,16 @@ bool roboticslab::YarpOpenraveControlboard::relativeMove(const double *deltas) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::checkMotionDone(int j, bool *flag) {
-    CD_INFO("Doing nothing.\n");
+    CD_WARNING("Always returning true.\n");
+    *flag = true;
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::checkMotionDone(bool *flag) {
-    CD_INFO("Doing nothing.\n");
+    CD_WARNING("Always returning true.\n");
+    *flag = true;
     return true;
 }
 
