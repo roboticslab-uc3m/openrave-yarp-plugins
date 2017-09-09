@@ -28,11 +28,28 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
     //OpenRAVE::RobotBasePtr probot;
     //std::vector< int > manipulatorIDs;
 
-    dEncRaw[ manipulatorIDs[j] ] = ref * M_PI / 180.0;
+    {
+        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-    probot->SetJointValues(dEncRaw);  // More compatible with physics??
+        manipulatorTargets[ j ] = ref * M_PI / 180.0;
 
-    penv->StepSimulation(0.1);  // StepSimulation must be given in seconds
+        /*OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
+        probot->SetActiveDOFs(manipulatorIDs);
+        //ptraj->Init(probot->GetActiveConfigurationSpecification());
+        OpenRAVE::ConfigurationSpecification spec = probot->GetActiveConfigurationSpecification();
+        int timeoffset = spec.AddDeltaTimeGroup();
+        ptraj->Init(spec);
+        std::vector<OpenRAVE::dReal> q;
+        probot->GetActiveDOFValues(q); // get current values
+        q[j] = ref * M_PI / 180.0;
+        ptraj->Insert(0,q);
+        pcontrol->SetPath(ptraj);*/
+        //OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot);
+        //probot->GetController()->SetPath(ptraj);
+        pcontrol->SetDesired(manipulatorTargets);
+
+    }
+    //penv->StepSimulation(0.1);  // StepSimulation must be given in seconds
 
     return true;
 }

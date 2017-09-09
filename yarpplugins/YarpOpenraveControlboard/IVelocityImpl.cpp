@@ -5,7 +5,17 @@
 // ------------------ IVelocity Related ----------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
-    CD_INFO("Doing nothing.\n");
+
+    std::stringstream sout,ss; ss << "setvelocity ";
+    for(size_t i = 0; i < manipulatorIDs.size(); ++i) {
+        ss << sp << " ";
+    }
+
+    if( ! pcontrol->SendCommand(sout,ss) ) {
+        CD_ERROR("Failed to send velocity command\n");
+        return false;
+    }
+
     return true;
 }
 
@@ -13,9 +23,6 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
 
 bool roboticslab::YarpOpenraveControlboard::velocityMove(const double *sp) {
     CD_INFO("\n");
-    printf("[YarpOpenraveControlboard] Vel:");
-    CD_INFO("Doing nothing.");
-    printf("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= velocityMove(i,sp[i]);
