@@ -45,7 +45,7 @@ bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         pcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");
         probot->SetController(pcontrol,manipulatorIDs,0); // control all manipulator joints
         penv->StopSimulation();
-        penv->StartSimulation(0.001);
+        penv->StartSimulation(0.01);
         probot->SetActiveDOFs(manipulatorIDs);
     }
 
