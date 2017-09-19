@@ -44,8 +44,9 @@ namespace roboticslab
 // Note: IPositionControl2 inherits from IPositionControl
 // Note: IVelocityControl2 inherits from IVelocityControl
 // Note: IControlLimits2 inherits from IControlLimits
+// Note: IControlMode2 inherits from IControlMode
 class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
-        public yarp::dev::IControlLimits2, public yarp::dev::IControlMode, public yarp::dev::ITorqueControl {
+        public yarp::dev::IControlLimits2, public yarp::dev::IControlMode2, public yarp::dev::ITorqueControl {
     public:
 
         // Set the Thread Rate in the class constructor
@@ -531,7 +532,57 @@ class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::de
                 */
                 virtual bool getControlModes(int *modes);
 
-            // -------- ITorqueControl declarations. Implementation in ITorqueImpl.cpp --------
+            //  --------- IControlMode2 Declarations. Implementation in IControlMode2Impl.cpp ---------
+
+            /**
+            * Get the current control mode for a subset of axes.
+            * @param n_joints how many joints this command is referring to
+            * @param joints list of joint numbers, the size of this array is n_joints
+            * @param modes array containing the new controlmodes, one value for each joint, the size is n_joints.
+            *          The first value will be the new reference fot the joint joints[0].
+            *          for example:
+            *          n_joint  3
+            *          joints   0  2  4
+            *          modes    VOCAB_CM_POSITION VOCAB_CM_VELOCITY VOCAB_CM_POSITION
+            * @return true/false success failure.
+            */
+            virtual bool getControlModes(const int n_joint, const int *joints, int *modes);
+
+            /**
+            * Set the current control mode.
+            * @param j: joint number
+            * @param mode: a vocab of the desired control mode for joint j.
+            * @return true if the new controlMode was successfully set, false if the message was not received or
+            *         the joint was unable to switch to the desired controlMode
+            *         (e.g. the joint is on a fault condition or the desired mode is not implemented).    */
+            virtual bool setControlMode(const int j, const int mode);
+
+            /**
+            * Set the current control mode for a subset of axes.
+            * @param n_joints how many joints this command is referring to
+            * @param joints list of joint numbers, the size of this array is n_joints
+            * @param modes array containing the new controlmodes, one value for each joint, the size is n_joints.
+            *          The first value will be the new reference fot the joint joints[0].
+            *          for example:
+            *          n_joint  3
+            *          joints   0  2  4
+            *          modes    VOCAB_CM_POSITION VOCAB_CM_VELOCITY VOCAB_CM_POSITION
+            * @return true if the new controlMode was successfully set, false if the message was not received or
+            *         the joint was unable to switch to the desired controlMode
+            *         (e.g. the joint is on a fault condition or the desired mode is not implemented).
+            */
+            virtual bool setControlModes(const int n_joint, const int *joints, int *modes);
+
+            /**
+            * Set the current control mode (multiple joints).
+            * @param modes: a vector containing vocabs for the desired control modes of the joints.
+            * @return true if the new controlMode was successfully set, false if the message was not received or
+            *         the joint was unable to switch to the desired controlMode
+            *         (e.g. the joint is on a fault condition or the desired mode is not implemented).
+            */
+            virtual bool setControlModes(int *modes);
+                // -------- ITorqueControl declarations. Implementation in ITorqueImpl.cpp --------
+
 
                /** Get the reference value of the torque for all joints.
                  * This is NOT the feedback (see getTorques instead).
@@ -773,6 +824,7 @@ class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::de
                 OpenRAVE::RobotBasePtr probot;
                 OpenRAVE::ControllerBasePtr pcontrol;
                 std::vector< int > manipulatorIDs;
+                std::vector< int > controlModes;
                 std::vector<OpenRAVE::dReal> manipulatorTargets;
                 std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
 
