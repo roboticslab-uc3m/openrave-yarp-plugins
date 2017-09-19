@@ -31,6 +31,7 @@ bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
     axes = manipulatorIDs.size();
     manipulatorTargets.resize( axes, 0.0 );
+    controlModes.resize( axes, VOCAB_CM_POSITION );
 
     for(size_t i=0; i<manipulatorIDs.size(); i++)
     {

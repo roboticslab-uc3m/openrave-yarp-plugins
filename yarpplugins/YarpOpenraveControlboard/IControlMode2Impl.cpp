@@ -13,41 +13,44 @@ bool roboticslab::YarpOpenraveControlboard::setPositionMode(int j) {
 
 bool roboticslab::YarpOpenraveControlboard::setVelocityMode(int j) {
     CD_INFO("(%d)\n",j);
-    return true;
+    return setControlMode(j, VOCAB_CM_VELOCITY);
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setTorqueMode(int j)  {
     CD_INFO("(%d)\n",j);
-    return true;
+    return setControlMode(j, VOCAB_CM_TORQUE);
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setImpedancePositionMode(int j) {
     CD_INFO("(%d)\n",j);
-    return true;
+    return setControlMode(j, VOCAB_CM_IMPEDANCE_POS);
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setImpedanceVelocityMode(int j) {
     CD_INFO("(%d)\n",j);
-    return true;
+    return setControlMode(j, VOCAB_CM_IMPEDANCE_VEL);
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setOpenLoopMode(int j) {
-    CD_INFO("(%d)\n",j);
-    return true;
+    CD_ERROR("(%d)\n",j);  //-- Removed in YARP 2.3.70
+    return false;
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getControlMode(int j, int *mode) {
     //CD_DEBUG("Doing nothing.\n");  //-- Way too verbose.
+
+    *mode = controlModes[j];
+
     return true;
 }
 
@@ -79,6 +82,8 @@ bool roboticslab::YarpOpenraveControlboard::getControlModes(const int n_joint, c
 bool roboticslab::YarpOpenraveControlboard::setControlMode(const int j, const int mode)
 {
     CD_DEBUG("(%d, %d)\n",j,mode);
+
+    controlModes[j] = mode;
 
     return true;
 }
