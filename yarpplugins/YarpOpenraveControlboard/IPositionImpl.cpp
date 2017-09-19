@@ -15,11 +15,6 @@ bool roboticslab::YarpOpenraveControlboard::getAxes(int *ax) {
 
 bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
 //    CD_INFO("\n");
-    if ((unsigned int)j>axes)
-    {
-        CD_ERROR("axis index more than axes.\n");
-        return false;
-    }
 //    if(modePosVel!=0) {  // Check if we are in position mode.
 //        fprintf(stderr,"[FakeControlboardOR] warning: will not positionMove as not in positionMode\n");
 //        return false;
