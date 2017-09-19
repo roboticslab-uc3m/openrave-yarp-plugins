@@ -815,16 +815,13 @@ class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::de
 
                 // General Joint Motion Controller parameters //
                 unsigned int axes;
-                //
-                std::vector<int> mode;
-
+                std::vector< int > controlModes;
 
                 //OpenRAVE//
                 OpenRAVE::EnvironmentBasePtr penv;
                 OpenRAVE::RobotBasePtr probot;
                 OpenRAVE::ControllerBasePtr pcontrol;
                 std::vector< int > manipulatorIDs;
-                std::vector< int > controlModes;
                 std::vector<OpenRAVE::dReal> manipulatorTargets;
                 std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
 
