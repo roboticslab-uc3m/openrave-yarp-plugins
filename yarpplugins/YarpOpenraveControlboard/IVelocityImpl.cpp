@@ -6,6 +6,13 @@
 
 bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
 
+    //-- Check if we are in position mode.
+    if( controlModes[j] != VOCAB_CM_VELOCITY )
+    {
+        CD_ERROR("Will not positionMove as not in positionMode\n");
+        return false;
+    }
+
     std::stringstream sout,ss; ss << "setvelocity ";
     for(size_t i = 0; i < manipulatorIDs.size(); ++i) {
         ss << sp << " ";
