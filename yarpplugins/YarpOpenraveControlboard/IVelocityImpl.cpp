@@ -9,7 +9,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
     //-- Check if we are in position mode.
     if( controlModes[j] != VOCAB_CM_VELOCITY )
     {
-        CD_ERROR("Will not positionMove as not in positionMode\n");
+        CD_ERROR("Will not velocityMove as not in velocityMode\n");
         return false;
     }
 
