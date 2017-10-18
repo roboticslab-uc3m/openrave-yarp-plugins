@@ -84,10 +84,7 @@ The following commands explain how to use openrave to create a 3D model (.pp) of
 # new terminal
 openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml #--padding=PADDING --maxHullVertices=MAXHULLVERTICES --mergeThresholdPercent=MERGETHRESHOLDPERCENT
 ```
-
-  --padding=PADDING : The distance to move the hull planes along their respective normals (default=0.005).
-  --maxHullVertices=MAXHULLVERTICES : Maximum number of vertices in output convex hulls  (default=64).
-  --mergeThresholdPercent=MERGETHRESHOLDPERCENT : The percentage of volume difference allowed to merge two convex hulls (default=30.0).
+At the time to generate the .pp file different params can be set. In our case the most relevants are the **padding**, the **maxHullVertices** and the **mergeThresholdPercent** (this last two used to reduce the number of triangles generated in the model).
   
 More options can be found [here](http://openrave.org/docs/0.8.0/openravepy/databases.convexdecomposition/).
 
