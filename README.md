@@ -77,3 +77,80 @@ python ~/repos/openrave-yarp-plugins/examples/openrave-YarpRobot-collision-real.
 yarp rpc /safe/teo/[kinematic chain name]/rpc:i
 ```
 
+# Tutorials: (How to extract a .pp model from ConvexDecomposition)
+The following commands explain how to use openrave to create a 3D model (.pp) of the collision space that openrave uses to calculate collisions. Whereas openarave uses it continuously, here we can save the 3D files to use them.
+
+```bash
+# new terminal
+openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml [options]
+```
+Computes the set of convex hulls for each triangle mesh geometry.using
+convexdecomposition
+
+Options:
+  -h, --help            show this help message and exit
+  --skinWidth=SKINWIDTH
+                        Skin width on the convex hulls generated, convex
+                        decomposition side (default=0.0)
+  --padding=PADDING     The distance to move the hull planes along their
+                        respective normals (default=0.005)
+  --decompositionDepth=DECOMPOSITIONDEPTH
+                        recursion depth for convex decomposition (default=8)
+  --maxHullVertices=MAXHULLVERTICES
+                        maximum number of vertices in output convex hulls
+                        (default=64)
+  --concavityThresholdPercent=CONCAVITYTHRESHOLDPERCENT
+                        The percentage of concavity allowed without causing a
+                        split to occur (default=5.0).
+  --mergeThresholdPercent=MERGETHRESHOLDPERCENT
+                        The percentage of volume difference allowed to merge
+                        two convex hulls (default=30.0).
+  --volumeSplitThresholdPercent=VOLUMESPLITTHRESHOLDPERCENT
+                        The percentage of the total volume of the object above
+                        which splits will still occur (default=5.0).
+  --useInitialIslandGeneration=USEINITIALISLANDGENERATION
+                        whether or not to perform initial island generation on
+                        the input mesh (default=1).
+  --useIslandGeneration=USEISLANDGENERATION
+                        Whether or not to perform island generation at each
+                        split.  Currently disabled due to bug in
+                        RemoveTjunctions (default=0).
+
+OpenRAVE Environment Options:
+    --loadplugin=_LOADPLUGINS
+                        List all plugins and the interfaces they provide.
+    --collision=_COLLISION
+                        Default collision checker to use
+    --physics=_PHYSICS  physics engine to use (default=none)
+    --viewer=_VIEWER    viewer to use (default=qtcoin)
+    --server=_SERVER    server to use (default=None).
+    --serverport=_SERVERPORT
+                        port to load server on (default=4765).
+    --module=_MODULES   module to load, can specify multiple modules. Two
+                        arguments are required: "name" "args".
+    -l _LEVEL, --level=_LEVEL, --log_level=_LEVEL
+                        Debug level, one of
+                        (fatal,error,warn,info,debug,verbose,verifyplans)
+    --testmode          if set, will run the program in a finite amount of
+                        time and spend computation time validating results.
+                        Used for testing
+
+  OpenRAVE Database Generator General Options:
+    --show              Graphically shows the built model
+    --getfilename       If set, will return the final database filename where
+                        all data is stored
+    --gethas            If set, will exit with 0 if datafile is generated and
+                        up to date, otherwise will return a 1. This will
+                        require loading the model and checking versions, so
+                        might be a little slow.
+    --robot=ROBOT       OpenRAVE robot to load
+                        (default=robots/barrettsegway.robot.xml)
+    --numthreads=NUMTHREADS
+                        number of threads to compute the database with
+                        (default=1)
+```bash
+# To check the results, execute the following command. It is worth noting that, the triangle count is not correct, this was contrasted using other tool.
+openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --show
+```
+
+To change the file type, [this](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/0cead695c508f05b71e557e41cbf9d2ae0142799/scripts/openravepp-to-stl#openrave-to-stl-script) can be used.
