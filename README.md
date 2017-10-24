@@ -77,3 +77,20 @@ python ~/repos/openrave-yarp-plugins/examples/openrave-YarpRobot-collision-real.
 yarp rpc /safe/teo/[kinematic chain name]/rpc:i
 ```
 
+# Tutorials: (How to extract a .pp model from ConvexDecomposition)
+The following commands explain how to use openrave to create a 3D model (.pp) of the collision space that openrave uses to calculate collisions. Whereas openarave uses it continuously, here we can save the 3D files to use them.
+
+```bash
+# new terminal
+openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml #--padding=PADDING --maxHullVertices=MAXHULLVERTICES --mergeThresholdPercent=MERGETHRESHOLDPERCENT
+```
+At the time to generate the .pp file different params can be set. In our case the most relevants are the **padding**, the **maxHullVertices** and the **mergeThresholdPercent** (this last two used to reduce the number of triangles generated in the model).
+  
+More options can be found [here](http://openrave.org/docs/0.8.0/openravepy/databases.convexdecomposition/).
+
+```bash
+# To check the results, execute the following command. It is worth noting that, the triangle count is not correct, this was contrasted using other tool.
+openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --show
+```
+
+To change the file type, [this](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/0cead695c508f05b71e557e41cbf9d2ae0142799/scripts/openravepp-to-stl#openrave-to-stl-script) can be used.
