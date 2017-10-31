@@ -6,6 +6,18 @@
 
 bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
+    if ( ( ! config.check("env") ) && ( ! config.check("penv") ) )
+    {
+        CD_ERROR("Please use --env or --penv parameter. Bye!\n");
+        return false;
+    }
+
+    if ( ( config.check("env") ) && ( config.check("penv") ) )
+    {
+        CD_ERROR("Please do not use --env and --penv simultaneously. Bye!\n");
+        return false;
+    }
+
     //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
     penv = *((OpenRAVE::EnvironmentBasePtr*)(config.find("penv").asBlob()));
 
