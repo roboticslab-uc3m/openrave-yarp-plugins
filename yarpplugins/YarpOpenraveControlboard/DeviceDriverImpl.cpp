@@ -6,20 +6,27 @@
 
 bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
-    if ( ( ! config.check("env") ) && ( ! config.check("penv") ) )
-    {
-        CD_ERROR("Please use --env or --penv parameter. Bye!\n");
-        return false;
-    }
-
     if ( ( config.check("env") ) && ( config.check("penv") ) )
     {
         CD_ERROR("Please do not use --env and --penv simultaneously. Bye!\n");
         return false;
     }
 
-    //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
-    penv = *((OpenRAVE::EnvironmentBasePtr*)(config.find("penv").asBlob()));
+    if ( config.check("env") )
+    {
+        CD_DEBUG("Found env parameter. Not implemented yet. Bye!\n");
+        return false;
+    }
+    else if ( config.check("penv") )
+    {
+        //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
+        penv = *((OpenRAVE::EnvironmentBasePtr*)(config.find("penv").asBlob()));
+    }
+    else
+    {
+        CD_ERROR("Please use --env or --penv parameter. Bye!\n");
+        return false;
+    }
 
     int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
     if( robotIndex < 0 )  // a.k.a. -1 one line above
