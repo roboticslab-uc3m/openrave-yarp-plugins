@@ -77,6 +77,28 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         return false;
     }
 
+    if( config.check("orPlugin") )
+    {
+        CD_DEBUG("Found --orPlugin parameter.\n");
+
+        std::string orPlugin = config.find("orPlugin").asString();
+        if ( ! OpenRAVE::RaveLoadPlugin(orPlugin) )
+        {
+            CD_ERROR("Could not load plugin '%s'\n",orPlugin.c_str());
+            return false;
+        }
+        OpenRAVE::ModuleBasePtr pModule = RaveCreateModule(penv,orPlugin); // create the module
+        penv->Add(pModule,true); // load the module, calls main and also enables good destroy.
+        std::stringstream cmdin,cmdout;
+        cmdin << "open";
+        // RAVELOG_INFO("%s\n",cmdin.str().c_str());
+        if( ! pModule->SendCommand(cmdout,cmdin) )
+        {
+            CD_ERROR("Bad send 'open' command.\n");
+        }
+        CD_SUCCESS("Sent 'open' command.\n");
+    }
+
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
     penv->GetRobots(vectorOfRobotPtr);
     probot = vectorOfRobotPtr[robotIndex];
