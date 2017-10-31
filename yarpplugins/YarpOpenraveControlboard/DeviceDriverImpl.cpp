@@ -52,12 +52,6 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
             return false;
         }
         CD_SUCCESS("Loaded environment '%s'.\n",envFull.c_str());
-
-        // Attach a physics engine
-        /*if(physics=="ode"){
-            penv->SetPhysicsEngine(RaveCreatePhysicsEngine(penv,"ode"));
-            penv->GetPhysicsEngine()->SetGravity(OpenRAVE::Vector(0,0,-9.8));
-        }*/
     }
     else if ( config.check("penv") )
     {
