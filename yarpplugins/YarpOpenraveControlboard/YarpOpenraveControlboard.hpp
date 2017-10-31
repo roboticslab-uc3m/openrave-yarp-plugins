@@ -23,6 +23,10 @@
 namespace roboticslab
 {
 
+
+// Specific for --env parameter
+void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername, int _viewer);
+
 /**
  * @ingroup TeoYarp
  * \defgroup YarpOpenraveControlboard
@@ -825,6 +829,8 @@ class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::de
                 std::vector<OpenRAVE::dReal> manipulatorTargets;
                 std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
 
+                // Specific for --env parameter
+                boost::thread_group orThreads;
         };
 
         }  // namespace roboticslab

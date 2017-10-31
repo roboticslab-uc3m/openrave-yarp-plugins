@@ -2,9 +2,28 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+namespace roboticslab
+{
+
+// -------------------------------------------------------------------
+
+void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername, int _viewer)
+{
+    OpenRAVE::ViewerBasePtr viewer = OpenRAVE::RaveCreateViewer(penv,viewername);
+    BOOST_ASSERT(!!viewer);
+
+    // attach it to the environment:
+    penv->AddViewer(viewer);  // penv->AttachViewer(viewer);
+
+    // finally you call the viewer's infinite loop (this is why you need a separate thread):
+    bool showgui = true; // change to false to disable scene view
+    if(!_viewer) showgui = false;  // if viewer arg = 0
+    viewer->main(showgui);
+}
+
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
+bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
     if ( ( config.check("env") ) && ( config.check("penv") ) )
     {
@@ -14,8 +33,31 @@ bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
     if ( config.check("env") )
     {
-        CD_DEBUG("Found env parameter. Not implemented yet. Bye!\n");
-        return false;
+        CD_DEBUG("Found --env parameter.\n");
+
+        // Initialize OpenRAVE-core
+        OpenRAVE::RaveInitialize(true);  // Start openrave core
+        penv = OpenRAVE::RaveCreateEnvironment();  // Create the main OpenRAVE environment, set the EnvironmentBasePtr
+        penv->StopSimulation();  // NEEDED??
+        boost::thread thviewer(boost::bind(SetViewer,penv,"qtcoin",1));
+        orThreads.add_thread(&thviewer);
+        yarp::os::Time::delay(0.4); // wait for the viewer to init, in [s]
+
+
+        // Actually load the scene
+        std::string envFull = config.find("env").asString();
+
+        if (! penv->Load(envFull.c_str()) ) {
+            CD_ERROR("Could not load '%s' environment.\n",envFull.c_str());
+            return false;
+        }
+        CD_SUCCESS("Loaded environment '%s'.\n",envFull.c_str());
+
+        // Attach a physics engine
+        /*if(physics=="ode"){
+            penv->SetPhysicsEngine(RaveCreatePhysicsEngine(penv,"ode"));
+            penv->GetPhysicsEngine()->SetGravity(OpenRAVE::Vector(0,0,-9.8));
+        }*/
     }
     else if ( config.check("penv") )
     {
@@ -31,13 +73,13 @@ bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
     if( robotIndex < 0 )  // a.k.a. -1 one line above
     {
-        CD_ERROR("Please review robotIndex.\n");
+        CD_ERROR("Please review robotIndex, currently '%d'.\n", robotIndex);
         return false;
     }
     int manipulatorIndex = config.check("manipulatorIndex",-1,"manipulatorIndex").asInt();
     if( manipulatorIndex < 0 )  // a.k.a. -1 one line above
     {
-        CD_ERROR("Please review manipulatorIndex.\n");
+        CD_ERROR("Please review manipulatorIndex, currently '%d'.\n", manipulatorIndex);
         return false;
     }
 
@@ -74,9 +116,12 @@ bool roboticslab::YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::close() {
+bool YarpOpenraveControlboard::close() {
     printf("[YarpOpenraveControlboard] close()\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
+
+}  // namespace roboticslab
+
