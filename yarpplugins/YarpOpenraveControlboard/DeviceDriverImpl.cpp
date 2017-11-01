@@ -99,6 +99,22 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         CD_SUCCESS("Sent 'open' command.\n");
     }
 
+    if( config.check("orPlugins") )
+    {
+        CD_DEBUG("Found --orPlugins parameter.\n");
+
+        if( ! config.find("orPlugins").isList() )
+        {
+            CD_ERROR("orPlugins must contain (list). Bye!\n");
+            return false;
+        }
+        yarp::os::Bottle* orPlugins = config.find("orPlugins").asList();
+        for(int i=0; i<orPlugins->size();i++)
+        {
+            CD_DEBUG("orPlugins[%d]: %s\n",i,orPlugins->get(i).asString().c_str());
+        }
+    }
+
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
     penv->GetRobots(vectorOfRobotPtr);
     probot = vectorOfRobotPtr[robotIndex];
