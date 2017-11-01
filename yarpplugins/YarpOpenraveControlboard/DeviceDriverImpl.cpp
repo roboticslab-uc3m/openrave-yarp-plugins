@@ -105,13 +105,24 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
         if( ! config.find("orPlugins").isList() )
         {
-            CD_ERROR("orPlugins must contain (list). Bye!\n");
+            CD_ERROR("orPlugins usage from CLI: --orPlugins \"((plugin1 module1 command1 arg11 arg12 ...) (plugin2 module2 command2 arg21 arg22 ...))\". Bye!\n");
             return false;
         }
         yarp::os::Bottle* orPlugins = config.find("orPlugins").asList();
+        CD_DEBUG("orPlugins: %s\n",orPlugins->toString().c_str());
         for(int i=0; i<orPlugins->size();i++)
         {
-            CD_DEBUG("orPlugins[%d]: %s\n",i,orPlugins->get(i).asString().c_str());
+            if( ! orPlugins->get(i).isList() )
+            {
+                CD_ERROR("orPlugins usage from CLI: --orPlugins \"((plugin1 module1 command1 arg11 arg12 ...) (plugin2 module2 command2 arg21 arg22 ...))\". Bye!\n");
+                return false;
+            }
+            yarp::os::Bottle* orPlugin = orPlugins->get(i).asList();
+            CD_DEBUG("orPlugin[%d]: %s\n",i,orPlugin->toString().c_str());
+            for(int j=0; j<orPlugin->size();j++)
+            {
+                CD_DEBUG("* orPlugin[%d][%d]: %s\n",i,j,orPlugin->get(j).asString().c_str());
+            }
         }
     }
 
