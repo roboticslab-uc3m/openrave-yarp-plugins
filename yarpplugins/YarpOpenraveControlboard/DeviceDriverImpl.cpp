@@ -81,13 +81,13 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     {
         CD_DEBUG("Found --orPlugin parameter.\n");
 
-        std::string orPlugin = config.find("orPlugin").asString();
-        if ( ! OpenRAVE::RaveLoadPlugin(orPlugin) )
+        std::string orPluginAndModuleName = config.find("orPlugin").asString();
+        if ( ! OpenRAVE::RaveLoadPlugin(orPluginAndModuleName) )
         {
-            CD_ERROR("Could not load plugin '%s'\n",orPlugin.c_str());
+            CD_ERROR("Could not load plugin '%s'\n",orPluginAndModuleName.c_str());
             return false;
         }
-        OpenRAVE::ModuleBasePtr pModule = RaveCreateModule(penv,orPlugin); // create the module
+        OpenRAVE::ModuleBasePtr pModule = OpenRAVE::RaveCreateModule(penv,orPluginAndModuleName); // create the module
         penv->Add(pModule,true); // load the module, calls main and also enables good destroy.
         std::stringstream cmdin,cmdout;
         cmdin << "open";
@@ -119,9 +119,41 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
             }
             yarp::os::Bottle* orPlugin = orPlugins->get(i).asList();
             CD_DEBUG("orPlugin[%d]: %s\n",i,orPlugin->toString().c_str());
-            for(int j=0; j<orPlugin->size();j++)
+            /*for(int j=0; j<orPlugin->size();j++)
             {
                 CD_DEBUG("* orPlugin[%d][%d]: %s\n",i,j,orPlugin->get(j).asString().c_str());
+            }*/
+            if( orPlugin->size() < 2 )
+            {
+                CD_ERROR("orPlugins needs at least plugin and module parameters.\n");
+                CD_ERROR("orPlugins usage from CLI: --orPlugins \"((plugin1 module1 command1 arg11 arg12 ...) (plugin2 module2 command2 arg21 arg22 ...))\". Bye!\n");
+                return false;
+            }
+            //-- Load plugin (docs say will reload if already loaded)
+            std::string orPluginName = orPlugin->get(0).asString();
+            if ( ! OpenRAVE::RaveLoadPlugin(orPluginName) )
+            {
+                CD_ERROR("Could not load plugin '%s'\n",orPluginName.c_str());
+                return false;
+            }
+            //-- Load module from plugin
+            std::string orModuleName = orPlugin->get(1).asString();
+            OpenRAVE::ModuleBasePtr pModule = OpenRAVE::RaveCreateModule(penv,orPluginName); // create the module
+            penv->Add(pModule,true); // load the module, calls main and also enables good destroy.
+            //-- Send command if list big enough
+            if( orPlugin->size() > 2 )
+            {
+                std::stringstream cmdin,cmdout;
+                for(int j=2;j<orPlugin->size();j++)
+                {
+                    cmdin << orPlugin->get(j).asString() << " ";
+                }
+                // RAVELOG_INFO("%s\n",cmdin.str().c_str());
+                if( ! pModule->SendCommand(cmdout,cmdin) )
+                {
+                    CD_ERROR("Bad send '%s' command.\n",cmdin.str().c_str());
+                }
+                CD_SUCCESS("Sent '%s' command.\n",cmdin.str().c_str());
             }
         }
     }
