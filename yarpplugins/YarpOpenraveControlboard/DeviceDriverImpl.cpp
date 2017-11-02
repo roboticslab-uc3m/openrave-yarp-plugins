@@ -126,7 +126,8 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
             CD_DEBUG("orPlugin[%d]: %s\n",i,orPlugin->toString().c_str());
             std::string orPluginName = orPlugin->get(0).asString();
             CD_DEBUG("* orPlugin[%d]: plugin: %s\n",i,orPluginName.c_str());
-            CD_DEBUG("* orPlugin[%d]: module: %s\n",i,orPlugin->find("module").asString().c_str());
+            std::string orModuleName = orPlugin->find("module").asString();
+            CD_DEBUG("* orPlugin[%d]: module: %s\n",i,orModuleName.c_str());
             CD_DEBUG("* orPlugin[%d]: commands: %s\n",i,orPlugin->find("commands").asString().c_str());
 
             //-- Load plugin (docs say will reload if already loaded)
@@ -135,13 +136,12 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
                 CD_ERROR("Could not load plugin '%s'\n",orPluginName.c_str());
                 return false;
             }
-            /*
+
             //-- Load module from plugin
-            std::string orModuleName = orPlugin->get(1).asString();
-            OpenRAVE::ModuleBasePtr pModule = OpenRAVE::RaveCreateModule(penv,orPluginName); // create the module
+            OpenRAVE::ModuleBasePtr pModule = OpenRAVE::RaveCreateModule(penv,orModuleName); // create the module
             penv->Add(pModule,true); // load the module, calls main and also enables good destroy.
             //-- Send command if list big enough
-            if( orPlugin->size() > 2 )
+            /*if( orPlugin->size() > 2 )
             {
                 std::stringstream cmdin,cmdout;
                 for(int j=2;j<orPlugin->size();j++)
