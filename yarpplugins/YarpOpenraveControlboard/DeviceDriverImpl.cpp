@@ -41,10 +41,13 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         OpenRAVE::RaveInitialize(true);  // Start openrave core
         penv = OpenRAVE::RaveCreateEnvironment();  // Create the main OpenRAVE environment, set the EnvironmentBasePtr
         penv->StopSimulation();  // NEEDED??
-        boost::thread thviewer(boost::bind(SetViewer,penv,"qtcoin",1));
-        orThreads.add_thread(&thviewer);
-        yarp::os::Time::delay(0.4); // wait for the viewer to init, in [s]
 
+        if ( config.check("view") )
+        {
+            boost::thread thviewer(boost::bind(SetViewer,penv,"qtcoin",1));
+            orThreads.add_thread(&thviewer);
+            yarp::os::Time::delay(0.4); // wait for the viewer to init, in [s]
+        }
 
         // Actually load the scene
         std::string envFull = config.find("env").asString();
