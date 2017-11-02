@@ -121,27 +121,18 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
             }
             yarp::os::Bottle* orPlugin = orPlugins.get(i).asList();
             CD_DEBUG("orPlugin[%d]: %s\n",i,orPlugin->toString().c_str());
-            CD_DEBUG("* orPlugin[%d]: plugin: %s\n",i,orPlugin->get(0).asString().c_str());
+            std::string orPluginName = orPlugin->get(0).asString();
+            CD_DEBUG("* orPlugin[%d]: plugin: %s\n",i,orPluginName.c_str());
             CD_DEBUG("* orPlugin[%d]: module: %s\n",i,orPlugin->find("module").asString().c_str());
             CD_DEBUG("* orPlugin[%d]: commands: %s\n",i,orPlugin->find("commands").asString().c_str());
 
-            /*for(int j=0; j<orPlugin->size();j++)
-            {
-                CD_DEBUG("* orPlugin[%d][%d]: %s\n",i,j,orPlugin->get(j).asString().c_str());
-            }
-            if( orPlugin->size() < 2 )
-            {
-                CD_ERROR("orPlugins needs at least plugin and module parameters.\n");
-                CD_ERROR("orPlugins usage from CLI: (read code) ->. Bye!\n");  //--orPlugins "(plugin1 (module module1) (commands \"open port\"))"
-                return false;
-            }
             //-- Load plugin (docs say will reload if already loaded)
-            std::string orPluginName = orPlugin->get(0).asString();
             if ( ! OpenRAVE::RaveLoadPlugin(orPluginName) )
             {
                 CD_ERROR("Could not load plugin '%s'\n",orPluginName.c_str());
                 return false;
             }
+            /*
             //-- Load module from plugin
             std::string orModuleName = orPlugin->get(1).asString();
             OpenRAVE::ModuleBasePtr pModule = OpenRAVE::RaveCreateModule(penv,orPluginName); // create the module
