@@ -25,6 +25,8 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername,
 
 bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
+    CD_DEBUG("config: %s\n",config.toString().c_str());
+
     if ( ( config.check("env") ) && ( config.check("penv") ) )
     {
         CD_ERROR("Please do not use --env and --penv simultaneously. Bye!\n");
@@ -105,28 +107,32 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
         if( ! config.find("orPlugins").isList() )
         {
-            CD_ERROR("orPlugins usage from CLI: --orPlugins \"((plugin1 module1 command1 arg11 arg12 ...) (plugin2 module2 command2 arg21 arg22 ...))\". Bye!\n");
+            CD_ERROR("orPlugins usage from CLI: (read code) ->. Bye!\n");  //--orPlugins "(plugin1 (module module1) (commands \"open port\"))"
             return false;
         }
-        yarp::os::Bottle* orPlugins = config.find("orPlugins").asList();
-        CD_DEBUG("orPlugins: %s\n",orPlugins->toString().c_str());
-        for(int i=0; i<orPlugins->size();i++)
+        yarp::os::Bottle orPlugins = config.findGroup("orPlugins");
+        CD_DEBUG("orPlugins: %s\n",orPlugins.toString().c_str());
+        for(int i=1; i<orPlugins.size();i++)  // elem(0) is "orPlugins"
         {
-            if( ! orPlugins->get(i).isList() )
+            if( ! orPlugins.get(i).isList() )
             {
-                CD_ERROR("orPlugins usage from CLI: --orPlugins \"((plugin1 module1 command1 arg11 arg12 ...) (plugin2 module2 command2 arg21 arg22 ...))\". Bye!\n");
+                CD_ERROR("orPlugins usage from CLI: (read code) ->. Bye!\n");  //--orPlugins "(plugin1 (module module1) (commands \"open port\"))"
                 return false;
             }
-            yarp::os::Bottle* orPlugin = orPlugins->get(i).asList();
+            yarp::os::Bottle* orPlugin = orPlugins.get(i).asList();
             CD_DEBUG("orPlugin[%d]: %s\n",i,orPlugin->toString().c_str());
+            CD_DEBUG("* orPlugin[%d]: plugin: %s\n",i,orPlugin->get(0).asString().c_str());
+            CD_DEBUG("* orPlugin[%d]: module: %s\n",i,orPlugin->find("module").asString().c_str());
+            CD_DEBUG("* orPlugin[%d]: commands: %s\n",i,orPlugin->find("commands").asString().c_str());
+
             /*for(int j=0; j<orPlugin->size();j++)
             {
                 CD_DEBUG("* orPlugin[%d][%d]: %s\n",i,j,orPlugin->get(j).asString().c_str());
-            }*/
+            }
             if( orPlugin->size() < 2 )
             {
                 CD_ERROR("orPlugins needs at least plugin and module parameters.\n");
-                CD_ERROR("orPlugins usage from CLI: --orPlugins \"((plugin1 module1 command1 arg11 arg12 ...) (plugin2 module2 command2 arg21 arg22 ...))\". Bye!\n");
+                CD_ERROR("orPlugins usage from CLI: (read code) ->. Bye!\n");  //--orPlugins "(plugin1 (module module1) (commands \"open port\"))"
                 return false;
             }
             //-- Load plugin (docs say will reload if already loaded)
@@ -154,7 +160,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
                     CD_ERROR("Bad send '%s' command.\n",cmdin.str().c_str());
                 }
                 CD_SUCCESS("Sent '%s' command.\n",cmdin.str().c_str());
-            }
+            }*/
         }
     }
 
