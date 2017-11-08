@@ -93,7 +93,7 @@ set(OPENRAVE_YARP_PLUGINS_LIBRARIES CACHE INTERNAL "appended libraries" FORCE)
 add_subdirectory(share)
 #add_subdirectory(libraries)
 add_subdirectory(programs)
-add_subdirectory(yarpplugins)
+add_subdirectory(YarpPlugins)
 add_subdirectory(openraveplugins)
 
 
