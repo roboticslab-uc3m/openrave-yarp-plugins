@@ -94,7 +94,7 @@ add_subdirectory(share)
 #add_subdirectory(libraries)
 add_subdirectory(programs)
 add_subdirectory(YarpPlugins)
-add_subdirectory(openraveplugins)
+add_subdirectory(OpenravePlugins)
 
 
 # export our variables to a OPENRAVE_YARP_PLUGINSConfig.cmake creation
