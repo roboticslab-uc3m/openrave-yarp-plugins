@@ -91,11 +91,8 @@ set(OPENRAVE_YARP_PLUGINS_LIBRARIES CACHE INTERNAL "appended libraries" FORCE)
 
 # add main contents
 add_subdirectory(share)
-#add_subdirectory(libraries)
+add_subdirectory(libraries)
 add_subdirectory(programs)
-add_subdirectory(YarpPlugins)
-add_subdirectory(OpenravePlugins)
-
 
 # export our variables to a OPENRAVE_YARP_PLUGINSConfig.cmake creation
 set(OPENRAVE_YARP_PLUGINS_LINK_DIRS ${OPENRAVE_YARP_PLUGINS_LINK_DIRS} ${LIBRARY_OUTPUT_PATH})
