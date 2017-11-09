@@ -42,6 +42,9 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
             CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
         }
 
+        OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
+        ptraj->Init(activeConfigurationSpecification);
+
         /*OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
         probot->SetActiveDOFs(manipulatorIDs);
         //ptraj->Init(probot->GetActiveConfigurationSpecification());
