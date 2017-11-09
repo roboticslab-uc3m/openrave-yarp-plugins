@@ -173,6 +173,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     {
         OpenRAVE::RobotBase::JointPtr jointPtr = probot->GetJointFromDOFIndex(manipulatorIDs[i]);
         vectorOfJointPtr.push_back(jointPtr);
+        CD_DEBUG("manipulatorIDs[%d]: %d\n",i,manipulatorIDs[i]);
     }
 
     //-- Create the controller, make sure to lock environment!
