@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <openrave/planningutils.h>
+
 // ------------------- IPositionControl Related --------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getAxes(int *ax) {
@@ -41,7 +43,12 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
         ptraj->Init(activeConfigurationSpecification);
-
+        std::vector<OpenRAVE::dReal> manipulatorNow;
+        probot->GetActiveDOFValues(manipulatorNow); // get current values
+        ptraj->Insert(0,manipulatorNow);
+        ptraj->Insert(1,manipulatorTargets);
+        OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot);
+        pcontrol->SetPath(ptraj);
         /*
         int timeoffset = spec.AddDeltaTimeGroup();
         std::vector<OpenRAVE::dReal> q;
