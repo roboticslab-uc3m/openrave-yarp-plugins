@@ -44,8 +44,8 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
         if ( config.check("view") )
         {
-            boost::thread thviewer(boost::bind(SetViewer,penv,"qtcoin",1));
-            orThreads.add_thread(&thviewer);
+            boost::thread openraveViewerThread(boost::bind(SetViewer,penv,"qtcoin",1));
+            openraveThreads.add_thread(&openraveViewerThread);
             yarp::os::Time::delay(0.4); // wait for the viewer to init, in [s]
         }
 
