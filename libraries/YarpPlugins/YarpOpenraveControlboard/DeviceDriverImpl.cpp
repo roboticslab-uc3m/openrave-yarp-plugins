@@ -180,11 +180,34 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
+        OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
+        for (int i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        {
+            CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
+        }
+        std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
+        for(size_t i=0; i<manipulatorIDs.size(); i++)
+        {
+            CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
+        }
+
         pcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");
         probot->SetController(pcontrol,manipulatorIDs,0); // control all manipulator joints
         penv->StopSimulation();
         penv->StartSimulation(0.01);
         probot->SetActiveDOFs(manipulatorIDs);
+
+        activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
+        for (int i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        {
+            CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
+        }
+        activeDOFIndices = probot->GetActiveDOFIndices();
+        for(size_t i=0; i<manipulatorIDs.size(); i++)
+        {
+            CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
+        }
+
     }
 
     return true;
