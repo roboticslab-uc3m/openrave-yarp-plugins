@@ -31,6 +31,17 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         manipulatorTargets[ j ] = ref * M_PI / 180.0;
 
+        OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
+        for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        {
+            CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
+        }
+        std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
+        for(size_t i=0; i<manipulatorIDs.size(); i++)
+        {
+            CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
+        }
+
         /*OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
         probot->SetActiveDOFs(manipulatorIDs);
         //ptraj->Init(probot->GetActiveConfigurationSpecification());
@@ -44,7 +55,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         pcontrol->SetPath(ptraj);*/
         //OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot);
         //probot->GetController()->SetPath(ptraj);
-        pcontrol->SetDesired(manipulatorTargets);
+        //pcontrol->SetDesired(manipulatorTargets);
 
     }
     //penv->StepSimulation(0.1);  // StepSimulation must be given in seconds
