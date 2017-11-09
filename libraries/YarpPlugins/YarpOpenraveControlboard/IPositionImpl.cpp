@@ -42,17 +42,14 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
         ptraj->Init(activeConfigurationSpecification);
 
-        /*OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
-        probot->SetActiveDOFs(manipulatorIDs);
-        //ptraj->Init(probot->GetActiveConfigurationSpecification());
-        OpenRAVE::ConfigurationSpecification spec = probot->GetActiveConfigurationSpecification();
+        /*
         int timeoffset = spec.AddDeltaTimeGroup();
-        ptraj->Init(spec);
         std::vector<OpenRAVE::dReal> q;
         probot->GetActiveDOFValues(q); // get current values
         q[j] = ref * M_PI / 180.0;
         ptraj->Insert(0,q);
-        pcontrol->SetPath(ptraj);*/
+        pcontrol->SetPath(ptraj);
+        */
         //OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot);
         //probot->GetController()->SetPath(ptraj);
         //pcontrol->SetDesired(manipulatorTargets);
