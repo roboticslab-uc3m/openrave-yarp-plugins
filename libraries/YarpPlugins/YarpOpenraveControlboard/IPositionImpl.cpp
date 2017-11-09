@@ -47,7 +47,14 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         probot->GetActiveDOFValues(manipulatorNow); // get current values
         ptraj->Insert(0,manipulatorNow);
         ptraj->Insert(1,manipulatorTargets);
+        CD_DEBUG("ptraj-prev\n");
+        ptraj->serialize(std::cout);
+        CD_DEBUG("ptraj-prev\n");
         OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot);
+        CD_DEBUG("ptraj-post\n");
+        ptraj->serialize(std::cout);
+        CD_DEBUG("ptraj-post\n");
+        //CD_DEBUG("ptraj-post: %s\n",ptraj->GetDescription().c_str());
         pcontrol->SetPath(ptraj);
         /*
         int timeoffset = spec.AddDeltaTimeGroup();
