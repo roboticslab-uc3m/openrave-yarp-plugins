@@ -23,9 +23,6 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         return false;
     }
 
-    //OpenRAVE::RobotBasePtr probot;
-    //std::vector< int > manipulatorIDs;
-
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
