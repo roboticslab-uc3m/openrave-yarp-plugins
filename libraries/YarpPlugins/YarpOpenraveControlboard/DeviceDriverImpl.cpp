@@ -181,7 +181,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
         OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
-        for (int i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
         {
             CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
         }
@@ -198,7 +198,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         probot->SetActiveDOFs(manipulatorIDs);
 
         activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
-        for (int i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
         {
             CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
         }
