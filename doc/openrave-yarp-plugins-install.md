@@ -1,9 +1,9 @@
 ## openrave-yarp-plugins: Installation from Source Code
 
 First install the dependencies:
-- [Install CMake](https://github.com/roboticslab-uc3m/installation-guides/blob/develop/install-cmake.md)
-- [Install YARP](https://github.com/roboticslab-uc3m/installation-guides/blob/develop/install-yarp.md)
-- [Install OpenRAVE](https://github.com/roboticslab-uc3m/installation-guides/blob/develop/install-openrave.md)
+- [Install CMake](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-cmake.md)
+- [Install YARP](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-yarp.md)
+- [Install OpenRAVE](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-openrave.md)
 
 ### Install openrave-yarp-plugins on Ubuntu (working on all tested versions)
 
@@ -21,7 +21,7 @@ cd  # go home
 
 For CMake `find_package(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS REQUIRED)`, you may also be interested in adding the following to your `~/.bashrc` or `~/.profile`:
 ```bash
-export ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_DIR=$HOME/repos/openrave-yarp-plugins/build  # Points to where TEOConfig.cmake is generated upon running CMake
+export ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_DIR=$HOME/repos/openrave-yarp-plugins/build  # Points to where OPENRAVE_YARP_PLUGINSConfig.cmake is generated upon running CMake
 ```
 
 For additional options use ccmake instead of cmake.

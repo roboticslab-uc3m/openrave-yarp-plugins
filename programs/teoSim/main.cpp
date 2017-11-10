@@ -5,7 +5,7 @@
  *
  * \defgroup teoSim teoSim
  *
- * @brief Creates an instance of teo::TeoSim.
+ * @brief Creates an instance of roboticslab::TeoSim.
  *
  * @section teoSim_legal Legal
  *
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     rf.setDefaultConfigFile("teoSim.ini");
     rf.configure(argc,argv);
 
-    teo::TeoSim mod;
+    roboticslab::TeoSim mod;
     if(rf.check("help")) {
         return mod.runModule(rf);
     }

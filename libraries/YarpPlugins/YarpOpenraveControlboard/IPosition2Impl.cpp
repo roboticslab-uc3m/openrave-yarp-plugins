@@ -1,0 +1,94 @@
+// -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
+
+#include "YarpOpenraveControlboard.hpp"
+
+// ------------------- IPositionControl2 Related --------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
+{
+    CD_DEBUG("\n");
+    // must implement mask!
+    return positionMove(refs);
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
+{
+    CD_DEBUG("\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flags)
+{
+    CD_DEBUG("\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
+{
+    CD_DEBUG("\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
+{
+    CD_DEBUG("\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
+{
+    CD_DEBUG("\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
+{
+    CD_DEBUG("\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::stop(const int n_joint, const int *joints)
+{
+    CD_DEBUG("\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::getTargetPosition(const int joint, double *ref)
+{
+    CD_INFO("\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::getTargetPositions(double *refs)
+{
+    CD_DEBUG("\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
+{
+    CD_DEBUG("\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------

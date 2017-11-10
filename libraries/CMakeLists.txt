@@ -1,0 +1,3 @@
+add_subdirectory(YarpPlugins)
+add_subdirectory(OpenravePlugins)
+

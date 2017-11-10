@@ -4,12 +4,11 @@
 
 # Exploit new cmake 2.6 features (export). 
 
-# reduce warning level with cmake 2.6
-cmake_minimum_required(VERSION 2.6)
-#cmake policies
-if(COMMAND cmake_policy)
-  cmake_policy(SET CMP0003 NEW)
-endif(COMMAND cmake_policy)
+cmake_minimum_required(VERSION 2.8.9)
+
+# Safety check against missing dummy library for system-available COLOR_DEBUG.
+# Remove if cmake_minimum_required() above is set to 3.0 or later.
+cmake_policy(SET CMP0046 NEW)
 
 project(OPENRAVE_YARP_PLUGINS)
 
@@ -23,6 +22,9 @@ option(ENABLE_YarpOpenraveControlboardCollision "Enable/disable option YarpOpenr
 ### options: cpp libraries (openrave plugins)
 option(ENABLE_OpenraveYarpControlboard "Enable/disable option OpenraveYarpControlboard" TRUE)
 option(ENABLE_OpenraveYarpPaintSquares "Enable/disable option OpenraveYarpPaintSquares" TRUE)
+option(ENABLE_OpenraveWorldRpcResponder "Enable/disable option OpenraveWorldRpcResponder" TRUE)
+option(ENABLE_OpenraveYarpForce "Enable/disable option OpenraveYarpForce" TRUE)
+option(ENABLE_OpenraveYarpForceEstimator "Enable/disable option OpenraveYarpForceEstimator" TRUE)
 
 ### options: cpp programs
 option(ENABLE_teoSim "Choose if you want to compile (deprecated) teoSim" TRUE)
@@ -43,6 +45,8 @@ if (MSVC)
 endif(MSVC)
 
 ######################
+
+include(GNUInstallDirs)
 
 ### this makes everything go in $OPENRAVE_YARP_PLUGINS_DIR/lib and $OPENRAVE_YARP_PLUGINS_DIR/bin
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
@@ -74,17 +78,22 @@ include(FindOrBuildPackage)
 
 find_or_build_package(COLOR_DEBUG)
 
+# find_or_build_package() doesn't bring into scope COLOR_DEBUG_INCLUDE_DIRS
+# nor other config variables. If a system copy is found, we have to call the
+# find_package() command and proceed as usual.
+if(USE_SYSTEM_COLOR_DEBUG)
+    find_package(COLOR_DEBUG REQUIRED)
+    include_directories(${COLOR_DEBUG_INCLUDE_DIRS})
+endif()
+
 set(OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS CACHE INTERNAL "appended header dirs" FORCE)
 set(OPENRAVE_YARP_PLUGINS_LINK_DIRS CACHE INTERNAL "appended link dirs" FORCE)
 set(OPENRAVE_YARP_PLUGINS_LIBRARIES CACHE INTERNAL "appended libraries" FORCE)
 
 # add main contents
 add_subdirectory(share)
-#add_subdirectory(libraries)
+add_subdirectory(libraries)
 add_subdirectory(programs)
-add_subdirectory(yarpplugins)
-add_subdirectory(openraveplugins)
-
 
 # export our variables to a OPENRAVE_YARP_PLUGINSConfig.cmake creation
 set(OPENRAVE_YARP_PLUGINS_LINK_DIRS ${OPENRAVE_YARP_PLUGINS_LINK_DIRS} ${LIBRARY_OUTPUT_PATH})

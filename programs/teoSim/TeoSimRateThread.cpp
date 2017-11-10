@@ -4,23 +4,23 @@
 
 // ------------------- RateThread Related ------------------------------------
 
-bool teo::TeoSimRateThread::threadInit() {
+bool roboticslab::TeoSimRateThread::threadInit() {
     printf("[TeoSimRateThread] begin: threadInit()\n");
     jmcMs = this->getRate();
 
-    yarp::os::ConstString externObj = DEFAULT_EXTERN_OBJ;
+    std::string plugin = DEFAULT_PLUGIN;
 
-    if(externObj=="redCan") {
-        OpenRAVE::RaveLoadPlugin("ExternObj");
-        OpenRAVE::ModuleBasePtr pExternObj = RaveCreateModule(environmentPtr,"ExternObj"); // create the module
-        environmentPtr->Add(pExternObj,true); // load the module, calls main and also enables good destroy.
+    if(plugin != "none") {
+        OpenRAVE::RaveLoadPlugin(plugin);
+        OpenRAVE::ModuleBasePtr moduleBasePtr = RaveCreateModule(environmentPtr,plugin); // create the module
+        environmentPtr->Add(moduleBasePtr,true); // load the module, calls main and also enables good destroy.
         std::stringstream cmdin,cmdout;
-        cmdin << "Open";  // default maxiter:4000
+        cmdin << "open";  // default maxiter:4000
         RAVELOG_INFO("%s\n",cmdin.str().c_str());
-        if( !pExternObj->SendCommand(cmdout,cmdin) ) {
-            fprintf(stderr,"Bad send Open command.\n");
+        if( !moduleBasePtr->SendCommand(cmdout,cmdin) ) {
+            fprintf(stderr,"Bad send open command.\n");
         }
-        printf("Sent Open command.\n");
+        printf("Sent open command.\n");
     }
 
     lastTime = yarp::os::Time::now();
@@ -30,7 +30,7 @@ bool teo::TeoSimRateThread::threadInit() {
 
 // -----------------------------------------------------------------------------
 
-void teo::TeoSimRateThread::run() {
+void roboticslab::TeoSimRateThread::run() {
     //printf("[TeoSimRateThread] run()\n");
 
     for(size_t i=0;i<ptrVectorOfRobotPtr->size();i++) {  // For each robot
