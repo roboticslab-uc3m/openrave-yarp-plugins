@@ -43,8 +43,10 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
             CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
         }
 
+        //OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot); // all of the following is to avoid calling this slow robot-wise planner
         //activeConfigurationSpecification.AddDerivativeGroups(2,true);  // adds joint_accelerations
         //activeConfigurationSpecification.AddDerivativeGroups(1,true);  // adds joint_accelerations (good)
+        //int timeoffset = spec.AddDeltaTimeGroup();  // also interesting
 
         activeConfigurationSpecification.GetGroupFromName("joint_values").interpolation = "linear";
 
@@ -62,16 +64,17 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         iswaypoint.interpolation="next";
         activeConfigurationSpecification.AddGroup(iswaypoint);
 
-        for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
-        {
-            OpenRAVE::ConfigurationSpecification::Group g = activeConfigurationSpecification._vgroups[i];
-            CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
-        }
-        activeDOFIndices = probot->GetActiveDOFIndices();
-        for(size_t i=0; i<manipulatorIDs.size(); i++)
-        {
-            CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
-        }
+        //for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        //{
+        //    OpenRAVE::ConfigurationSpecification::Group g = activeConfigurationSpecification._vgroups[i];
+        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        //}
+
+        //activeDOFIndices = probot->GetActiveDOFIndices();
+        //for(size_t i=0; i<manipulatorIDs.size(); i++)
+        //{
+        //    CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
+        //}
 
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
         ptraj->Init(activeConfigurationSpecification);
@@ -83,31 +86,20 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         manipulatorTargets[axes] = 1;
         manipulatorTargets[axes+1] = 1;
         ptraj->Insert(1,manipulatorTargets);
-        CD_DEBUG("ptraj-prev\n");
-        ptraj->serialize(std::cout);
-        CD_DEBUG("ptraj-prev\n");
 
-        /*OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot);
-        activeConfigurationSpecification = ptraj->GetConfigurationSpecification();
-        for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
-        {
-            OpenRAVE::ConfigurationSpecification::Group g = activeConfigurationSpecification._vgroups[i];
-            CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
-        }
-        CD_DEBUG("ptraj-post\n");
-        ptraj->serialize(std::cout);
-        CD_DEBUG("ptraj-post\n");*/
+        //CD_DEBUG("begin{ptraj-serialize}\n");
+        //ptraj->serialize(std::cout);
+        //CD_DEBUG("end{ptraj-serialize}\n");
+
+        // activeConfigurationSpecification = ptraj->GetConfigurationSpecification();
+        //for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        //{
+        //    OpenRAVE::ConfigurationSpecification::Group g = activeConfigurationSpecification._vgroups[i];
+        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        //}
 
         pcontrol->SetPath(ptraj);
-        /*
-        int timeoffset = spec.AddDeltaTimeGroup();
-        std::vector<OpenRAVE::dReal> q;
-        probot->GetActiveDOFValues(q); // get current values
-        q[j] = ref * M_PI / 180.0;
-        ptraj->Insert(0,q);
-        pcontrol->SetPath(ptraj);
-        */
-        //OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot);
+
         //probot->GetController()->SetPath(ptraj);
         //pcontrol->SetDesired(manipulatorTargets);
 
