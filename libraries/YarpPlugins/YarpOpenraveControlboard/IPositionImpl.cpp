@@ -31,9 +31,11 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         manipulatorTargets[ j ] = ref * M_PI / 180.0;
 
         OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
+
         for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
         {
-            CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
+            OpenRAVE::ConfigurationSpecification::Group g = activeConfigurationSpecification._vgroups[i];
+            CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
         }
         std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
         for(size_t i=0; i<manipulatorIDs.size(); i++)
@@ -41,30 +43,63 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
             CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
         }
 
+        //OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot); // all of the following is to avoid calling this slow robot-wise planner
+        //activeConfigurationSpecification.AddDerivativeGroups(2,true);  // adds joint_accelerations
+        //activeConfigurationSpecification.AddDerivativeGroups(1,true);  // adds joint_accelerations (good)
+        //int timeoffset = spec.AddDeltaTimeGroup();  // also interesting
+
+        activeConfigurationSpecification.GetGroupFromName("joint_values").interpolation = "linear";
+
+        OpenRAVE::ConfigurationSpecification::Group deltatime;
+        deltatime.name="deltatime";
+        deltatime.offset=7;
+        deltatime.dof=1;
+        deltatime.interpolation="";
+        activeConfigurationSpecification.AddGroup(deltatime);
+
+        OpenRAVE::ConfigurationSpecification::Group iswaypoint;
+        iswaypoint.name="iswaypoint";
+        iswaypoint.offset=8;
+        iswaypoint.dof=1;
+        iswaypoint.interpolation="next";
+        activeConfigurationSpecification.AddGroup(iswaypoint);
+
+        //for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        //{
+        //    OpenRAVE::ConfigurationSpecification::Group g = activeConfigurationSpecification._vgroups[i];
+        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        //}
+
+        //activeDOFIndices = probot->GetActiveDOFIndices();
+        //for(size_t i=0; i<manipulatorIDs.size(); i++)
+        //{
+        //    CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
+        //}
+
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
         ptraj->Init(activeConfigurationSpecification);
         std::vector<OpenRAVE::dReal> manipulatorNow;
         probot->GetActiveDOFValues(manipulatorNow); // get current values
+        manipulatorNow.push_back(0);
+        manipulatorNow.push_back(1);
         ptraj->Insert(0,manipulatorNow);
+        manipulatorTargets[axes] = 1;
+        manipulatorTargets[axes+1] = 1;
         ptraj->Insert(1,manipulatorTargets);
-        CD_DEBUG("ptraj-prev\n");
-        ptraj->serialize(std::cout);
-        CD_DEBUG("ptraj-prev\n");
-        OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot);
-        CD_DEBUG("ptraj-post\n");
-        ptraj->serialize(std::cout);
-        CD_DEBUG("ptraj-post\n");
-        //CD_DEBUG("ptraj-post: %s\n",ptraj->GetDescription().c_str());
+
+        //CD_DEBUG("begin{ptraj-serialize}\n");
+        //ptraj->serialize(std::cout);
+        //CD_DEBUG("end{ptraj-serialize}\n");
+
+        // activeConfigurationSpecification = ptraj->GetConfigurationSpecification();
+        //for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        //{
+        //    OpenRAVE::ConfigurationSpecification::Group g = activeConfigurationSpecification._vgroups[i];
+        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        //}
+
         pcontrol->SetPath(ptraj);
-        /*
-        int timeoffset = spec.AddDeltaTimeGroup();
-        std::vector<OpenRAVE::dReal> q;
-        probot->GetActiveDOFValues(q); // get current values
-        q[j] = ref * M_PI / 180.0;
-        ptraj->Insert(0,q);
-        pcontrol->SetPath(ptraj);
-        */
-        //OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot);
+
         //probot->GetController()->SetPath(ptraj);
         //pcontrol->SetDesired(manipulatorTargets);
 
