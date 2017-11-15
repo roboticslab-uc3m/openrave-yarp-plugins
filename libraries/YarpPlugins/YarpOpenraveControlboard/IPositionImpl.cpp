@@ -14,7 +14,7 @@ bool roboticslab::YarpOpenraveControlboard::getAxes(int *ax) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
-    CD_INFO("\n");
+    //CD_DEBUG("\n");
 
     //-- Check if we are in position mode.
     if( controlModes[j] != VOCAB_CM_POSITION )
