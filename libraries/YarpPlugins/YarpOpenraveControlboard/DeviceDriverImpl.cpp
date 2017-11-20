@@ -163,12 +163,13 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
     penv->GetRobots(vectorOfRobotPtr);
     probot = vectorOfRobotPtr[robotIndex];
+    robotName = probot->GetName();
 
     std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
     manipulatorIDs = vectorOfManipulatorPtr[manipulatorIndex]->GetArmIndices();
 
     axes = manipulatorIDs.size();
-    manipulatorTargets.resize( axes+2, 0.0 );
+    manipulatorTargets.resize( axes, 0.0 );
     controlModes.resize( axes, VOCAB_CM_POSITION );
 
     for(size_t i=0; i<manipulatorIDs.size(); i++)

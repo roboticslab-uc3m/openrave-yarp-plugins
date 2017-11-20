@@ -819,6 +819,7 @@ private:
     //OpenRAVE//
     OpenRAVE::EnvironmentBasePtr penv;
     OpenRAVE::RobotBasePtr probot;
+    std::string robotName;
     OpenRAVE::MultiControllerBasePtr multi;
     std::vector< OpenRAVE::ControllerBasePtr > pcontrols;
     std::vector< int > manipulatorIDs;
