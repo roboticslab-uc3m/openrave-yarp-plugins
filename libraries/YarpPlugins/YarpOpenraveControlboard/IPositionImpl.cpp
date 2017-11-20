@@ -29,11 +29,11 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         manipulatorTargets[ j ] = ref * M_PI / 180.0;
 
         //--- Console output robot active DOF
-        std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
-        for(size_t i=0; i<activeDOFIndices.size(); i++)
-        {
-            CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
-        }
+        //std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
+        //for(size_t i=0; i<activeDOFIndices.size(); i++)
+        //{
+        //    CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
+        //}
 
         //-- Get the activeConfigurationSpecification from the robot
         OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
