@@ -221,7 +221,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
             OpenRAVE::ControllerBasePtr pindivcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
             std::vector<int> tmpIndices;
             tmpIndices.push_back( manipulatorIDs[i] );
-            std::cout << "tmpIndices: " << tmpIndices << "." << std::endl;
+            CD_DEBUG("Attach individual controller for manipulatorID: %d\n",tmpIndices[0]);
             multi->AttachController(pindivcontrol, tmpIndices, 0);
             pcontrols.push_back(pindivcontrol);
         }
