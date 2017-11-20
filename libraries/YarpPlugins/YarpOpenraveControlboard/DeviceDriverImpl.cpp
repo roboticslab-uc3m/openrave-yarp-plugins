@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <algorithm>  // Thanks: https://notfaq.wordpress.com/2007/08/04/cc-convert-string-to-upperlower-case/
+
 namespace roboticslab
 {
 
@@ -180,14 +182,39 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-        pcontrol = probot->GetController();
+        //--- Console output robot active DOF
+        std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
+        for(size_t i=0; i<activeDOFIndices.size(); i++)
+        {
+            CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
+        }
+
+        //-- Convert robot controller to multi if not already.
+        OpenRAVE::ControllerBasePtr pcontrol = probot->GetController();
+        CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
+        //-- Doing case insensitive check because defaults to IdealController but idealcontroller exists
+        std::string controllerName( pcontrol->GetXMLId() );
+        std::transform(controllerName.begin(), controllerName.end(), controllerName.begin(), ::tolower);
+        if( controllerName == "idealcontroller" )
+        {
+            CD_INFO("Detected idealcontroller, switch to mutli\n");
+            pcontrol = OpenRAVE::RaveCreateMultiController(penv);
+            probot->SetController(pcontrol,activeDOFIndices,1);  // idealcontroller -> genericmulticontroller
+        }
         CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
 
-        pcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");
-        CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
+        //-- Safe to assume we have a multicontroller, store for usage.
+        multi = boost::dynamic_pointer_cast< OpenRAVE::MultiControllerBase >(pcontrol);
 
-        probot->SetController(pcontrol,manipulatorIDs,0); // control all manipulator joints
-        CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
+        for(size_t i=0; i<manipulatorIDs.size(); i++)
+        {
+            OpenRAVE::ControllerBasePtr pindivcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
+            std::vector<int> tmpIndices;
+            tmpIndices.push_back( manipulatorIDs[i] );
+            std::cout << "tmpIndices: " << tmpIndices << "." << std::endl;
+            multi->AttachController(pindivcontrol, tmpIndices, 0);
+            pcontrols.push_back(pindivcontrol);
+        }
 
         penv->StopSimulation();
         penv->StartSimulation(0.01);
@@ -197,13 +224,6 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
         {
             CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
-        }
-
-        //--- Console output robot active DOF
-        std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
-        for(size_t i=0; i<activeDOFIndices.size(); i++)
-        {
-            CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
         }
 
     }

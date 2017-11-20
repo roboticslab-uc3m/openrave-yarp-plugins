@@ -81,7 +81,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         ptraj->Insert(1,manipulatorTargets);
 
         //-- SetPath makes the controller perform the trajectory
-        pcontrol->SetPath(ptraj);
+        pcontrols[j]->SetPath(ptraj);
         //-- Next line performs the above less efficiently
         //probot->GetController()->SetPath(ptraj);
 

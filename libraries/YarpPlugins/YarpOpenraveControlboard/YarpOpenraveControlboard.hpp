@@ -819,7 +819,8 @@ private:
     //OpenRAVE//
     OpenRAVE::EnvironmentBasePtr penv;
     OpenRAVE::RobotBasePtr probot;
-    OpenRAVE::ControllerBasePtr pcontrol;
+    OpenRAVE::MultiControllerBasePtr multi;
+    std::vector< OpenRAVE::ControllerBasePtr > pcontrols;
     std::vector< int > manipulatorIDs;
     std::vector<OpenRAVE::dReal> manipulatorTargets;
     std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
