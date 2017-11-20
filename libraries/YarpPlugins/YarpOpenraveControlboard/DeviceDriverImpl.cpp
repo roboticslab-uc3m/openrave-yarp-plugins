@@ -206,7 +206,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
             CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
         }
         activeDOFIndices = probot->GetActiveDOFIndices();
-        for(size_t i=0; i<manipulatorIDs.size(); i++)
+        for(size_t i=0; i<activeDOFIndices.size(); i++)
         {
             CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
         }
