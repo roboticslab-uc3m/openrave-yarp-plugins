@@ -183,12 +183,12 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-        //--- Console output robot active DOF
         std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
-        for(size_t i=0; i<activeDOFIndices.size(); i++)
-        {
-            CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
-        }
+        //--- Console output robot active DOF
+        //for(size_t i=0; i<activeDOFIndices.size(); i++)
+        //{
+        //    CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
+        //}
 
         //-- Convert robot controller to multi if not already.
         OpenRAVE::ControllerBasePtr pcontrol = probot->GetController();
@@ -230,11 +230,11 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         penv->StartSimulation(0.01);
 
         //-- Console output of the robot ConfigurationSpecification
-        OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
-        for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
-        {
-            CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
-        }
+        //OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
+        //for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        //{
+        //    CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
+        //}
 
     }
 
