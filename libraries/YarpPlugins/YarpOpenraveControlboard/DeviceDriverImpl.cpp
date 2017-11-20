@@ -180,8 +180,15 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
+        pcontrol = probot->GetController();
+        CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
+
         pcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");
+        CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
+
         probot->SetController(pcontrol,manipulatorIDs,0); // control all manipulator joints
+        CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
+
         penv->StopSimulation();
         penv->StartSimulation(0.01);
 
