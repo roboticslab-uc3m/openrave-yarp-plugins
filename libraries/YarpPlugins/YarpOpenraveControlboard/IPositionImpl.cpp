@@ -30,7 +30,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         //--- Console output robot active DOF
         std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
-        for(size_t i=0; i<manipulatorIDs.size(); i++)
+        for(size_t i=0; i<activeDOFIndices.size(); i++)
         {
             CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
         }
