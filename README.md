@@ -35,7 +35,7 @@ Installation instructions for installing from source can be found [here](doc/ope
 
 The main approach is to develop OpenRAVE plugins (contained in the [openraveplugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/openraveplugins) folder), which internally load YARP plugins (contained in the [yarpplugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/yarpplugins) folder) that open ports thanks to their network wrappers. This can be seen in the following figure.
 
-![Block Diagram](doc/fig/Diagram.png)
+![Architecture Block Diagram](doc/fig/architecture.png)
 
 Technically, the OpenRAVE plugin contains one or many `yarp::dev::PolyDriver`, and calls  `open(yarp::os::Searchable &config)` passing a `yarp::os::Property` (note that `Property` is a `Searchable`) with the following contents:
 - "device": A YARP plugin that is a general purpose network wrapper  (contrcontrolboardwrapper2, grabber...).
