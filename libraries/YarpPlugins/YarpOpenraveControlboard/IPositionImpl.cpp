@@ -2,8 +2,6 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
-#include <openrave/planningutils.h>
-
 // ------------------- IPositionControl Related --------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getAxes(int *ax) {
@@ -43,7 +41,6 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
             CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
         }
 
-        //OpenRAVE::planningutils::SmoothActiveDOFTrajectory(ptraj,probot); // all of the following is to avoid calling this slow robot-wise planner
         //activeConfigurationSpecification.AddDerivativeGroups(2,true);  // adds joint_accelerations
         //activeConfigurationSpecification.AddDerivativeGroups(1,true);  // adds joint_accelerations (good)
         //int timeoffset = spec.AddDeltaTimeGroup();  // also interesting
