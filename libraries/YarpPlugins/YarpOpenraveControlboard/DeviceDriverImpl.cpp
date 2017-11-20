@@ -198,9 +198,18 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         std::transform(controllerName.begin(), controllerName.end(), controllerName.begin(), ::tolower);
         if( controllerName == "idealcontroller" )
         {
-            CD_INFO("Detected idealcontroller, switch to mutli\n");
+            CD_INFO("Detected idealcontroller, switch to genericmulticontroller.\n");
             pcontrol = OpenRAVE::RaveCreateMultiController(penv);
             probot->SetController(pcontrol,activeDOFIndices,1);  // idealcontroller -> genericmulticontroller
+        }
+        else if( controllerName == "genericmulticontroller")
+        {
+            CD_INFO("Detected genericmulticontroller, which will be used.\n");
+        }
+        else
+        {
+            CD_ERROR("Non-treated controller case. Bye!\n");
+            return false;
         }
         CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
 
