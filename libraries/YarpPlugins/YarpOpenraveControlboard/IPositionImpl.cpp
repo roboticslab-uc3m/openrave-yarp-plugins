@@ -28,22 +28,20 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         manipulatorTargets[ j ] = ref * M_PI / 180.0;
 
-        OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
-
-        for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
-        {
-            OpenRAVE::ConfigurationSpecification::Group g = activeConfigurationSpecification._vgroups[i];
-            CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
-        }
+        //--- Console output robot active DOF
         std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
         for(size_t i=0; i<manipulatorIDs.size(); i++)
         {
             CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
         }
 
+        //-- Get the activeConfigurationSpecification from the robot
+        OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
+
+        //-- Add the linear interpolation tag to the joint_values group
         activeConfigurationSpecification.GetGroupFromName("joint_values").interpolation = "linear";
 
-        //-- Add deltatime
+        //-- Add a required deltatime group
         //-- Perhaps also could be done via: int timeoffset = spec.AddDeltaTimeGroup();
         OpenRAVE::ConfigurationSpecification::Group deltatime;
         deltatime.name="deltatime";
