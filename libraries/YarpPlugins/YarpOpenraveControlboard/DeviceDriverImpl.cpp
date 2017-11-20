@@ -198,13 +198,17 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
         probot->SetController(pcontrol,manipulatorIDs,0); // control all manipulator joints
         penv->StopSimulation();
         penv->StartSimulation(0.01);
+
         probot->SetActiveDOFs(manipulatorIDs);
 
+        //-- Console output of the robot ConfigurationSpecification
         activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
         for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
         {
             CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
         }
+
+        //--- Console output robot active DOF
         activeDOFIndices = probot->GetActiveDOFIndices();
         for(size_t i=0; i<activeDOFIndices.size(); i++)
         {
