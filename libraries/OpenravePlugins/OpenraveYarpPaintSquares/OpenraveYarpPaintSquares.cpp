@@ -32,6 +32,8 @@
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
 
+#include "ColorDebug.hpp"
+
 #define DEFAULT_RATE_MS 0.5
 #define NSQUARES 16
 
@@ -58,7 +60,7 @@ private:
     {
         yarp::os::Bottle request, response;
         if (!request.read(in)) return false;
-        printf("Request: %s\n", request.toString().c_str());
+        CD_DEBUG("Request: %s\n", request.toString().c_str());
         yarp::os::ConnectionWriter *out = in.getWriter();
         if (out==NULL) return true;
 
