@@ -57,46 +57,39 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         iswaypoint.interpolation="next";
         activeConfigurationSpecification.AddGroup(iswaypoint);
 
-        //for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
-        //{
-        //    OpenRAVE::ConfigurationSpecification::Group g = activeConfigurationSpecification._vgroups[i];
-        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
-        //}
-
-        //activeDOFIndices = probot->GetActiveDOFIndices();
-        //for(size_t i=0; i<manipulatorIDs.size(); i++)
-        //{
-        //    CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
-        //}
+        //-- Console output of the manually adjusted ConfigurationSpecification
+        for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        {
+            OpenRAVE::ConfigurationSpecification::Group g = activeConfigurationSpecification._vgroups[i];
+            CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        }
 
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
+
         ptraj->Init(activeConfigurationSpecification);
+
+        //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> manipulatorNow;
         probot->GetActiveDOFValues(manipulatorNow); // get current values
         manipulatorNow.push_back(0);
         manipulatorNow.push_back(1);
         ptraj->Insert(0,manipulatorNow);
+
+        //-- ptraj[1] with position targets, with: 1 deltatime, 1 iswaypoint
         manipulatorTargets[axes] = 1;
         manipulatorTargets[axes+1] = 1;
         ptraj->Insert(1,manipulatorTargets);
 
-        //CD_DEBUG("begin{ptraj-serialize}\n");
-        //ptraj->serialize(std::cout);
-        //CD_DEBUG("end{ptraj-serialize}\n");
-
-        // activeConfigurationSpecification = ptraj->GetConfigurationSpecification();
-        //for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
-        //{
-        //    OpenRAVE::ConfigurationSpecification::Group g = activeConfigurationSpecification._vgroups[i];
-        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
-        //}
-
+        //-- SetPath makes the controller perform the trajectory
         pcontrol->SetPath(ptraj);
-
+        //-- Next line performs the above less efficiently
         //probot->GetController()->SetPath(ptraj);
-        //pcontrol->SetDesired(manipulatorTargets);
 
+        //-- Next line is ye-oldie that goes immediately
+        //pcontrol->SetDesired(manipulatorTargets);
     }
+
+    //-- Next line not required anymore
     //penv->StepSimulation(0.1);  // StepSimulation must be given in seconds
 
     return true;
