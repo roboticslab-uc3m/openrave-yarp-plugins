@@ -176,7 +176,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     {
         OpenRAVE::RobotBase::JointPtr jointPtr = probot->GetJointFromDOFIndex(manipulatorIDs[i]);
         vectorOfJointPtr.push_back(jointPtr);
-        CD_DEBUG("manipulatorIDs[%d]: %d\n",i,manipulatorIDs[i]);
+        CD_DEBUG("Get JointPtr for manipulatorIDs[%d]: %d\n",i,manipulatorIDs[i]);
     }
 
     //-- Create the controller, make sure to lock environment!
@@ -221,7 +221,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
             OpenRAVE::ControllerBasePtr pindivcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
             std::vector<int> tmpIndices;
             tmpIndices.push_back( manipulatorIDs[i] );
-            CD_DEBUG("Attach individual controller for manipulatorID: %d\n",tmpIndices[0]);
+            CD_DEBUG("Attach individual controller for manipulatorIDs[%d]: %d\n",i,tmpIndices[0]);
             multi->AttachController(pindivcontrol, tmpIndices, 0);
             pcontrols.push_back(pindivcontrol);
         }
