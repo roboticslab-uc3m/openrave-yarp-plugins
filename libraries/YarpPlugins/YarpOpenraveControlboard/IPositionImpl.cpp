@@ -45,14 +45,14 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         //-- Perhaps also could be done via: int timeoffset = spec.AddDeltaTimeGroup();
         OpenRAVE::ConfigurationSpecification::Group deltatime;
         deltatime.name="deltatime";
-        deltatime.offset=7;
+        deltatime.offset=manipulatorIDs.size()+1;
         deltatime.dof=1;
         deltatime.interpolation="";
         activeConfigurationSpecification.AddGroup(deltatime);
 
         OpenRAVE::ConfigurationSpecification::Group iswaypoint;
         iswaypoint.name="iswaypoint";
-        iswaypoint.offset=8;
+        iswaypoint.offset=manipulatorIDs.size()+2;
         iswaypoint.dof=1;
         iswaypoint.interpolation="next";
         activeConfigurationSpecification.AddGroup(iswaypoint);
