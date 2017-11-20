@@ -41,12 +41,10 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
             CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
         }
 
-        //activeConfigurationSpecification.AddDerivativeGroups(2,true);  // adds joint_accelerations
-        //activeConfigurationSpecification.AddDerivativeGroups(1,true);  // adds joint_accelerations (good)
-        //int timeoffset = spec.AddDeltaTimeGroup();  // also interesting
-
         activeConfigurationSpecification.GetGroupFromName("joint_values").interpolation = "linear";
 
+        //-- Add deltatime
+        //-- Perhaps also could be done via: int timeoffset = spec.AddDeltaTimeGroup();
         OpenRAVE::ConfigurationSpecification::Group deltatime;
         deltatime.name="deltatime";
         deltatime.offset=7;
