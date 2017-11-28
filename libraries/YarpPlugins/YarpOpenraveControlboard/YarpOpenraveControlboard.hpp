@@ -816,7 +816,7 @@ private:
     // General Joint Motion Controller parameters //
     unsigned int axes;
     std::vector< int > controlModes;
-    std::vector<double> refSpeed;  // Exposed.
+    std::vector<double> refSpeeds;  // Exposed.
 
     //OpenRAVE//
     OpenRAVE::EnvironmentBasePtr penv;
