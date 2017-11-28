@@ -26,6 +26,20 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
+        OpenRAVE::dReal dofTargetRads = ref * M_PI / 180.0;  // ref comes in exposed
+
+        // Store for later
+        manipulatorTargets[ j ] = dofTargetRads;
+
+        if( refSpeeds[ j ] == 0 )
+        {
+            CD_DEBUG("Avoid division by 0, (refSpeeds[ j ] == 0), implemented immediate movement.\n");
+            std::vector<OpenRAVE::dReal> tmp;
+            tmp.push_back(dofTargetRads);
+            pcontrols[j]->SetDesired(tmp);
+            return true;
+        }
+
         //--- Console output robot active DOF
         //std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
         //for(size_t i=0; i<activeDOFIndices.size(); i++)
@@ -82,23 +96,10 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         ptraj->Init(oneDofConfigurationSpecification);
 
         OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
-        OpenRAVE::dReal dofTargetRads = ref * M_PI / 180.0;  // ref comes in exposed
-
-        // Store for later
-        manipulatorTargets[ j ] = dofTargetRads;
 
         OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( refSpeeds[ j ] * M_PI / 180.0 ) ); // Time in seconds
 
         CD_DEBUG("abs(target-current)/vel = abs(%f-%f)/%f = %f\n",ref,dofCurrentRads*180/M_PI,refSpeeds[ j ],dofTime);
-
-        if( refSpeeds[ j ] == 0 )
-        {
-            CD_DEBUG("Avoid division by 0, (refSpeeds[ j ] == 0), implemented immediate movement.\n");
-            std::vector<OpenRAVE::dReal> tmp;
-            tmp.push_back(dofTargetRads);
-            pcontrols[j]->SetDesired(tmp);
-            return true;
-        }
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
