@@ -91,6 +91,12 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         CD_DEBUG("abs(target-current)/vel = abs(%f-%f)/%f = %f\n",ref,dofCurrentRads*180/M_PI,refSpeeds[ j ],dofTime);
 
+        if( refSpeeds[ j ] == 0 )
+        {
+            CD_INFO("Avoid division by 0, (refSpeeds[ j ] == 0), just return true.\n");
+            return true;
+        }
+
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
         dofCurrentFull[0] = dofCurrentRads;  // joint_values
