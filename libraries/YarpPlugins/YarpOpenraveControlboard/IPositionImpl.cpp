@@ -189,7 +189,8 @@ bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const double *ac
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getRefSpeed(int j, double *ref) {
-    CD_INFO("Doing nothing.\n");
+    CD_INFO("\n");
+    *ref = refSpeeds[j];
     return true;
 }
 
