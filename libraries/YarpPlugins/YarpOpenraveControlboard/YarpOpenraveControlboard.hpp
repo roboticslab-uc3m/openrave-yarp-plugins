@@ -4,7 +4,6 @@
 #define __YARP_OPENRAVE_CONTROLBOARD_HPP__
 
 #include <yarp/os/all.h>
-#include <yarp/os/Semaphore.h>
 #include <yarp/dev/all.h>
 
 #include <openrave-core.h>
