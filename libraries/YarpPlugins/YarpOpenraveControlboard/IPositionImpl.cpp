@@ -113,15 +113,10 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         //-- SetPath makes the controller perform the trajectory
         pcontrols[j]->SetPath(ptraj);
-        //-- Next line performs the above less efficiently
-        //probot->GetController()->SetPath(ptraj);
 
         //-- Next line is ye-oldie that goes immediately
         //pcontrol->SetDesired(manipulatorTargets);
     }
-
-    //-- Next line not required anymore
-    //penv->StepSimulation(0.1);  // StepSimulation must be given in seconds
 
     return true;
 }
