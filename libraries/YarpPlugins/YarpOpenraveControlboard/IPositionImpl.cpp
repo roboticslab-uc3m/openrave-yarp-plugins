@@ -26,7 +26,19 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-        manipulatorTargets[ j ] = ref * M_PI / 180.0;
+        OpenRAVE::dReal dofTargetRads = ref * M_PI / 180.0;  // ref comes in exposed
+
+        // Store for later
+        manipulatorTargets[ j ] = dofTargetRads;
+
+        if( refSpeeds[ j ] == 0 )
+        {
+            CD_DEBUG("Avoid division by 0, (refSpeeds[ j ] == 0), implemented immediate movement.\n");
+            std::vector<OpenRAVE::dReal> tmp;
+            tmp.push_back(dofTargetRads);
+            pcontrols[j]->SetDesired(tmp);
+            return true;
+        }
 
         //--- Console output robot active DOF
         //std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
@@ -83,31 +95,30 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         ptraj->Init(oneDofConfigurationSpecification);
 
+        OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
+
+        OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( refSpeeds[ j ] * M_PI / 180.0 ) ); // Time in seconds
+
+        CD_DEBUG("abs(target-current)/vel = abs(%f-%f)/%f = %f\n",ref,dofCurrentRads*180/M_PI,refSpeeds[ j ],dofTime);
+
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
-        std::vector<OpenRAVE::dReal> dofNow(3);
-        dofNow[0] = vectorOfJointPtr[j]->GetValue(0) ;
-        dofNow[1] = 0;
-        dofNow[2] = 1;
-        ptraj->Insert(0,dofNow);
+        std::vector<OpenRAVE::dReal> dofCurrentFull(3);
+        dofCurrentFull[0] = dofCurrentRads;  // joint_values
+        dofCurrentFull[1] = 0;           // deltatime
+        dofCurrentFull[2] = 1;           // iswaypoint
+        ptraj->Insert(0,dofCurrentFull);
 
         //-- ptraj[1] with position targets, with: 1 deltatime, 1 iswaypoint
-        std::vector<OpenRAVE::dReal> dofTarget(3);
-        dofTarget[0] = ref * M_PI / 180.0;
-        dofTarget[1] = 1;
-        dofTarget[2] = 1;
-        ptraj->Insert(1,dofTarget);
+        std::vector<OpenRAVE::dReal> dofTargetFull(3);
+        dofTargetFull[0] = dofTargetRads;  // joint_values
+        dofTargetFull[1] = dofTime;    // deltatime
+        dofTargetFull[2] = 1;          // iswaypoint
+        ptraj->Insert(1,dofTargetFull);
 
         //-- SetPath makes the controller perform the trajectory
         pcontrols[j]->SetPath(ptraj);
-        //-- Next line performs the above less efficiently
-        //probot->GetController()->SetPath(ptraj);
 
-        //-- Next line is ye-oldie that goes immediately
-        //pcontrol->SetDesired(manipulatorTargets);
     }
-
-    //-- Next line not required anymore
-    //penv->StepSimulation(0.1);  // StepSimulation must be given in seconds
 
     return true;
 }
@@ -155,7 +166,8 @@ bool roboticslab::YarpOpenraveControlboard::checkMotionDone(bool *flag) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setRefSpeed(int j, double sp) {
-    CD_INFO("Doing nothing.\n");
+    CD_INFO("\n");
+    refSpeeds[j] = sp;
     return true;
 }
 
@@ -189,7 +201,8 @@ bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const double *ac
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getRefSpeed(int j, double *ref) {
-    CD_INFO("Doing nothing.\n");
+    CD_INFO("\n");
+    *ref = refSpeeds[j];
     return true;
 }
 

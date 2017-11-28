@@ -19,6 +19,7 @@
 #include "ColorDebug.hpp"
 
 #define DEFAULT_AXES 5
+#define DEFAULT_GEN_REF_SPEED 7.5  // Exposed.
 
 namespace roboticslab
 {
@@ -815,6 +816,7 @@ private:
     // General Joint Motion Controller parameters //
     unsigned int axes;
     std::vector< int > controlModes;
+    std::vector<double> refSpeeds;  // Exposed.
 
     //OpenRAVE//
     OpenRAVE::EnvironmentBasePtr penv;

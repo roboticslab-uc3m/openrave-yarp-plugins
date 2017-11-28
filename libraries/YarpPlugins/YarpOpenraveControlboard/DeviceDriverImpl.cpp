@@ -29,6 +29,8 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
+    double genRefSpeed = config.check("genRefSpeed",DEFAULT_GEN_REF_SPEED,"general ref speed").asDouble();
+
     if ( ( config.check("env") ) && ( config.check("penv") ) )
     {
         CD_ERROR("Please do not use --env and --penv simultaneously. Bye!\n");
@@ -171,6 +173,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     axes = manipulatorIDs.size();
     manipulatorTargets.resize( axes, 0.0 );
     controlModes.resize( axes, VOCAB_CM_POSITION );
+    refSpeeds.resize( axes, genRefSpeed );
 
     for(size_t i=0; i<manipulatorIDs.size(); i++)
     {
