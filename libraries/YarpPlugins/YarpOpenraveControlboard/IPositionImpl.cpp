@@ -87,20 +87,20 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         // Store for later
         manipulatorTargets[ j ] = dofTarget;
 
-        OpenRAVE::dReal dofTime = 1; // Suppose in seconds
+        OpenRAVE::dReal dofTime = 1; // Time in seconds
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
-        dofCurrentFull[0] = dofCurrent;
-        dofCurrentFull[1] = 0;
-        dofCurrentFull[2] = 1;
+        dofCurrentFull[0] = dofCurrent;  // joint_values
+        dofCurrentFull[1] = 0;           // deltatime
+        dofCurrentFull[2] = 1;           // iswaypoint
         ptraj->Insert(0,dofCurrentFull);
 
         //-- ptraj[1] with position targets, with: 1 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofTargetFull(3);
-        dofTargetFull[0] = dofTarget;
-        dofTargetFull[1] = 1;
-        dofTargetFull[2] = dofTime;
+        dofTargetFull[0] = dofTarget;  // joint_values
+        dofTargetFull[1] = dofTime;    // deltatime
+        dofTargetFull[2] = 1;          // iswaypoint
         ptraj->Insert(1,dofTargetFull);
 
         //-- SetPath makes the controller perform the trajectory
