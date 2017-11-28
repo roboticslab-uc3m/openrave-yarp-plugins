@@ -81,24 +81,26 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         ptraj->Init(oneDofConfigurationSpecification);
 
-        OpenRAVE::dReal dofCurrent = vectorOfJointPtr[j]->GetValue(0);
-        OpenRAVE::dReal dofTarget = ref * M_PI / 180.0;  // ref comes in exposed
+        OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
+        OpenRAVE::dReal dofTargetRads = ref * M_PI / 180.0;  // ref comes in exposed
 
         // Store for later
-        manipulatorTargets[ j ] = dofTarget;
+        manipulatorTargets[ j ] = dofTargetRads;
 
-        OpenRAVE::dReal dofTime = 1; // Time in seconds
+        OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( refSpeeds[ j ] * M_PI / 180.0 ) ); // Time in seconds
+
+        CD_DEBUG("abs(target-current)/vel = abs(%f-%f)/%f = %f\n",ref,dofCurrentRads*180/M_PI,refSpeeds[ j ],dofTime);
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
-        dofCurrentFull[0] = dofCurrent;  // joint_values
+        dofCurrentFull[0] = dofCurrentRads;  // joint_values
         dofCurrentFull[1] = 0;           // deltatime
         dofCurrentFull[2] = 1;           // iswaypoint
         ptraj->Insert(0,dofCurrentFull);
 
         //-- ptraj[1] with position targets, with: 1 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofTargetFull(3);
-        dofTargetFull[0] = dofTarget;  // joint_values
+        dofTargetFull[0] = dofTargetRads;  // joint_values
         dofTargetFull[1] = dofTime;    // deltatime
         dofTargetFull[2] = 1;          // iswaypoint
         ptraj->Insert(1,dofTargetFull);
