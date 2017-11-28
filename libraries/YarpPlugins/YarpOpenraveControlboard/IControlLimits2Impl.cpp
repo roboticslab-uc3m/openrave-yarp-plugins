@@ -47,7 +47,12 @@ bool roboticslab::YarpOpenraveControlboard::setVelLimits(int axis, double min, d
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getVelLimits(int axis, double *min, double *max) {
-    CD_INFO("Doing nothing.\n");
+
+    *min = 0;  // Hard-coded lower limit for now.
+    *max = vectorOfJointPtr[axis]->GetMaxVel() * 180.0/M_PI;
+
+    CD_INFO("Limits %d: [%f, %f]\n",axis,*min,*max);
+
     return true;
 }
 
