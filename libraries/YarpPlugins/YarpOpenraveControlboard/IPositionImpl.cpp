@@ -93,7 +93,10 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         if( refSpeeds[ j ] == 0 )
         {
-            CD_INFO("Avoid division by 0, (refSpeeds[ j ] == 0), just return true.\n");
+            CD_DEBUG("Avoid division by 0, (refSpeeds[ j ] == 0), implemented immediate movement.\n");
+            std::vector<OpenRAVE::dReal> tmp;
+            tmp.push_back(dofTargetRads);
+            pcontrols[j]->SetDesired(tmp);
             return true;
         }
 
@@ -114,8 +117,6 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         //-- SetPath makes the controller perform the trajectory
         pcontrols[j]->SetPath(ptraj);
 
-        //-- Next line is ye-oldie that goes immediately
-        //pcontrol->SetDesired(manipulatorTargets);
     }
 
     return true;
