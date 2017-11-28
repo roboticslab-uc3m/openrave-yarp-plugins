@@ -155,7 +155,8 @@ bool roboticslab::YarpOpenraveControlboard::checkMotionDone(bool *flag) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setRefSpeed(int j, double sp) {
-    CD_INFO("Doing nothing.\n");
+    CD_INFO("\n");
+    refSpeeds[j] = sp;
     return true;
 }
 
