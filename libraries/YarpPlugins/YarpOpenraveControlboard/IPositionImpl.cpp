@@ -26,8 +26,6 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-        manipulatorTargets[ j ] = ref * M_PI / 180.0;
-
         //--- Console output robot active DOF
         //std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
         //for(size_t i=0; i<activeDOFIndices.size(); i++)
@@ -83,18 +81,26 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         ptraj->Init(oneDofConfigurationSpecification);
 
+        OpenRAVE::dReal dofCurrent = vectorOfJointPtr[j]->GetValue(0);
+        OpenRAVE::dReal dofTarget = ref * M_PI / 180.0;  // ref comes in exposed
+
+        // Store for later
+        manipulatorTargets[ j ] = dofTarget;
+
+        OpenRAVE::dReal dofTime = 1; // Suppose in seconds
+
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
-        dofCurrentFull[0] = vectorOfJointPtr[j]->GetValue(0) ;
+        dofCurrentFull[0] = dofCurrent;
         dofCurrentFull[1] = 0;
         dofCurrentFull[2] = 1;
         ptraj->Insert(0,dofCurrentFull);
 
         //-- ptraj[1] with position targets, with: 1 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofTargetFull(3);
-        dofTargetFull[0] = ref * M_PI / 180.0;
+        dofTargetFull[0] = dofTarget;
         dofTargetFull[1] = 1;
-        dofTargetFull[2] = 1;
+        dofTargetFull[2] = dofTime;
         ptraj->Insert(1,dofTargetFull);
 
         //-- SetPath makes the controller perform the trajectory
