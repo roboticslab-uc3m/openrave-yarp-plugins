@@ -30,7 +30,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
     //-- But do not move if no velocity
     if( refSpeeds[ j ] == 0 )
     {
-        CD_DEBUG("(refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true.\n");
+        CD_DEBUG("[%d] (refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true.\n",j);
         return true;
     }
 
@@ -108,7 +108,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         OpenRAVE::dReal dofTime = fabs( ( dofTargetRads - dofCurrentRads ) / ( refSpeeds[ j ] * M_PI / 180.0 ) ); // Time in seconds
 
-        CD_DEBUG("abs(target-current)/vel = abs(%f-%f)/%f = %f\n",ref,dofCurrentRads*180/M_PI,refSpeeds[ j ],dofTime);
+        CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,dofCurrentRads*180/M_PI,refSpeeds[ j ],dofTime);
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
