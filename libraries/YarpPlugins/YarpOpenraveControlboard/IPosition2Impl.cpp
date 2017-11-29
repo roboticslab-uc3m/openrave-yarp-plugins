@@ -40,8 +40,13 @@ bool roboticslab::YarpOpenraveControlboard::checkMotionDone(const int n_joint, c
 
 bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    CD_INFO("\n");
+    bool ok = true;
+    for(int i=0;i<n_joint;i++)
+    {
+        ok &= setRefSpeed(joints[i],spds[i]);
+    }
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
