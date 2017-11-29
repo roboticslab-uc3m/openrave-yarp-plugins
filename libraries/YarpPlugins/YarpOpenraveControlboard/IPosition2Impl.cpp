@@ -53,8 +53,13 @@ bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const int n_joint, cons
 
 bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    CD_INFO("\n");
+    bool ok = true;
+    for(int i=0;i<n_joint;i++)
+    {
+        ok &= setRefAcceleration(joints[i],accs[i]);
+    }
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
