@@ -18,7 +18,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
         ss << sp << " ";
     }
 
-    if( ! pcontrol->SendCommand(sout,ss) ) {
+    if( ! pcontrols[j]->SendCommand(sout,ss) ) {
         CD_ERROR("Failed to send velocity command\n");
         return false;
     }

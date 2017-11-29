@@ -4,7 +4,6 @@
 #define __YARP_OPENRAVE_CONTROLBOARD_HPP__
 
 #include <yarp/os/all.h>
-#include <yarp/os/Semaphore.h>
 #include <yarp/dev/all.h>
 
 #include <openrave-core.h>
@@ -18,7 +17,7 @@
 
 #include "ColorDebug.hpp"
 
-#define DEFAULT_AXES 5
+#define DEFAULT_GEN_REF_SPEED 7.5  // Exposed.
 
 namespace roboticslab
 {
@@ -815,13 +814,16 @@ private:
     // General Joint Motion Controller parameters //
     unsigned int axes;
     std::vector< int > controlModes;
+    std::vector<double> refSpeeds;  // Exposed.
 
     //OpenRAVE//
     OpenRAVE::EnvironmentBasePtr penv;
     OpenRAVE::RobotBasePtr probot;
-    OpenRAVE::ControllerBasePtr pcontrol;
+    std::string robotName;
+    OpenRAVE::MultiControllerBasePtr multi;
+    std::vector< OpenRAVE::ControllerBasePtr > pcontrols;
     std::vector< int > manipulatorIDs;
-    std::vector<OpenRAVE::dReal> manipulatorTargets;
+    std::vector<OpenRAVE::dReal> manipulatorTargetRads;
     std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
 
     // Specific for --env parameter with --view
