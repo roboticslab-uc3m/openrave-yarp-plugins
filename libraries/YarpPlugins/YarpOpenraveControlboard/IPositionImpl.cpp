@@ -22,6 +22,12 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         return false;
     }
 
+    if( refSpeeds[ j ] == 0 )
+    {
+        CD_DEBUG("(refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true.\n");
+        return true;
+    }
+
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
@@ -30,14 +36,11 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         // Store for later
         manipulatorTargets[ j ] = dofTargetRads;
 
-        if( refSpeeds[ j ] == 0 )
-        {
-            CD_DEBUG("Avoid division by 0, (refSpeeds[ j ] == 0), implemented immediate movement.\n");
-            std::vector<OpenRAVE::dReal> tmp;
-            tmp.push_back(dofTargetRads);
-            pcontrols[j]->SetDesired(tmp);
-            return true;
-        }
+        //-- immediate movement
+        //std::vector<OpenRAVE::dReal> tmp;
+        //tmp.push_back(dofTargetRads);
+        //pcontrols[j]->SetDesired(tmp);
+
 
         //--- Console output robot active DOF
         //std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
