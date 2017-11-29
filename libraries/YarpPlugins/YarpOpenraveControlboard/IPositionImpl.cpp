@@ -96,7 +96,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
 
-        OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( refSpeeds[ j ] * M_PI / 180.0 ) ); // Time in seconds
+        OpenRAVE::dReal dofTime = fabs( ( dofTargetRads - dofCurrentRads ) / ( refSpeeds[ j ] * M_PI / 180.0 ) ); // Time in seconds
 
         CD_DEBUG("abs(target-current)/vel = abs(%f-%f)/%f = %f\n",ref,dofCurrentRads*180/M_PI,refSpeeds[ j ],dofTime);
 

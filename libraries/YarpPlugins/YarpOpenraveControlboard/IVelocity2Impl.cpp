@@ -8,7 +8,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(const int n_joint, cons
 {
     CD_INFO("\n");
     bool ok = true;
-    for(unsigned int i=0;i<n_joint;i++)
+    for(int i=0;i<n_joint;i++)
         ok &= velocityMove(joints[i],spds[i]);
     return ok;
 }
@@ -17,7 +17,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(const int n_joint, cons
 
 bool roboticslab::YarpOpenraveControlboard::getRefVelocity(const int joint, double *vel)
 {
-    CD_DEBUG("\n");
+    CD_ERROR("Not implemented yet.\n");
     return true;
 }
 
@@ -25,7 +25,7 @@ bool roboticslab::YarpOpenraveControlboard::getRefVelocity(const int joint, doub
 
 bool roboticslab::YarpOpenraveControlboard::getRefVelocities(double *vels)
 {
-    CD_DEBUG("\n");
+    CD_ERROR("Not implemented yet.\n");
     return true;
 }
 
@@ -33,7 +33,7 @@ bool roboticslab::YarpOpenraveControlboard::getRefVelocities(double *vels)
 
 bool roboticslab::YarpOpenraveControlboard::getRefVelocities(const int n_joint, const int *joints, double *vels)
 {
-    CD_DEBUG("\n");
+    CD_ERROR("Not implemented yet.\n");
     return true;
 }
 
@@ -41,7 +41,7 @@ bool roboticslab::YarpOpenraveControlboard::getRefVelocities(const int n_joint, 
 
 bool roboticslab::YarpOpenraveControlboard::setVelPid(int j, const yarp::dev::Pid &pid)
 {
-    CD_DEBUG("\n");
+    CD_ERROR("Not implemented yet.\n");
     return true;
 }
 
@@ -49,7 +49,7 @@ bool roboticslab::YarpOpenraveControlboard::setVelPid(int j, const yarp::dev::Pi
 
 bool roboticslab::YarpOpenraveControlboard::setVelPids(const yarp::dev::Pid *pids)
 {
-    CD_DEBUG("\n");
+    CD_ERROR("Not implemented yet.\n");
     return true;
 }
 
@@ -57,7 +57,7 @@ bool roboticslab::YarpOpenraveControlboard::setVelPids(const yarp::dev::Pid *pid
 
 bool roboticslab::YarpOpenraveControlboard::getVelPid(int j, yarp::dev::Pid *pid)
 {
-    CD_DEBUG("\n");
+    CD_ERROR("Not implemented yet.\n");
     return true;
 }
 
@@ -65,7 +65,7 @@ bool roboticslab::YarpOpenraveControlboard::getVelPid(int j, yarp::dev::Pid *pid
 
 bool roboticslab::YarpOpenraveControlboard::getVelPids(yarp::dev::Pid *pids)
 {
-    CD_DEBUG("\n");
+    CD_ERROR("Not implemented yet.\n");
     return true;
 }
 
