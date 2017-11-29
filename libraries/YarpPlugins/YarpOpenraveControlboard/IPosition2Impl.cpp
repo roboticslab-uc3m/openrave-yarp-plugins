@@ -19,8 +19,13 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(const int n_joint, cons
 
 bool roboticslab::YarpOpenraveControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    CD_INFO("\n");
+    bool ok = true;
+    for(int i=0;i<n_joint;i++)
+    {
+        ok &= relativeMove(joints[i],deltas[i]);
+    }
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
