@@ -13,7 +13,7 @@ bool roboticslab::YarpOpenraveControlboard::getAxes(int *ax) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
-    CD_INFO("\n");
+    //CD_INFO("\n");
 
     //-- Check if we are in position mode.
     if( controlModes[j] != VOCAB_CM_POSITION )
@@ -180,7 +180,7 @@ bool roboticslab::YarpOpenraveControlboard::setRefSpeed(int j, double sp) {
     getVelLimits( j, &min, &max );
     if( sp > max )
     {
-        CD_WARNING("Setting %f, above %f max. All joint %d movements will be immediate.\n",sp,max,j);
+        CD_WARNING("Setting %f refSpeed above %f maxVelLimit. All joint %d movements will be immediate.\n",sp,max,j);
     }
     refSpeeds[j] = sp;
     return true;
