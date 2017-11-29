@@ -171,7 +171,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     manipulatorIDs = vectorOfManipulatorPtr[manipulatorIndex]->GetArmIndices();
 
     axes = manipulatorIDs.size();
-    manipulatorTargets.resize( axes, 0.0 );
+    manipulatorTargetRads.resize( axes, 0.0 );
     controlModes.resize( axes, VOCAB_CM_POSITION );
     refSpeeds.resize( axes, genRefSpeed );
 

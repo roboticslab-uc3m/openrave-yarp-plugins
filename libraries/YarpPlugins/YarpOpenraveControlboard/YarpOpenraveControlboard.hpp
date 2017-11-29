@@ -823,7 +823,7 @@ private:
     OpenRAVE::MultiControllerBasePtr multi;
     std::vector< OpenRAVE::ControllerBasePtr > pcontrols;
     std::vector< int > manipulatorIDs;
-    std::vector<OpenRAVE::dReal> manipulatorTargets;
+    std::vector<OpenRAVE::dReal> manipulatorTargetRads;
     std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
 
     // Specific for --env parameter with --view

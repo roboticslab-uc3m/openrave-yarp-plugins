@@ -13,7 +13,7 @@ bool roboticslab::YarpOpenraveControlboard::getAxes(int *ax) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
-    CD_INFO("\n");
+    //CD_INFO("\n");
 
     //-- Check if we are in position mode.
     if( controlModes[j] != VOCAB_CM_POSITION )
@@ -22,17 +22,27 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         return false;
     }
 
+    OpenRAVE::dReal dofTargetRads = ref * M_PI / 180.0;  // ref comes in exposed
+
+    //-- Store the targets
+    manipulatorTargetRads[ j ] = dofTargetRads;
+
+    //-- But do not move if no velocity
+    if( refSpeeds[ j ] == 0 )
+    {
+        CD_DEBUG("[%d] (refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true.\n",j);
+        return true;
+    }
+
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-        OpenRAVE::dReal dofTargetRads = ref * M_PI / 180.0;  // ref comes in exposed
-
-        // Store for later
-        manipulatorTargets[ j ] = dofTargetRads;
-
-        if( refSpeeds[ j ] == 0 )
+        //-- Check and do immediate movement if appropriate.
+        //-- In fact, OpenRAVE would actually do the extra-fast movement but warn at all times.
+        double min,max;
+        getVelLimits( j, &min, &max );
+        if( refSpeeds[ j ] > max )
         {
-            CD_DEBUG("Avoid division by 0, (refSpeeds[ j ] == 0), implemented immediate movement.\n");
             std::vector<OpenRAVE::dReal> tmp;
             tmp.push_back(dofTargetRads);
             pcontrols[j]->SetDesired(tmp);
@@ -98,7 +108,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         OpenRAVE::dReal dofTime = fabs( ( dofTargetRads - dofCurrentRads ) / ( refSpeeds[ j ] * M_PI / 180.0 ) ); // Time in seconds
 
-        CD_DEBUG("abs(target-current)/vel = abs(%f-%f)/%f = %f\n",ref,dofCurrentRads*180/M_PI,refSpeeds[ j ],dofTime);
+        CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,dofCurrentRads*180/M_PI,refSpeeds[ j ],dofTime);
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
@@ -166,6 +176,12 @@ bool roboticslab::YarpOpenraveControlboard::checkMotionDone(bool *flag) {
 
 bool roboticslab::YarpOpenraveControlboard::setRefSpeed(int j, double sp) {
     CD_INFO("\n");
+    double min,max;
+    getVelLimits( j, &min, &max );
+    if( sp > max )
+    {
+        CD_WARNING("Setting %f refSpeed above %f maxVelLimit. All joint %d movements will be immediate.\n",sp,max,j);
+    }
     refSpeeds[j] = sp;
     return true;
 }
