@@ -22,6 +22,12 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         return false;
     }
 
+    OpenRAVE::dReal dofTargetRads = ref * M_PI / 180.0;  // ref comes in exposed
+
+    //-- Store the targets
+    manipulatorTargetRads[ j ] = dofTargetRads;
+
+    //-- But do not move if no velocity
     if( refSpeeds[ j ] == 0 )
     {
         CD_DEBUG("(refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true.\n");
@@ -30,11 +36,6 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
-
-        OpenRAVE::dReal dofTargetRads = ref * M_PI / 180.0;  // ref comes in exposed
-
-        // Store for later
-        manipulatorTargets[ j ] = dofTargetRads;
 
         //-- immediate movement
         //std::vector<OpenRAVE::dReal> tmp;
