@@ -6,9 +6,13 @@
 
 bool roboticslab::YarpOpenraveControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
 {
-    CD_DEBUG("\n");
-    // must implement mask!
-    return positionMove(refs);
+    CD_INFO("\n");
+    bool ok = true;
+    for(int i=0;i<n_joint;i++)
+    {
+        ok &= positionMove(joints[i],refs[i]);
+    }
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
