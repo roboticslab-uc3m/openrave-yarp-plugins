@@ -37,11 +37,17 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-        //-- immediate movement
-        //std::vector<OpenRAVE::dReal> tmp;
-        //tmp.push_back(dofTargetRads);
-        //pcontrols[j]->SetDesired(tmp);
-
+        //-- Check and do immediate movement if appropriate.
+        //-- In fact, OpenRAVE would actually do the extra-fast movement but warn at all times.
+        double min,max;
+        getVelLimits( j, &min, &max );
+        if( refSpeeds[ j ] > max )
+        {
+            std::vector<OpenRAVE::dReal> tmp;
+            tmp.push_back(dofTargetRads);
+            pcontrols[j]->SetDesired(tmp);
+            return true;
+        }
 
         //--- Console output robot active DOF
         //std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
@@ -170,6 +176,12 @@ bool roboticslab::YarpOpenraveControlboard::checkMotionDone(bool *flag) {
 
 bool roboticslab::YarpOpenraveControlboard::setRefSpeed(int j, double sp) {
     CD_INFO("\n");
+    double min,max;
+    getVelLimits( j, &min, &max );
+    if( sp > max )
+    {
+        CD_WARNING("Setting %f, above %f max. All joint %d movements will be immediate.\n",sp,max,j);
+    }
     refSpeeds[j] = sp;
     return true;
 }
