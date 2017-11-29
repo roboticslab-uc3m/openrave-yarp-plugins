@@ -128,13 +128,21 @@ public:
             funcionArgs.push_back(funcionArg);
         }
 
+        string portName("/openraveYarpForceEstimator/rpc:s");
+
+	if (funcionArgs.size() > 0)
+        {
+            if( funcionArgs[0][0] == '/')
+                portName = funcionArgs[0];
+        }
+        RAVELOG_INFO("portName: %s\n",portName.c_str());
 
         if ( !yarp.checkNetwork() )
         {
             RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
             return false;
         }
-        teoSimRateThread.port.open("/forceEstimator:o");
+        teoSimRateThread.port.open(portName);
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr pEnv = GetEnv();
