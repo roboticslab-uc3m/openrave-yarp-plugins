@@ -5,8 +5,8 @@
 // ------------------- IPositionControl Related --------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getAxes(int *ax) {
-    CD_INFO("Reporting %d axes are present\n", *ax);
     *ax = axes;
+    CD_INFO("Reporting %d axes are present\n", *ax);
     return true;
 }
 
