@@ -103,11 +103,39 @@ public:
 
         CD_DEBUG("config: %s\n", options.toString().c_str());
 
-        RAVELOG_INFO("penv: %p\n",GetEnv().get());
+        //-- Get and put pointer to environment
+        CD_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
-
         yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
         options.put("penv",v);
+
+        //-- If robotIndex (and then if manipulatorIndex), get and put name
+        if( options.check("robotIndex") )
+        {
+            std::string name("/");
+
+            int robotPtrIdx = options.find("robotIndex").asInt();
+
+            std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
+            GetEnv()->GetRobots(vectorOfRobotPtr);
+
+            name += vectorOfRobotPtr[ robotPtrIdx ]->GetName();
+
+            if( options.check("manipulatorIndex") )
+            {
+                int manipulatorPtrIdx = options.find("manipulatorIndex").asInt();
+
+                std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[robotPtrIdx]->GetManipulators();
+                vectorOfRobotPtr[ robotPtrIdx ]->GetManipulators();
+
+                name += "/";
+                name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
+            }
+
+            options.put("name",name);
+        }
+
+        CD_DEBUG("post-config: %s\n", options.toString().c_str());
 
         yarpPlugin = new yarp::dev::PolyDriver;
         yarpPlugin->open(options);
