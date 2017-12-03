@@ -57,6 +57,7 @@ public:
         {
             yarpPlugins[i]->close();
             delete yarpPlugins[i];
+            yarpPlugins[i] = 0;
         }
     }
 
