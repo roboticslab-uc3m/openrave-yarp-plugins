@@ -35,14 +35,11 @@
 using namespace std;
 using namespace OpenRAVE;
 
-//YARP_DECLARE_PLUGINS(yarpplugins)
-
 class OpenraveYarpPluginLoader : public ModuleBase
 {
 public:
     OpenraveYarpPluginLoader(EnvironmentBasePtr penv) : ModuleBase(penv)
     {
-        //YARP_REGISTER_PLUGINS(yarpplugins);
         __description = "OpenraveYarpPluginLoader plugin.";
         RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens port");
     }
