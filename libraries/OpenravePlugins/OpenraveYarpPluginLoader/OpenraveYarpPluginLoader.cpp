@@ -119,14 +119,25 @@ public:
             std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
             GetEnv()->GetRobots(vectorOfRobotPtr);
 
+            if(robotPtrIdx >= vectorOfRobotPtr.size())
+            {
+                CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotPtrIdx,vectorOfRobotPtr.size());
+                return false;
+            }
+
             name += vectorOfRobotPtr[ robotPtrIdx ]->GetName();
 
             if( options.check("manipulatorIndex") )
             {
                 int manipulatorPtrIdx = options.find("manipulatorIndex").asInt();
 
-                std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[robotPtrIdx]->GetManipulators();
-                vectorOfRobotPtr[ robotPtrIdx ]->GetManipulators();
+                std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ robotPtrIdx ]->GetManipulators();
+
+                if(manipulatorPtrIdx >= vectorOfManipulatorPtr.size())
+                {
+                    CD_ERROR("manipulatorPtrIdx %d >= vectorOfManipulatorPtr.size() %d, not loading yarpPlugin.\n",manipulatorPtrIdx,vectorOfManipulatorPtr.size());
+                    return false;
+                }
 
                 name += "/";
                 name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
@@ -142,10 +153,10 @@ public:
 
         if( ! yarpPlugin->isValid() )
         {
-            CD_ERROR("Bad\n");
+            CD_ERROR("yarpPlugin not valid.\n");
             return false;
         }
-        CD_SUCCESS("Good\n");
+        CD_SUCCESS("Valid yarpPlugin.\n");
 
         return true;
     }
