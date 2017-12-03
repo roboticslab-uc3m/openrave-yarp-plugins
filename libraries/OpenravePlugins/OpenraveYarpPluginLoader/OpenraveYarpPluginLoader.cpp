@@ -51,7 +51,8 @@ public:
             delete yarpPlugins[i];
         }
 
-        for(int i=0;i<argv.size();i++)
+        //-- Note that we start on element 1, first elem was not via new!!
+        for(int i=1;i<argv.size();i++)
         {
             printf("Here [%s]\n",argv[i]);
             delete argv[i];
