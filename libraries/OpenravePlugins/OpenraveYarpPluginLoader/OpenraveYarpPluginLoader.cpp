@@ -81,6 +81,8 @@ public:
         }
         CD_SUCCESS("Found yarp network.\n");
 
+        //-- Given "std::istream& sinput", create equivalent to "int argc, char *argv[]"
+        //-- Note that char* != const char* given by std::string::c_str();
         char* dummyProgramName = "dummyProgramName";
         argv.push_back(dummyProgramName);
 
@@ -88,11 +90,8 @@ public:
         {
             std::string str;
             sinput >> str;
-            if(str.length() == 0)
-            {
-                //CD_WARNING("Omit empty string that is usually at end via openrave.\n");
+            if(str.length() == 0)  //-- Omits empty string that is usually at end via openrave.
                 continue;
-            }
             char *cstr = new char[str.length() + 1];  // pushed to member argv to be deleted in ~.
             strcpy(cstr, str.c_str());
             argv.push_back(cstr);
