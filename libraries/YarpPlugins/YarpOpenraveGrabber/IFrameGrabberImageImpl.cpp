@@ -2,39 +2,33 @@
 
 #include "YarpOpenraveGrabber.hpp"
 
-// ------------------ IVelocity Related ----------------------------------------
+namespace roboticslab
+{
 
-bool roboticslab::YarpOpenraveGrabber::velocityMove(int j, double sp) {  // velExposed = sp;
+// ------------------ IFrameGrabberImage Related ----------------------------------------
 
-    //-- Check if we are in position mode.
-    if( controlModes[j] != VOCAB_CM_VELOCITY )
-    {
-        CD_ERROR("Will not velocityMove as not in velocityMode\n");
-        return false;
-    }
-
-    std::stringstream sout,ss; ss << "setvelocity ";
-    for(size_t i = 0; i < manipulatorIDs.size(); ++i) {
-        ss << sp << " ";
-    }
-
-    if( ! pcontrols[j]->SendCommand(sout,ss) ) {
-        CD_ERROR("Failed to send velocity command\n");
-        return false;
-    }
+bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& image)
+{
 
     return true;
 }
 
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveGrabber::velocityMove(const double *sp) {
-    CD_INFO("\n");
-    bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= velocityMove(i,sp[i]);
-    return ok;
+int YarpOpenraveGrabber::height() const
+{
+
+    return 0;
 }
 
 // ----------------------------------------------------------------------------
 
+int YarpOpenraveGrabber::width() const
+{
+
+    return 0;
+}
+
+// ----------------------------------------------------------------------------
+
+}
