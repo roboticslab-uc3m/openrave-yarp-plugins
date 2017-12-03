@@ -32,12 +32,10 @@
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
 
-using namespace OpenRAVE;
-
-class OpenraveYarpPluginLoader : public ModuleBase
+class OpenraveYarpPluginLoader : public OpenRAVE::ModuleBase
 {
 public:
-    OpenraveYarpPluginLoader(EnvironmentBasePtr penv) : ModuleBase(penv)
+    OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
     {
         __description = "OpenraveYarpPluginLoader plugin.";
         RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens port");
@@ -136,18 +134,18 @@ private:
     std::vector< yarp::dev::PolyDriver* > yarpPlugins;
 };
 
-InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv)
+OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
 {
-    if( type == PT_Module && interfacename == "openraveyarpcontrolboard" )
+    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpcontrolboard" )
     {
-        return InterfaceBasePtr(new OpenraveYarpPluginLoader(penv));
+        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPluginLoader(penv));
     }
-    return InterfaceBasePtr();
+    return OpenRAVE::InterfaceBasePtr();
 }
 
-void GetPluginAttributesValidated(PLUGININFO& info)
+void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
 {
-    info.interfacenames[PT_Module].push_back("OpenraveYarpPluginLoader");
+    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpPluginLoader");
 }
 
 OPENRAVE_PLUGIN_API void DestroyPlugin()
