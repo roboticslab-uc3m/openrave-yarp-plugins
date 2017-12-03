@@ -32,6 +32,8 @@
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
 
+#include "ColorDebug.hpp"
+
 class OpenraveYarpPluginLoader : public OpenRAVE::ModuleBase
 {
 public:
@@ -65,19 +67,20 @@ public:
     {
         if ( ! yarp.checkNetwork() )
         {
-            RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+            CD_ERROR("Found no yarp network (try running \"yarpserver &\"), bye!\n");
             return false;
         }
 
-        yarp::os::Bottle funcionArgs;
+        yarp::os::Bottle config;
 
         while(sinput)
         {
             std::string funcionArg;
             sinput >> funcionArg;
-            funcionArgs.addString(funcionArg);
+            config.addString(funcionArg);
         }
 
+        CD_DEBUG("config: %s\n", config.toString().c_str());
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
