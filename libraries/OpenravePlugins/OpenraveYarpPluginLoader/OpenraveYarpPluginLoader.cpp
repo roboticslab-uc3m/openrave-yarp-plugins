@@ -63,6 +63,12 @@ public:
 
     bool Open(std::ostream& sout, std::istream& sinput)
     {
+        if ( ! yarp.checkNetwork() )
+        {
+            RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+            return false;
+        }
+
         yarp::os::Bottle funcionArgs;
 
         while(sinput)
@@ -72,11 +78,6 @@ public:
             funcionArgs.addString(funcionArg);
         }
 
-        if ( ! yarp.checkNetwork() )
-        {
-            RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
-            return false;
-        }
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
