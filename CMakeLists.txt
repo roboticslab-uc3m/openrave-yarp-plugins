@@ -18,6 +18,7 @@ set(BUILD_SHARED_LIBS TRUE CACHE INTERNAL "hide this!")
 option(ENABLE_FakeControlboard "Enable/disable compilation of FakeControlboard" TRUE)
 option(ENABLE_YarpOpenraveControlboard "Enable/disable option YarpOpenraveControlboard" TRUE)
 option(ENABLE_YarpOpenraveControlboardCollision "Enable/disable option YarpOpenraveControlboardCollision" TRUE)
+option(ENABLE_YarpOpenraveGrabber "Enable/disable option YarpOpenraveGrabber" TRUE)
 
 ### options: cpp libraries (openrave plugins)
 option(ENABLE_OpenraveYarpControlboard "Enable/disable option OpenraveYarpControlboard" TRUE)
