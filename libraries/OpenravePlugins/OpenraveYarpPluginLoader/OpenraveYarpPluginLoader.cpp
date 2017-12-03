@@ -53,12 +53,9 @@ public:
             argv[i] = 0;
         }
 
-        for(size_t i=0;i<yarpPlugins.size();i++)
-        {
-            yarpPlugins[i]->close();
-            delete yarpPlugins[i];
-            yarpPlugins[i] = 0;
-        }
+        yarpPlugin->close();
+        delete yarpPlugin;
+        yarpPlugin = 0;
     }
 
     virtual void Destroy()
@@ -109,52 +106,20 @@ public:
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
-        //-- Get robots
-        std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-        GetEnv()->GetRobots(vectorOfRobotPtr);
+        yarpPlugin = new yarp::dev::PolyDriver;
 
-        //-- For each robot
-        for(size_t robotPtrIdx=0;robotPtrIdx<vectorOfRobotPtr.size();robotPtrIdx++)
+        yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
+        options.put("penv",v);
+
+        yarpPlugin->open(options);
+
+        if( ! yarpPlugin->isValid() )
         {
-            RAVELOG_INFO( "Robots[%zu]: %s\n",robotPtrIdx,vectorOfRobotPtr[robotPtrIdx]->GetName().c_str());
-
-            //-- Get manipulators
-            std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[robotPtrIdx]->GetManipulators();
-
-            //-- For each manipulator
-            for(size_t manipulatorPtrIdx=0;manipulatorPtrIdx<vectorOfManipulatorPtr.size();manipulatorPtrIdx++)
-            {
-                RAVELOG_INFO( "* Manipulators[%zu]: %s\n",manipulatorPtrIdx,vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName().c_str() );
-
-                //-- Formulate the manipulator port name
-                std::string manipulatorPortName;
-
-                manipulatorPortName += "/";
-                manipulatorPortName += vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName();
-                RAVELOG_INFO( "* manipulatorPortName: %s\n",manipulatorPortName.c_str() );
-
-                //--
-                yarp::dev::PolyDriver* robotDevice = new yarp::dev::PolyDriver;
-                yarp::os::Property options;
-                options.put("device","controlboardwrapper2");  //-- ports
-                options.put("subdevice","YarpOpenraveControlboard");
-                options.put("name", manipulatorPortName );
-
-                yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
-                options.put("penv",v);
-                options.put("robotIndex",static_cast<int>(robotPtrIdx));
-                options.put("manipulatorIndex",static_cast<int>(manipulatorPtrIdx));
-
-                robotDevice->open(options);
-
-                if( ! robotDevice->isValid() )
-                {
-                    RAVELOG_INFO("Bad\n");
-                    return false;
-                }
-                yarpPlugins.push_back( robotDevice );
-            }
+            CD_ERROR("Bad\n");
+            return false;
         }
+        CD_SUCCESS("Good\n");
+
         return true;
     }
 
@@ -162,7 +127,7 @@ private:
     std::vector<char *> argv;
 
     yarp::os::Network yarp;
-    std::vector< yarp::dev::PolyDriver* > yarpPlugins;
+    yarp::dev::PolyDriver* yarpPlugin;
 };
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
