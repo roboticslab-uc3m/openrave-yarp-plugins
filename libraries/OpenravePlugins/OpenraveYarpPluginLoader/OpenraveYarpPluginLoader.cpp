@@ -106,11 +106,10 @@ public:
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
-        yarpPlugin = new yarp::dev::PolyDriver;
-
         yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
         options.put("penv",v);
 
+        yarpPlugin = new yarp::dev::PolyDriver;
         yarpPlugin->open(options);
 
         if( ! yarpPlugin->isValid() )
