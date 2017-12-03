@@ -50,6 +50,13 @@ public:
             yarpPlugins[i]->close();
             delete yarpPlugins[i];
         }
+
+        for(int i=0;i<argv.size();i++)
+        {
+            printf("Here [%s]\n",argv[i]);
+            delete argv[i];
+            argv[i] = 0;
+        }
     }
 
     virtual void Destroy()
@@ -73,7 +80,6 @@ public:
         }
         CD_SUCCESS("Found yarp network.\n");
 
-        std::vector<char *> argv;
         char* dummyProgramName = "dummyProgramName";
         argv.push_back(dummyProgramName);
 
@@ -83,24 +89,21 @@ public:
             sinput >> str;
             if(str.length() == 0)
             {
-                //CD_WARNING("Omit empty\n");
+                //CD_WARNING("Omit empty string that is usually at end via openrave.\n");
                 continue;
             }
-            char *cstr = new char[str.length() + 1];
+            char *cstr = new char[str.length() + 1];  // pushed to member argv to be deleted in ~.
             strcpy(cstr, str.c_str());
             argv.push_back(cstr);
-            CD_DEBUG("Here [%s]\n",cstr);
         }
 
-        for(int i=0;i<argv.size();i++)
-        {
-            printf("Here [%s]\n",argv[i]);
-        }
+        for(size_t i=0;i<argv.size();i++)
+            CD_DEBUG("argv[%d] is [%s]\n",i,argv[i]);
 
         yarp::os::Property options;
         options.fromCommand(argv.size(),argv.data());
 
-        CD_DEBUG("config [%d]: %s\n", argv.size(),options.toString().c_str());
+        CD_DEBUG("config: %s\n", options.toString().c_str());
 
         return true;
 
@@ -157,6 +160,8 @@ public:
     }
 
 private:
+    std::vector<char *> argv;
+
     yarp::os::Network yarp;
     std::vector< yarp::dev::PolyDriver* > yarpPlugins;
 };
