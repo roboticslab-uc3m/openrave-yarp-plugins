@@ -40,17 +40,19 @@ using namespace OpenRAVE;
 class OpenraveYarpPluginLoader : public ModuleBase
 {
 public:
-    OpenraveYarpPluginLoader(EnvironmentBasePtr penv) : ModuleBase(penv) {
+    OpenraveYarpPluginLoader(EnvironmentBasePtr penv) : ModuleBase(penv)
+    {
         //YARP_REGISTER_PLUGINS(yarpplugins);
         __description = "OpenraveYarpPluginLoader plugin.";
         RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens port");
     }
 
-    virtual ~OpenraveYarpPluginLoader() {
-        for(int i=0;i<robotDevices.size();i++)
+    virtual ~OpenraveYarpPluginLoader()
+    {
+        for(int i=0;i<yarpPlugins.size();i++)
         {
-            robotDevices[i]->close();
-            delete robotDevices[i];
+            yarpPlugins[i]->close();
+            delete yarpPlugins[i];
         }
     }
 
@@ -66,9 +68,6 @@ public:
 
     bool Open(ostream& sout, istream& sinput)
     {
-        bool collision = false;
-        bool alternativeRobotName = false;
-
         vector<string> funcionArgs;
         while(sinput)
         {
@@ -81,28 +80,10 @@ public:
         {
             if (funcionArgs[0] == "collision")
             {
-                RAVELOG_INFO("Will open YarpOpenraveControlboardCollision");
-                collision = true;
-                if (funcionArgs.size() > 1)
-                {
-                    if( funcionArgs[1][0] == '/')
-                    {
-                        RAVELOG_INFO("Will use alternativeRobotName: %s",funcionArgs[1].c_str());
-                        alternativeRobotName = true;
-                    }
-                    else
-                    {
-                        RAVELOG_INFO("Will not use alternativeRobotName that does not begin with '/': %s",funcionArgs[1].c_str());
-                    }
-                }
             }
         }
-        else
-        {
-            RAVELOG_INFO("Will open YarpOpenraveControlboard");
-        }
 
-        if ( !yarp.checkNetwork() )
+        if ( ! yarp.checkNetwork() )
         {
             RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
             return false;
@@ -130,15 +111,7 @@ public:
 
                 //-- Formulate the manipulator port name
                 std::string manipulatorPortName;
-                if(alternativeRobotName)
-                {
-                    manipulatorPortName += funcionArgs[1];
-                }
-                else
-                {
-                    manipulatorPortName += "/";
-                    manipulatorPortName += vectorOfRobotPtr[robotPtrIdx]->GetName();
-                }
+
                 manipulatorPortName += "/";
                 manipulatorPortName += vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName();
                 RAVELOG_INFO( "* manipulatorPortName: %s\n",manipulatorPortName.c_str() );
@@ -147,33 +120,22 @@ public:
                 yarp::dev::PolyDriver* robotDevice = new yarp::dev::PolyDriver;
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
-
-                if (collision)
-                {
-                    options.put("subdevice","YarpOpenraveControlboardCollision");
-                    std::string safe("/safe");
-                    options.put("name", safe+manipulatorPortName );
-                    options.put("remote", manipulatorPortName );
-                }
-                else
-                {
-                    options.put("subdevice","YarpOpenraveControlboard");
-                    options.put("name", manipulatorPortName );
-                }
+                options.put("subdevice","YarpOpenraveControlboard");
+                options.put("name", manipulatorPortName );
 
                 yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
                 options.put("penv",v);
-
                 options.put("robotIndex",static_cast<int>(robotPtrIdx));
                 options.put("manipulatorIndex",static_cast<int>(manipulatorPtrIdx));
 
                 robotDevice->open(options);
+
                 if( ! robotDevice->isValid() )
                 {
                     RAVELOG_INFO("Bad\n");
                     return false;
                 }
-                robotDevices.push_back( robotDevice );
+                yarpPlugins.push_back( robotDevice );
             }
         }
         return true;
@@ -181,20 +143,24 @@ public:
 
 private:
     yarp::os::Network yarp;
-    std::vector< yarp::dev::PolyDriver* > robotDevices;
+    std::vector< yarp::dev::PolyDriver* > yarpPlugins;
 };
 
-InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
-    if( type == PT_Module && interfacename == "openraveyarpcontrolboard" ) {
+InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv)
+{
+    if( type == PT_Module && interfacename == "openraveyarpcontrolboard" )
+    {
         return InterfaceBasePtr(new OpenraveYarpPluginLoader(penv));
     }
     return InterfaceBasePtr();
 }
 
-void GetPluginAttributesValidated(PLUGININFO& info) {
+void GetPluginAttributesValidated(PLUGININFO& info)
+{
     info.interfacenames[PT_Module].push_back("OpenraveYarpPluginLoader");
 }
 
-OPENRAVE_PLUGIN_API void DestroyPlugin() {
+OPENRAVE_PLUGIN_API void DestroyPlugin()
+{
     RAVELOG_INFO("destroying plugin\n");
 }
