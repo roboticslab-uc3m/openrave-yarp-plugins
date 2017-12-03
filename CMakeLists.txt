@@ -25,6 +25,7 @@ option(ENABLE_OpenraveYarpPaintSquares "Enable/disable option OpenraveYarpPaintS
 option(ENABLE_OpenraveWorldRpcResponder "Enable/disable option OpenraveWorldRpcResponder" TRUE)
 option(ENABLE_OpenraveYarpForce "Enable/disable option OpenraveYarpForce" TRUE)
 option(ENABLE_OpenraveYarpForceEstimator "Enable/disable option OpenraveYarpForceEstimator" TRUE)
+option(ENABLE_OpenraveYarpPluginLoader "Enable/disable option OpenraveYarpPluginLoader" TRUE)
 
 ### options: cpp programs
 option(ENABLE_teoSim "Choose if you want to compile (deprecated) teoSim" TRUE)
