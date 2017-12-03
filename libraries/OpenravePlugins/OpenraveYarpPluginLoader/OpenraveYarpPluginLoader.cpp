@@ -98,8 +98,8 @@ public:
             argv.push_back(cstr);
         }
 
-        for(size_t i=0;i<argv.size();i++)
-            CD_DEBUG("argv[%d] is [%s]\n",i,argv[i]);
+        //for(size_t i=0;i<argv.size();i++)
+        //    CD_DEBUG("argv[%d] is [%s]\n",i,argv[i]);
 
         yarp::os::Property options;
         options.fromCommand(argv.size(),argv.data());
