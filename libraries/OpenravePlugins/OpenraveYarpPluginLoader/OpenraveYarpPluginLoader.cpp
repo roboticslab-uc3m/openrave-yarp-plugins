@@ -141,7 +141,7 @@ private:
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
 {
-    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpcontrolboard" )
+    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarppluginloader")
     {
         return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPluginLoader(penv));
     }
