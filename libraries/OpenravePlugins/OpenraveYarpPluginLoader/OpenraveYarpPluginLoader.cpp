@@ -106,8 +106,6 @@ public:
 
         CD_DEBUG("config: %s\n", options.toString().c_str());
 
-        return true;
-
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
