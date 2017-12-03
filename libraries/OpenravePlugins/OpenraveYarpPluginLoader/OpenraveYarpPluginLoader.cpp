@@ -73,16 +73,36 @@ public:
         }
         CD_SUCCESS("Found yarp network.\n");
 
-        yarp::os::Bottle config;
+        std::vector<char *> argv;
+        char* dummyProgramName = "dummyProgramName";
+        argv.push_back(dummyProgramName);
 
         while(sinput)
         {
-            std::string funcionArg;
-            sinput >> funcionArg;
-            config.addString(funcionArg);
+            std::string str;
+            sinput >> str;
+            if(str.length() == 0)
+            {
+                //CD_WARNING("Omit empty\n");
+                continue;
+            }
+            char *cstr = new char[str.length() + 1];
+            strcpy(cstr, str.c_str());
+            argv.push_back(cstr);
+            CD_DEBUG("Here [%s]\n",cstr);
         }
 
-        CD_DEBUG("config: %s\n", config.toString().c_str());
+        for(int i=0;i<argv.size();i++)
+        {
+            printf("Here [%s]\n",argv[i]);
+        }
+
+        yarp::os::Property options;
+        options.fromCommand(argv.size(),argv.data());
+
+        CD_DEBUG("config [%d]: %s\n", argv.size(),options.toString().c_str());
+
+        return true;
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
