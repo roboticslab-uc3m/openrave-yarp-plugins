@@ -109,47 +109,50 @@ public:
         yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
         options.put("penv",v);
 
-        //-- If robotIndex (and then if manipulatorIndex), get and put name
-        if( options.check("robotIndex") )
+        if( ! options.check("name") )  // Enable bypass if "name" already exists
         {
-            std::string name;
-
-            if( options.check("prefix") )
+            //-- If robotIndex (and then if manipulatorIndex), get and put name
+            if( options.check("robotIndex") )
             {
-                name += options.find("prefix").asString();
-            }
+                std::string name;
 
-            name += "/";
-            int robotPtrIdx = options.find("robotIndex").asInt();
-
-            std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-            GetEnv()->GetRobots(vectorOfRobotPtr);
-
-            if(robotPtrIdx >= vectorOfRobotPtr.size())
-            {
-                CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotPtrIdx,vectorOfRobotPtr.size());
-                return false;
-            }
-
-            name += vectorOfRobotPtr[ robotPtrIdx ]->GetName();
-
-            if( options.check("manipulatorIndex") )
-            {
-                int manipulatorPtrIdx = options.find("manipulatorIndex").asInt();
-
-                std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ robotPtrIdx ]->GetManipulators();
-
-                if(manipulatorPtrIdx >= vectorOfManipulatorPtr.size())
+                if( options.check("prefix") )  // Note that not taken into account if using "name"
                 {
-                    CD_ERROR("manipulatorPtrIdx %d >= vectorOfManipulatorPtr.size() %d, not loading yarpPlugin.\n",manipulatorPtrIdx,vectorOfManipulatorPtr.size());
-                    return false;
+                    name += options.find("prefix").asString();
                 }
 
                 name += "/";
-                name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
-            }
+                int robotPtrIdx = options.find("robotIndex").asInt();
 
-            options.put("name",name);
+                std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
+                GetEnv()->GetRobots(vectorOfRobotPtr);
+
+                if(robotPtrIdx >= vectorOfRobotPtr.size())
+                {
+                    CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotPtrIdx,vectorOfRobotPtr.size());
+                    return false;
+                }
+
+                name += vectorOfRobotPtr[ robotPtrIdx ]->GetName();
+
+                if( options.check("manipulatorIndex") )
+                {
+                    int manipulatorPtrIdx = options.find("manipulatorIndex").asInt();
+
+                    std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ robotPtrIdx ]->GetManipulators();
+
+                    if(manipulatorPtrIdx >= vectorOfManipulatorPtr.size())
+                    {
+                        CD_ERROR("manipulatorPtrIdx %d >= vectorOfManipulatorPtr.size() %d, not loading yarpPlugin.\n",manipulatorPtrIdx,vectorOfManipulatorPtr.size());
+                        return false;
+                    }
+
+                    name += "/";
+                    name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
+                }
+
+                options.put("name",name);
+            }
         }
 
         CD_DEBUG("post-config: %s\n", options.toString().c_str());
