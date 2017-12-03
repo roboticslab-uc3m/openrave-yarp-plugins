@@ -112,8 +112,14 @@ public:
         //-- If robotIndex (and then if manipulatorIndex), get and put name
         if( options.check("robotIndex") )
         {
-            std::string name("/");
+            std::string name;
 
+            if( options.check("prefix") )
+            {
+                name += options.find("prefix").asString();
+            }
+
+            name += "/";
             int robotPtrIdx = options.find("robotIndex").asInt();
 
             std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
