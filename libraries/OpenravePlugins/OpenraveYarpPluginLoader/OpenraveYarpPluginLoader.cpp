@@ -65,11 +65,13 @@ public:
 
     bool Open(std::ostream& sout, std::istream& sinput)
     {
+        CD_INFO("Checking for yarp network...\n");
         if ( ! yarp.checkNetwork() )
         {
             CD_ERROR("Found no yarp network (try running \"yarpserver &\"), bye!\n");
             return false;
         }
+        CD_SUCCESS("Found yarp network.\n");
 
         yarp::os::Bottle config;
 
