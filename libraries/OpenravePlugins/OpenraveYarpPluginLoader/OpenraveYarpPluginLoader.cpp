@@ -32,7 +32,6 @@
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
 
-using namespace std;
 using namespace OpenRAVE;
 
 class OpenraveYarpPluginLoader : public ModuleBase
@@ -64,21 +63,14 @@ public:
         return 0;
     }*/
 
-    bool Open(ostream& sout, istream& sinput)
+    bool Open(std::ostream& sout, std::istream& sinput)
     {
-        vector<string> funcionArgs;
+        std::vector<std::string> funcionArgs;
         while(sinput)
         {
-            string funcionArg;
+            std::string funcionArg;
             sinput >> funcionArg;
             funcionArgs.push_back(funcionArg);
-        }
-
-        if (funcionArgs.size() > 0)
-        {
-            if (funcionArgs[0] == "collision")
-            {
-            }
         }
 
         if ( ! yarp.checkNetwork() )
