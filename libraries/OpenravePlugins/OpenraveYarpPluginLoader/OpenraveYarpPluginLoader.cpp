@@ -63,12 +63,13 @@ public:
 
     bool Open(std::ostream& sout, std::istream& sinput)
     {
-        std::vector<std::string> funcionArgs;
+        yarp::os::Bottle funcionArgs;
+
         while(sinput)
         {
             std::string funcionArg;
             sinput >> funcionArg;
-            funcionArgs.push_back(funcionArg);
+            funcionArgs.addString(funcionArg);
         }
 
         if ( ! yarp.checkNetwork() )
