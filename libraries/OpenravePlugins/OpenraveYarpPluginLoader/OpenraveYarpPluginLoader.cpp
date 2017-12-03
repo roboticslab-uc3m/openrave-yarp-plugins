@@ -48,7 +48,7 @@ public:
         //-- Note that we start on element 1, first elem was not via new!!
         for(int i=1;i<argv.size();i++)
         {
-            CD_DEBUG("Freeing [%s]\n",argv[i]);
+            //CD_DEBUG("Deleting [%s]\n",argv[i]);
             delete argv[i];
             argv[i] = 0;
         }
