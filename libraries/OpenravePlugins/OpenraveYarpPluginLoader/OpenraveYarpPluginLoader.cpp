@@ -151,6 +151,11 @@ public:
                         CD_ERROR("manipulatorPtrIdx %d >= vectorOfManipulatorPtr.size() %d, not loading yarpPlugin.\n",manipulatorPtrIdx,vectorOfManipulatorPtr.size());
                         return false;
                     }
+                    else if (manipulatorPtrIdx < 0)
+                    {
+                        CD_ERROR("manipulatorPtrIdx %d < 0, not loading yarpPlugin.\n",manipulatorPtrIdx);
+                        return false;
+                    }
 
                     name += "/";
                     name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
