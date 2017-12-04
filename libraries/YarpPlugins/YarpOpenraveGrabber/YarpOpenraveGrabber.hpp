@@ -102,6 +102,8 @@ private:
     OpenRAVE::RobotBasePtr probot;
     std::string robotName;
 
+    boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> cameraSensorDataPtr;
+
     // Specific for --env parameter with --view
     boost::thread_group openraveThreads;
 };
