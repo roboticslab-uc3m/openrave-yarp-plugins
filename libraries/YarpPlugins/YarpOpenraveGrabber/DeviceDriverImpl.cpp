@@ -9,7 +9,7 @@ namespace roboticslab
 
 // -------------------------------------------------------------------
 
-void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername, int _viewer)
+void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
 {
     OpenRAVE::ViewerBasePtr viewer = OpenRAVE::RaveCreateViewer(penv,viewername);
     BOOST_ASSERT(!!viewer);
@@ -18,9 +18,7 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername,
     penv->AddViewer(viewer);  // penv->AttachViewer(viewer);
 
     // finally you call the viewer's infinite loop (this is why you need a separate thread):
-    bool showgui = true; // change to false to disable scene view
-    if(!_viewer) showgui = false;  // if viewer arg = 0
-    viewer->main(showgui);
+    viewer->main(true);
 }
 
 // ------------------- DeviceDriver Related ------------------------------------
@@ -48,7 +46,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
 
         if ( config.check("view") )
         {
-            boost::thread openraveViewerThread(boost::bind(SetViewer,penv,"qtcoin",1));
+            boost::thread openraveViewerThread(boost::bind(SetViewer,penv,"qtcoin"));
             openraveThreads.add_thread(&openraveViewerThread);
             yarp::os::Time::delay(0.4); // wait for the viewer to init, in [s]
         }
