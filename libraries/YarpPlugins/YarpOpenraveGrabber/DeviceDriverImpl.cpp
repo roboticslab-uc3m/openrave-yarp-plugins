@@ -191,7 +191,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
     psensorbase->Configure(OpenRAVE::SensorBase::CC_PowerOn);
 
     // Show the camera image in a separate window
-    // pcamerasensorbase->Configure(SensorBase::CC_RenderDataOn);
+    //psensorbase->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
     // Get some camera parameter info
     boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> pcamerageomdata = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(psensorbase->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
     CD_DEBUG("Camera width: %d, height: %d.\n",pcamerageomdata->width,pcamerageomdata->height);
@@ -199,23 +199,6 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
     _height = pcamerageomdata->height;
 
     cameraSensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(psensorbase->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
-
-    /*
-    // Get a pointer to access the camera data stream
-    vectorOfCameraSensorDataPtr.push_back(boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(psensorbase->CreateSensorData(OpenRAVE::SensorBase::ST_Camera)));
-    vectorOfSensorPtrForCameras.push_back(psensorbase);  // "save"
-    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >* tmpPort = new yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >;
-    yarp::os::ConstString tmpName("/");
-    yarp::os::ConstString cameraSensorString(psensorbase->GetName());
-    size_t pos = cameraSensorString.find("imageMap");
-    if ( pos != std::string::npos) {
-        tmpName += cameraSensorString.substr (0,pos-1);
-        tmpName += "/imageMap:o";
-    } else {
-        tmpName += cameraSensorString.c_str();
-        tmpName += "/img:o";
-    }
-    */
 
     return true;
 }
