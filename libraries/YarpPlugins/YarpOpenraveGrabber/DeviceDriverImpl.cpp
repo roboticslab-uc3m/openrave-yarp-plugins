@@ -191,7 +191,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
     sensorPtrForCameras->Configure(OpenRAVE::SensorBase::CC_PowerOn);
 
     // Show the camera image in a separate window
-    sensorPtrForCameras->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
+    //sensorPtrForCameras->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
     // Get some camera parameter info
     boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> pcamerageomdata = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorPtrForCameras->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
     CD_DEBUG("Camera width: %d, height: %d.\n",pcamerageomdata->width,pcamerageomdata->height);
