@@ -34,16 +34,16 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
 
 int YarpOpenraveGrabber::height() const
 {
-
-    return 0;
+    CD_DEBUG("%d\n", _height);
+    return _height;
 }
 
 // ----------------------------------------------------------------------------
 
 int YarpOpenraveGrabber::width() const
 {
-
-    return 0;
+    CD_DEBUG("%d\n", _width);
+    return _width;
 }
 
 // ----------------------------------------------------------------------------

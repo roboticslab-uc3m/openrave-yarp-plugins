@@ -96,6 +96,7 @@ public:
 private:
 
     // General Grabber parameters //
+    int _height, _width;
 
     //OpenRAVE//
     OpenRAVE::EnvironmentBasePtr penv;
