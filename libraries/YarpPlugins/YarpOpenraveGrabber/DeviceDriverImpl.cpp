@@ -2,8 +2,6 @@
 
 #include "YarpOpenraveGrabber.hpp"
 
-#include <algorithm>  // Thanks: https://notfaq.wordpress.com/2007/08/04/cc-convert-string-to-upperlower-case/
-
 namespace roboticslab
 {
 
