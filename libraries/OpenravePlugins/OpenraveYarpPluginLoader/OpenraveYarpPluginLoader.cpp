@@ -132,6 +132,11 @@ public:
                     CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotPtrIdx,vectorOfRobotPtr.size());
                     return false;
                 }
+                else if (robotPtrIdx < 0)
+                {
+                    CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotPtrIdx);
+                    return false;
+                }
 
                 name += vectorOfRobotPtr[ robotPtrIdx ]->GetName();
 
