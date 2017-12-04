@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __YARP_OPENRAVE_CONTROLBOARD_HPP__
-#define __YARP_OPENRAVE_CONTROLBOARD_HPP__
+#ifndef __YARP_OPENRAVE_GRABBER_HPP__
+#define __YARP_OPENRAVE_GRABBER_HPP__
 
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
@@ -16,8 +16,6 @@
 #include <vector>
 
 #include "ColorDebug.hpp"
-
-#define DEFAULT_GEN_REF_SPEED 7.5  // Exposed.
 
 namespace roboticslab
 {
@@ -112,4 +110,4 @@ private:
 
 }  // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_CONTROLBOARD_HPP__
+#endif  // __YARP_OPENRAVE_GRABBER_HPP__
