@@ -5,7 +5,7 @@ yarp_prepare_plugin(YarpOpenraveGrabber
                     CATEGORY device
                     TYPE roboticslab::YarpOpenraveGrabber
                     INCLUDE YarpOpenraveGrabber.hpp
-                    WRAPPER grabberwrapper2)
+                    WRAPPER grabber)
 
 IF (NOT SKIP_YarpOpenraveGrabber)
 
