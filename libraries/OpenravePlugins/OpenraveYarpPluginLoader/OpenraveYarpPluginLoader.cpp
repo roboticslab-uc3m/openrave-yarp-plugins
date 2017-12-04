@@ -132,6 +132,11 @@ public:
                     CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotPtrIdx,vectorOfRobotPtr.size());
                     return false;
                 }
+                else if (robotPtrIdx < 0)
+                {
+                    CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotPtrIdx);
+                    return false;
+                }
 
                 name += vectorOfRobotPtr[ robotPtrIdx ]->GetName();
 
@@ -144,6 +149,11 @@ public:
                     if(manipulatorPtrIdx >= vectorOfManipulatorPtr.size())
                     {
                         CD_ERROR("manipulatorPtrIdx %d >= vectorOfManipulatorPtr.size() %d, not loading yarpPlugin.\n",manipulatorPtrIdx,vectorOfManipulatorPtr.size());
+                        return false;
+                    }
+                    else if (manipulatorPtrIdx < 0)
+                    {
+                        CD_ERROR("manipulatorPtrIdx %d < 0, not loading yarpPlugin.\n",manipulatorPtrIdx);
                         return false;
                     }
 
