@@ -29,6 +29,8 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
+    int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
+    int manipulatorIndex = config.check("manipulatorIndex",-1,"manipulatorIndex").asInt();
     double genRefSpeed = config.check("genRefSpeed",DEFAULT_GEN_REF_SPEED,"general ref speed").asDouble();
 
     if ( ( config.check("env") ) && ( config.check("penv") ) )
@@ -70,19 +72,6 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     else
     {
         CD_ERROR("Please use --env or --penv parameter. Bye!\n");
-        return false;
-    }
-
-    int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
-    if( robotIndex < 0 )  // a.k.a. -1 one line above
-    {
-        CD_ERROR("Please review robotIndex, currently '%d'.\n", robotIndex);
-        return false;
-    }
-    int manipulatorIndex = config.check("manipulatorIndex",-1,"manipulatorIndex").asInt();
-    if( manipulatorIndex < 0 )  // a.k.a. -1 one line above
-    {
-        CD_ERROR("Please review manipulatorIndex, currently '%d'.\n", manipulatorIndex);
         return false;
     }
 
@@ -164,10 +153,32 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
 
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
     penv->GetRobots(vectorOfRobotPtr);
+    if(robotIndex >= vectorOfRobotPtr.size())
+    {
+        CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotIndex,vectorOfRobotPtr.size());
+        return false;
+    }
+    else if (robotIndex < 0)
+    {
+        CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotIndex);
+        return false;
+    }
+
     probot = vectorOfRobotPtr[robotIndex];
     robotName = probot->GetName();
 
     std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
+    if(manipulatorIndex >= vectorOfManipulatorPtr.size())
+    {
+        CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarpPlugin.\n",manipulatorIndex,vectorOfManipulatorPtr.size());
+        return false;
+    }
+    else if (manipulatorIndex < 0)
+    {
+        CD_ERROR("manipulatorIndex %d < 0, not loading yarpPlugin.\n",manipulatorIndex);
+        return false;
+    }
+
     manipulatorIDs = vectorOfManipulatorPtr[manipulatorIndex]->GetArmIndices();
 
     axes = manipulatorIDs.size();
