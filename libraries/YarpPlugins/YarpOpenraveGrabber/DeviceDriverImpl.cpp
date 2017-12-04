@@ -26,7 +26,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
     int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
-    int manipulatorIndex = config.check("manipulatorIndex",-1,"manipulatorIndex").asInt();
+    int sensorIndex = config.check("sensorIndex",-1,"sensorIndex").asInt();
 
     if ( ( config.check("env") ) && ( config.check("penv") ) )
     {
@@ -162,15 +162,15 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
     probot = vectorOfRobotPtr[robotIndex];
     robotName = probot->GetName();
 
-    std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
-    if(manipulatorIndex >= vectorOfManipulatorPtr.size())
+    std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = vectorOfRobotPtr.at(robotIndex)->GetAttachedSensors();
+    if(sensorIndex >= vectorOfSensorPtr.size())
     {
-        CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarpPlugin.\n",manipulatorIndex,vectorOfManipulatorPtr.size());
+        CD_ERROR("sensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",sensorIndex,vectorOfSensorPtr.size());
         return false;
     }
-    else if (manipulatorIndex < 0)
+    else if (sensorIndex < 0)
     {
-        CD_ERROR("manipulatorIndex %d < 0, not loading yarpPlugin.\n",manipulatorIndex);
+        CD_ERROR("sensorIndex %d < 0, not loading yarpPlugin.\n",sensorIndex);
         return false;
     }
 
