@@ -16,8 +16,10 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
     //yarp::sig::ImageOf<yarp::sig::PixelRgb>& i_imagen = ptrVectorOfRgbPortPtr->at(camIter)->prepare();
     //i_imagen.resize(ptrVectorOfCameraWidth->at(camIter),ptrVectorOfCameraHeight->at(camIter));  // Tamaño de la pantalla
     yarp::sig::PixelRgb p;
-    for (int i_x = 0; i_x < image.width(); ++i_x) {
-        for (int i_y = 0; i_y < image.height(); ++i_y) {
+    for (int i_x = 0; i_x < image.width(); ++i_x)
+    {
+        for (int i_y = 0; i_y < image.height(); ++i_y)
+        {
             p.r = cameraSensorDataPtr->vimagedata[3*(i_x+(i_y*image.width()))];
             p.g = cameraSensorDataPtr->vimagedata[1+3*(i_x+(i_y*image.width()))];
             p.b = cameraSensorDataPtr->vimagedata[2+3*(i_x+(i_y*image.width()))];
