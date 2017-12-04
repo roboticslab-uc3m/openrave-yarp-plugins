@@ -174,12 +174,6 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
         return false;
     }
 
-    //-- Create the controller, make sure to lock environment!
-    {
-        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
-
-    }
-
     return true;
 }
 
