@@ -207,7 +207,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
 // -----------------------------------------------------------------------------
 
 bool YarpOpenraveGrabber::close() {
-    printf("[YarpOpenraveGrabber] close()\n");
+    CD_INFO("\n");
     return true;
 }
 

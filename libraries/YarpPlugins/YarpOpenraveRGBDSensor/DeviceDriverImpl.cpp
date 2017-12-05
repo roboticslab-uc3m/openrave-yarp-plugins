@@ -207,7 +207,7 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config) {
 // -----------------------------------------------------------------------------
 
 bool YarpOpenraveRGBDSensor::close() {
-    printf("[YarpOpenraveRGBDSensor] close()\n");
+    CD_INFO("\n");
     return true;
 }
 
