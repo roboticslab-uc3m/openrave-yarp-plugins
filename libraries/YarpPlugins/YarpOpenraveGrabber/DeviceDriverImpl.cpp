@@ -174,31 +174,31 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
         return false;
     }
 
-    sensorPtrForCameras = vectorOfSensorPtr.at(sensorIndex)->GetSensor();
+    sensorBasePtr = vectorOfSensorPtr.at(sensorIndex)->GetSensor();
 
-    std::string tipo = sensorPtrForCameras->GetName();
+    std::string tipo = sensorBasePtr->GetName();
 
     printf("Sensor %d name: %s\n",sensorIndex,tipo.c_str());
 
     // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
 
-    if ( ! sensorPtrForCameras->Supports(OpenRAVE::SensorBase::ST_Camera) )
+    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
     {
         CD_ERROR("Sensor %d does not support ST_Camera.\n", sensorIndex );
     }
 
     // Activate the camera
-    sensorPtrForCameras->Configure(OpenRAVE::SensorBase::CC_PowerOn);
+    sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
 
     // Show the camera image in a separate window
     //sensorPtrForCameras->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
     // Get some camera parameter info
-    boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> pcamerageomdata = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorPtrForCameras->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
+    boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> pcamerageomdata = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
     CD_DEBUG("Camera width: %d, height: %d.\n",pcamerageomdata->width,pcamerageomdata->height);
     _width = pcamerageomdata->width;
     _height = pcamerageomdata->height;
 
-    cameraSensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(sensorPtrForCameras->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
+    cameraSensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
 
     return true;
 }
