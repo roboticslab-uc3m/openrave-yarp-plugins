@@ -5,11 +5,11 @@
 namespace roboticslab
 {
 
-// ------------------ IFrameGrabberImage Related ----------------------------------------
+// ------------------ IRGBDSensor Related ----------------------------------------
 
-bool YarpOpenraveRGBDSensor::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& image)
+bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp)
 {
-    sensorPtrForCameras->GetSensorData(cameraSensorDataPtr);
+    /*sensorPtrForCameras->GetSensorData(cameraSensorDataPtr);
 
     //std::vector<uint8_t> currentFrame = pcamerasensordata->vimagedata;
     //printf("Vector size: %d\n",currentFrame.size()); // i.e. 480 * 640 * 3 = 921600;
@@ -25,25 +25,9 @@ bool YarpOpenraveRGBDSensor::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& i
             p.b = cameraSensorDataPtr->vimagedata[2+3*(i_x+(i_y*image.width()))];
             image.safePixel(i_x,i_y) = p;
         }
-    }
+    }*/
 
     return true;
-}
-
-// ----------------------------------------------------------------------------
-
-int YarpOpenraveRGBDSensor::height() const
-{
-    CD_DEBUG("%d\n", _height);
-    return _height;
-}
-
-// ----------------------------------------------------------------------------
-
-int YarpOpenraveRGBDSensor::width() const
-{
-    CD_DEBUG("%d\n", _width);
-    return _width;
 }
 
 // ----------------------------------------------------------------------------
