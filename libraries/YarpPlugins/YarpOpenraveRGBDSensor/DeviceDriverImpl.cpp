@@ -198,7 +198,7 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config) {
     _width = pcamerageomdata->width;
     _height = pcamerageomdata->height;
 
-    cameraSensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
+    sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
 
     return true;
 }
