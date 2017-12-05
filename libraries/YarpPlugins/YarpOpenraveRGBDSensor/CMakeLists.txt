@@ -25,7 +25,7 @@ endif()
 
 LINK_DIRECTORIES(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
 
-YARP_ADD_PLUGIN(YarpOpenraveRGBDSensor YarpOpenraveRGBDSensor.hpp DeviceDriverImpl.cpp IFrameGrabberImageImpl.cpp)
+YARP_ADD_PLUGIN(YarpOpenraveRGBDSensor YarpOpenraveRGBDSensor.hpp DeviceDriverImpl.cpp IRGBDSensorImpl.cpp)
 add_dependencies(YarpOpenraveRGBDSensor COLOR_DEBUG)
 set_target_properties(${KEYWORD} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
 set_target_properties(${KEYWORD} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
