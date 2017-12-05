@@ -182,12 +182,12 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config) {
 
     // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
 
-    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
+    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Laser) )
     {
-        CD_ERROR("Sensor %d does not support ST_Camera.\n", sensorIndex );
+        CD_ERROR("Sensor %d does not support ST_Laser.\n", sensorIndex );
     }
 
-    // Activate the camera
+    // Activate the sensor
     sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
 
     // Show the camera image in a separate window
