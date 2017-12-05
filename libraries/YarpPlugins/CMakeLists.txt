@@ -25,6 +25,7 @@ endif ()
     add_subdirectory(YarpOpenraveControlboardCollision)
     add_subdirectory(FakeControlboard)
     add_subdirectory(YarpOpenraveGrabber)
+    add_subdirectory(YarpOpenraveRGBDSensor)
 #  yarp_end_plugin_library(yarpplugins)
   
 #  IF (ENABLE_launchyarpPlugins)
