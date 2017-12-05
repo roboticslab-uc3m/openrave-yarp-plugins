@@ -193,13 +193,15 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config) {
     // Show the sensor image in a separate window // Ok for Laser???
     //sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
 
-    // Get some camera parameter info
+    // Get pointer to geom properties of sensor
     boost::shared_ptr<OpenRAVE::SensorBase::LaserGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Laser));
+
+    // Get pointer to sensed data
+    sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Laser));
+
     CD_INFO("Laser resolution: %f   %f.\n",geomDataPtr->resolution[0],geomDataPtr->resolution[1]);
     CD_INFO("Laser min_angle: %f   %f.\n",geomDataPtr->min_angle[0],geomDataPtr->min_angle[1]);
     CD_INFO("Laser max_angle: %f   %f.\n",geomDataPtr->max_angle[0],geomDataPtr->max_angle[1]);
-
-    sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Laser));
 
     return true;
 }
