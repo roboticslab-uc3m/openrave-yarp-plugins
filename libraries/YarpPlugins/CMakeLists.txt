@@ -12,11 +12,10 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions("-fPIC")
 endif ()
 
-  find_package(YARP REQUIRED)
-  include_directories(${YARP_INCLUDE_DIRS})
-  list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
-  include(YarpPlugin)
-
+find_package(YARP REQUIRED)
+include_directories(${YARP_INCLUDE_DIRS})
+list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
+include(YarpPlugin)
 
 #  yarp_begin_plugin_library(yarpplugins)
     add_subdirectory(YarpOpenraveControlboard)
