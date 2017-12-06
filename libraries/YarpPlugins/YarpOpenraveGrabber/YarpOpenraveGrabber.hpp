@@ -99,15 +99,9 @@ private:
     int _height, _width;
 
     //OpenRAVE//
-    OpenRAVE::EnvironmentBasePtr penv;
-    OpenRAVE::RobotBasePtr probot;
-    std::string robotName;
-
     OpenRAVE::SensorBasePtr sensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> sensorDataPtr;
 
-    // Specific for --env parameter with --view
-    boost::thread_group openraveThreads;
 };
 
 }  // namespace roboticslab
