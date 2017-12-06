@@ -31,9 +31,9 @@ set_target_properties(${KEYWORD} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}"
 set_target_properties(${KEYWORD} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 TARGET_LINK_LIBRARIES(YarpOpenraveRGBDSensor ${OpenRAVE_LIBRARIES} ${OpenRAVE_CORE_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${YARP_LIBRARIES} YarpOpenraveBase)
 
-# Exporting dependencies for TEOConfig.cmake quite manually for now... 
+# Exporting dependencies for ...Config.cmake quite manually for now...
 set(OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS ${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended header dirs")
-set(OPENRAVE_YARP_PLUGINS_LIBRARIES ${OPENRAVE_YARP_PLUGINS_LIBRARIES} TeoYarp YarpOpenraveRGBDSensor CACHE INTERNAL "appended libraries")
+#set(OPENRAVE_YARP_PLUGINS_LIBRARIES ${OPENRAVE_YARP_PLUGINS_LIBRARIES} YarpOpenraveRGBDSensor CACHE INTERNAL "appended libraries")
 
   #install(TARGETS YarpOpenraveRGBDSensor DESTINATION lib)
   yarp_install(TARGETS YarpOpenraveRGBDSensor
