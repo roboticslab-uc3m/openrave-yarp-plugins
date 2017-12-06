@@ -9,8 +9,8 @@ namespace roboticslab
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
-
+bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
+{
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
     if ( ! configureEnvironment(config) )
