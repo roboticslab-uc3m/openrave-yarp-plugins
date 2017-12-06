@@ -62,8 +62,9 @@ bool roboticslab::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& 
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboardCollision::close() {
-    printf("[YarpOpenraveControlboardCollision] close()\n");
+bool roboticslab::YarpOpenraveControlboardCollision::close()
+{
+    CD_INFO("\n");
     return true;
 }
 
