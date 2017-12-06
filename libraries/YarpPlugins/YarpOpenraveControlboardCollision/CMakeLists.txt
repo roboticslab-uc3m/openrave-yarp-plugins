@@ -18,7 +18,7 @@ if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
   add_definitions("-fno-strict-aliasing -Wall")
 endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${OpenRAVE_INCLUDE_DIRS})  # kdl name depends on version
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${OpenRAVE_INCLUDE_DIRS} ${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS})
 if( Boost_INCLUDE_DIRS )
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
@@ -26,14 +26,14 @@ endif()
 LINK_DIRECTORIES(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
 
 YARP_ADD_PLUGIN(YarpOpenraveControlboardCollision YarpOpenraveControlboardCollision.hpp DeviceDriverImpl.cpp IControlLimits2Impl.cpp IControlModeImpl.cpp IEncodersImpl.cpp IEncodersTimedImpl.cpp IPositionImpl.cpp IPosition2Impl.cpp IVelocityImpl.cpp IVelocity2Impl.cpp ITorqueImpl.cpp)
-add_dependencies(YarpOpenraveControlboardCollision COLOR_DEBUG)
-set_target_properties(${KEYWORD} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
-set_target_properties(${KEYWORD} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
-TARGET_LINK_LIBRARIES(YarpOpenraveControlboardCollision ${OpenRAVE_LIBRARIES} ${OpenRAVE_CORE_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${YARP_LIBRARIES})
+add_dependencies(YarpOpenraveControlboardCollision COLOR_DEBUG YarpOpenraveBase)
+set_target_properties(YarpOpenraveControlboardCollision PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
+set_target_properties(YarpOpenraveControlboardCollision PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+TARGET_LINK_LIBRARIES(YarpOpenraveControlboardCollision ${OpenRAVE_LIBRARIES} ${OpenRAVE_CORE_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${YARP_LIBRARIES} YarpOpenraveBase)
 
-# Exporting dependencies for TEOConfig.cmake quite manually for now... 
-set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")
-set(TEO_LIBRARIES ${TEO_LIBRARIES} TeoYarp YarpOpenraveControlboardCollision CACHE INTERNAL "appended libraries")
+# Exporting dependencies for ...Config.cmake quite manually for now...
+set(OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS ${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended header dirs")
+#set(OPENRAVE_YARP_PLUGINS_LIBRARIES ${OPENRAVE_YARP_PLUGINS_LIBRARIES} YarpOpenraveControlboardCollisition CACHE INTERNAL "appended libraries")
 
   #install(TARGETS YarpOpenraveControlboardCollision DESTINATION lib)
   yarp_install(TARGETS YarpOpenraveControlboardCollision

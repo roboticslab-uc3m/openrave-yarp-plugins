@@ -4,27 +4,20 @@
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool roboticslab::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config) {
+bool roboticslab::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config)
+{
+    CD_DEBUG("config: %s\n",config.toString().c_str());
 
-    //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
-    penv = *((OpenRAVE::EnvironmentBasePtr*)(config.find("penv").asBlob()));
-
-    int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
-    if( robotIndex < 0 )  // a.k.a. -1 one line above
-    {
-        CD_ERROR("Please review robotIndex.\n");
+    if ( ! configureEnvironment(config) )
         return false;
-    }
+
+    if ( ! configureOpenravePlugins(config) )
+        return false;
+
+    if ( ! configureRobot(config) )
+        return false;
+
     int manipulatorIndex = config.check("manipulatorIndex",-1,"manipulatorIndex").asInt();
-    if( manipulatorIndex < 0 )  // a.k.a. -1 one line above
-    {
-        CD_ERROR("Please review manipulatorIndex.\n");
-        return false;
-    }
-
-    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-    penv->GetRobots(vectorOfRobotPtr);
-    probot = vectorOfRobotPtr[robotIndex];
 
     dEncRaw.resize( probot->GetDOF() );
     std::fill(dEncRaw.begin(), dEncRaw.end(), 0);
