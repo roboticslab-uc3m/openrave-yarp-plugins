@@ -5,20 +5,6 @@
 namespace roboticslab
 {
 
-// -------------------------------------------------------------------
-
-void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
-{
-    OpenRAVE::ViewerBasePtr viewer = OpenRAVE::RaveCreateViewer(penv,viewername);
-    BOOST_ASSERT(!!viewer);
-
-    // attach it to the environment:
-    penv->AddViewer(viewer);  // penv->AttachViewer(viewer);
-
-    // finally you call the viewer's infinite loop (this is why you need a separate thread):
-    viewer->main(true);
-}
-
 // ------------------- DeviceDriver Related ------------------------------------
 
 bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
