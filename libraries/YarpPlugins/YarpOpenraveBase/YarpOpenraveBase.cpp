@@ -157,6 +157,32 @@ bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
 
 // -----------------------------------------------------------------------------
 
+bool YarpOpenraveBase::configureRobot(yarp::os::Searchable& config)
+{
+    CD_INFO("\n");
+    int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
+
+    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
+    penv->GetRobots(vectorOfRobotPtr);
+    if(robotIndex >= vectorOfRobotPtr.size())
+    {
+        CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotIndex,vectorOfRobotPtr.size());
+        return false;
+    }
+    else if (robotIndex < 0)
+    {
+        CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotIndex);
+        return false;
+    }
+
+    probot = vectorOfRobotPtr[robotIndex];
+    robotName = probot->GetName();
+
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
 bool YarpOpenraveBase::clean()
 {
     CD_INFO("\n");

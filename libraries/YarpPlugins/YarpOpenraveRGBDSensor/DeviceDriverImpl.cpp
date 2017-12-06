@@ -17,26 +17,12 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     if ( ! configureOpenravePlugins(config) )
         return false;
 
-    int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
+    if ( ! configureRobot(config) )
+        return false;
+
     int sensorIndex = config.check("sensorIndex",-1,"sensorIndex").asInt();
 
-    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-    penv->GetRobots(vectorOfRobotPtr);
-    if(robotIndex >= vectorOfRobotPtr.size())
-    {
-        CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotIndex,vectorOfRobotPtr.size());
-        return false;
-    }
-    else if (robotIndex < 0)
-    {
-        CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotIndex);
-        return false;
-    }
-
-    probot = vectorOfRobotPtr[robotIndex];
-    robotName = probot->GetName();
-
-    std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = vectorOfRobotPtr.at(robotIndex)->GetAttachedSensors();
+    std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
     if(sensorIndex >= vectorOfSensorPtr.size())
     {
         CD_ERROR("sensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",sensorIndex,vectorOfSensorPtr.size());

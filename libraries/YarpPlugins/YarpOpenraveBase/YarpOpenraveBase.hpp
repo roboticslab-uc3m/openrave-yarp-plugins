@@ -47,6 +47,7 @@ public:
 
     bool configureEnvironment(yarp::os::Searchable& config);
     bool configureOpenravePlugins(yarp::os::Searchable& config);
+    bool configureRobot(yarp::os::Searchable& config);
     bool clean();
 
 protected:
