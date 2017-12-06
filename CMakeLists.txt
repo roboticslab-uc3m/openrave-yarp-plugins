@@ -25,9 +25,10 @@ option(ENABLE_YarpOpenraveRGBDSensor  "Enable/disable option YarpOpenraveRGBDSen
 option(ENABLE_OpenraveYarpControlboard "Enable/disable option OpenraveYarpControlboard" TRUE)
 option(ENABLE_OpenraveYarpPaintSquares "Enable/disable option OpenraveYarpPaintSquares" TRUE)
 option(ENABLE_OpenraveWorldRpcResponder "Enable/disable option OpenraveWorldRpcResponder" TRUE)
-option(ENABLE_OpenraveYarpForce "Enable/disable option OpenraveYarpForce" TRUE)
 option(ENABLE_OpenraveYarpForceEstimator "Enable/disable option OpenraveYarpForceEstimator" TRUE)
 option(ENABLE_OpenraveYarpPluginLoader "Enable/disable option OpenraveYarpPluginLoader" TRUE)
+
+option(ENABLE_OpenraveYarpCoupled "Enable/disable option OpenraveYarpCoupled" TRUE)
 
 ### options: cpp programs
 option(ENABLE_teoSim "Choose if you want to compile (deprecated) teoSim" TRUE)

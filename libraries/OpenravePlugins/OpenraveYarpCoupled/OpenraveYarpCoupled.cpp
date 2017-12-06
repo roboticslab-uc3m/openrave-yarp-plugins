@@ -229,16 +229,16 @@ void TeoSimRateThread::run() {
 
 }
 
-class OpenraveYarpForce : public ModuleBase
+class OpenraveYarpCoulped : public ModuleBase
 {
 public:
-    OpenraveYarpForce(EnvironmentBasePtr penv) : ModuleBase(penv) {
+    OpenraveYarpCoulped(EnvironmentBasePtr penv) : ModuleBase(penv) {
         //YARP_REGISTER_PLUGINS(yarpplugins);
-        __description = "OpenraveYarpForce plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveYarpForce::Open, this,_1,_2),"opens port");
+        __description = "OpenraveYarpCoulped plugin.";
+        RegisterCommand("open",boost::bind(&OpenraveYarpCoulped::Open, this,_1,_2),"opens port");
     }
 
-    virtual ~OpenraveYarpForce() {
+    virtual ~OpenraveYarpCoulped() {
         for(int i=0;i<robotDevices.size();i++)
         {
             robotDevices[i]->close();
@@ -407,14 +407,14 @@ private:
 };
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
-    if( type == PT_Module && interfacename == "openraveyarpforce" ) {
-        return InterfaceBasePtr(new OpenraveYarpForce(penv));
+    if( type == PT_Module && interfacename == "openraveyarpcoupled" ) {
+        return InterfaceBasePtr(new OpenraveYarpCoulped(penv));
     }
     return InterfaceBasePtr();
 }
 
 void GetPluginAttributesValidated(PLUGININFO& info) {
-    info.interfacenames[PT_Module].push_back("OpenraveYarpForce");
+    info.interfacenames[PT_Module].push_back("OpenraveYarpCoulped");
 }
 
 OPENRAVE_PLUGIN_API void DestroyPlugin() {
