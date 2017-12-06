@@ -26,7 +26,7 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
  * @ingroup YarpPlugins
  * \defgroup YarpOpenraveBase
  *
- * @brief Contains teo::YarpOpenraveBase.
+ * @brief Contains roboticslab::YarpOpenraveBase.
  *
  * @section YarpOpenraveBase_install Installation
  *

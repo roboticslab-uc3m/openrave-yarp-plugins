@@ -26,7 +26,7 @@ namespace roboticslab
  * @ingroup YarpPlugins
  * \defgroup YarpOpenraveRGBDSensor
  *
- * @brief Contains teo::YarpOpenraveRGBDSensor.
+ * @brief Contains roboticslab::YarpOpenraveRGBDSensor.
  *
  * @section YarpOpenraveRGBDSensor_install Installation
  *
