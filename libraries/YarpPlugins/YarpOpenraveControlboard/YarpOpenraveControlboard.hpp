@@ -15,16 +15,14 @@
 #include <sstream>
 #include <vector>
 
+#include "YarpOpenraveBase.hpp"
+
 #include "ColorDebug.hpp"
 
 #define DEFAULT_GEN_REF_SPEED 7.5  // Exposed.
 
 namespace roboticslab
 {
-
-
-// Specific for --env parameter
-void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername);
 
 /**
  * @ingroup TeoYarp
@@ -48,7 +46,7 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
 // Note: IVelocityControl2 inherits from IVelocityControl
 // Note: IControlLimits2 inherits from IControlLimits
 // Note: IControlMode2 inherits from IControlMode
-class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
+class YarpOpenraveControlboard : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
     public yarp::dev::IControlLimits2, public yarp::dev::IControlMode2, public yarp::dev::ITorqueControl {
 public:
 
@@ -817,9 +815,6 @@ private:
     std::vector<double> refSpeeds;  // Exposed.
 
     //OpenRAVE//
-    OpenRAVE::EnvironmentBasePtr penv;
-    OpenRAVE::RobotBasePtr probot;
-    std::string robotName;
     OpenRAVE::MultiControllerBasePtr multi;
     std::vector< OpenRAVE::ControllerBasePtr > pcontrols;
     std::vector< int > manipulatorIDs;

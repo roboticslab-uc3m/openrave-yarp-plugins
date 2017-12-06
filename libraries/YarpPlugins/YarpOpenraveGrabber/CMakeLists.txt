@@ -23,12 +23,12 @@ if( Boost_INCLUDE_DIRS )
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
-LINK_DIRECTORIES(${OPENRAVE_YARP_PLUGINS_LINK_DIRS} ${OPENRAVE_YARP_PLUGINS_LIBRARIES})
+LINK_DIRECTORIES(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
 
 YARP_ADD_PLUGIN(YarpOpenraveGrabber YarpOpenraveGrabber.hpp DeviceDriverImpl.cpp IFrameGrabberImageImpl.cpp)
 add_dependencies(YarpOpenraveGrabber COLOR_DEBUG YarpOpenraveBase)
-set_target_properties(${KEYWORD} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
-set_target_properties(${KEYWORD} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+set_target_properties(YarpOpenraveGrabber PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
+set_target_properties(YarpOpenraveGrabber PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 TARGET_LINK_LIBRARIES(YarpOpenraveGrabber ${OpenRAVE_LIBRARIES} ${OpenRAVE_CORE_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${YARP_LIBRARIES} YarpOpenraveBase)
 
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
