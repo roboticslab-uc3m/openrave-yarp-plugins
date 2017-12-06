@@ -159,7 +159,8 @@ bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
 
 bool YarpOpenraveBase::configureRobot(yarp::os::Searchable& config)
 {
-    CD_INFO("\n");
+    //CD_DEBUG("config: %s\n",config.toString().c_str());
+
     int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
 
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
