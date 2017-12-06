@@ -23,9 +23,9 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
 
 // -------------------------------------------------------------------
 
-bool YarpOpenraveBase::configure(yarp::os::Searchable& config) {
-
-    CD_DEBUG("config: %s\n",config.toString().c_str());
+bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
+{
+    //CD_DEBUG("config: %s\n",config.toString().c_str());
 
     if ( ( config.check("env") ) && ( config.check("penv") ) )
     {
@@ -68,6 +68,14 @@ bool YarpOpenraveBase::configure(yarp::os::Searchable& config) {
         CD_ERROR("Please use --env or --penv parameter. Bye!\n");
         return false;
     }
+    return true;
+}
+
+// -------------------------------------------------------------------
+
+bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
+{
+    //CD_DEBUG("config: %s\n",config.toString().c_str());
 
     if( config.check("orPlugin") )
     {
@@ -144,13 +152,13 @@ bool YarpOpenraveBase::configure(yarp::os::Searchable& config) {
             }
         }
     }
-
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveBase::clean() {
+bool YarpOpenraveBase::clean()
+{
     CD_INFO("\n");
     return true;
 }

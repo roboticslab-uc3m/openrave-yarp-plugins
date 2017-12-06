@@ -45,7 +45,8 @@ public:
     // Set the Thread Rate in the class constructor
     YarpOpenraveBase() {}
 
-    bool configure(yarp::os::Searchable& config);
+    bool configureEnvironment(yarp::os::Searchable& config);
+    bool configureOpenravePlugins(yarp::os::Searchable& config);
     bool clean();
 
 protected:
