@@ -15,17 +15,15 @@
 #include <sstream>
 #include <vector>
 
+#include "YarpOpenraveBase.hpp"
+
 #include "ColorDebug.hpp"
 
 namespace roboticslab
 {
 
-
-// Specific for --env parameter
-void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername);
-
 /**
- * @ingroup TeoYarp
+ * @ingroup YarpPlugins
  * \defgroup YarpOpenraveGrabber
  *
  * @brief Contains teo::YarpOpenraveGrabber.
@@ -41,7 +39,8 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
  * @brief Implements the YARP_dev IFrameGrabberImage, etc.
  * interface class member functions.
  */
-class YarpOpenraveGrabber : public yarp::dev::DeviceDriver, public yarp::dev::IFrameGrabberImage {
+class YarpOpenraveGrabber : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IFrameGrabberImage
+{
 public:
 
     // Set the Thread Rate in the class constructor
@@ -97,15 +96,9 @@ private:
     int _height, _width;
 
     //OpenRAVE//
-    OpenRAVE::EnvironmentBasePtr penv;
-    OpenRAVE::RobotBasePtr probot;
-    std::string robotName;
-
     OpenRAVE::SensorBasePtr sensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> sensorDataPtr;
 
-    // Specific for --env parameter with --view
-    boost::thread_group openraveThreads;
 };
 
 }  // namespace roboticslab

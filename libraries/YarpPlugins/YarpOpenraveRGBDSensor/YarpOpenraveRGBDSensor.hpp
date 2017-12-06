@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __YARP_OPENRAVE_GRABBER_HPP__
-#define __YARP_OPENRAVE_GRABBER_HPP__
+#ifndef __YARP_OPENRAVE_RGBDSENSOR_HPP__
+#define __YARP_OPENRAVE_RGBDSENSOR_HPP__
 
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
@@ -15,20 +15,18 @@
 #include <sstream>
 #include <vector>
 
+#include "YarpOpenraveBase.hpp"
+
 #include "ColorDebug.hpp"
 
 namespace roboticslab
 {
 
-
-// Specific for --env parameter
-void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername);
-
 /**
- * @ingroup TeoYarp
+ * @ingroup YarpPlugins
  * \defgroup YarpOpenraveRGBDSensor
  *
- * @brief Contains teo::YarpOpenraveRGBDSensor.
+ * @brief Contains roboticslab::YarpOpenraveRGBDSensor.
  *
  * @section YarpOpenraveRGBDSensor_install Installation
  *
@@ -38,10 +36,11 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
 
 /**
  * @ingroup YarpOpenraveRGBDSensor
- * @brief Implements the YARP_dev IFrameGrabberImage, etc.
+ * @brief Implements the YARP_dev IRGBDSensor, etc.
  * interface class member functions.
  */
-class YarpOpenraveRGBDSensor : public yarp::dev::DeviceDriver, public yarp::dev::IRGBDSensor {
+class YarpOpenraveRGBDSensor : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IRGBDSensor
+{
 public:
 
     // Set the Thread Rate in the class constructor
@@ -174,17 +173,11 @@ private:
     int _height, _width;
 
     //OpenRAVE//
-    OpenRAVE::EnvironmentBasePtr penv;
-    OpenRAVE::RobotBasePtr probot;
-    std::string robotName;
-
     OpenRAVE::SensorBasePtr sensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::LaserSensorData> sensorDataPtr;
 
-    // Specific for --env parameter with --view
-    boost::thread_group openraveThreads;
 };
 
 }  // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_GRABBER_HPP__
+#endif  // __YARP_OPENRAVE_RGBDSENSOR_HPP__

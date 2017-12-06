@@ -16,6 +16,8 @@
 #include <sstream>
 #include <vector>
 
+#include "YarpOpenraveBase.hpp"
+
 #include "ColorDebug.hpp"
 
 #define DEFAULT_AXES 5
@@ -45,7 +47,7 @@ namespace roboticslab
 // Note: IPositionControl2 inherits from IPositionControl
 // Note: IVelocityControl2 inherits from IVelocityControl
 // Note: IControlLimits2 inherits from IControlLimits
-class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
+class YarpOpenraveControlboardCollision : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
         public yarp::dev::IControlLimits2, public yarp::dev::IControlMode, public yarp::dev::ITorqueControl {
     public:
 
@@ -768,10 +770,7 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
                 //
                 std::vector<int> mode;
 
-
                 //OpenRAVE//
-                OpenRAVE::EnvironmentBasePtr penv;
-                OpenRAVE::RobotBasePtr probot;
                 std::vector< int > manipulatorIDs;
                 std::vector<OpenRAVE::dReal> dEncRaw;
 
