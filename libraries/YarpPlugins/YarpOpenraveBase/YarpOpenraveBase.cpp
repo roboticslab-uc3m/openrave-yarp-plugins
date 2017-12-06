@@ -23,6 +23,13 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
 
 // -------------------------------------------------------------------
 
+YarpOpenraveBase::YarpOpenraveBase()
+{
+
+}
+
+// -------------------------------------------------------------------
+
 bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
 {
     //CD_DEBUG("config: %s\n",config.toString().c_str());

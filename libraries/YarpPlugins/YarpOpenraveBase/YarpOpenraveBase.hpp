@@ -39,11 +39,10 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
  * @brief Implements configure.
  * interface class member functions.
  */
-class YarpOpenraveBase {
+class YarpOpenraveBase
+{
 public:
-
-    // Set the Thread Rate in the class constructor
-    YarpOpenraveBase() {}
+    YarpOpenraveBase();
 
     bool configureEnvironment(yarp::os::Searchable& config);
     bool configureOpenravePlugins(yarp::os::Searchable& config);
