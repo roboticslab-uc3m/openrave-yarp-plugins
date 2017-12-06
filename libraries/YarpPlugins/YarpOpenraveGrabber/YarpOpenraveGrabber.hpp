@@ -23,7 +23,7 @@ namespace roboticslab
 {
 
 /**
- * @ingroup TeoYarp
+ * @ingroup YarpPlugins
  * \defgroup YarpOpenraveGrabber
  *
  * @brief Contains teo::YarpOpenraveGrabber.

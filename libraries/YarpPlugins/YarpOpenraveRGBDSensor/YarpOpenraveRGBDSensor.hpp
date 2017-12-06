@@ -23,7 +23,7 @@ namespace roboticslab
 {
 
 /**
- * @ingroup TeoYarp
+ * @ingroup YarpPlugins
  * \defgroup YarpOpenraveRGBDSensor
  *
  * @brief Contains teo::YarpOpenraveRGBDSensor.
