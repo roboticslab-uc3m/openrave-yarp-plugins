@@ -27,9 +27,6 @@ bool YarpOpenraveBase::configure(yarp::os::Searchable& config) {
 
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
-    int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
-    int sensorIndex = config.check("sensorIndex",-1,"sensorIndex").asInt();
-
     if ( ( config.check("env") ) && ( config.check("penv") ) )
     {
         CD_ERROR("Please do not use --env and --penv simultaneously. Bye!\n");
@@ -147,55 +144,6 @@ bool YarpOpenraveBase::configure(yarp::os::Searchable& config) {
             }
         }
     }
-
-    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-    penv->GetRobots(vectorOfRobotPtr);
-    if(robotIndex >= vectorOfRobotPtr.size())
-    {
-        CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotIndex,vectorOfRobotPtr.size());
-        return false;
-    }
-    else if (robotIndex < 0)
-    {
-        CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotIndex);
-        return false;
-    }
-
-    probot = vectorOfRobotPtr[robotIndex];
-    robotName = probot->GetName();
-
-    //-- Sensor-specific part begins
-
-    /*std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = vectorOfRobotPtr.at(robotIndex)->GetAttachedSensors();
-    if(sensorIndex >= vectorOfSensorPtr.size())
-    {
-        CD_ERROR("sensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",sensorIndex,vectorOfSensorPtr.size());
-        return false;
-    }
-    else if (sensorIndex < 0)
-    {
-        CD_ERROR("sensorIndex %d < 0, not loading yarpPlugin.\n",sensorIndex);
-        return false;
-    }
-
-    sensorBasePtr = vectorOfSensorPtr.at(sensorIndex)->GetSensor();
-
-    std::string tipo = sensorBasePtr->GetName();
-
-    printf("Sensor %d name: %s\n",sensorIndex,tipo.c_str());
-
-    // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
-
-    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
-    {
-        CD_ERROR("Sensor %d does not support ST_Camera.\n", sensorIndex );
-    }
-
-    // Activate the sensor
-    sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
-
-    // Show the sensor image in a separate window
-    //sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);*/
 
     return true;
 }
