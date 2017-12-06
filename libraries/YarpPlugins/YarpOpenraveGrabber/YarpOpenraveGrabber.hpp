@@ -15,6 +15,8 @@
 #include <sstream>
 #include <vector>
 
+#include "YarpOpenraveBase.hpp"
+
 #include "ColorDebug.hpp"
 
 namespace roboticslab
@@ -41,7 +43,7 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
  * @brief Implements the YARP_dev IFrameGrabberImage, etc.
  * interface class member functions.
  */
-class YarpOpenraveGrabber : public yarp::dev::DeviceDriver, public yarp::dev::IFrameGrabberImage {
+class YarpOpenraveGrabber : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IFrameGrabberImage {
 public:
 
     // Set the Thread Rate in the class constructor

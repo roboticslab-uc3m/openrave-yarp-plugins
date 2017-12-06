@@ -25,6 +25,8 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config) {
 
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
+    YarpOpenraveBase::configure(config);
+
     int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
     int sensorIndex = config.check("sensorIndex",-1,"sensorIndex").asInt();
 

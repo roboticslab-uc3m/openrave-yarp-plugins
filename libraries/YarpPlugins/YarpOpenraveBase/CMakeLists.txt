@@ -22,9 +22,10 @@ add_dependencies(YarpOpenraveBase COLOR_DEBUG)
 set_target_properties(${KEYWORD} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
 set_target_properties(${KEYWORD} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 target_link_libraries(YarpOpenraveBase ${OpenRAVE_LIBRARIES} ${OpenRAVE_CORE_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${YARP_LIBRARIES})
+install(TARGETS YarpOpenraveBase DESTINATION lib )
 
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
-#set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")
-#set(TEO_LIBRARIES ${TEO_LIBRARIES} TeoYarp YarpOpenraveBase CACHE INTERNAL "appended libraries")
+set(OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS ${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended header dirs")
+#set(OPENRAVE_YARP_PLUGINS_LIBRARIES ${OPENRAVE_YARP_PLUGINS_LIBRARIES} YarpOpenraveBase CACHE INTERNAL "appended libraries")
 
 
