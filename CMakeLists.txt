@@ -19,6 +19,7 @@ option(ENABLE_FakeControlboard "Enable/disable compilation of FakeControlboard" 
 option(ENABLE_YarpOpenraveControlboard "Enable/disable option YarpOpenraveControlboard" TRUE)
 option(ENABLE_YarpOpenraveControlboardCollision "Enable/disable option YarpOpenraveControlboardCollision" TRUE)
 option(ENABLE_YarpOpenraveGrabber "Enable/disable option YarpOpenraveGrabber" TRUE)
+option(ENABLE_YarpOpenraveRGBDSensor  "Enable/disable option YarpOpenraveRGBDSensor" TRUE)
 
 ### options: cpp libraries (openrave plugins)
 option(ENABLE_OpenraveYarpControlboard "Enable/disable option OpenraveYarpControlboard" TRUE)

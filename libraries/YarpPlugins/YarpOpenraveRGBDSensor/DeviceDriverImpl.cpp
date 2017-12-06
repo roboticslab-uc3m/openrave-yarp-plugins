@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveGrabber.hpp"
+#include "YarpOpenraveRGBDSensor.hpp"
 
 namespace roboticslab
 {
@@ -21,7 +21,7 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
+bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config) {
 
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
@@ -182,33 +182,33 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
 
     // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
 
-    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
+    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Laser) )
     {
-        CD_ERROR("Sensor %d does not support ST_Camera.\n", sensorIndex );
+        CD_ERROR("Sensor %d does not support ST_Laser.\n", sensorIndex );
     }
 
     // Activate the sensor
     sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
 
-    // Show the sensor image in a separate window
+    // Show the sensor image in a separate window // Ok for Laser???
     //sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
 
     // Get pointer to geom properties of sensor
-    boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
+    boost::shared_ptr<OpenRAVE::SensorBase::LaserGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Laser));
 
     // Get pointer to sensed data
-    sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
+    sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Laser));
 
-    CD_INFO("Camera width: %d, height: %d.\n",geomDataPtr->width,geomDataPtr->height);
-    _width = geomDataPtr->width;
-    _height = geomDataPtr->height;
+    CD_INFO("Laser resolution: %f   %f.\n",geomDataPtr->resolution[0],geomDataPtr->resolution[1]);
+    CD_INFO("Laser min_angle: %f   %f.\n",geomDataPtr->min_angle[0],geomDataPtr->min_angle[1]);
+    CD_INFO("Laser max_angle: %f   %f.\n",geomDataPtr->max_angle[0],geomDataPtr->max_angle[1]);
 
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::close() {
+bool YarpOpenraveRGBDSensor::close() {
     CD_INFO("\n");
     return true;
 }

@@ -24,7 +24,7 @@ namespace roboticslab
 
 
 // Specific for --env parameter
-void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername, int _viewer);
+void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername);
 
 /**
  * @ingroup TeoYarp

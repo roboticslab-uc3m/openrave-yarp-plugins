@@ -9,7 +9,7 @@ namespace roboticslab
 
 bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& image)
 {
-    sensorPtrForCameras->GetSensorData(cameraSensorDataPtr);
+    sensorBasePtr->GetSensorData(sensorDataPtr);
 
     //std::vector<uint8_t> currentFrame = pcamerasensordata->vimagedata;
     //printf("Vector size: %d\n",currentFrame.size()); // i.e. 480 * 640 * 3 = 921600;
@@ -20,9 +20,9 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
     {
         for (int i_y = 0; i_y < image.height(); ++i_y)
         {
-            p.r = cameraSensorDataPtr->vimagedata[3*(i_x+(i_y*image.width()))];
-            p.g = cameraSensorDataPtr->vimagedata[1+3*(i_x+(i_y*image.width()))];
-            p.b = cameraSensorDataPtr->vimagedata[2+3*(i_x+(i_y*image.width()))];
+            p.r = sensorDataPtr->vimagedata[3*(i_x+(i_y*image.width()))];
+            p.g = sensorDataPtr->vimagedata[1+3*(i_x+(i_y*image.width()))];
+            p.b = sensorDataPtr->vimagedata[2+3*(i_x+(i_y*image.width()))];
             image.safePixel(i_x,i_y) = p;
         }
     }
