@@ -39,7 +39,8 @@ namespace roboticslab
  * @brief Implements the YARP_dev IFrameGrabberImage, etc.
  * interface class member functions.
  */
-class YarpOpenraveGrabber : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IFrameGrabberImage {
+class YarpOpenraveGrabber : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IFrameGrabberImage
+{
 public:
 
     // Set the Thread Rate in the class constructor

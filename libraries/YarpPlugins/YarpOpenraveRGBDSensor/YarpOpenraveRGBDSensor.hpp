@@ -39,7 +39,8 @@ namespace roboticslab
  * @brief Implements the YARP_dev IFrameGrabberImage, etc.
  * interface class member functions.
  */
-class YarpOpenraveRGBDSensor : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IRGBDSensor {
+class YarpOpenraveRGBDSensor : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IRGBDSensor
+{
 public:
 
     // Set the Thread Rate in the class constructor
