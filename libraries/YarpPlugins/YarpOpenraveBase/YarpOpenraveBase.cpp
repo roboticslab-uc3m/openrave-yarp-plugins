@@ -25,7 +25,7 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
 
 YarpOpenraveBase::YarpOpenraveBase()
 {
-
+    penv = OpenRAVE::EnvironmentBasePtr();  // nullptr
 }
 
 // -------------------------------------------------------------------
@@ -83,6 +83,12 @@ bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
 bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
 {
     //CD_DEBUG("config: %s\n",config.toString().c_str());
+
+    if( ! penv )
+    {
+        CD_ERROR("Note to developers: please call configureEnvironment() first.\n");
+        return false;
+    }
 
     if( config.check("orPlugin") )
     {
@@ -167,6 +173,12 @@ bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
 bool YarpOpenraveBase::configureRobot(yarp::os::Searchable& config)
 {
     //CD_DEBUG("config: %s\n",config.toString().c_str());
+
+    if( ! penv )
+    {
+        CD_ERROR("Note to developers: please call configureEnvironment() first.\n");
+        return false;
+    }
 
     int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
 
