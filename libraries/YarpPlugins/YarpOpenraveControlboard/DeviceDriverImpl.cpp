@@ -124,4 +124,3 @@ bool YarpOpenraveControlboard::close()
 // -----------------------------------------------------------------------------
 
 }  // namespace roboticslab
-

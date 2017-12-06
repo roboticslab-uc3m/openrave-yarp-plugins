@@ -2,9 +2,12 @@
 
 #include "YarpOpenraveControlboardCollision.hpp"
 
+namespace roboticslab
+{
+
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool roboticslab::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config)
+bool YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config)
 {
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
@@ -62,10 +65,12 @@ bool roboticslab::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& 
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboardCollision::close()
+bool YarpOpenraveControlboardCollision::close()
 {
     CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
+
+}  // namespace roboticslab
