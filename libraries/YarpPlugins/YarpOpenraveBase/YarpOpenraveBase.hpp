@@ -44,12 +44,12 @@ class YarpOpenraveBase
 public:
     YarpOpenraveBase();
 
+protected:
     bool configureEnvironment(yarp::os::Searchable& config);
     bool configureOpenravePlugins(yarp::os::Searchable& config);
     bool configureRobot(yarp::os::Searchable& config);
     bool clean();
 
-protected:
     //OpenRAVE//
     OpenRAVE::EnvironmentBasePtr penv;
     OpenRAVE::RobotBasePtr probot;
