@@ -9,6 +9,7 @@ add_subdirectory(OpenraveYarpPaintSquares)
 add_subdirectory(OpenraveWorldRpcResponder)
 add_subdirectory(OpenraveYarpForce)
 add_subdirectory(OpenraveYarpForceEstimator)
+add_subdirectory(OpenraveYarpPluginLoader)
 
 #ENDIF (ENABLE_openraveplugins)
 

@@ -1,8 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveControlboard.hpp"
-
-#include <algorithm>  // Thanks: https://notfaq.wordpress.com/2007/08/04/cc-convert-string-to-upperlower-case/
+#include "YarpOpenraveGrabber.hpp"
 
 namespace roboticslab
 {
@@ -23,13 +21,12 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
+bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
 
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
     int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
-    int manipulatorIndex = config.check("manipulatorIndex",-1,"manipulatorIndex").asInt();
-    double genRefSpeed = config.check("genRefSpeed",DEFAULT_GEN_REF_SPEED,"general ref speed").asDouble();
+    int sensorIndex = config.check("sensorIndex",-1,"sensorIndex").asInt();
 
     if ( ( config.check("env") ) && ( config.check("penv") ) )
     {
@@ -165,98 +162,54 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config) {
     probot = vectorOfRobotPtr[robotIndex];
     robotName = probot->GetName();
 
-    std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
-    if(manipulatorIndex >= vectorOfManipulatorPtr.size())
+    std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = vectorOfRobotPtr.at(robotIndex)->GetAttachedSensors();
+    if(sensorIndex >= vectorOfSensorPtr.size())
     {
-        CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarpPlugin.\n",manipulatorIndex,vectorOfManipulatorPtr.size());
+        CD_ERROR("sensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",sensorIndex,vectorOfSensorPtr.size());
         return false;
     }
-    else if (manipulatorIndex < 0)
+    else if (sensorIndex < 0)
     {
-        CD_ERROR("manipulatorIndex %d < 0, not loading yarpPlugin.\n",manipulatorIndex);
+        CD_ERROR("sensorIndex %d < 0, not loading yarpPlugin.\n",sensorIndex);
         return false;
     }
 
-    manipulatorIDs = vectorOfManipulatorPtr[manipulatorIndex]->GetArmIndices();
+    sensorBasePtr = vectorOfSensorPtr.at(sensorIndex)->GetSensor();
 
-    axes = manipulatorIDs.size();
-    manipulatorTargetRads.resize( axes, 0.0 );
-    controlModes.resize( axes, VOCAB_CM_POSITION );
-    refSpeeds.resize( axes, genRefSpeed );
+    std::string tipo = sensorBasePtr->GetName();
 
-    for(size_t i=0; i<manipulatorIDs.size(); i++)
+    printf("Sensor %d name: %s\n",sensorIndex,tipo.c_str());
+
+    // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
+
+    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
     {
-        OpenRAVE::RobotBase::JointPtr jointPtr = probot->GetJointFromDOFIndex(manipulatorIDs[i]);
-        vectorOfJointPtr.push_back(jointPtr);
-        CD_DEBUG("Get JointPtr for manipulatorIDs[%d]: %d\n",i,manipulatorIDs[i]);
+        CD_ERROR("Sensor %d does not support ST_Camera.\n", sensorIndex );
     }
 
-    //-- Create the controller, make sure to lock environment!
-    {
-        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
+    // Activate the sensor
+    sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
 
-        std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
-        //--- Console output robot active DOF
-        //for(size_t i=0; i<activeDOFIndices.size(); i++)
-        //{
-        //    CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
-        //}
+    // Show the sensor image in a separate window
+    //sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
 
-        //-- Convert robot controller to multi if not already.
-        OpenRAVE::ControllerBasePtr pcontrol = probot->GetController();
-        CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
-        //-- Doing case insensitive check because defaults to IdealController but idealcontroller exists
-        std::string controllerName( pcontrol->GetXMLId() );
-        std::transform(controllerName.begin(), controllerName.end(), controllerName.begin(), ::tolower);
-        if( controllerName == "idealcontroller" )
-        {
-            CD_INFO("Detected idealcontroller, switch to genericmulticontroller.\n");
-            pcontrol = OpenRAVE::RaveCreateMultiController(penv);
-            probot->SetController(pcontrol,activeDOFIndices,1);  // idealcontroller -> genericmulticontroller
-        }
-        else if( controllerName == "genericmulticontroller")
-        {
-            CD_INFO("Detected genericmulticontroller, which will be used.\n");
-        }
-        else
-        {
-            CD_ERROR("Non-treated controller case. Bye!\n");
-            return false;
-        }
-        CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
+    // Get pointer to geom properties of sensor
+    boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
 
-        //-- Safe to assume we have a multicontroller, store for usage.
-        multi = boost::dynamic_pointer_cast< OpenRAVE::MultiControllerBase >(pcontrol);
+    // Get pointer to sensed data
+    sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
 
-        for(size_t i=0; i<manipulatorIDs.size(); i++)
-        {
-            OpenRAVE::ControllerBasePtr pindivcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
-            std::vector<int> tmpIndices;
-            tmpIndices.push_back( manipulatorIDs[i] );
-            CD_DEBUG("Attach individual controller for manipulatorIDs[%d]: %d\n",i,tmpIndices[0]);
-            multi->AttachController(pindivcontrol, tmpIndices, 0);
-            pcontrols.push_back(pindivcontrol);
-        }
-
-        penv->StopSimulation();
-        penv->StartSimulation(0.01);
-
-        //-- Console output of the robot ConfigurationSpecification
-        //OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
-        //for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
-        //{
-        //    CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
-        //}
-
-    }
+    CD_INFO("Camera width: %d, height: %d.\n",geomDataPtr->width,geomDataPtr->height);
+    _width = geomDataPtr->width;
+    _height = geomDataPtr->height;
 
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::close() {
-    printf("[YarpOpenraveControlboard] close()\n");
+bool YarpOpenraveGrabber::close() {
+    CD_INFO("\n");
     return true;
 }
 
