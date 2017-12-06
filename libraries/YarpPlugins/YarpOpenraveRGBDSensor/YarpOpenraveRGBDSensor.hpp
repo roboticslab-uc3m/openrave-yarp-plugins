@@ -36,7 +36,7 @@ namespace roboticslab
 
 /**
  * @ingroup YarpOpenraveRGBDSensor
- * @brief Implements the YARP_dev IFrameGrabberImage, etc.
+ * @brief Implements the YARP_dev IRGBDSensor, etc.
  * interface class member functions.
  */
 class YarpOpenraveRGBDSensor : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IRGBDSensor
