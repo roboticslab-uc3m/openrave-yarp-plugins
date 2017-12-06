@@ -7,8 +7,8 @@ namespace roboticslab
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config) {
-
+bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
+{
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
     if ( ! configureEnvironment(config) )
@@ -82,7 +82,8 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config) {
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveRGBDSensor::close() {
+bool YarpOpenraveRGBDSensor::close()
+{
     CD_INFO("\n");
     return true;
 }

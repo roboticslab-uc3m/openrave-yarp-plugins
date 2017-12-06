@@ -7,8 +7,8 @@ namespace roboticslab
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
-
+bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
+{
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
     if ( ! configureEnvironment(config) )
@@ -82,7 +82,8 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config) {
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::close() {
+bool YarpOpenraveGrabber::close()
+{
     CD_INFO("\n");
     return true;
 }
