@@ -22,8 +22,7 @@ bool YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config)
 
     int manipulatorIndex = config.check("manipulatorIndex",-1,"manipulatorIndex").asInt();
 
-    dEncRaw.resize( probot->GetDOF() );
-    std::fill(dEncRaw.begin(), dEncRaw.end(), 0);
+    dEncRaw.resize( probot->GetDOF(), 0.0 );
 
     std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
     manipulatorIDs = vectorOfManipulatorPtr[manipulatorIndex]->GetArmIndices();
@@ -38,24 +37,32 @@ bool YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config)
     std::string YarpOpenraveControlboardStr("/YarpOpenraveControlboardCollision");
     options.put("local",YarpOpenraveControlboardStr+remoteStr);
     options.put("remote",remoteStr);  //-- Hard-code for now
+
     remoteDevice.open(options);
-    if( ! remoteDevice.isValid() ) {
+
+    if( ! remoteDevice.isValid() )
+    {
         CD_ERROR("robot remote not valid: %s.\n",remoteStr.c_str());
         return false;
     }
-    if( ! remoteDevice.view(iEncoders) ) {
+
+    if( ! remoteDevice.view(iEncoders) )
+    {
         CD_ERROR("Could not view iEncoders in: %s.\n",remoteStr.c_str());
         return false;
     }
-    if( ! remoteDevice.view(iPositionControl) ) {
+    if( ! remoteDevice.view(iPositionControl) )
+    {
         CD_ERROR("Could not view iPositionControl in: %s.\n",remoteStr.c_str());
         return false;
     }
-    if( ! remoteDevice.view(iControlLimits2) ) {
+    if( ! remoteDevice.view(iControlLimits2) )
+    {
         CD_ERROR("Could not view iControlLimits2 in: %s.\n",remoteStr.c_str());
         return false;
     }
-    if( ! remoteDevice.view(iControlMode) ) {
+    if( ! remoteDevice.view(iControlMode) )
+    {
         CD_ERROR("Could not view iControlMode in: %s.\n",remoteStr.c_str());
         return false;
     }
