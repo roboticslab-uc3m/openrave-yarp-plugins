@@ -10,7 +10,7 @@ yarp_prepare_plugin(YarpOpenraveRGBDSensor
 IF (NOT SKIP_YarpOpenraveRGBDSensor)
 
 SET(CMAKE_MODULE_PATH ${TEO_MODULE_PATH} ${CMAKE_MODULE_PATH})
-FIND_PACKAGE(YARP REQUIRED)
+FIND_PACKAGE(YARP 2.3.70 REQUIRED)
 FIND_PACKAGE(OpenRAVE REQUIRED)
 find_package(Boost COMPONENTS iostreams python thread system)
 
