@@ -9,6 +9,12 @@ try:
     if not RaveLoadPlugin('OpenraveYarpControlboard'):
         raveLogError("Plugin not correctly loaded")
 
+    if not RaveLoadPlugin('OpenraveYarpWorldRpcResponder'):
+        raveLogError("Plugin not correctly loaded")
+
+    if not RaveLoadPlugin('OpenraveYarpCoupled'):
+        raveLogError("Plugin not correctly loaded")
+
     env=Environment()
     env.SetViewer('qtcoin')
     env.Load('/home/yo/repos/textiles/textiles/ironing/manipulation/ironingSim/ironingSim.env.xml')
@@ -19,7 +25,7 @@ try:
     OpenraveWorldRpcResponder = RaveCreateModule(env,'OpenraveWorldRpcResponder')
     print OpenraveWorldRpcResponder.SendCommand('open')
 
-    OpenraveYarpForce = RaveCreateModule(env,'OpenraveYarpForce')
+    OpenraveYarpForce = RaveCreateModule(env,'OpenraveYarpCoupled')
     print OpenraveYarpForce.SendCommand('open')
 
     while 1:
