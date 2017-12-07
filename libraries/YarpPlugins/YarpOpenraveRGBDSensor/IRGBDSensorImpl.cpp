@@ -44,7 +44,9 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
 
 bool YarpOpenraveRGBDSensor::getImages(yarp::sig::FlexImage &colorFrame, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthFrame, yarp::os::Stamp *colorStamp, yarp::os::Stamp *depthStamp)
 {
-    return true;
+    bool ok = true;
+    ok &= getDepthImage(depthFrame,depthStamp);
+    return ok;
 }
 
 // ----------------------------------------------------------------------------
