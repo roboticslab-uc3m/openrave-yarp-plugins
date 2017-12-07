@@ -47,4 +47,6 @@ yarp::dev::IRGBDSensor::RGBDSensor_status YarpOpenraveRGBDSensor::getSensorStatu
     return yarp::dev::IRGBDSensor::RGBD_SENSOR_OK_IN_USE;
 }
 
+// ----------------------------------------------------------------------------
+
 }
