@@ -165,7 +165,7 @@ public:
      * @return an enum representing the status of the robot or an error code
      * if any error is present
      */
-    virtual RGBDSensor_status getSensorStatus() {}
+    virtual RGBDSensor_status getSensorStatus();
 
 private:
 

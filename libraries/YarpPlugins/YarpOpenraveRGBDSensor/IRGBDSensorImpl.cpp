@@ -42,4 +42,9 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
 
 // ----------------------------------------------------------------------------
 
+yarp::dev::IRGBDSensor::RGBDSensor_status YarpOpenraveRGBDSensor::getSensorStatus()
+{
+    return yarp::dev::IRGBDSensor::RGBD_SENSOR_OK_IN_USE;
+}
+
 }
