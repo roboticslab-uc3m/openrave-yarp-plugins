@@ -9,24 +9,35 @@ namespace roboticslab
 
 bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp)
 {
-    /*sensorPtrForCameras->GetSensorData(cameraSensorDataPtr);
+    sensorBasePtr->GetSensorData(sensorDataPtr);
 
-    //std::vector<uint8_t> currentFrame = pcamerasensordata->vimagedata;
-    //printf("Vector size: %d\n",currentFrame.size()); // i.e. 480 * 640 * 3 = 921600;
-    //yarp::sig::ImageOf<yarp::sig::PixelRgb>& i_imagen = ptrVectorOfRgbPortPtr->at(camIter)->prepare();
-    //i_imagen.resize(ptrVectorOfCameraWidth->at(camIter),ptrVectorOfCameraHeight->at(camIter));  // Tamaño de la pantalla
-    yarp::sig::PixelRgb p;
-    for (int i_x = 0; i_x < image.width(); ++i_x)
-    {
-        for (int i_y = 0; i_y < image.height(); ++i_y)
-        {
-            p.r = cameraSensorDataPtr->vimagedata[3*(i_x+(i_y*image.width()))];
-            p.g = cameraSensorDataPtr->vimagedata[1+3*(i_x+(i_y*image.width()))];
-            p.b = cameraSensorDataPtr->vimagedata[2+3*(i_x+(i_y*image.width()))];
-            image.safePixel(i_x,i_y) = p;
+    //std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorRanges = ptrVectorOfLaserSensorDataPtr->at(laserIter)->ranges;
+    //std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorPositions = ptrVectorOfLaserSensorDataPtr->at(laserIter)->positions;
+    //OpenRAVE::Transform tinv = ptrVectorOfLaserSensorDataPtr->at(laserIter)->__trans.inverse();
+
+    /*
+        if(sensorRanges.size()==3072) i_depth.resize(64,48);  // Tamaño de la pantalla (64,48)
+        else if(sensorRanges.size()==12288) i_depth.resize(128,96);
+        else if(sensorRanges.size()==49152) i_depth.resize(256,192);
+        else if(sensorRanges.size()==307200) i_depth.resize(640,480);
+        else if(sensorRanges.size()==4) i_depth.resize(2,2);
+        //else printf("[warning] unrecognized laser sensor data size.\n");
+        else i_depth.resize(sensorRanges.size(),1);
+        for (int i_y = 0; i_y < i_depth.height(); ++i_y) {  // was y in x before
+            for (int i_x = 0; i_x < i_depth.width(); ++i_x) {
+                //double p = sensorRanges[i_y+(i_x*i_depth.height())].z;
+                double p;
+                if( sensorPositions.size() > 0 ) {
+                    OpenRAVE::Vector v = tinv*(sensorRanges[i_y+(i_x*i_depth.height())] + sensorPositions[0]);
+                    p = (float)v.z;
+                } else {
+                    OpenRAVE::Vector v = tinv*(sensorRanges[i_y+(i_x*i_depth.height())]);
+                    p = (float)v.z;
+                }
+                i_depth(i_x,i_y) = p*1000.0;  // give mm
+            }
         }
-    }*/
-
+*/
     return true;
 }
 
