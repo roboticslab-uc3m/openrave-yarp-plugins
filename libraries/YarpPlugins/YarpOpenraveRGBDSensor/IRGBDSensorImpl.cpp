@@ -28,6 +28,19 @@ bool YarpOpenraveRGBDSensor::setDepthResolution(int width, int height)
 
 // ----------------------------------------------------------------------------
 
+bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::os::Stamp *timeStamp)
+{
+    //CD_DEBUG("\n");
+
+    //rgbImage.resize(64,48);
+
+    timeStamp->update( yarp::os::Time::now() );
+
+    return true;
+}
+
+// ----------------------------------------------------------------------------
+
 bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp)
 {
     //CD_DEBUG("\n");
@@ -70,6 +83,7 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
 bool YarpOpenraveRGBDSensor::getImages(yarp::sig::FlexImage &colorFrame, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthFrame, yarp::os::Stamp *colorStamp, yarp::os::Stamp *depthStamp)
 {
     bool ok = true;
+    ok &= getRgbImage(colorFrame,colorStamp);
     ok &= getDepthImage(depthFrame,depthStamp);
     return ok;
 }
