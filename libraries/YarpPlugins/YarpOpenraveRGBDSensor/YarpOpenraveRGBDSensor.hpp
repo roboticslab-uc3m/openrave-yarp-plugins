@@ -86,9 +86,9 @@ public:
     /*
      * IDepthVisualParams interface. Look at IVisualParams.h for documentation
      */
-    virtual int    getDepthHeight() {}
-    virtual int    getDepthWidth() {}
-    virtual bool   setDepthResolution(int width, int height) {}
+    virtual int    getDepthHeight();
+    virtual int    getDepthWidth();
+    virtual bool   setDepthResolution(int width, int height);
     virtual bool   getDepthFOV(double &horizontalFov, double &verticalFov) {}
     virtual bool   setDepthFOV(double horizontalFov, double verticalFov) {}
     virtual double getDepthAccuracy() {}

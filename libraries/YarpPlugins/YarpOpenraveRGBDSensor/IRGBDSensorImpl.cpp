@@ -7,8 +7,31 @@ namespace roboticslab
 
 // ------------------ IRGBDSensor Related ----------------------------------------
 
+int YarpOpenraveRGBDSensor::getDepthHeight()
+{
+    return 48;
+}
+
+// ----------------------------------------------------------------------------
+
+int YarpOpenraveRGBDSensor::getDepthWidth()
+{
+    return 64;
+}
+
+// ----------------------------------------------------------------------------
+
+bool YarpOpenraveRGBDSensor::setDepthResolution(int width, int height)
+{
+    return false;
+}
+
+// ----------------------------------------------------------------------------
+
 bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp)
 {
+    //CD_DEBUG("\n");
+
     sensorBasePtr->GetSensorData(sensorDataPtr);
 
     std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorRanges = sensorDataPtr->ranges;
@@ -36,6 +59,8 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
             depthImage(i_x,i_y) = p*1000.0;  // give mm
         }
     }
+
+    timeStamp->update( yarp::os::Time::now() );
 
     return true;
 }
