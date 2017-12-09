@@ -59,9 +59,17 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     // Get pointer to sensed data
     sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Laser));
 
-    CD_INFO("Laser resolution: %f   %f.\n",geomDataPtr->resolution[0],geomDataPtr->resolution[1]);
-    CD_INFO("Laser min_angle: %f   %f.\n",geomDataPtr->min_angle[0],geomDataPtr->min_angle[1]);
-    CD_INFO("Laser max_angle: %f   %f.\n",geomDataPtr->max_angle[0],geomDataPtr->max_angle[1]);
+    CD_INFO("Laser min_angle: %f   %f.\n",geomDataPtr->min_angle[0],geomDataPtr->min_angle[1]);  // boost::array<dReal,2>
+    CD_INFO("Laser max_angle: %f   %f.\n",geomDataPtr->max_angle[0],geomDataPtr->max_angle[1]);  // boost::array<dReal,2>
+    CD_INFO("Laser resolution: %f   %f.\n",geomDataPtr->resolution[0],geomDataPtr->resolution[1]);  // boost::array<dReal,2>
+    CD_INFO("Laser min_range, max_range: %f   %f.\n",geomDataPtr->min_range,geomDataPtr->max_range);
+    CD_INFO("Laser time_increment: %f   %f.\n",geomDataPtr->time_increment);
+    CD_INFO("Laser time_scan: %f   %f.\n",geomDataPtr->time_scan);
+
+    rgbHeight = 1;
+    rgbWidth = 1;
+    depthHeight = 0;
+    depthWidth = 0;
 
     return true;
 }

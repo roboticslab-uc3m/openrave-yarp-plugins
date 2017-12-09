@@ -86,9 +86,9 @@ public:
     /*
      * IDepthVisualParams interface. Look at IVisualParams.h for documentation
      */
-    virtual int    getDepthHeight() {}
-    virtual int    getDepthWidth() {}
-    virtual bool   setDepthResolution(int width, int height) {}
+    virtual int    getDepthHeight();
+    virtual int    getDepthWidth();
+    virtual bool   setDepthResolution(int width, int height);
     virtual bool   getDepthFOV(double &horizontalFov, double &verticalFov) {}
     virtual bool   setDepthFOV(double horizontalFov, double verticalFov) {}
     virtual double getDepthAccuracy() {}
@@ -130,7 +130,7 @@ public:
      * @param timeStamp time in which the image was acquired. Optional, the user must provide memory allocation
      * @return True on success
      */
-    virtual bool getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::os::Stamp *timeStamp = NULL)  {}
+    virtual bool getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::os::Stamp *timeStamp = NULL);
 
     /**
      * Get the depth frame from the device.
@@ -157,7 +157,7 @@ public:
     * @param depthStamp pointer to memory to hold the Stamp of the depth frame
     * @return true if able to get both data.
     */
-    virtual bool getImages(yarp::sig::FlexImage &colorFrame, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthFrame, yarp::os::Stamp *colorStamp=NULL, yarp::os::Stamp *depthStamp=NULL) {}
+    virtual bool getImages(yarp::sig::FlexImage &colorFrame, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthFrame, yarp::os::Stamp *colorStamp=NULL, yarp::os::Stamp *depthStamp=NULL);
 
     /**
      * Get the surrent status of the sensor, using enum type
@@ -165,16 +165,17 @@ public:
      * @return an enum representing the status of the robot or an error code
      * if any error is present
      */
-    virtual RGBDSensor_status getSensorStatus() {}
+    virtual RGBDSensor_status getSensorStatus();
 
 private:
 
     // General Grabber parameters //
-    int _height, _width;
+    int rgbHeight, rgbWidth, depthHeight, depthWidth;
 
     //OpenRAVE//
     OpenRAVE::SensorBasePtr sensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::LaserSensorData> sensorDataPtr;
+    OpenRAVE::Transform tinv;
 
 };
 
