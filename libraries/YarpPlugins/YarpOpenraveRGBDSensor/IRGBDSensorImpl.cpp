@@ -9,14 +9,14 @@ namespace roboticslab
 
 int YarpOpenraveRGBDSensor::getDepthHeight()
 {
-    return 48;
+    return depthHeight;
 }
 
 // ----------------------------------------------------------------------------
 
 int YarpOpenraveRGBDSensor::getDepthWidth()
 {
-    return 64;
+    return depthWidth;
 }
 
 // ----------------------------------------------------------------------------
@@ -32,7 +32,8 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
 {
     //CD_DEBUG("\n");
 
-    //rgbImage.resize(64,48);
+    rgbImage.setPixelCode(VOCAB_PIXEL_RGB);
+    rgbImage.resize(rgbWidth,rgbHeight);
 
     timeStamp->update( yarp::os::Time::now() );
 
@@ -49,27 +50,64 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
 
     std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorRanges = sensorDataPtr->ranges;
     std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorPositions = sensorDataPtr->positions;
-    OpenRAVE::Transform tinv = sensorDataPtr->__trans.inverse();
 
-    if(sensorRanges.size()==3072) depthImage.resize(64,48);  // Tamaño de la pantalla (64,48)
-    else if(sensorRanges.size()==12288) depthImage.resize(128,96);
-    else if(sensorRanges.size()==49152) depthImage.resize(256,192);
-    else if(sensorRanges.size()==307200) depthImage.resize(640,480);
-    else if(sensorRanges.size()==4) depthImage.resize(2,2);
-    //else printf("[warning] unrecognized laser sensor data size.\n");
-    else depthImage.resize(sensorRanges.size(),1);
-    for (int i_y = 0; i_y < depthImage.height(); ++i_y) {  // was y in x before
-        for (int i_x = 0; i_x < depthImage.width(); ++i_x) {
+    if( (depthHeight == 0) || (depthWidth == 0) )
+    {
+        if (sensorRanges.size()==3072)
+        {
+            depthWidth  = 64;
+            depthHeight = 48;
+        }
+        else if (sensorRanges.size()==12288)
+        {
+            depthWidth  = 128;
+            depthHeight = 96;
+        }
+        else if (sensorRanges.size()==49152)
+        {
+            depthWidth  = 256;
+            depthHeight = 192;
+        }
+        else if (sensorRanges.size()==307200)
+        {
+            depthWidth  = 640;
+            depthHeight = 480;
+        }
+        else if (sensorRanges.size()==4)
+        {
+            depthWidth  = 2;
+            depthHeight = 2;
+        }
+        else
+        {
+            depthWidth  = sensorRanges.size();
+            depthHeight = 1;
+        }
+        //else CD_ERROR("unrecognized laser sensor data size.\n");
+
+        tinv = sensorDataPtr->__trans.inverse();
+    }
+
+    depthImage.resize(depthWidth,depthHeight);
+
+    for (int i_y = 0; i_y < depthImage.height(); ++i_y)
+    {  // was y in x before
+        for (int i_x = 0; i_x < depthImage.width(); ++i_x)
+        {
             //double p = sensorRanges[i_y+(i_x*depthImage.height())].z;
             double p;
-            if( sensorPositions.size() > 0 ) {
+            if( sensorPositions.size() > 0 )
+            {
                 OpenRAVE::Vector v = tinv*(sensorRanges[i_y+(i_x*depthImage.height())] + sensorPositions[0]);
                 p = (float)v.z;
-            } else {
+            }
+            else
+            {
                 OpenRAVE::Vector v = tinv*(sensorRanges[i_y+(i_x*depthImage.height())]);
                 p = (float)v.z;
             }
             depthImage(i_x,i_y) = p*1000.0;  // give mm
+            //*(yarp::sig::PixelFloat*)depthImage.getPixelAddress(0, 0) = 0.0;
         }
     }
 

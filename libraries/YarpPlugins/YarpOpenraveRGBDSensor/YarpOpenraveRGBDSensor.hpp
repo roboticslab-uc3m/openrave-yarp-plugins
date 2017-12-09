@@ -170,11 +170,12 @@ public:
 private:
 
     // General Grabber parameters //
-    int _height, _width;
+    int rgbHeight, rgbWidth, depthHeight, depthWidth;
 
     //OpenRAVE//
     OpenRAVE::SensorBasePtr sensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::LaserSensorData> sensorDataPtr;
+    OpenRAVE::Transform tinv;
 
 };
 

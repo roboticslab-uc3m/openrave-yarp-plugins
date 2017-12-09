@@ -66,6 +66,11 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     CD_INFO("Laser time_increment: %f   %f.\n",geomDataPtr->time_increment);
     CD_INFO("Laser time_scan: %f   %f.\n",geomDataPtr->time_scan);
 
+    rgbHeight = 1;
+    rgbWidth = 1;
+    depthHeight = 0;
+    depthWidth = 0;
+
     return true;
 }
 
