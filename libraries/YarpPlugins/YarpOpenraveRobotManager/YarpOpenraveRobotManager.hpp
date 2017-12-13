@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __YARP_OPENRAVE_CONTROLBOARD_HPP__
-#define __YARP_OPENRAVE_CONTROLBOARD_HPP__
+#ifndef __YARP_OPENRAVE_ROBOT_MANAGER_HPP__
+#define __YARP_OPENRAVE_ROBOT_MANAGER_HPP__
 
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
@@ -117,4 +117,4 @@ private:
 
 }  // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_CONTROLBOARD_HPP__
+#endif  // __YARP_OPENRAVE_ROBOT_MANAGER_HPP__
