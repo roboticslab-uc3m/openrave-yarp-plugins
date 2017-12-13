@@ -5,7 +5,7 @@ yarp_prepare_plugin(YarpOpenraveRobotManager
                     CATEGORY device
                     TYPE roboticslab::YarpOpenraveRobotManager
                     INCLUDE YarpOpenraveRobotManager.hpp
-                    WRAPPER controlboardwrapper2)
+                    WRAPPER RobotServer)
 
 IF (NOT SKIP_YarpOpenraveRobotManager)
 
