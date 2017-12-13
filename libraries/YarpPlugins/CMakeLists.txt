@@ -25,6 +25,7 @@ include(YarpPlugin)
     add_subdirectory(YarpOpenraveControlboardCollision)
     add_subdirectory(YarpOpenraveGrabber)
     add_subdirectory(YarpOpenraveRGBDSensor)
+    add_subdirectory(YarpOpenraveRobotManager)
 #  yarp_end_plugin_library(yarpplugins)
   
 #ENDIF (ENABLE_yarpplugins)

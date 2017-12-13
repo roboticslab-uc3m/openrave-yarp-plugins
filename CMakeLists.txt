@@ -29,6 +29,7 @@ option(ENABLE_YarpOpenraveControlboard "Enable/disable option YarpOpenraveContro
 option(ENABLE_YarpOpenraveControlboardCollision "Enable/disable option YarpOpenraveControlboardCollision" TRUE)
 option(ENABLE_YarpOpenraveGrabber "Enable/disable option YarpOpenraveGrabber" TRUE)
 option(ENABLE_YarpOpenraveRGBDSensor  "Enable/disable option YarpOpenraveRGBDSensor" TRUE)
+option(ENABLE_YarpOpenraveRobotManager "Enable/disable option YarpOpenraveRobotManager" TRUE)
 
 ### options: cpp programs
 option(ENABLE_teoSim "Choose if you want to compile (deprecated) teoSim" TRUE)
