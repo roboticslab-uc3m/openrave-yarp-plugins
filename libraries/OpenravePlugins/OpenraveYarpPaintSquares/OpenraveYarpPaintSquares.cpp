@@ -35,7 +35,8 @@
 #include "ColorDebug.hpp"
 
 #define DEFAULT_RATE_MS 0.5
-#define NSQUARES 16
+#define DEFAULT_SQUARES 16
+#define DEFAULT_PORT_NAME "/openraveYarpPaintSquares/rpc:s"
 
 
 using namespace std;
@@ -108,7 +109,16 @@ public:
         RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens port");
     }
 
-    virtual ~OpenraveYarpPaintSquares() {
+    virtual ~OpenraveYarpPaintSquares()
+    {
+        //-- Note that we start on element 1, first elem was not via new!!
+        for(size_t i=1;i<argv.size();i++)
+        {
+            //CD_DEBUG("Deleting [%s]\n",argv[i]);
+            delete argv[i];
+            argv[i] = 0;
+        }
+
         rpcServer.close();
     }
 
@@ -124,28 +134,43 @@ public:
 
     bool Open(ostream& sout, istream& sinput)
     {
-        vector<string> funcionArgs;
-        while(sinput)
+        CD_INFO("Checking for yarp network...\n");
+        if ( ! yarp.checkNetwork() )
         {
-            string funcionArg;
-            sinput >> funcionArg;
-            funcionArgs.push_back(funcionArg);
-        }
-
-        string portName("/openraveYarpPaintSquares/rpc:s");
-
-        if (funcionArgs.size() > 0)
-        {
-            if( funcionArgs[0][0] == '/')
-                portName = funcionArgs[0];
-        }
-        RAVELOG_INFO("portName: %s\n",portName.c_str());
-
-        if ( !yarp.checkNetwork() )
-        {
-            RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+            CD_ERROR("Found no yarp network (try running \"yarpserver &\"), bye!\n");
             return false;
         }
+        CD_SUCCESS("Found yarp network.\n");
+
+        //-- Given "std::istream& sinput", create equivalent to "int argc, char *argv[]"
+        //-- Note that char* != const char* given by std::string::c_str();
+        char* dummyProgramName = "dummyProgramName";
+        argv.push_back(dummyProgramName);
+
+        while(sinput)
+        {
+            std::string str;
+            sinput >> str;
+            if(str.length() == 0)  //-- Omits empty string that is usually at end via openrave.
+                continue;
+            char *cstr = new char[str.length() + 1];  // pushed to member argv to be deleted in ~.
+            strcpy(cstr, str.c_str());
+            argv.push_back(cstr);
+        }
+
+        //for(size_t i=0;i<argv.size();i++)
+        //    CD_DEBUG("argv[%d] is [%s]\n",i,argv[i]);
+
+        yarp::os::Property options;
+        options.fromCommand(argv.size(),argv.data());
+
+        CD_DEBUG("config: %s\n", options.toString().c_str());
+
+        std::string portName = options.check("name",yarp::os::Value(DEFAULT_PORT_NAME),"port name").asString();
+        CD_INFO("port name: %s\n",portName.c_str());
+
+        int squares = options.check("squares",DEFAULT_SQUARES,"number of squares").asInt();
+        CD_INFO("squares: %d\n",squares);
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
@@ -167,7 +192,7 @@ public:
         probot->SetActiveManipulator("rightArm");
         probot->Grab(_objPtr);
 
-        sqPainted.resize(NSQUARES);
+        sqPainted.resize(squares);
 
         processor.setPsqPainted(&sqPainted);
         processor.setPsqPaintedSemaphore(&sqPaintedSemaphore);
@@ -228,6 +253,8 @@ public:
     }
 
 private:
+    std::vector<char *> argv;
+
     yarp::os::Network yarp;
     yarp::os::RpcServer rpcServer;
     DataProcessor processor;
