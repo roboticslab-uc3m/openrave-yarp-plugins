@@ -24,7 +24,7 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-        pcontrol = OpenRAVE::RaveCreateController(penv,"odevelocity");  // idealcontroller, odevelocity, idealvelocitycontroller
+        pcontrol = OpenRAVE::RaveCreateController(penv,"idealvelocitycontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
 
         std::vector<int> dofindices( probot->GetDOF() );
         for(int i = 0; i < probot->GetDOF(); ++i)

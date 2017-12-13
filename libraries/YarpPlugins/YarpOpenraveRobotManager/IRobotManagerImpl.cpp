@@ -10,13 +10,8 @@ namespace roboticslab
 bool YarpOpenraveRobotManager::moveForward(int velocity)
 {
     CD_DEBUG("\n");
-    std::stringstream sout,ss;
-    ss << "setvelocity 3.0 3.0 3.0 3.0 ";
-    if( ! pcontrol->SendCommand(sout,ss) )
-    {
-        CD_ERROR("failed to send velocity command\n");
-        return false;
-    }
+    std::vector<OpenRAVE::dReal> values(4, velocity);
+    pcontrol->SetDesired(values);
     return true;
 }
 
@@ -25,6 +20,8 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
 bool YarpOpenraveRobotManager::moveBackwards(int velocity)
 {
     CD_DEBUG("\n");
+    std::vector<OpenRAVE::dReal> values(4, -velocity);
+    pcontrol->SetDesired(values);
     return true;
 }
 
@@ -33,6 +30,12 @@ bool YarpOpenraveRobotManager::moveBackwards(int velocity)
 bool YarpOpenraveRobotManager::turnLeft(int velocity)
 {
     CD_DEBUG("\n");
+    std::vector<OpenRAVE::dReal> values(4);
+    values[0] = -velocity;
+    values[1] = velocity;
+    values[2] = -velocity;
+    values[3] = velocity;
+    pcontrol->SetDesired(values);
     return true;
 }
 
@@ -41,6 +44,12 @@ bool YarpOpenraveRobotManager::turnLeft(int velocity)
 bool YarpOpenraveRobotManager::turnRight(int velocity)
 {
     CD_DEBUG("\n");
+    std::vector<OpenRAVE::dReal> values(4);
+    values[0] = velocity;
+    values[1] = -velocity;
+    values[2] = velocity;
+    values[3] = -velocity;
+    pcontrol->SetDesired(values);
     return true;
 }
 
@@ -49,6 +58,8 @@ bool YarpOpenraveRobotManager::turnRight(int velocity)
 bool YarpOpenraveRobotManager::stopMovement()
 {
     CD_DEBUG("\n");
+    std::vector<OpenRAVE::dReal> values(4, 0.0);
+    pcontrol->SetDesired(values);
     return true;
 }
 
