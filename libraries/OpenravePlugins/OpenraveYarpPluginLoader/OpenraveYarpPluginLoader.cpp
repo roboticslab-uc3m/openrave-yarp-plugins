@@ -159,6 +159,11 @@ public:
 
                     name += "/";
                     name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
+
+                    if( options.check("suffix") )  // Note that not taken into account if using "name"
+                    {
+                        name += options.find("suffix").asString();
+                    }
                 }
 
                 options.put("name",name);
