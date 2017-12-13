@@ -75,6 +75,15 @@ bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
         CD_ERROR("Please use --env or --penv parameter. Bye!\n");
         return false;
     }
+
+    if( config.check("physics") )
+    {
+        std::string physics = config.find("physics").asString();
+        CD_DEBUG("Found --physics parameter: %s.\n", physics.c_str());
+        penv->SetPhysicsEngine(OpenRAVE::RaveCreatePhysicsEngine(penv,physics));
+        penv->GetPhysicsEngine()->SetGravity(OpenRAVE::Vector(0,0,-9.8));
+    }
+
     return true;
 }
 
