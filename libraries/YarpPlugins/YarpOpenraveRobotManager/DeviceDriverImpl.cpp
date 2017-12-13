@@ -20,6 +20,13 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
     if ( ! configureRobot(config) )
         return false;
 
+    //-- Create the controller, make sure to lock environment!
+    {
+        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
+
+        pcontrol = OpenRAVE::RaveCreateController(penv,"odevelocity");  // idealcontroller, odevelocity, idealvelocitycontroller
+    }
+
     return true;
 }
 

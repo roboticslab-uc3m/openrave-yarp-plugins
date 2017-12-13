@@ -109,7 +109,7 @@ public:
 private:
 
     //OpenRAVE//
-    OpenRAVE::ControllerBasePtr pcontrols;
+    OpenRAVE::ControllerBasePtr pcontrol;
 
     // Specific for --env parameter with --view
     boost::thread_group openraveThreads;
