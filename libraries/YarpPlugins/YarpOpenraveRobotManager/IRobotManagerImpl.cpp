@@ -10,6 +10,13 @@ namespace roboticslab
 bool YarpOpenraveRobotManager::moveForward(int velocity)
 {
     CD_DEBUG("\n");
+    std::stringstream sout,ss;
+    ss << "setvelocity 3.0 3.0 3.0 3.0 ";
+    if( ! pcontrol->SendCommand(sout,ss) )
+    {
+        CD_ERROR("failed to send velocity command\n");
+        return false;
+    }
     return true;
 }
 
