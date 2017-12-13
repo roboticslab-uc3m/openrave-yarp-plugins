@@ -25,7 +25,7 @@ endif()
 
 LINK_DIRECTORIES(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
 
-YARP_ADD_PLUGIN(YarpOpenraveRobotManager YarpOpenraveRobotManager.hpp DeviceDriverImpl.cpp)
+YARP_ADD_PLUGIN(YarpOpenraveRobotManager YarpOpenraveRobotManager.hpp DeviceDriverImpl.cpp IRobotManagerImpl.cpp)
 add_dependencies(YarpOpenraveRobotManager COLOR_DEBUG YarpOpenraveBase)
 set_target_properties(YarpOpenraveRobotManager PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
 set_target_properties(YarpOpenraveRobotManager PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

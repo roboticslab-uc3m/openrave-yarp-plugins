@@ -72,37 +72,37 @@ public:
      */
     virtual bool close();
 
-    // ------- IRobotManager declarations. Implementation in IRobotManager.cpp -------
+    // ------- IRobotManager declarations. Implementation in IRobotManagerImpl.cpp -------
 
     //-- Robot movement related functions
-    virtual bool moveForward(int velocity) { return true; }
-    virtual bool moveBackwards(int velocity) { return true; }
-    virtual bool turnLeft(int velocity) { return true; }
-    virtual bool turnRight(int velocity) { return true; }
-    virtual bool stopMovement() { return true; }
+    virtual bool moveForward(int velocity);
+    virtual bool moveBackwards(int velocity);
+    virtual bool turnLeft(int velocity);
+    virtual bool turnRight(int velocity);
+    virtual bool stopMovement();
 
     //-- Robot camera related functions
-    virtual bool tiltUp(int velocity) { return true; }
-    virtual bool tiltDown(int velocity) { return true; }
-    virtual bool panLeft(int velocity) { return true; }
-    virtual bool panRight(int velocity) { return true; }
-    virtual bool stopCameraMovement() { return true; }
+    virtual bool tiltUp(int velocity);
+    virtual bool tiltDown(int velocity);
+    virtual bool panLeft(int velocity);
+    virtual bool panRight(int velocity);
+    virtual bool stopCameraMovement();
 
     //-- Robot connection related functions
     /// @brief Connect to the remote robot
-    virtual bool connect() { return true; }
+    virtual bool connect();
 
     /// @brief Disconnect from the remote robot
-    virtual bool disconnect() { return true; }
+    virtual bool disconnect();
 
     /// @brief Test connection (not in used yet)
-    virtual bool test() { return true; }
+    virtual bool test();
 
     /// @brief Enable/disable sending commands through the manager
-    virtual void setEnabled(bool enabled) { return; }
+    virtual void setEnabled(bool enabled);
 
     //-- Other
-    virtual void onDestroy() { return; }
+    virtual void onDestroy();
 
     // ------------------------------- Private -------------------------------------
 
