@@ -20,7 +20,7 @@ try:
     print OpenraveYarpControlboard.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2 --genRefSpeed 999999')  # rightArm is maniplator 2
 
     OpenraveYarpPaintSquares = RaveCreateModule(env,'OpenraveYarpPaintSquares')
-    print OpenraveYarpPaintSquares.SendCommand('open --squares 64')
+    print OpenraveYarpPaintSquares.SendCommand('open --squares 16')
     #print OpenraveYarpPaintSquares.SendCommand('open --name /altPortName')
 
     while 1:
