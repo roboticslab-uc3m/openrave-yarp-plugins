@@ -54,7 +54,7 @@ bool roboticslab::FakeControlboard::positionMove(int j, double ref)
         velRaw[j] = -(refSpeed[j] * velRawExposed[j]);
     }
 
-    jointStatus[j] = 1;
+    jointStatus[j] = POSITION_MOVE;
     CD_INFO("positionMove(%d,%f) f[end]\n", j, ref);
 
     return true;
@@ -103,7 +103,7 @@ bool roboticslab::FakeControlboard::positionMove(const double *refs)
         }
 
         CD_INFO("velRaw[%d]: %f\n", motor, velRaw[motor]);
-        jointStatus[motor] = 1;
+        jointStatus[motor] = POSITION_MOVE;
 
         if (std::abs(targetExposed[motor] - encsExposed[motor]) < jointTol[motor])
         {
@@ -155,7 +155,7 @@ bool roboticslab::FakeControlboard::relativeMove(int j, double delta)
         velRaw[j] = -(refSpeed[j] * velRawExposed[j]);
     }
 
-    jointStatus[j] = 2;
+    jointStatus[j] = RELATIVE_MOVE;
     CD_INFO("relativeMove(%d,%f) f[end]\n", j, delta);
 
     return true;
@@ -195,7 +195,7 @@ bool roboticslab::FakeControlboard::relativeMove(const double *deltas)  // encEx
       targetExposed[motor] = encsExposed[motor] + deltas[motor];
       velRaw[motor] = ((deltas[motor]) / time_max_dist) * velRawExposed[motor];
       CD_INFO("velRaw[%d]: %f\n", motor, velRaw[motor]);
-      jointStatus[motor] = 2;
+      jointStatus[motor] = RELATIVE_MOVE;
     }
 
     CD_INFO("relativeMove() f[end]\n");
@@ -213,7 +213,7 @@ bool roboticslab::FakeControlboard::checkMotionDone(int j, bool *flag)
 
     bool done = true;
     
-    if (jointStatus[j] > 0)
+    if (jointStatus[j] != NOT_MOVING)
     {
         done = false;
     }
@@ -230,7 +230,7 @@ bool roboticslab::FakeControlboard::checkMotionDone(bool *flag)
 
     for (unsigned int i = 0; i < axes; i++)
     {
-        if (jointStatus[i] > 0)
+        if (jointStatus[i] != NOT_MOVING)
         {
             done = false;
         }
@@ -360,7 +360,7 @@ bool roboticslab::FakeControlboard::stop(int j)
     CD_DEBUG("stop(%d)\n", j);
 
     velRaw[j] = 0.0;
-    jointStatus[j] = 0;
+    jointStatus[j] = NOT_MOVING;
 
     return true;
 }

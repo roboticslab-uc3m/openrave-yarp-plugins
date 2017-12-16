@@ -21,7 +21,7 @@ bool roboticslab::FakeControlboard::velocityMove(int j, double sp)  // velExpose
     }
 
     velRaw[j] = sp * velRawExposed[j];
-    jointStatus[j] = 3;
+    jointStatus[j] = VELOCITY_MOVE;
 
     return true;
 }

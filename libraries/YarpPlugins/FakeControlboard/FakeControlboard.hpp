@@ -894,15 +894,19 @@ public:
 
 private:
 
+    enum jmc_state { NOT_MOVING, POSITION_MOVE, RELATIVE_MOVE, VELOCITY_MOVE };
+
     // General Joint Motion Controller parameters //
     unsigned int axes;
-    //
     int modePosVel;
     double lastTime;
+
     yarp::os::Semaphore encRawMutex;  // SharedArea
+
+    std::vector<jmc_state> jointStatus;
+
     std::vector<double> encRaw;
     std::vector<double> encRawExposed;  // For conversion.
-    std::vector<int> jointStatus;
     std::vector<double> initPos;  // Exposed.
     std::vector<double> jointTol;  // Exposed.
     std::vector<double> maxLimit;  // Exposed.
@@ -912,6 +916,7 @@ private:
     std::vector<double> targetExposed;  // Exposed.
     std::vector<double> velRawExposed;  // For conversion.
     std::vector<double> velRaw;
+
     double jmcMs, jmcMsAcc;
 };
 

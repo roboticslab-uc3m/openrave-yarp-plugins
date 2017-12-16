@@ -157,7 +157,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
 
     for (unsigned int i = 0; i < axes; i++)
     {
-        jointStatus[i] = 0;
+        jointStatus[i] = NOT_MOVING;
 
         if (!refSpeeds)
         {
