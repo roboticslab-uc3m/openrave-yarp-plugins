@@ -25,7 +25,6 @@
 #define DEFAULT_GEN_REF_SPEED 7.5  // Exposed.
 #define DEFAULT_GEN_VEL_RAW_EXPOSED 0.0174532925199433  // Ratio, 0.0174532925199433 is pi/180 (raw/exp)<->(rad/deg)
 #define DEFAULT_JMC_MS 20  // [ms]
-#define DEFAULT_JMC_MS_ACC 1  // multiplier
 #define DEFAULT_MODE_POS_VEL 0  // 0=Position, 1=Velocity.
 
 namespace roboticslab
@@ -895,11 +894,11 @@ public:
 private:
 
     enum jmc_state { NOT_MOVING, POSITION_MOVE, RELATIVE_MOVE, VELOCITY_MOVE };
-
     enum jmc_mode { POSITION_MODE, VELOCITY_MODE };
 
     // General Joint Motion Controller parameters //
     unsigned int axes;
+    double jmcMs;
     jmc_mode modePosVel;
     double lastTime;
 
@@ -918,8 +917,6 @@ private:
     std::vector<double> targetExposed;  // Exposed.
     std::vector<double> velRawExposed;  // For conversion.
     std::vector<double> velRaw;
-
-    double jmcMs, jmcMsAcc;
 };
 
 }  // namespace roboticslab

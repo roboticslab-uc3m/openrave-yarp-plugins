@@ -3,6 +3,7 @@
 #include "FakeControlboard.hpp"
 
 #include <yarp/os/Bottle.h>
+#include <yarp/os/Time.h>
 
 #include <ColorDebug.hpp>
 
@@ -11,7 +12,8 @@
 bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
 {
     axes = config.check("axes", DEFAULT_AXES, "number of axes to control").asInt();
-    
+    jmcMs = config.check("jmcMs", DEFAULT_JMC_MS, "period of JMC rate thread").asInt();
+
     double genInitPos = config.check("genInitPos", DEFAULT_GEN_INIT_POS, "general initialization positions").asDouble();
     double genJointTol = config.check("genJointTol", DEFAULT_GEN_JOINT_TOL, "general joint tolerances").asDouble();
     double genMaxLimit = config.check("genMaxLimit", DEFAULT_GEN_MAX_LIMIT, "general max limits").asDouble();
@@ -247,6 +249,8 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
     {
         setEncoder(i, initPos[i]);
     }
+
+    lastTime = yarp::os::Time::now();
 
     // Start the RateThread
     this->setRate(jmcMs);
