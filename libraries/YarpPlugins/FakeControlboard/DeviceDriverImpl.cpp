@@ -27,7 +27,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
         initPoss = config.find("initPoss").asList();
         CD_INFO("FakeControlboard using individual initPoss: %s\n", initPoss->toString().c_str());
 
-        if (initPoss->size() != axes)
+        if ((unsigned)initPoss->size() != axes)
         {
             CD_INFO("[warning] initPoss->size() != axes\n");
         }
@@ -45,7 +45,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
         jointTols = config.find("jointTols").asList();
         CD_INFO("FakeControlboard using individual jointTols: %s\n", jointTols->toString().c_str());
 
-        if (jointTols->size() != axes)
+        if ((unsigned)jointTols->size() != axes)
         {
             CD_INFO("[warning] jointTols->size() != axes\n");
         }
@@ -63,7 +63,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
         maxLimits = config.find("maxLimits").asList();
         CD_INFO("FakeControlboard using individual maxLimits: %s\n", maxLimits->toString().c_str());
 
-        if (maxLimits->size() != axes)
+        if ((unsigned)maxLimits->size() != axes)
         {
             CD_INFO("[warning] maxLimits->size() != axes\n");
         }
@@ -81,7 +81,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
         minLimits = config.find("minLimits").asList();
         CD_INFO("FakeControlboard using individual minLimits: %s\n", minLimits->toString().c_str());
         
-        if (minLimits->size() != axes)
+        if ((unsigned)minLimits->size() != axes)
         {
             CD_INFO("[warning] minLimits->size() != axes\n");
         }
@@ -99,7 +99,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
         refSpeeds = config.find("refSpeeds").asList();
         CD_INFO("FakeControlboard using individual refSpeeds: %s\n", refSpeeds->toString().c_str());
     
-        if (refSpeeds->size() != axes)
+        if ((unsigned)refSpeeds->size() != axes)
         {
             CD_INFO("[warning] refSpeeds->size() != axes\n");
         }
@@ -117,7 +117,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
         encRawExposeds = config.find("encRawExposeds").asList();
         CD_INFO("FakeControlboard using individual encRawExposeds: %s\n", encRawExposeds->toString().c_str());
      
-        if (encRawExposeds->size() != axes)
+        if ((unsigned)encRawExposeds->size() != axes)
         {
             CD_INFO("[warning] encRawExposeds->size() != axes\n");
         }
@@ -135,7 +135,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
         velRawExposeds = config.find("velRawExposeds").asList();
         CD_INFO("FakeControlboard using individual velRawExposeds: %s\n", velRawExposeds->toString().c_str());
 
-        if (velRawExposeds->size() != axes)
+        if ((unsigned)velRawExposeds->size() != axes)
         {
             CD_INFO("[warning] velRawExposeds->size() != axes\n");
         }
