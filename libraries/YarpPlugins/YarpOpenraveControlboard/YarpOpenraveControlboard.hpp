@@ -834,6 +834,18 @@ private:
      * @return Same value expressed in degrees.
      */
     inline double radToDeg(double rad) { return rad * 180.0 / M_PI; }
+
+    /**
+     * @brief Converts degrees to radians, unless joint j is prismatic.
+     * @param j Axis to check
+     * @param deg Angle value expressed in degrees.
+     * @return Same value expressed in radians.
+     */
+    inline double degToRadIfNotPrismatic(int j, double deg)
+    {
+        if( (vectorOfJointPtr[j])->IsPrismatic(0) ) return deg;
+        else return degToRad(deg);  //  revolute, circular
+    }
 };
 
 }  // namespace roboticslab

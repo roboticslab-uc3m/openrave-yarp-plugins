@@ -22,7 +22,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         return false;
     }
 
-    OpenRAVE::dReal dofTargetRads = ref * M_PI / 180.0;  // ref comes in exposed
+    OpenRAVE::dReal dofTargetRads = degToRadIfNotPrismatic(j, ref);  // ref comes in exposed
 
     //-- Store the targets
     manipulatorTargetRads[ j ] = dofTargetRads;
