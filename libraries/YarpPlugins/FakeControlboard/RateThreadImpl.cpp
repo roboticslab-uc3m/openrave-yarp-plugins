@@ -2,42 +2,65 @@
 
 #include "FakeControlboard.hpp"
 
+#include <yarp/os/Time.h>
+
+#include <ColorDebug.hpp>
+
 // ------------------- RateThread Related ------------------------------------
 
-bool roboticslab::FakeControlboard::threadInit() {
-    printf("[FakeControlboard] success: threadInit()\n");
+bool roboticslab::FakeControlboard::threadInit()
+{
+    CD_SUCCESS("\n");
     lastTime = yarp::os::Time::now();
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-void roboticslab::FakeControlboard::run() {
-    for(unsigned int motor=0;motor<axes;motor++){
-        setEncRaw(motor, getEncRaw(motor)+(velRaw[motor])*(yarp::os::Time::now()-lastTime));
-        if((jointStatus[motor]==1)||(jointStatus[motor]==2)||(jointStatus[motor]==3)) {  // if set to move...
-            if ((getEncExposed(motor) > maxLimit[motor])  && (velRaw[motor]>0)) {  // SW max JL
+void roboticslab::FakeControlboard::run()
+{
+    std::vector<double> encsRaw = getEncsRaw();
+    std::vector<double> encsExposed = getEncsExposed();
+
+    const double now = yarp::os::Time::now();
+
+    for (unsigned int motor = 0; motor < axes; motor++)
+    {
+        encsRaw[motor] += velRaw[motor] * (now - lastTime);
+
+        if (jointStatus[motor] != NOT_MOVING)  // if set to move...
+        {
+            if (encsExposed[motor] > maxLimit[motor] && velRaw[motor] > 0)  // SW max JL
+            {
                 stop(motor);  // puts jointStatus[motor]=0;
-                fprintf(stderr,"[FakeControlboard] warning: Moving joint q%d at configured max joint limit, stopping.\n",motor+1);
-            } else if ((getEncExposed(motor) < minLimit[motor]) && (velRaw[motor]<0)) {  // SW min JL
+                CD_WARNING("Moving joint q%d at configured max joint limit, stopping.\n", motor + 1);
+            }
+            else if (encsExposed[motor] < minLimit[motor] && velRaw[motor] < 0)  // SW min JL
+            {
                 stop(motor);  // puts jointStatus[motor]=0;
-                fprintf(stderr,"[FakeControlboard] warning: Moving joint q%d at configured min joint limit, stopping.\n",motor+1);
-            } else if((jointStatus[motor]==1)||(jointStatus[motor]==2)) {  // check if target reached in pos or rel
-                if ( (velRaw[motor] > 0) &&  // moving positive...
-                    (getEncExposed(motor) > (targetExposed[motor]-jointTol[motor])) ) {
+                CD_WARNING("Moving joint q%d at configured min joint limit, stopping.\n", motor + 1);
+            }
+            else if (jointStatus[motor] == POSITION_MOVE || jointStatus[motor] == RELATIVE_MOVE)  // check if target reached in pos or rel
+            {
+                if (velRaw[motor] > 0 &&  // moving positive...
+                    encsExposed[motor] > (targetExposed[motor] - jointTol[motor]))
+                {
                     stop(motor);  // puts jointStatus[motor]=0;
-                    printf("[FakeControlboard] Joint q%d reached target.\n",motor+1);
-                } else if ( (velRaw[motor] < 0) &&  // moving negative...
-                    (getEncExposed(motor) < (targetExposed[motor]+jointTol[motor])) ) {
+                    CD_INFO("Joint q%d reached target.\n", motor + 1);
+                }
+                else if (velRaw[motor] < 0 &&  // moving negative...
+                    encsExposed[motor] < (targetExposed[motor] + jointTol[motor]))
+                {
                     stop(motor);  // puts jointStatus[motor]=0;
-                    printf("[FakeControlboard] Joint q%d reached target.\n",motor+1);
+                    CD_INFO("Joint q%d reached target.\n", motor + 1);
                 }
             }
         }
     }
-    lastTime = yarp::os::Time::now();
 
+    setEncsRaw(encsRaw);
+
+    lastTime = yarp::os::Time::now();
 }
 
 // -----------------------------------------------------------------------------
-
