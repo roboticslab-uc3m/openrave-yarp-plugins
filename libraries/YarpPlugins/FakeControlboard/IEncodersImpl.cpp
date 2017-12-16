@@ -40,14 +40,15 @@ bool roboticslab::FakeControlboard::setEncoder(int j, double val)
 
 bool roboticslab::FakeControlboard::setEncoders(const double *vals)
 {
-    bool ok = true;
+    std::vector<double> v(axes);
 
     for (unsigned int i = 0; i < axes; i++)
     {
-        ok &= setEncoder(i, vals[i]);
+        v[i] = vals[i] * encRawExposed[i];
     }
 
-    return ok;
+    setEncsRaw(v);
+    return true;
 }
 
 // -----------------------------------------------------------------------------
@@ -62,14 +63,14 @@ bool roboticslab::FakeControlboard::getEncoder(int j, double *v)
 
 bool roboticslab::FakeControlboard::getEncoders(double *encs)
 {
-    bool ok = true;
+    std::vector<double> v = getEncsExposed();
 
     for (unsigned int i = 0; i < axes; i++)
     {
-        ok &= getEncoder(i, &encs[i]);
+        encs[i] = v[i];
     }
 
-    return ok;
+    return true;
 }
 
 // -----------------------------------------------------------------------------

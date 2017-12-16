@@ -4,10 +4,10 @@
 
 // ----------------------------------------------------------------------------
 
-void roboticslab::FakeControlboard::setEncRaw(const int Index, const double Position)
+void roboticslab::FakeControlboard::setEncRaw(const int index, const double position)
 {
     encRawMutex.wait();
-    encRaw[Index] = Position;
+    encRaw[index] = position;
     encRawMutex.post();
 }
 
