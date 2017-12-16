@@ -33,16 +33,16 @@ install:
   - cd ../..
   #-- Install kdl
   - sudo apt-get install libeigen3-dev
-  - git clone https://github.com/orocos/orocos_kinematics_dynamics
+  - git clone --branch master https://github.com/orocos/orocos_kinematics_dynamics
   - cd orocos_kinematics_dynamics/orocos_kdl && mkdir build && cd build
   - cmake ..
   - make
   - sudo make install
   - cd ../../..
   #-- Install OpenRAVE
-  - git clone --branch latest_stable https://github.com/rdiankov/openrave.git
+  - git clone --branch master https://github.com/rdiankov/openrave.git
   - cd openrave && mkdir build && cd build
-  - cmake .. -DOPENRAVE_PLUGIN_FCLRAVE=OFF
+  - cmake .. -DOPT_COLLADA=OFF # remove this entry once rdiankov/openrave#540 is merged
   - make
   - sudo make install
   - cd ../..
