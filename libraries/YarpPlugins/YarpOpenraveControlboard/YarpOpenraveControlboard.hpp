@@ -846,6 +846,18 @@ private:
         if( (vectorOfJointPtr[j])->IsPrismatic(0) ) return deg;
         else return degToRad(deg);  //  revolute, circular
     }
+
+    /**
+     * @brief Converts radians to degrees, unless joint j is prismatic.
+     * @param j Axis to check
+     * @param rad Angle value expressed in radians.
+     * @return Same value expressed in radians.
+     */
+    inline double radToDegIfNotPrismatic(int j, double rad)
+    {
+        if( (vectorOfJointPtr[j])->IsPrismatic(0) ) return rad;
+        else return radToDeg(rad);  //  revolute, circular
+    }
 };
 
 }  // namespace roboticslab
