@@ -820,6 +820,20 @@ private:
     std::vector< int > manipulatorIDs;
     std::vector<OpenRAVE::dReal> manipulatorTargetRads;
     std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
+
+    /**
+     * @brief Converts degrees to radians.
+     * @param deg Angle value expressed in degrees.
+     * @return Same value expressed in radians.
+     */
+    inline double degToRad(double deg) { return deg * M_PI / 180.0; }
+
+    /**
+     * @brief Converts radians to degrees.
+     * @param rad Angle value expressed in radians.
+     * @return Same value expressed in degrees.
+     */
+    inline double radToDeg(double rad) { return rad * 180.0 / M_PI; }
 };
 
 }  // namespace roboticslab
