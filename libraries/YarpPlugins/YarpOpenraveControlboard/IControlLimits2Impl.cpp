@@ -60,7 +60,7 @@ bool roboticslab::YarpOpenraveControlboard::setVelLimits(int axis, double min, d
 bool roboticslab::YarpOpenraveControlboard::getVelLimits(int axis, double *min, double *max) {
 
     //*min = 0;  // This would be a lower limit hard-coded to 0.
-    //*max = vectorOfJointPtr[axis]->GetMaxVel() * 180.0/M_PI;
+    //*max = radToDegIfNotPrismatic(axis,vectorOfJointPtr[axis]->GetMaxVel());
     //CD_INFO("(GetMaxVel) Velocity Limits %d: [%f, %f]\n",axis,*min,*max);
 
     std::pair<OpenRAVE::dReal, OpenRAVE::dReal> velLimits = vectorOfJointPtr[axis]->GetVelocityLimit();
