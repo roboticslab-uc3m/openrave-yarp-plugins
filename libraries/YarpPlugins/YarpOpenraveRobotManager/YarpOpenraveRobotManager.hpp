@@ -21,8 +21,6 @@
 
 #include "ColorDebug.hpp"
 
-#define DEFAULT_GEN_REF_SPEED 7.5  // Exposed.
-
 namespace roboticslab
 {
 
@@ -110,11 +108,9 @@ private:
 
     //OpenRAVE//
     OpenRAVE::ControllerBasePtr pcontrol;
-
-    // Specific for --env parameter with --view
-    boost::thread_group openraveThreads;
 };
 
 }  // namespace roboticslab
 
 #endif  // __YARP_OPENRAVE_ROBOT_MANAGER_HPP__
+
