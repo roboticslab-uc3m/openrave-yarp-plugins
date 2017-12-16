@@ -2,11 +2,14 @@
 
 #include "FakeControlboard.hpp"
 
+#include <yarp/os/Time.h>
+
 #include <ColorDebug.hpp>
 
 // ------------------- RateThread Related ------------------------------------
 
-bool roboticslab::FakeControlboard::threadInit() {
+bool roboticslab::FakeControlboard::threadInit()
+{
     CD_SUCCESS("\n");
     lastTime = yarp::os::Time::now();
     return true;
@@ -14,29 +17,40 @@ bool roboticslab::FakeControlboard::threadInit() {
 
 // -----------------------------------------------------------------------------
 
-void roboticslab::FakeControlboard::run() {
+void roboticslab::FakeControlboard::run()
+{
     std::vector<double> encsRaw = getEncsRaw();
     std::vector<double> encsExposed = getEncsExposed();
 
     const double now = yarp::os::Time::now();
 
-    for (unsigned int motor = 0; motor < axes; motor++) {
+    for (unsigned int motor = 0; motor < axes; motor++)
+    {
         encsRaw[motor] += velRaw[motor] * (now - lastTime);
 
-        if (jointStatus[motor] == 1 || jointStatus[motor] == 2 || jointStatus[motor] == 3) {  // if set to move...
-            if (encsExposed[motor] > maxLimit[motor] && velRaw[motor] > 0) {  // SW max JL
+        if (jointStatus[motor] == 1 || jointStatus[motor] == 2 || jointStatus[motor] == 3)  // if set to move...
+        {
+            if (encsExposed[motor] > maxLimit[motor] && velRaw[motor] > 0)  // SW max JL
+            {
                 stop(motor);  // puts jointStatus[motor]=0;
                 CD_WARNING("Moving joint q%d at configured max joint limit, stopping.\n", motor + 1);
-            } else if (encsExposed[motor] < minLimit[motor] && velRaw[motor] < 0) {  // SW min JL
+            }
+            else if (encsExposed[motor] < minLimit[motor] && velRaw[motor] < 0)  // SW min JL
+            {
                 stop(motor);  // puts jointStatus[motor]=0;
                 CD_WARNING("Moving joint q%d at configured min joint limit, stopping.\n", motor + 1);
-            } else if (jointStatus[motor] == 1 || jointStatus[motor] == 2) {  // check if target reached in pos or rel
+            }
+            else if (jointStatus[motor] == 1 || jointStatus[motor] == 2)  // check if target reached in pos or rel
+            {
                 if (velRaw[motor] > 0 &&  // moving positive...
-                    encsExposed[motor] > (targetExposed[motor] - jointTol[motor])) {
+                    encsExposed[motor] > (targetExposed[motor] - jointTol[motor]))
+                {
                     stop(motor);  // puts jointStatus[motor]=0;
                     CD_INFO("Joint q%d reached target.\n", motor + 1);
-                } else if (velRaw[motor] < 0 &&  // moving negative...
-                    encsExposed[motor] < (targetExposed[motor] + jointTol[motor])) {
+                }
+                else if (velRaw[motor] < 0 &&  // moving negative...
+                    encsExposed[motor] < (targetExposed[motor] + jointTol[motor]))
+                {
                     stop(motor);  // puts jointStatus[motor]=0;
                     CD_INFO("Joint q%d reached target.\n", motor + 1);
                 }

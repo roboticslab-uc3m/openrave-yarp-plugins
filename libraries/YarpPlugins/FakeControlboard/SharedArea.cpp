@@ -4,8 +4,8 @@
 
 // ----------------------------------------------------------------------------
 
-void roboticslab::FakeControlboard::setEncRaw(const int Index, const double Position) {
-    // printf("[SharedArea] setEncRaw.\n");
+void roboticslab::FakeControlboard::setEncRaw(const int Index, const double Position)
+{
     encRawMutex.wait();
     encRaw[Index] = Position;
     encRawMutex.post();
@@ -13,48 +13,55 @@ void roboticslab::FakeControlboard::setEncRaw(const int Index, const double Posi
 
 // ----------------------------------------------------------------------------
 
-void roboticslab::FakeControlboard::setEncsRaw(const std::vector<double> & Positions) {
+void roboticslab::FakeControlboard::setEncsRaw(const std::vector<double> & positions)
+{
     encRawMutex.wait();
-    encRaw = Positions;
+    encRaw = positions;
     encRawMutex.post();
 }
 
 // ----------------------------------------------------------------------------
 
-double roboticslab::FakeControlboard::getEncRaw(const int Index) {
-    // printf("[SharedArea] getEncRaw.\n");
-    double Position;
+double roboticslab::FakeControlboard::getEncRaw(const int index)
+{
+    double position;
     encRawMutex.wait();
-    Position = encRaw[Index];
+    position = encRaw[index];
     encRawMutex.post();
-    return Position;
+    return position;
 }
 
 // ----------------------------------------------------------------------------
 
-std::vector<double> roboticslab::FakeControlboard::getEncsRaw() {
-    std::vector<double> Positions;
+std::vector<double> roboticslab::FakeControlboard::getEncsRaw()
+{
+    std::vector<double> positions;
     encRawMutex.wait();
-    Positions = encRaw;
+    positions = encRaw;
     encRawMutex.post();
-    return Positions;
+    return positions;
 }
 
 // ----------------------------------------------------------------------------
 
-double roboticslab::FakeControlboard::getEncExposed(const int Index) {
-    double RawPosition = getEncRaw(Index);
-    return RawPosition / encRawExposed[Index];
+double roboticslab::FakeControlboard::getEncExposed(const int index)
+{
+    double rawPosition = getEncRaw(index);
+    return rawPosition / encRawExposed[index];
 }
 
 // ----------------------------------------------------------------------------
 
-std::vector<double> roboticslab::FakeControlboard::getEncsExposed() {
-    std::vector<double> RawPositions = getEncsRaw();
-    for (unsigned int i = 0; i < RawPositions.size(); i++) {
-        RawPositions[i] /= encRawExposed[i];
+std::vector<double> roboticslab::FakeControlboard::getEncsExposed()
+{
+    std::vector<double> rawPositions = getEncsRaw();
+
+    for (unsigned int i = 0; i < rawPositions.size(); i++)
+    {
+        rawPositions[i] /= encRawExposed[i];
     }
-    return RawPositions;
+
+    return rawPositions;
 }
 
 // ----------------------------------------------------------------------------

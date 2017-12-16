@@ -2,20 +2,27 @@
 
 #include "FakeControlboard.hpp"
 
+#include <yarp/os/Time.h>
+
 // ------------------ IEncodersTimed Related -----------------------------------------
 
-bool roboticslab::FakeControlboard::getEncodersTimed(double *encs, double *time) {
+bool roboticslab::FakeControlboard::getEncodersTimed(double *encs, double *time)
+{
     //CD_INFO("\n");  //-- Way too verbose
-
     bool ok = true;
-    for(unsigned int i=0; i < axes; i++)
-        ok &= getEncoderTimed(i,&(encs[i]),&(time[i]));
+
+    for (unsigned int i = 0; i < axes; i++)
+    {
+        ok &= getEncoderTimed(i, &(encs[i]), &(time[i]));
+    }
+
     return ok;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::FakeControlboard::getEncoderTimed(int j, double *encs, double *time) {
+bool roboticslab::FakeControlboard::getEncoderTimed(int j, double *encs, double *time)
+{
     //CD_INFO("(%d)\n",j);  //-- Way too verbose
 
     getEncoder(j, encs);
