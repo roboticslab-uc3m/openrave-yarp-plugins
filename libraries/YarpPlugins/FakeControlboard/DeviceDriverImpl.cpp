@@ -46,7 +46,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
 
         if ((unsigned)initPoss->size() != axes)
         {
-            CD_INFO("[warning] initPoss->size() != axes\n");
+            CD_WARNING("initPoss->size() != axes\n");
         }
     }
     else
@@ -64,7 +64,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
 
         if ((unsigned)jointTols->size() != axes)
         {
-            CD_INFO("[warning] jointTols->size() != axes\n");
+            CD_WARNING("jointTols->size() != axes\n");
         }
     }
     else
@@ -82,7 +82,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
 
         if ((unsigned)maxLimits->size() != axes)
         {
-            CD_INFO("[warning] maxLimits->size() != axes\n");
+            CD_WARNING("maxLimits->size() != axes\n");
         }
     }
     else
@@ -100,7 +100,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
         
         if ((unsigned)minLimits->size() != axes)
         {
-            CD_INFO("[warning] minLimits->size() != axes\n");
+            CD_WARNING("minLimits->size() != axes\n");
         }
     }
     else
@@ -118,7 +118,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
     
         if ((unsigned)refSpeeds->size() != axes)
         {
-            CD_INFO("[warning] refSpeeds->size() != axes\n");
+            CD_WARNING("refSpeeds->size() != axes\n");
         }
     }
     else
@@ -136,7 +136,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
      
         if ((unsigned)encRawExposeds->size() != axes)
         {
-            CD_INFO("[warning] encRawExposeds->size() != axes\n");
+            CD_WARNING("encRawExposeds->size() != axes\n");
         }
     }
     else
@@ -154,7 +154,7 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
 
         if ((unsigned)velRawExposeds->size() != axes)
         {
-            CD_INFO("[warning] velRawExposeds->size() != axes\n");
+            CD_WARNING("velRawExposeds->size() != axes\n");
         }
     }
     else
@@ -176,68 +176,13 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
     {
         jointStatus[i] = NOT_MOVING;
 
-        if (!refSpeeds)
-        {
-            refSpeed[i] = genRefSpeed;
-        }
-        else
-        {
-            refSpeed[i] = refSpeeds->get(i).asDouble();
-        }
-
-        if (!minLimits)
-        {
-            minLimit[i] = genMinLimit;
-        }
-        else
-        {
-            minLimit[i] = minLimits->get(i).asDouble();
-        }
-
-        if (!maxLimits)
-        {
-            maxLimit[i] = genMaxLimit;
-        }
-        else
-        {
-            maxLimit[i] = maxLimits->get(i).asDouble();
-        }
-
-        if (!initPoss)
-        {
-            initPos[i] = genInitPos;
-        }
-        else
-        {
-            initPos[i] = initPoss->get(i).asDouble();
-        }
-
-        if (!jointTols)
-        {
-            jointTol[i] = genJointTol;
-        }
-        else
-        {
-            jointTol[i] = jointTols->get(i).asDouble();
-        }
-
-        if (!encRawExposeds)
-        {
-            encRawExposed[i] = genEncRawExposed;
-        }
-        else
-        {
-            encRawExposed[i] = encRawExposeds->get(i).asDouble();
-        }
-
-        if (!velRawExposeds)
-        {
-            velRawExposed[i] = genVelRawExposed;
-        }
-        else
-        {
-            velRawExposed[i] = velRawExposeds->get(i).asDouble();
-        }
+        refSpeed[i]      = refSpeeds      ? refSpeeds->get(i).asDouble()      : genRefSpeed;
+        minLimit[i]      = minLimits      ? minLimits->get(i).asDouble()      : genMinLimit;
+        maxLimit[i]      = maxLimits      ? maxLimits->get(i).asDouble()      : genMaxLimit;
+        initPos[i]       = initPoss       ? initPoss->get(i).asDouble()       : genInitPos;
+        jointTol[i]      = jointTols      ? jointTols->get(i).asDouble()      : genJointTol;
+        encRawExposed[i] = encRawExposeds ? encRawExposeds->get(i).asDouble() : genEncRawExposed;
+        velRawExposed[i] = velRawExposeds ? velRawExposeds->get(i).asDouble() : genVelRawExposed;
     }
 
     encRaw.resize(axes, 0.0);
@@ -253,8 +198,8 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
     lastTime = yarp::os::Time::now();
 
     // Start the RateThread
-    this->setRate(jmcMs);
-    this->start();
+    RateThread::setRate(jmcMs);
+    RateThread::start();
     
     return true;
 }

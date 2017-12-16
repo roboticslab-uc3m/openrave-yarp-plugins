@@ -16,10 +16,15 @@ bool roboticslab::FakeControlboard::setVelLimits(int axis, double min, double ma
 
 bool roboticslab::FakeControlboard::getVelLimits(int axis, double *min, double *max)
 {
-    if(axis>=int(axes)) return false;
+    if (axis >= int(axes))
+    {
+        return false;
+    }
+
     // yarpmotorgui's defaults (partitem.cpp)
     *min = 0;
     *max = 100;
+
     return true;
 }
 

@@ -16,7 +16,7 @@ bool roboticslab::FakeControlboard::getAxes(int *ax)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::FakeControlboard::positionMove(int j, double ref)
+bool roboticslab::FakeControlboard::positionMove(int j, double ref)  // encExposed = ref;
 {
     if ((unsigned int)j > axes)
     {
@@ -27,7 +27,7 @@ bool roboticslab::FakeControlboard::positionMove(int j, double ref)
     // Check if we are in position mode.
     if (modePosVel != POSITION_MODE)
     {  
-        CD_WARNING("will not positionMove as not in positionMode\n");
+        CD_ERROR("will not positionMove as not in positionMode\n");
         return false;
     }
 
@@ -62,7 +62,7 @@ bool roboticslab::FakeControlboard::positionMove(int j, double ref)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::FakeControlboard::positionMove(const double *refs)
+bool roboticslab::FakeControlboard::positionMove(const double *refs)  // encExposed = refs;
 {
     // Check if we are in position mode.
     if (modePosVel != POSITION_MODE)
@@ -79,7 +79,7 @@ bool roboticslab::FakeControlboard::positionMove(const double *refs)
 
     for (unsigned int motor = 0; motor < axes; motor++)
     {
-        CD_INFO("dist[%d]: %f\n", motor, std::abs(refs[motor]- encsExposed[motor]));
+        CD_INFO("dist[%d]: %f\n", motor, std::abs(refs[motor] - encsExposed[motor]));
         CD_INFO("refSpeed[%d]: %f\n", motor, refSpeed[motor]);
 
         if (std::abs((refs[motor] - encsExposed[motor]) / refSpeed[motor]) > max_time)
@@ -352,12 +352,12 @@ bool roboticslab::FakeControlboard::getRefAccelerations(double *accs)
 
 bool roboticslab::FakeControlboard::stop(int j)
 {
+    CD_DEBUG("stop(%d)\n", j);
+
     if ((unsigned int)j > axes)
     {
         return false;
     }
-
-    CD_DEBUG("stop(%d)\n", j);
 
     velRaw[j] = 0.0;
     jointStatus[j] = NOT_MOVING;

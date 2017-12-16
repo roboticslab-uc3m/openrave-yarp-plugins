@@ -30,7 +30,7 @@ bool roboticslab::FakeControlboard::resetEncoders()
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::FakeControlboard::setEncoder(int j, double val)
+bool roboticslab::FakeControlboard::setEncoder(int j, double val)  // encExposed = val;
 {
     setEncRaw(j, val * encRawExposed[j]);
     return true;

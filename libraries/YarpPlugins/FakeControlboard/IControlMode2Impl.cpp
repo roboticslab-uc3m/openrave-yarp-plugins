@@ -8,7 +8,7 @@
 
 bool roboticslab::FakeControlboard::getControlModes(const int n_joint, const int *joints, int *modes)
 {
-    CD_INFO("(%d)\n", n_joint);
+    CD_DEBUG("(%d)\n", n_joint);
     bool ok = true;
 
     for (int i = 0; i < n_joint; i++)
@@ -23,7 +23,7 @@ bool roboticslab::FakeControlboard::getControlModes(const int n_joint, const int
 
 bool roboticslab::FakeControlboard::setControlMode(const int j, const int mode)
 {
-    CD_INFO("(%d)\n", j);
+    CD_DEBUG("(%d)\n", j);
 
     if ((unsigned int)j > axes)
     {
@@ -52,7 +52,7 @@ bool roboticslab::FakeControlboard::setControlMode(const int j, const int mode)
 
 bool roboticslab::FakeControlboard::setControlModes(const int n_joint, const int *joints, int *modes)
 {
-    CD_INFO("(%d)\n", n_joint);
+    CD_DEBUG("(%d)\n", n_joint);
     bool ok = true;
 
     for (int j = 0; j < n_joint; j++)
@@ -67,7 +67,7 @@ bool roboticslab::FakeControlboard::setControlModes(const int n_joint, const int
 
 bool roboticslab::FakeControlboard::setControlModes(int *modes)
 {
-    CD_INFO("\n");
+    CD_DEBUG("\n");
     bool ok = true;
 
     for (unsigned int i = 0; i < axes; i++)

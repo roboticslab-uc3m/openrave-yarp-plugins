@@ -18,7 +18,7 @@ bool roboticslab::FakeControlboard::setPositionMode(int j)
     // Do anything additional before setting flag to pos...
     if (!stop(j))
     {
-        CD_WARNING("failed to stop joint %d\n", j);
+        CD_ERROR("failed to stop joint %d\n", j);
         return false;
     }
 
@@ -55,7 +55,7 @@ bool roboticslab::FakeControlboard::setImpedancePositionMode(int j)
 
 bool roboticslab::FakeControlboard::setImpedanceVelocityMode(int j)
 {
-    CD_INFO("(%d)\n", j);
+    CD_DEBUG("(%d)\n", j);
     return true;
 }
 
@@ -98,7 +98,7 @@ bool roboticslab::FakeControlboard::getControlModes(int *modes)
 
     for (unsigned int i = 0; i < axes; i++)
     {
-        ok &= getControlMode(i, &(modes[i]));
+        ok &= getControlMode(i, &modes[i]);
     }
 
     return ok;
