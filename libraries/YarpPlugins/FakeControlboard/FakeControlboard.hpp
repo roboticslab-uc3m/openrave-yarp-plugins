@@ -896,9 +896,11 @@ private:
 
     enum jmc_state { NOT_MOVING, POSITION_MOVE, RELATIVE_MOVE, VELOCITY_MOVE };
 
+    enum jmc_mode { POSITION_MODE, VELOCITY_MODE };
+
     // General Joint Motion Controller parameters //
     unsigned int axes;
-    int modePosVel;
+    jmc_mode modePosVel;
     double lastTime;
 
     yarp::os::Semaphore encRawMutex;  // SharedArea

@@ -25,7 +25,7 @@ bool roboticslab::FakeControlboard::positionMove(int j, double ref)
     }
 
     // Check if we are in position mode.
-    if (modePosVel != 0)
+    if (modePosVel != POSITION_MODE)
     {  
         CD_WARNING("will not positionMove as not in positionMode\n");
         return false;
@@ -65,7 +65,7 @@ bool roboticslab::FakeControlboard::positionMove(int j, double ref)
 bool roboticslab::FakeControlboard::positionMove(const double *refs)
 {
     // Check if we are in position mode.
-    if (modePosVel != 0)
+    if (modePosVel != POSITION_MODE)
     {
         CD_ERROR("Will not positionMove as not in positionMode\n");
         return false;
@@ -126,7 +126,7 @@ bool roboticslab::FakeControlboard::relativeMove(int j, double delta)
     }
 
     // Check if we are in position mode.
-    if (modePosVel != 0)
+    if (modePosVel != POSITION_MODE)
     {
         CD_ERROR("FakeControlboard will not relativeMove as not in positionMode\n");
         return false;
@@ -166,7 +166,7 @@ bool roboticslab::FakeControlboard::relativeMove(int j, double delta)
 bool roboticslab::FakeControlboard::relativeMove(const double *deltas)  // encExposed = deltas + encExposed
 {
     // Check if we are in position mode.
-    if (modePosVel != 0)
+    if (modePosVel != POSITION_MODE)
     {
         CD_ERROR("will not relativeMove as not in positionMode\n");
         return false;

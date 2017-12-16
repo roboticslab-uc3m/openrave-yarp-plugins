@@ -11,6 +11,7 @@
 bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
 {
     axes = config.check("axes", DEFAULT_AXES, "number of axes to control").asInt();
+    
     double genInitPos = config.check("genInitPos", DEFAULT_GEN_INIT_POS, "general initialization positions").asDouble();
     double genJointTol = config.check("genJointTol", DEFAULT_GEN_JOINT_TOL, "general joint tolerances").asDouble();
     double genMaxLimit = config.check("genMaxLimit", DEFAULT_GEN_MAX_LIMIT, "general max limits").asDouble();
@@ -18,7 +19,21 @@ bool roboticslab::FakeControlboard::open(yarp::os::Searchable& config)
     double genRefSpeed = config.check("genRefSpeed", DEFAULT_GEN_REF_SPEED, "general ref speed").asDouble();
     double genEncRawExposed = config.check("genEncRawExposed", DEFAULT_GEN_ENC_RAW_EXPOSED, "general EncRawExposed").asDouble();
     double genVelRawExposed = config.check("genVelRawExposed", DEFAULT_GEN_VEL_RAW_EXPOSED, "general VelRawExposed").asDouble();
-    modePosVel = config.check("modePosVel", DEFAULT_MODE_POS_VEL, "0:pos, 1:vel").asInt();
+    
+    int modePosVelInt = config.check("modePosVel", DEFAULT_MODE_POS_VEL, "0:pos, 1:vel").asInt();
+
+    switch (modePosVelInt)
+    {
+    case 0:
+        modePosVel = POSITION_MODE;
+        break;
+    case 1:
+        modePosVel = VELOCITY_MODE;
+        break;
+    default:
+        CD_ERROR("Unrecognized mode identifier: %d (0:pos, 1:vel).\n", modePosVelInt);
+        return false;
+    }
 
     yarp::os::Bottle* initPoss;
 

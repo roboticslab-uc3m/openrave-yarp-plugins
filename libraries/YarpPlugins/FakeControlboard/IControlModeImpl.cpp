@@ -10,7 +10,7 @@ bool roboticslab::FakeControlboard::setPositionMode(int j)
 {
     CD_DEBUG("(%d)\n", j);
 
-    if (modePosVel == 0)
+    if (modePosVel == POSITION_MODE)
     {
         return true;  // Simply return true if we were already in pos mode.
     }
@@ -22,7 +22,7 @@ bool roboticslab::FakeControlboard::setPositionMode(int j)
         return false;
     }
 
-    modePosVel = 0;
+    modePosVel = POSITION_MODE;
     return true;
 }
 
@@ -31,7 +31,7 @@ bool roboticslab::FakeControlboard::setPositionMode(int j)
 bool roboticslab::FakeControlboard::setVelocityMode(int j)
 {
     CD_DEBUG("(%d)\n", j);
-    modePosVel = 1;  // Set flag to vel.
+    modePosVel = VELOCITY_MODE;
     return true;
 }
 
@@ -72,11 +72,11 @@ bool roboticslab::FakeControlboard::setOpenLoopMode(int j)
 bool roboticslab::FakeControlboard::getControlMode(int j, int *mode)
 {
     // CD_DEBUG("\n");  //-- Way too verbose.
-    if (modePosVel == 0)
+    if (modePosVel == POSITION_MODE)
     {
         *mode = VOCAB_CM_POSITION;
     }
-    else if (modePosVel == 1)
+    else if (modePosVel == VELOCITY_MODE)
     {
         *mode = VOCAB_CM_VELOCITY;
     }
