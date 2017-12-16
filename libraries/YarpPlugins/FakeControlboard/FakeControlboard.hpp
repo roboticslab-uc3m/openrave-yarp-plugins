@@ -821,8 +821,11 @@ class FakeControlboard : public yarp::dev::DeviceDriver, public yarp::dev::IPosi
     // ----- Shared Area Funcion declarations. Implementation in SharedArea.cpp -----
 
         void setEncRaw(const int Index, const double Position);
+        void setEncsRaw(const std::vector<double> & Positions);
         double getEncRaw(const int Index);
+        std::vector<double> getEncsRaw();
         double getEncExposed(const int Index);
+        std::vector<double> getEncsExposed();
 
     // ------------------------------- Private -------------------------------------
 

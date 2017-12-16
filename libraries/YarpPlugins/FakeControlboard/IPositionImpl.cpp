@@ -26,11 +26,12 @@ bool roboticslab::FakeControlboard::positionMove(int j, double ref) {  // encExp
     CD_INFO("positionMove(%d,%f) f[begin]\n",j,ref);
     // Set all the private parameters of the Rave class that correspond to this kind of movement!
     targetExposed[j] = ref;
-    if (fabs(targetExposed[j]-getEncExposed(j))<jointTol[j]) {
+    double encExposed = getEncExposed(j);
+    if (fabs(targetExposed[j]- encExposed)<jointTol[j]) {
         stop(j);  // puts jointStatus[j]=0;
         CD_INFO("Joint q%d reached target.\n",j+1);
         return true;
-    } else if ( ref > getEncExposed(j) ) {
+    } else if ( ref > encExposed) {
         //if(!velocityMove(j, refSpeed[j])) return false;
         velRaw[j] = (refSpeed[j] * velRawExposed[j]);
     } else {
@@ -52,11 +53,12 @@ bool roboticslab::FakeControlboard::positionMove(const double *refs) {  // encEx
     CD_INFO("positionMove() f[begin]\n");
     // Find out the maximum time to move
     double max_time = 0;
+    std::vector<double> encsExposed = getEncsExposed();
     for(unsigned int motor=0;motor<axes;motor++) {
-        CD_INFO("dist[%d]: %f\n",motor,fabs(refs[motor]-getEncExposed(motor)));
+        CD_INFO("dist[%d]: %f\n",motor,fabs(refs[motor]- encsExposed[motor]));
         CD_INFO("refSpeed[%d]: %f\n",motor,refSpeed[motor]);
-        if (fabs((refs[motor]-getEncExposed(motor))/refSpeed[motor])>max_time) {
-            max_time = fabs((refs[motor]-getEncExposed(motor))/refSpeed[motor]);
+        if (fabs((refs[motor]- encsExposed[motor])/refSpeed[motor])>max_time) {
+            max_time = fabs((refs[motor]- encsExposed[motor])/refSpeed[motor]);
             CD_INFO(" -->candidate: %f\n",max_time);
         }
     }
@@ -64,11 +66,11 @@ bool roboticslab::FakeControlboard::positionMove(const double *refs) {  // encEx
     // Set all the private parameters of the Rave class that correspond to this kind of movement!
     for(unsigned int motor=0;motor<axes;motor++) {
         targetExposed[motor]=refs[motor];
-        velRaw[motor] = ((refs[motor]-getEncExposed(motor))/max_time)*velRawExposed[motor];
+        velRaw[motor] = ((refs[motor]- encsExposed[motor])/max_time)*velRawExposed[motor];
         if(velRaw[motor] != velRaw[motor]) velRaw[motor] = 0;  // protect against NaN
         CD_INFO("velRaw[%d]: %f\n",motor,velRaw[motor]);
         jointStatus[motor]=1;
-        if (fabs(targetExposed[motor]-getEncExposed(motor))<jointTol[motor]) {
+        if (fabs(targetExposed[motor]- encsExposed[motor])<jointTol[motor]) {
             stop(motor);  // puts jointStatus[motor]=0;
             CD_INFO("Joint q%d reached target.\n",motor+1);
         }
@@ -87,12 +89,13 @@ bool roboticslab::FakeControlboard::relativeMove(int j, double delta) {
     }
     CD_INFO("relativeMove(%d,%f) f[begin]\n",j,delta);
     // Set all the private parameters of the Rave class that correspond to this kind of movement!
-    targetExposed[j]=getEncExposed(j)+delta;
-    if (fabs(targetExposed[j]-getEncExposed(j))<jointTol[j]) {
+    double encExposed = getEncExposed(j);
+    targetExposed[j]= encExposed +delta;
+    if (fabs(targetExposed[j]- encExposed)<jointTol[j]) {
         stop(j);  // puts jointStatus[j]=0;
         CD_INFO("Joint q%d already at target.\n",j+1);
         return true;
-    } else if ( targetExposed[j] > getEncExposed(j) ) {
+    } else if ( targetExposed[j] > encExposed) {
         // if(!velocityMove(j, refSpeed[j])) return false;
         velRaw[j] = (refSpeed[j] * velRawExposed[j]);
     } else {
@@ -121,8 +124,9 @@ bool roboticslab::FakeControlboard::relativeMove(const double *deltas) {  // enc
             time_max_dist = max_dist/refSpeed[motor];  // the max_dist motor will be at refSpeed
         }
     // Set all the private parameters of the Rave class that correspond to this kind of movement!
+    std::vector<double> encsExposed = getEncsExposed();
     for(unsigned int motor=0; motor<axes; motor++) {
-      targetExposed[motor]=getEncExposed(motor)+deltas[motor];
+      targetExposed[motor]= encsExposed[motor] +deltas[motor];
       velRaw[motor] = ((deltas[motor])/time_max_dist)*velRawExposed[motor];
       CD_INFO("velRaw[%d]: %f\n",motor,velRaw[motor]);
       jointStatus[motor]=2;
