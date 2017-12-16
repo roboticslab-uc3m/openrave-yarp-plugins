@@ -820,6 +820,44 @@ private:
     std::vector< int > manipulatorIDs;
     std::vector<OpenRAVE::dReal> manipulatorTargetRads;
     std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
+
+    /**
+     * @brief Converts degrees to radians.
+     * @param deg Angle value expressed in degrees.
+     * @return Same value expressed in radians.
+     */
+    inline double degToRad(double deg) { return deg * M_PI / 180.0; }
+
+    /**
+     * @brief Converts radians to degrees.
+     * @param rad Angle value expressed in radians.
+     * @return Same value expressed in degrees.
+     */
+    inline double radToDeg(double rad) { return rad * 180.0 / M_PI; }
+
+    /**
+     * @brief Converts degrees to radians, unless joint j is prismatic.
+     * @param j Axis to check
+     * @param deg Angle value expressed in degrees.
+     * @return Same value expressed in radians.
+     */
+    inline double degToRadIfNotPrismatic(int j, double deg)
+    {
+        if( (vectorOfJointPtr[j])->IsPrismatic(0) ) return deg;
+        else return degToRad(deg);  //  revolute, circular
+    }
+
+    /**
+     * @brief Converts radians to degrees, unless joint j is prismatic.
+     * @param j Axis to check
+     * @param rad Angle value expressed in radians.
+     * @return Same value expressed in degrees.
+     */
+    inline double radToDegIfNotPrismatic(int j, double rad)
+    {
+        if( (vectorOfJointPtr[j])->IsPrismatic(0) ) return rad;
+        else return radToDeg(rad);  //  revolute, circular
+    }
 };
 
 }  // namespace roboticslab

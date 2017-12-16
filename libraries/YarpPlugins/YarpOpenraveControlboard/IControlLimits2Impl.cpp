@@ -10,8 +10,8 @@ bool roboticslab::YarpOpenraveControlboard::setLimits(int axis, double min, doub
     std::vector<OpenRAVE::dReal> vUpperLimit;
 
     //-- Our joints always have ony 1 DoF, therefore safe to use only [0].
-    vLowerLimit.push_back(min*M_PI/180.0);
-    vUpperLimit.push_back(max*M_PI/180.0);
+    vLowerLimit.push_back( degToRadIfNotPrismatic(axis,min) );
+    vUpperLimit.push_back( degToRadIfNotPrismatic(axis,max) );
 
     vectorOfJointPtr[axis]->SetLimits(vLowerLimit,vUpperLimit);
 
@@ -29,8 +29,8 @@ bool roboticslab::YarpOpenraveControlboard::getLimits(int axis, double *min, dou
     vectorOfJointPtr[axis]->GetLimits(vLowerLimit,vUpperLimit);
 
     //-- Our joints always have ony 1 DoF, therefore safe to use only [0].
-    *min = vLowerLimit[0]*180.0/M_PI;
-    *max = vUpperLimit[0]*180.0/M_PI;
+    *min = radToDegIfNotPrismatic(axis,vLowerLimit[0]);
+    *max = radToDegIfNotPrismatic(axis,vUpperLimit[0]);
 
     CD_INFO("Limits %d: [%f, %f]\n",axis,*min,*max);
 
@@ -48,7 +48,7 @@ bool roboticslab::YarpOpenraveControlboard::setVelLimits(int axis, double min, d
     }
 
     std::vector<OpenRAVE::dReal> vUpperLimitVel;
-    vUpperLimitVel.push_back( max * M_PI/180.0 );
+    vUpperLimitVel.push_back( degToRadIfNotPrismatic(axis,max) );
 
     vectorOfJointPtr[axis]->SetVelocityLimits(vUpperLimitVel);
 
@@ -60,12 +60,12 @@ bool roboticslab::YarpOpenraveControlboard::setVelLimits(int axis, double min, d
 bool roboticslab::YarpOpenraveControlboard::getVelLimits(int axis, double *min, double *max) {
 
     //*min = 0;  // This would be a lower limit hard-coded to 0.
-    //*max = vectorOfJointPtr[axis]->GetMaxVel() * 180.0/M_PI;
+    //*max = radToDegIfNotPrismatic(axis,vectorOfJointPtr[axis]->GetMaxVel());
     //CD_INFO("(GetMaxVel) Velocity Limits %d: [%f, %f]\n",axis,*min,*max);
 
     std::pair<OpenRAVE::dReal, OpenRAVE::dReal> velLimits = vectorOfJointPtr[axis]->GetVelocityLimit();
-    *min = velLimits.first * 180.0/M_PI;  // This lower limit is in fact hard-coded upstream to -(max).
-    *max = velLimits.second * 180.0/M_PI;
+    *min = radToDegIfNotPrismatic(axis, velLimits.first);  // This lower limit is in fact hard-coded upstream to -(max).
+    *max = radToDegIfNotPrismatic(axis, velLimits.second);
 
     //CD_INFO("(GetVelocityLimit) Velocity Limits %d: [%f, %f]\n",axis,*min,*max);
 

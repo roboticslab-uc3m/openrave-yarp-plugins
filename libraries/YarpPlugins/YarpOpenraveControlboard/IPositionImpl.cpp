@@ -22,7 +22,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         return false;
     }
 
-    OpenRAVE::dReal dofTargetRads = ref * M_PI / 180.0;  // ref comes in exposed
+    OpenRAVE::dReal dofTargetRads = degToRadIfNotPrismatic(j, ref);  // ref comes in exposed
 
     //-- Store the targets
     manipulatorTargetRads[ j ] = dofTargetRads;
@@ -106,9 +106,9 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
 
-        OpenRAVE::dReal dofTime = fabs( ( dofTargetRads - dofCurrentRads ) / ( refSpeeds[ j ] * M_PI / 180.0 ) ); // Time in seconds
+        OpenRAVE::dReal dofTime = fabs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
 
-        CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,dofCurrentRads*180/M_PI,refSpeeds[ j ],dofTime);
+        CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
