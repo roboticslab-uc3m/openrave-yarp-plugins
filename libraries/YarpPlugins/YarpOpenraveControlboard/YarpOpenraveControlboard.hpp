@@ -820,9 +820,6 @@ private:
     std::vector< int > manipulatorIDs;
     std::vector<OpenRAVE::dReal> manipulatorTargetRads;
     std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
-
-    // Specific for --env parameter with --view
-    boost::thread_group openraveThreads;
 };
 
 }  // namespace roboticslab
