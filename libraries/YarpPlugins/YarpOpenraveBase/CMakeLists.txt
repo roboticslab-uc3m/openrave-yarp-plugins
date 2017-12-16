@@ -1,6 +1,8 @@
 # Copyright: (C) 2017 Universidad Carlos III de Madrid
 # Author: Juan G. Victores
 
+if(ENABLE_YarpOpenraveBase)
+
 set(CMAKE_MODULE_PATH ${TEO_MODULE_PATH} ${CMAKE_MODULE_PATH})
 find_package(YARP REQUIRED)
 find_package(OpenRAVE REQUIRED)
@@ -28,4 +30,4 @@ install(TARGETS YarpOpenraveBase DESTINATION lib )
 set(OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS ${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended header dirs")
 #set(OPENRAVE_YARP_PLUGINS_LIBRARIES ${OPENRAVE_YARP_PLUGINS_LIBRARIES} YarpOpenraveBase CACHE INTERNAL "appended libraries")
 
-
+endif()
