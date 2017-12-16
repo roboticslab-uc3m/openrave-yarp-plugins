@@ -851,7 +851,7 @@ private:
      * @brief Converts radians to degrees, unless joint j is prismatic.
      * @param j Axis to check
      * @param rad Angle value expressed in radians.
-     * @return Same value expressed in radians.
+     * @return Same value expressed in degrees.
      */
     inline double radToDegIfNotPrismatic(int j, double rad)
     {
