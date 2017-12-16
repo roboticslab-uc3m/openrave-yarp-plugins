@@ -29,8 +29,8 @@ bool roboticslab::YarpOpenraveControlboard::getLimits(int axis, double *min, dou
     vectorOfJointPtr[axis]->GetLimits(vLowerLimit,vUpperLimit);
 
     //-- Our joints always have ony 1 DoF, therefore safe to use only [0].
-    *min = vLowerLimit[0]*180.0/M_PI;
-    *max = vUpperLimit[0]*180.0/M_PI;
+    *min = radToDegIfNotPrismatic(axis,vLowerLimit[0]);
+    *max = radToDegIfNotPrismatic(axis,vUpperLimit[0]);
 
     CD_INFO("Limits %d: [%f, %f]\n",axis,*min,*max);
 
