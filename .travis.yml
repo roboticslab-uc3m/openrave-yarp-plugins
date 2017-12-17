@@ -42,7 +42,7 @@ install:
   #-- Install OpenRAVE
   - git clone --branch master https://github.com/rdiankov/openrave.git
   - cd openrave && mkdir build && cd build
-  - cmake .. -DOPT_COLLADA=OFF # remove this entry once rdiankov/openrave#540 is merged
+  - cmake ..
   - make
   - sudo make install
   - cd ../..
