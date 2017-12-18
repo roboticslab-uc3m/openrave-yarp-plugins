@@ -90,6 +90,13 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
 
         for(size_t i=0; i<manipulatorIDs.size(); i++)
         {
+            OpenRAVE::ControllerBasePtr controlFromMulti = multi->GetController( manipulatorIDs[i] );
+            if( !! controlFromMulti )
+            {
+                CD_DEBUG("EXPERIMENTAL: Using existing individual controller for manipulatorIDs[%d]: %d (%s)\n",i,manipulatorIDs[i],controlFromMulti->GetXMLId().c_str());
+                pcontrols.push_back(controlFromMulti);
+                continue;
+            }
             OpenRAVE::ControllerBasePtr pindivcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
             std::vector<int> tmpIndices;
             tmpIndices.push_back( manipulatorIDs[i] );
