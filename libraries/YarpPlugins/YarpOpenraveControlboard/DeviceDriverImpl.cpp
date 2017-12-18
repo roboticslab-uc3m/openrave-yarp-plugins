@@ -93,7 +93,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
             OpenRAVE::ControllerBasePtr controlFromMulti = multi->GetController( manipulatorIDs[i] );
             if( !! controlFromMulti )
             {
-                CD_WARNING("controlFromMulti[%d]: %p, %s\n",manipulatorIDs[i],controlFromMulti.get(),controlFromMulti->GetXMLId().c_str());
+                CD_DEBUG("EXPERIMENTAL: Using existing individual controller for manipulatorIDs[%d]: %d (%s)\n",i,manipulatorIDs[i],controlFromMulti->GetXMLId().c_str());
                 pcontrols.push_back(controlFromMulti);
                 continue;
             }
