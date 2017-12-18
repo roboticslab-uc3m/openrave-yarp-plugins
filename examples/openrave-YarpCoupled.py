@@ -6,12 +6,6 @@ from openravepy import *
 try:
     RaveInitialize()
 
-    if not RaveLoadPlugin('OpenraveYarpControlboard'):
-        raveLogError("Plugin not correctly loaded")
-
-    if not RaveLoadPlugin('OpenraveYarpWorldRpcResponder'):
-        raveLogError("Plugin not correctly loaded")
-
     if not RaveLoadPlugin('OpenraveYarpCoupled'):
         raveLogError("Plugin not correctly loaded")
 
@@ -19,14 +13,8 @@ try:
     env.SetViewer('qtcoin')
     env.Load('/home/yo/repos/textiles/textiles/ironing/manipulation/ironingSim/ironingSim.env.xml')
 
-    OpenraveYarpControlboard = RaveCreateModule(env,'OpenraveYarpControlboard')
-    print OpenraveYarpControlboard.SendCommand('open')
-
-    OpenraveWorldRpcResponder = RaveCreateModule(env,'OpenraveWorldRpcResponder')
-    print OpenraveWorldRpcResponder.SendCommand('open')
-
-    OpenraveYarpForce = RaveCreateModule(env,'OpenraveYarpCoupled')
-    print OpenraveYarpForce.SendCommand('open')
+    OpenraveYarpCoupled = RaveCreateModule(env,'OpenraveYarpCoupled')
+    print OpenraveYarpCoupled.SendCommand('open')
 
     while 1:
         pass
