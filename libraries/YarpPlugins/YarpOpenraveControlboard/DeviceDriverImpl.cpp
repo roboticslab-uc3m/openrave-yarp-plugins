@@ -90,19 +90,19 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
 
         for(size_t i=0; i<manipulatorIDs.size(); i++)
         {
-            OpenRAVE::ControllerBasePtr controlFromMulti = multi->GetController( manipulatorIDs[i] );
-            if( !! controlFromMulti )
+            OpenRAVE::ControllerBasePtr pIndivControlFromMulti = multi->GetController( manipulatorIDs[i] );
+            if( !! pIndivControlFromMulti )
             {
-                CD_DEBUG("EXPERIMENTAL: Using existing individual controller for manipulatorIDs[%d]: %d (%s)\n",i,manipulatorIDs[i],controlFromMulti->GetXMLId().c_str());
-                pcontrols.push_back(controlFromMulti);
+                CD_DEBUG("EXPERIMENTAL: Using existing individual controller for manipulatorIDs[%d]: %d (%s)\n",i,manipulatorIDs[i],pIndivControlFromMulti->GetXMLId().c_str());
+                pcontrols.push_back(pIndivControlFromMulti);
                 continue;
             }
-            OpenRAVE::ControllerBasePtr pindivcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
+            OpenRAVE::ControllerBasePtr pIndivControl = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
             std::vector<int> tmpIndices;
             tmpIndices.push_back( manipulatorIDs[i] );
             CD_DEBUG("Attach individual controller for manipulatorIDs[%d]: %d\n",i,tmpIndices[0]);
-            multi->AttachController(pindivcontrol, tmpIndices, 0);
-            pcontrols.push_back(pindivcontrol);
+            multi->AttachController(pIndivControl, tmpIndices, 0);
+            pcontrols.push_back(pIndivControl);
         }
 
         penv->StopSimulation();
