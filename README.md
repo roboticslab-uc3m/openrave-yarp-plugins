@@ -61,7 +61,7 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 python ~/repos/openrave-yarp-plugins/examples/openraveYarpControlboard.py
 # new terminal to open the collision avoidance simulator 
 # NOTE: Expect LONG wait to load the padding model
-python ~/repos/openrave-yarp-plugins/examples/openraveYarpControlboardCollision-sim.py
+python ~/repos/openrave-yarp-plugins/examples/openraveYarpControlboard-collision-sim.py
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teoSim/[kinematic chain name]/rpc:i
 ```
@@ -71,7 +71,7 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 
 ```bash
 # new terminal
-python ~/repos/openrave-yarp-plugins/examples/openraveYarpControlboardCollision-real.py
+python ~/repos/openrave-yarp-plugins/examples/openraveYarpControlboard-collision-real.py
 # wait for the system to load the padding model
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teo/[kinematic chain name]/rpc:i
