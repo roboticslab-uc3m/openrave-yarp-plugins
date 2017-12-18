@@ -15,7 +15,6 @@ try:
 
     OpenraveYarpPaintSquares = RaveCreateModule(env,'OpenraveYarpPaintSquares')
     print OpenraveYarpPaintSquares.SendCommand('open')
-    #print OpenraveYarpPaintSquares.SendCommand('open /altPortName')
 
     while 1:
         pass
