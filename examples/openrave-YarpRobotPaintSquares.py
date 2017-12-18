@@ -6,7 +6,7 @@ from openravepy import *
 try:
     RaveInitialize()
 
-    if not RaveLoadPlugin('OpenraveYarpControlboard'):
+    if not RaveLoadPlugin('OpenraveYarpPluginLoader'):
         raveLogError("Plugin not correctly loaded")
 
     if not RaveLoadPlugin('OpenraveYarpPaintSquares'):
