@@ -827,13 +827,13 @@ private:
 
     // General Joint Motion Controller parameters //
     unsigned int axes;
-    std::vector< int > controlModes;
+    std::vector<int> controlModes;
     std::vector<double> refSpeeds;  // Exposed.
 
     //OpenRAVE//
     OpenRAVE::MultiControllerBasePtr multi;
-    std::vector< OpenRAVE::ControllerBasePtr > pcontrols;
-    std::vector< int > manipulatorIDs;
+    std::vector<OpenRAVE::ControllerBasePtr> pcontrols;
+    std::vector<int> manipulatorIDs;
     std::vector<OpenRAVE::dReal> manipulatorTargetRads;
     std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
 
