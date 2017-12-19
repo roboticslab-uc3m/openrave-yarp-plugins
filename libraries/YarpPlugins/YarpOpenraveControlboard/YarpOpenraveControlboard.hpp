@@ -46,7 +46,7 @@ namespace roboticslab
 // Note: IVelocityControl2 inherits from IVelocityControl
 // Note: IControlLimits2 inherits from IControlLimits
 // Note: IControlMode2 inherits from IControlMode
-class YarpOpenraveControlboard : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
+class YarpOpenraveControlboard : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IPositionDirect, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
     public yarp::dev::IControlLimits2, public yarp::dev::IControlMode2, public yarp::dev::ITorqueControl {
 public:
 
@@ -263,6 +263,34 @@ public:
      * @return true/false on success/failure
      */
     virtual bool getTargetPositions(const int n_joint, const int *joints, double *refs);
+
+    // ------- IPositionDirect declarations. Implementation in IPositionDirectImpl.cpp -------
+
+    /** Set new position for a single axis.
+     * @param j joint number
+     * @param ref specifies the new ref point
+     * @return true/false on success/failure
+     */
+    virtual bool setPosition(int j, double ref);
+
+    /** Set new reference point for all axes.
+     * @param n_joint how many joints this command is referring to
+     * @param joints list of joints controlled. The size of this array is n_joints
+     * @param refs array, new reference points, one value for each joint, the size is n_joints.
+     *        The first value will be the new reference fot the joint joints[0].
+     *          for example:
+     *          n_joint  3
+     *          joints   0  2  4
+     *          refs    10 30 40
+     * @return true/false on success/failure
+     */
+    virtual bool setPositions(const int n_joint, const int *joints, double *refs);
+
+    /** Set new position for a set of axis.
+     * @param refs specifies the new reference points
+     * @return true/false on success/failure
+     */
+    virtual bool setPositions(const double *refs);
 
     //  ---------- IEncodersTimed Declarations. Implementation in IEncoderImpl.cpp ----------
 
