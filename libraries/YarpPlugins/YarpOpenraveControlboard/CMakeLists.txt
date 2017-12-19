@@ -25,7 +25,18 @@ endif()
 
 LINK_DIRECTORIES(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
 
-YARP_ADD_PLUGIN(YarpOpenraveControlboard YarpOpenraveControlboard.hpp DeviceDriverImpl.cpp IControlLimits2Impl.cpp IControlMode2Impl.cpp IEncodersImpl.cpp IEncodersTimedImpl.cpp IPositionImpl.cpp IPosition2Impl.cpp IVelocityImpl.cpp IVelocity2Impl.cpp ITorqueImpl.cpp)
+YARP_ADD_PLUGIN(YarpOpenraveControlboard DeviceDriverImpl.cpp
+                                         IControlLimits2Impl.cpp
+                                         IControlMode2Impl.cpp
+                                         IEncodersImpl.cpp
+                                         IEncodersTimedImpl.cpp
+                                         IPositionImpl.cpp
+                                         IPosition2Impl.cpp
+                                         IPositionDirectImpl.cpp
+                                         IVelocityImpl.cpp
+                                         IVelocity2Impl.cpp
+                                         ITorqueImpl.cpp
+                                         YarpOpenraveControlboard.hpp)
 add_dependencies(YarpOpenraveControlboard COLOR_DEBUG YarpOpenraveBase)
 set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
 set_target_properties(YarpOpenraveControlboard PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
