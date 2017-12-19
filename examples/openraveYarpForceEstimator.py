@@ -16,8 +16,6 @@ try:
     env.SetViewer('qtcoin')
     env.Load('/home/raul/repos/textiles/textiles/ironing/manipulation/ironingSim/ironingSim.env.xml')
 
-    #New config:
-
     OpenraveYarpControlboard0 = RaveCreateModule(env,'OpenraveYarpPluginLoader')
     print OpenraveYarpControlboard0.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2 --genRefSpeed 999999')  # rightArm is maniplator 2
     
