@@ -35,7 +35,7 @@ YARP_ADD_PLUGIN(YarpOpenraveControlboard DeviceDriverImpl.cpp
                                          IPositionDirectImpl.cpp
                                          IVelocityImpl.cpp
                                          IVelocity2Impl.cpp
-                                         ITorqueImpl.cpp
+                                         ITorqueControlImpl.cpp
                                          YarpOpenraveControlboard.hpp)
 add_dependencies(YarpOpenraveControlboard COLOR_DEBUG YarpOpenraveBase)
 set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
