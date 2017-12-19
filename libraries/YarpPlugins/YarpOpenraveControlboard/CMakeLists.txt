@@ -30,8 +30,8 @@ YARP_ADD_PLUGIN(YarpOpenraveControlboard DeviceDriverImpl.cpp
                                          IControlMode2Impl.cpp
                                          IEncodersImpl.cpp
                                          IEncodersTimedImpl.cpp
-                                         IPositionImpl.cpp
-                                         IPosition2Impl.cpp
+                                         IPositionControlImpl.cpp
+                                         IPositionControl2Impl.cpp
                                          IPositionDirectImpl.cpp
                                          IVelocityImpl.cpp
                                          IVelocity2Impl.cpp
