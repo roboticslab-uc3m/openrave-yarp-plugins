@@ -57,7 +57,7 @@ public:
     // Set the Thread Rate in the class constructor
     YarpOpenraveControlboard() {}
 
-    // ------- IPositionControl declarations. Implementation in IPositionImpl.cpp -------
+    // ------- IPositionControl declarations. Implementation in IPositionControlImpl.cpp -------
 
     /**
      * Get the number of controlled axes. This command asks the number of controlled
@@ -174,7 +174,7 @@ public:
      */
     virtual bool stop();
 
-    // ------- IPositionControl2 declarations. Implementation in IPosition2Impl.cpp -------
+    // ------- IPositionControl2 declarations. Implementation in IPositionControl2Impl.cpp -------
 
     /** Set new reference point for a subset of joints.
      * @param joints pointer to the array of joint numbers
@@ -296,7 +296,7 @@ public:
      */
     virtual bool setPositions(const double *refs);
 
-    //  ---------- IEncodersTimed Declarations. Implementation in IEncoderImpl.cpp ----------
+    //  ---------- IEncoders Declarations. Implementation in IEncodersImpl.cpp ----------
 
     /**
      * Reset encoder, single joint. Set the encoder value to zero
@@ -370,6 +370,8 @@ public:
      */
     virtual bool getEncoderAccelerations(double *accs);
 
+    //  ---------- IEncodersTimed Declarations. Implementation in IEncodersTimedImpl.cpp ----------
+
     /**
     * Read the instantaneous acceleration of all axes.
     * \param encs pointer to the array that will contain the output
@@ -387,7 +389,7 @@ public:
     */
     virtual bool getEncoderTimed(int j, double *encs, double *time);
 
-    //  --------- IVelocityControl Declarations. Implementation in IVelocityImpl.cpp ---------
+    //  --------- IVelocityControl Declarations. Implementation in IVelocityControlImpl.cpp ---------
 
     /**
      * Start motion at a given speed, single joint.
@@ -404,7 +406,7 @@ public:
      */
     virtual bool velocityMove(const double *sp);
 
-    //  --------- IVelocityControl2 Declarations. Implementation in IVelocity2Impl.cpp ---------
+    //  --------- IVelocityControl2 Declarations. Implementation in IVelocityControl2Impl.cpp ---------
 
     /** Start motion at a given speed for a subset of joints.
      * @param n_joint how many joints this command is referring to
@@ -467,7 +469,7 @@ public:
      */
     virtual bool getVelPids(yarp::dev::Pid *pids);
 
-    //  --------- IControlLimits Declarations. Implementation in IControlLimitsImpl.cpp ---------
+    //  --------- IControlLimits Declarations. Implementation in IControlLimits2Impl.cpp ---------
 
     /**
      * Set the software limits for a particular axis, the behavior of the
@@ -486,6 +488,8 @@ public:
      * @return true if everything goes fine, false otherwise.
      */
     virtual bool getLimits(int axis, double *min, double *max);
+
+    //  --------- IControlLimits2 Declarations. Implementation in IControlLimits2Impl.cpp ---------
 
     /**
      * Set the software speed limits for a particular axis, the behavior of the
@@ -506,7 +510,7 @@ public:
      */
     virtual bool getVelLimits(int axis, double *min, double *max);
 
-    //  --------- IControlMode Declarations. Implementation in IControlModeImpl.cpp ---------
+    //  --------- IControlMode Declarations. Implementation in IControlMode2Impl.cpp ---------
 
     /**
     * Set position mode, single axis.
@@ -614,8 +618,8 @@ public:
     *         (e.g. the joint is on a fault condition or the desired mode is not implemented).
     */
     virtual bool setControlModes(int *modes);
-    // -------- ITorqueControl declarations. Implementation in ITorqueImpl.cpp --------
 
+    // -------- ITorqueControl declarations. Implementation in ITorqueControlImpl.cpp --------
 
     /** Get the reference value of the torque for all joints.
       * This is NOT the feedback (see getTorques instead).
