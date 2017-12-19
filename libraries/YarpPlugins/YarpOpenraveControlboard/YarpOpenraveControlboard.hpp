@@ -41,13 +41,17 @@ namespace roboticslab
  * @brief Implements the YARP_dev IPositionControl, IVelocityControl, IEncodersTimed, etc.
  * interface class member functions.
  */
-// Note: IEncodersTimed inherits from IEncoders
-// Note: IPositionControl2 inherits from IPositionControl
-// Note: IVelocityControl2 inherits from IVelocityControl
-// Note: IControlLimits2 inherits from IControlLimits
-// Note: IControlMode2 inherits from IControlMode
-class YarpOpenraveControlboard : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IPositionDirect, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
-    public yarp::dev::IControlLimits2, public yarp::dev::IControlMode2, public yarp::dev::ITorqueControl {
+
+class YarpOpenraveControlboard : YarpOpenraveBase,
+        public yarp::dev::DeviceDriver,
+        public yarp::dev::IControlLimits2,    //-- IControlLimits2 inherits from IControlLimits
+        public yarp::dev::IControlMode2,      //-- IControlMode2 inherits from IControlMode
+        public yarp::dev::IEncodersTimed,     //-- IEncodersTimed inherits from IEncoders
+        public yarp::dev::IPositionControl2,  //-- IPositionControl2 inherits from IPositionControl
+        public yarp::dev::IPositionDirect,
+        public yarp::dev::ITorqueControl,
+        public yarp::dev::IVelocityControl2   //-- IVelocityControl2 inherits from IVelocityControl
+{
 public:
 
     // Set the Thread Rate in the class constructor
