@@ -113,29 +113,6 @@ public:
         options.put("penv",v);
 
         /*
-        if( ! options.check("name") )  // Enable bypass if "name" already exists
-        {
-            //-- If robotIndex (and then if manipulatorIndex), get and put name
-            if( options.check("robotIndex") )
-            {
-                std::string name;
-
-                name += "/";
-                int robotPtrIdx = options.find("robotIndex").asInt();
-
-                std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-                GetEnv()->GetRobots(vectorOfRobotPtr);
-
-                if(robotPtrIdx >= vectorOfRobotPtr.size())
-                {
-                    CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotPtrIdx,vectorOfRobotPtr.size());
-                    return false;
-                }
-                else if (robotPtrIdx < 0)
-                {
-                    CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotPtrIdx);
-                    return false;
-                }
 
                 name += vectorOfRobotPtr[ robotPtrIdx ]->GetName();
 
@@ -162,10 +139,6 @@ public:
                 }
 
                 options.put("name",name);
-            }
-        }
-
-        CD_DEBUG("post-config: %s\n", options.toString().c_str());
         */
 
         //-- Fill robotIndeces from: robotIndex/robotIndices/allRobots
