@@ -171,9 +171,12 @@ public:
             robotName += vectorOfRobotPtr[ robotIndex ]->GetName();
 
             //-- Fill manipulatorIndices from: manipulatorIndex/manipulatorIndices/allManipulators
+            //-- Fill sensorIndices from: sensorIndex/sensorIndices/allSensors
             std::vector<int> manipulatorIndices;
+            std::vector<int> sensorIndices;
 
             std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ robotIndex ]->GetManipulators();
+            std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = vectorOfRobotPtr[ robotIndex ]->GetAttachedSensors();
 
             if( options.check("manipulatorIndex") )
             {
