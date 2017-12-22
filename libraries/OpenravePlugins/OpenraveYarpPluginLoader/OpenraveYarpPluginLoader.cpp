@@ -53,9 +53,12 @@ public:
             argv[i] = 0;
         }
 
-        yarpPlugin->close();
-        delete yarpPlugin;
-        yarpPlugin = 0;
+        for(int i=0;i<yarpPlugins.size();i++)
+        {
+            yarpPlugins[i]->close();
+            delete yarpPlugins[i];
+            yarpPlugins[i] = 0;
+        }
     }
 
     virtual void Destroy()
@@ -172,7 +175,7 @@ public:
 
         CD_DEBUG("post-config: %s\n", options.toString().c_str());
 
-        yarpPlugin = new yarp::dev::PolyDriver;
+        yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
         yarpPlugin->open(options);
 
         if( ! yarpPlugin->isValid() )
@@ -182,6 +185,8 @@ public:
         }
         CD_SUCCESS("Valid yarpPlugin.\n");
 
+        yarpPlugins.push_back(yarpPlugin);
+
         return true;
     }
 
@@ -189,7 +194,7 @@ private:
     std::vector<char *> argv;
 
     yarp::os::Network yarp;
-    yarp::dev::PolyDriver* yarpPlugin;
+    std::vector<yarp::dev::PolyDriver*> yarpPlugins;
 };
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
