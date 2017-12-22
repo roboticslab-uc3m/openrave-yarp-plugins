@@ -203,18 +203,20 @@ public:
             CD_INFO("Not using --robotIndex or --robotIndices or --allRobots parameter.\n");
         }
 
-  /*
-        if(robotIndex >= vectorOfRobotPtr.size())
+        for(int i=0;i<robotIndices.size();i++)
         {
-            CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotIndex,vectorOfRobotPtr.size());
-            return false;
+            int robotIndex = robotIndices[i];
+            if( robotIndex >= vectorOfRobotPtr.size())
+            {
+                CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotIndex,vectorOfRobotPtr.size());
+                return false;
+            }
+            else if (robotIndex < 0)
+            {
+                CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotIndex);
+                return false;
+            }
         }
-        else if (robotIndex < 0)
-        {
-            CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotIndex);
-            return false;
-        }
-*/
         /*
 
         std::vector<int> manipulatorIndexes;
