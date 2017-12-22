@@ -142,10 +142,10 @@ public:
 
             if( ! yarpPlugin->isValid() )
             {
-                CD_ERROR("yarpPlugin not valid.\n");
+                CD_ERROR("yarp plugin not valid.\n");
                 return false;
             }
-            CD_SUCCESS("Valid yarpPlugin.\n");
+            CD_SUCCESS("Valid yarp plugin.\n");
 
             yarpPlugins.push_back(yarpPlugin);
 
@@ -170,35 +170,35 @@ public:
             std::string robotName("/");
             robotName += vectorOfRobotPtr[ robotIndex ]->GetName();
 
-            //-- Fill robotIndeces from: robotIndex/robotIndices/allRobots
-            std::vector<int> manipulatorIndexes;
+            //-- Fill manipulatorIndices from: manipulatorIndex/manipulatorIndices/allManipulators
+            std::vector<int> manipulatorIndices;
 
             std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ robotIndex ]->GetManipulators();
 
             if( options.check("manipulatorIndex") )
             {
                 int manipulatorIndex = options.find("manipulatorIndex").asInt();
-
-                if(manipulatorIndex >= vectorOfManipulatorPtr.size())
-                {
-                    CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarp plugin. Bye!\n",manipulatorIndex,vectorOfManipulatorPtr.size());
-                    return false;
-                }
-                else if (manipulatorIndex < 0)
-                {
-                    CD_ERROR("manipulatorIndex %d < 0, not loading yarpPlugin.\n",manipulatorIndex);
-                    return false;
-                }
+                manipulatorIndices.push_back(manipulatorIndex);
             }
 
 
+            /*if(manipulatorIndex >= vectorOfManipulatorPtr.size())
+            {
+                CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarp plugin. Bye!\n",manipulatorIndex,vectorOfManipulatorPtr.size());
+                return false;
+            }
+            else if (manipulatorIndex < 0)
+            {
+                CD_ERROR("manipulatorIndex %d < 0, not loading yarpPlugin.\n",manipulatorIndex);
+                return false;
+            }*/
         }
 
         /*
-                name += "/";
-                name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
+        name += "/";
+        name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
 
-                options.put("name",name);
+        options.put("name",name);
         */
 
         return true;
