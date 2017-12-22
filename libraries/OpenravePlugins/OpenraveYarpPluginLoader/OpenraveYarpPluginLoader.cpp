@@ -125,7 +125,7 @@ public:
         }
         else if( options.check("robotIndices") )
         {
-            CD_ERROR("Not implemented yet. Bye!\n");
+            CD_ERROR("robotIndices not implemented yet. Bye!\n");
             return false;
         }
         else if( options.check("allRobots") )
@@ -179,6 +179,34 @@ public:
             {
                 int manipulatorIndex = options.find("manipulatorIndex").asInt();
                 manipulatorIndices.push_back(manipulatorIndex);
+            }
+            if( options.check("manipulatorIndices") )
+            {
+                CD_ERROR("manipulatorIndices not implemented yet. Bye!\n");
+                return false;
+            }
+            else if( options.check("allManipulators") )
+            {
+                for(int i=0;i<vectorOfManipulatorPtr.size();i++)
+                    manipulatorIndices.push_back(i);
+            }
+            else
+            {
+                CD_INFO("Not using --manipulatorIndex or --manipulatorIndices or --allManipulators parameter.\n");
+
+                options.put("name",robotName);
+
+                yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+                yarpPlugin->open(options);
+
+                if( ! yarpPlugin->isValid() )
+                {
+                    CD_ERROR("yarp plugin not valid.\n");
+                    return false;
+                }
+                CD_SUCCESS("Valid yarp plugin.\n");
+
+                yarpPlugins.push_back(yarpPlugin);
             }
 
 
