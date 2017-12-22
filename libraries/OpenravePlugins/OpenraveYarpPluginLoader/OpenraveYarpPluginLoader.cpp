@@ -166,6 +166,7 @@ public:
                 CD_ERROR("robotIndex %d < 0, not loading yarp plugin. Bye!\n",robotIndex);
                 return false;
             }
+            options.put("robotIndex",robotIndex);
 
             std::string robotName("/");
             robotName += vectorOfRobotPtr[ robotIndex ]->GetName();
@@ -242,6 +243,7 @@ public:
                     CD_ERROR("manipulatorIndex %d < 0, not loading yarp plugin.\n",manipulatorIndex);
                     return false;
                 }
+                options.put("manipulatorIndex",manipulatorIndex);
 
                 std::string manipulatorName(robotName);
                 manipulatorName += "/";
@@ -276,6 +278,7 @@ public:
                     CD_ERROR("sensorIndex %d < 0, not loading yarp plugin.\n",sensorIndex);
                     return false;
                 }
+                options.put("sensorIndex",sensorIndex);
 
                 std::string sensorName(robotName);
                 sensorName += "/";
