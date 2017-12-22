@@ -112,33 +112,7 @@ public:
         yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
         options.put("penv",v);
 
-        /*
-                if( options.check("manipulatorIndex") )
-                {
-                    int manipulatorPtrIdx = options.find("manipulatorIndex").asInt();
-
-                    std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ robotPtrIdx ]->GetManipulators();
-
-                    if(manipulatorPtrIdx >= vectorOfManipulatorPtr.size())
-                    {
-                        CD_ERROR("manipulatorPtrIdx %d >= vectorOfManipulatorPtr.size() %d, not loading yarpPlugin.\n",manipulatorPtrIdx,vectorOfManipulatorPtr.size());
-                        return false;
-                    }
-                    else if (manipulatorPtrIdx < 0)
-                    {
-                        CD_ERROR("manipulatorPtrIdx %d < 0, not loading yarpPlugin.\n",manipulatorPtrIdx);
-                        return false;
-                    }
-
-                    name += "/";
-                    name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
-
-                }
-
-                options.put("name",name);
-        */
-
-        //-- Fill robotIndeces from: robotIndex/robotIndices/allRobots
+        //-- Fill robotIndices from: robotIndex/robotIndices/allRobots
         std::vector<int> robotIndices;
 
         std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
@@ -196,8 +170,36 @@ public:
             std::string robotName("/");
             robotName += vectorOfRobotPtr[ robotIndex ]->GetName();
 
-            // std::vector<int> manipulatorIndexes;
+            //-- Fill robotIndeces from: robotIndex/robotIndices/allRobots
+            std::vector<int> manipulatorIndexes;
+
+            std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ robotIndex ]->GetManipulators();
+
+            if( options.check("manipulatorIndex") )
+            {
+                int manipulatorIndex = options.find("manipulatorIndex").asInt();
+
+                if(manipulatorIndex >= vectorOfManipulatorPtr.size())
+                {
+                    CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarp plugin. Bye!\n",manipulatorIndex,vectorOfManipulatorPtr.size());
+                    return false;
+                }
+                else if (manipulatorIndex < 0)
+                {
+                    CD_ERROR("manipulatorIndex %d < 0, not loading yarpPlugin.\n",manipulatorIndex);
+                    return false;
+                }
+            }
+
+
         }
+
+        /*
+                name += "/";
+                name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
+
+                options.put("name",name);
+        */
 
         return true;
     }
