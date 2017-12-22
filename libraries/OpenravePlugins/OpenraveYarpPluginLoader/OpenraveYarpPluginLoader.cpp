@@ -201,37 +201,43 @@ public:
         else
         {
             CD_INFO("Not using --robotIndex or --robotIndices or --allRobots parameter.\n");
+
+            yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+            yarpPlugin->open(options);
+
+            if( ! yarpPlugin->isValid() )
+            {
+                CD_ERROR("yarpPlugin not valid.\n");
+                return false;
+            }
+            CD_SUCCESS("Valid yarpPlugin.\n");
+
+            yarpPlugins.push_back(yarpPlugin);
+
+            return true;
         }
 
+        //-- Iterate through robots
         for(int i=0;i<robotIndices.size();i++)
         {
             int robotIndex = robotIndices[i];
             if( robotIndex >= vectorOfRobotPtr.size())
             {
-                CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotIndex,vectorOfRobotPtr.size());
+                CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarp plugin. Bye!\n",robotIndex,vectorOfRobotPtr.size());
                 return false;
             }
             else if (robotIndex < 0)
             {
-                CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotIndex);
+                CD_ERROR("robotIndex %d < 0, not loading yarp plugin. Bye!\n",robotIndex);
                 return false;
             }
+
+            std::string robotName("/");
+            robotName += vectorOfRobotPtr[ robotIndex ]->GetName();
+
         }
-        /*
+        // std::vector<int> manipulatorIndexes;
 
-        std::vector<int> manipulatorIndexes;
-
-        yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
-        yarpPlugin->open(options);
-
-        if( ! yarpPlugin->isValid() )
-        {
-            CD_ERROR("yarpPlugin not valid.\n");
-            return false;
-        }
-        CD_SUCCESS("Valid yarpPlugin.\n");
-
-        yarpPlugins.push_back(yarpPlugin);*/
 
         return true;
     }
