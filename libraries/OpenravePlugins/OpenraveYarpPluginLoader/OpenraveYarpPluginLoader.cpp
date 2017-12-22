@@ -112,6 +112,7 @@ public:
         yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
         options.put("penv",v);
 
+        /*
         if( ! options.check("name") )  // Enable bypass if "name" already exists
         {
             //-- If robotIndex (and then if manipulatorIndex), get and put name
@@ -174,6 +175,50 @@ public:
         }
 
         CD_DEBUG("post-config: %s\n", options.toString().c_str());
+        */
+
+        //-- Fill robotIndeces from: robotIndex/robotIndices/allRobots
+        std::vector<int> robotIndices;
+
+        std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
+        penv->GetRobots(vectorOfRobotPtr);
+
+        if( options.check("robotIndex") )
+        {
+            int robotIndex = options.find("robotIndex").asInt();
+            robotIndices.push_back(robotIndex);
+        }
+        else if( options.check("robotIndices") )
+        {
+            CD_ERROR("Not implemented yet. Bye!\n");
+            return false;
+        }
+        else if( options.check("allRobots") )
+        {
+            for(int i=0;i<vectorOfRobotPtr.size();i++)
+                robotIndices.push_back(i);
+        }
+        else
+        {
+            CD_ERROR("Please use --robotIndex or --robotIndices or --allRobots parameter. Bye!\n");
+            return false;
+        }
+
+  /*
+        if(robotIndex >= vectorOfRobotPtr.size())
+        {
+            CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotIndex,vectorOfRobotPtr.size());
+            return false;
+        }
+        else if (robotIndex < 0)
+        {
+            CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotIndex);
+            return false;
+        }
+*/
+        /*
+
+        std::vector<int> manipulatorIndexes;
 
         yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
         yarpPlugin->open(options);
@@ -185,7 +230,7 @@ public:
         }
         CD_SUCCESS("Valid yarpPlugin.\n");
 
-        yarpPlugins.push_back(yarpPlugin);
+        yarpPlugins.push_back(yarpPlugin);*/
 
         return true;
     }
