@@ -113,9 +113,6 @@ public:
         options.put("penv",v);
 
         /*
-
-                name += vectorOfRobotPtr[ robotPtrIdx ]->GetName();
-
                 if( options.check("manipulatorIndex") )
                 {
                     int manipulatorPtrIdx = options.find("manipulatorIndex").asInt();
