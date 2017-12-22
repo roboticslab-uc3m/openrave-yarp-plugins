@@ -183,7 +183,7 @@ public:
                 int manipulatorIndex = options.find("manipulatorIndex").asInt();
                 manipulatorIndices.push_back(manipulatorIndex);
             }
-            if( options.check("manipulatorIndices") )
+            else if( options.check("manipulatorIndices") )
             {
                 CD_ERROR("manipulatorIndices not implemented yet. Bye!\n");
                 return false;
@@ -193,9 +193,25 @@ public:
                 for(int i=0;i<vectorOfManipulatorPtr.size();i++)
                     manipulatorIndices.push_back(i);
             }
+            else if( options.check("sensorIndex") )
+            {
+                int sensorIndex = options.find("sensorIndex").asInt();
+                sensorIndices.push_back(sensorIndex);
+            }
+            else if( options.check("sensorIndices") )
+            {
+                CD_ERROR("sensorIndices not implemented yet. Bye!\n");
+                return false;
+            }
+            else if( options.check("allSensors") )
+            {
+                for(int i=0;i<vectorOfSensorPtr.size();i++)
+                    sensorIndices.push_back(i);
+            }
             else
             {
                 CD_INFO("Not using --manipulatorIndex or --manipulatorIndices or --allManipulators parameter.\n");
+                CD_INFO("Not using --sensorIndex or --sensorIndices or --allSensors parameter.\n");
 
                 options.put("name",robotName);
 
