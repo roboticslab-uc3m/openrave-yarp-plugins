@@ -239,7 +239,7 @@ public:
                 }
                 else if (manipulatorIndex < 0)
                 {
-                    CD_ERROR("manipulatorIndex %d < 0, not loading yarpPlugin.\n",manipulatorIndex);
+                    CD_ERROR("manipulatorIndex %d < 0, not loading yarp plugin.\n",manipulatorIndex);
                     return false;
                 }
 
@@ -261,9 +261,41 @@ public:
 
                 yarpPlugins.push_back(yarpPlugin);
             }
-        }
-;
 
+            //-- Iterate through sensors
+            for(int i=0;i<sensorIndices.size();i++)
+            {
+                int sensorIndex = sensorIndices[i];
+                if(sensorIndex >= vectorOfSensorPtr.size())
+                {
+                    CD_ERROR("sensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarp plugin. Bye!\n",sensorIndex,vectorOfSensorPtr.size());
+                    return false;
+                }
+                else if (sensorIndex < 0)
+                {
+                    CD_ERROR("sensorIndex %d < 0, not loading yarp plugin.\n",sensorIndex);
+                    return false;
+                }
+
+                std::string sensorName(robotName);
+                sensorName += "/";
+                sensorName += vectorOfSensorPtr[ sensorIndex ]->GetName();
+
+                options.put("name",sensorName);
+
+                yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+                yarpPlugin->open(options);
+
+                if( ! yarpPlugin->isValid() )
+                {
+                    CD_ERROR("yarp plugin not valid.\n");
+                    return false;
+                }
+                CD_SUCCESS("Valid yarp plugin.\n");
+
+                yarpPlugins.push_back(yarpPlugin);
+            }
+        }
         return true;
     }
 
