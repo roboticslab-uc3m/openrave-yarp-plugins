@@ -200,8 +200,7 @@ public:
         }
         else
         {
-            CD_ERROR("Please use --robotIndex or --robotIndices or --allRobots parameter. Bye!\n");
-            return false;
+            CD_INFO("Not using --robotIndex or --robotIndices or --allRobots parameter.\n");
         }
 
   /*
