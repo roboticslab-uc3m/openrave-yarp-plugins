@@ -53,9 +53,12 @@ public:
             argv[i] = 0;
         }
 
-        yarpPlugin->close();
-        delete yarpPlugin;
-        yarpPlugin = 0;
+        for(int i=0;i<yarpPlugins.size();i++)
+        {
+            yarpPlugins[i]->close();
+            delete yarpPlugins[i];
+            yarpPlugins[i] = 0;
+        }
     }
 
     virtual void Destroy()
@@ -109,79 +112,193 @@ public:
         yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
         options.put("penv",v);
 
-        if( ! options.check("name") )  // Enable bypass if "name" already exists
+        //-- Fill robotIndices from: robotIndex/robotIndices/allRobots
+        std::vector<int> robotIndices;
+
+        std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
+        penv->GetRobots(vectorOfRobotPtr);
+
+        if( options.check("robotIndex") )
         {
-            //-- If robotIndex (and then if manipulatorIndex), get and put name
-            if( options.check("robotIndex") )
-            {
-                std::string name;
-
-                if( options.check("prefix") )  // Note that not taken into account if using "name"
-                {
-                    name += options.find("prefix").asString();
-                }
-
-                name += "/";
-                int robotPtrIdx = options.find("robotIndex").asInt();
-
-                std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-                GetEnv()->GetRobots(vectorOfRobotPtr);
-
-                if(robotPtrIdx >= vectorOfRobotPtr.size())
-                {
-                    CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotPtrIdx,vectorOfRobotPtr.size());
-                    return false;
-                }
-                else if (robotPtrIdx < 0)
-                {
-                    CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotPtrIdx);
-                    return false;
-                }
-
-                name += vectorOfRobotPtr[ robotPtrIdx ]->GetName();
-
-                if( options.check("manipulatorIndex") )
-                {
-                    int manipulatorPtrIdx = options.find("manipulatorIndex").asInt();
-
-                    std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ robotPtrIdx ]->GetManipulators();
-
-                    if(manipulatorPtrIdx >= vectorOfManipulatorPtr.size())
-                    {
-                        CD_ERROR("manipulatorPtrIdx %d >= vectorOfManipulatorPtr.size() %d, not loading yarpPlugin.\n",manipulatorPtrIdx,vectorOfManipulatorPtr.size());
-                        return false;
-                    }
-                    else if (manipulatorPtrIdx < 0)
-                    {
-                        CD_ERROR("manipulatorPtrIdx %d < 0, not loading yarpPlugin.\n",manipulatorPtrIdx);
-                        return false;
-                    }
-
-                    name += "/";
-                    name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
-
-                    if( options.check("suffix") )  // Note that not taken into account if using "name"
-                    {
-                        name += options.find("suffix").asString();
-                    }
-                }
-
-                options.put("name",name);
-            }
+            int robotIndex = options.find("robotIndex").asInt();
+            robotIndices.push_back(robotIndex);
         }
-
-        CD_DEBUG("post-config: %s\n", options.toString().c_str());
-
-        yarpPlugin = new yarp::dev::PolyDriver;
-        yarpPlugin->open(options);
-
-        if( ! yarpPlugin->isValid() )
+        else if( options.check("robotIndices") )
         {
-            CD_ERROR("yarpPlugin not valid.\n");
+            CD_ERROR("robotIndices not implemented yet. Bye!\n");
             return false;
         }
-        CD_SUCCESS("Valid yarpPlugin.\n");
+        else if( options.check("allRobots") )
+        {
+            for(int i=0;i<vectorOfRobotPtr.size();i++)
+                robotIndices.push_back(i);
+        }
+        else
+        {
+            CD_INFO("Not using --robotIndex or --robotIndices or --allRobots parameter.\n");
 
+            yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+            yarpPlugin->open(options);
+
+            if( ! yarpPlugin->isValid() )
+            {
+                CD_ERROR("yarp plugin not valid.\n");
+                return false;
+            }
+            CD_SUCCESS("Valid yarp plugin.\n");
+
+            yarpPlugins.push_back(yarpPlugin);
+
+            return true;
+        }
+
+        //-- Iterate through robots
+        for(int i=0;i<robotIndices.size();i++)
+        {
+            int robotIndex = robotIndices[i];
+            if( robotIndex >= vectorOfRobotPtr.size())
+            {
+                CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarp plugin. Bye!\n",robotIndex,vectorOfRobotPtr.size());
+                return false;
+            }
+            else if (robotIndex < 0)
+            {
+                CD_ERROR("robotIndex %d < 0, not loading yarp plugin. Bye!\n",robotIndex);
+                return false;
+            }
+            options.put("robotIndex",robotIndex);
+
+            std::string robotName("/");
+            robotName += vectorOfRobotPtr[ robotIndex ]->GetName();
+
+            //-- Fill manipulatorIndices from: manipulatorIndex/manipulatorIndices/allManipulators
+            //-- Fill sensorIndices from: sensorIndex/sensorIndices/allSensors
+            std::vector<int> manipulatorIndices;
+            std::vector<int> sensorIndices;
+
+            std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ robotIndex ]->GetManipulators();
+            std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = vectorOfRobotPtr[ robotIndex ]->GetAttachedSensors();
+
+            if( options.check("manipulatorIndex") )
+            {
+                int manipulatorIndex = options.find("manipulatorIndex").asInt();
+                manipulatorIndices.push_back(manipulatorIndex);
+            }
+            else if( options.check("manipulatorIndices") )
+            {
+                CD_ERROR("manipulatorIndices not implemented yet. Bye!\n");
+                return false;
+            }
+            else if( options.check("allManipulators") )
+            {
+                for(int i=0;i<vectorOfManipulatorPtr.size();i++)
+                    manipulatorIndices.push_back(i);
+            }
+            else if( options.check("sensorIndex") )
+            {
+                int sensorIndex = options.find("sensorIndex").asInt();
+                sensorIndices.push_back(sensorIndex);
+            }
+            else if( options.check("sensorIndices") )
+            {
+                CD_ERROR("sensorIndices not implemented yet. Bye!\n");
+                return false;
+            }
+            else if( options.check("allSensors") )
+            {
+                for(int i=0;i<vectorOfSensorPtr.size();i++)
+                    sensorIndices.push_back(i);
+            }
+            else
+            {
+                CD_INFO("Not using --manipulatorIndex or --manipulatorIndices or --allManipulators parameter.\n");
+                CD_INFO("Not using --sensorIndex or --sensorIndices or --allSensors parameter.\n");
+
+                options.put("name",robotName);
+
+                yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+                yarpPlugin->open(options);
+
+                if( ! yarpPlugin->isValid() )
+                {
+                    CD_ERROR("yarp plugin not valid.\n");
+                    return false;
+                }
+                CD_SUCCESS("Valid yarp plugin.\n");
+
+                yarpPlugins.push_back(yarpPlugin);
+            }
+
+            //-- Iterate through manipulators
+            for(int i=0;i<manipulatorIndices.size();i++)
+            {
+                int manipulatorIndex = manipulatorIndices[i];
+                if(manipulatorIndex >= vectorOfManipulatorPtr.size())
+                {
+                    CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarp plugin. Bye!\n",manipulatorIndex,vectorOfManipulatorPtr.size());
+                    return false;
+                }
+                else if (manipulatorIndex < 0)
+                {
+                    CD_ERROR("manipulatorIndex %d < 0, not loading yarp plugin.\n",manipulatorIndex);
+                    return false;
+                }
+                options.put("manipulatorIndex",manipulatorIndex);
+
+                std::string manipulatorName(robotName);
+                manipulatorName += "/";
+                manipulatorName += vectorOfManipulatorPtr[ manipulatorIndex ]->GetName();
+
+                options.put("name",manipulatorName);
+
+                yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+                yarpPlugin->open(options);
+
+                if( ! yarpPlugin->isValid() )
+                {
+                    CD_ERROR("yarp plugin not valid.\n");
+                    return false;
+                }
+                CD_SUCCESS("Valid yarp plugin.\n");
+
+                yarpPlugins.push_back(yarpPlugin);
+            }
+
+            //-- Iterate through sensors
+            for(int i=0;i<sensorIndices.size();i++)
+            {
+                int sensorIndex = sensorIndices[i];
+                if(sensorIndex >= vectorOfSensorPtr.size())
+                {
+                    CD_ERROR("sensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarp plugin. Bye!\n",sensorIndex,vectorOfSensorPtr.size());
+                    return false;
+                }
+                else if (sensorIndex < 0)
+                {
+                    CD_ERROR("sensorIndex %d < 0, not loading yarp plugin.\n",sensorIndex);
+                    return false;
+                }
+                options.put("sensorIndex",sensorIndex);
+
+                std::string sensorName(robotName);
+                sensorName += "/";
+                sensorName += vectorOfSensorPtr[ sensorIndex ]->GetName();
+
+                options.put("name",sensorName);
+
+                yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+                yarpPlugin->open(options);
+
+                if( ! yarpPlugin->isValid() )
+                {
+                    CD_ERROR("yarp plugin not valid.\n");
+                    return false;
+                }
+                CD_SUCCESS("Valid yarp plugin.\n");
+
+                yarpPlugins.push_back(yarpPlugin);
+            }
+        }
         return true;
     }
 
@@ -189,7 +306,7 @@ private:
     std::vector<char *> argv;
 
     yarp::os::Network yarp;
-    yarp::dev::PolyDriver* yarpPlugin;
+    std::vector<yarp::dev::PolyDriver*> yarpPlugins;
 };
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
