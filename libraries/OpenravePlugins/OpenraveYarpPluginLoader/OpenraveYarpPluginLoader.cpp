@@ -224,15 +224,26 @@ public:
                     return false;
                 }
 
+                std::string manipulatorName(robotName);
+                manipulatorName += "/";
+                manipulatorName += vectorOfManipulatorPtr[ manipulatorIndex ]->GetName();
+
+                options.put("name",manipulatorName);
+
+                yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+                yarpPlugin->open(options);
+
+                if( ! yarpPlugin->isValid() )
+                {
+                    CD_ERROR("yarp plugin not valid.\n");
+                    return false;
+                }
+                CD_SUCCESS("Valid yarp plugin.\n");
+
+                yarpPlugins.push_back(yarpPlugin);
             }
         }
-
-        /*
-        name += "/";
-        name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
-
-        options.put("name",name);
-        */
+;
 
         return true;
     }
