@@ -120,11 +120,6 @@ public:
             {
                 std::string name;
 
-                if( options.check("prefix") )  // Note that not taken into account if using "name"
-                {
-                    name += options.find("prefix").asString();
-                }
-
                 name += "/";
                 int robotPtrIdx = options.find("robotIndex").asInt();
 
@@ -164,10 +159,6 @@ public:
                     name += "/";
                     name += vectorOfManipulatorPtr[ manipulatorPtrIdx ]->GetName();
 
-                    if( options.check("suffix") )  // Note that not taken into account if using "name"
-                    {
-                        name += options.find("suffix").asString();
-                    }
                 }
 
                 options.put("name",name);
@@ -235,9 +226,8 @@ public:
             std::string robotName("/");
             robotName += vectorOfRobotPtr[ robotIndex ]->GetName();
 
+            // std::vector<int> manipulatorIndexes;
         }
-        // std::vector<int> manipulatorIndexes;
-
 
         return true;
     }
