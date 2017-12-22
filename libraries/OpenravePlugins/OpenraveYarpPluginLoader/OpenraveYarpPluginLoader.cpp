@@ -209,17 +209,22 @@ public:
                 yarpPlugins.push_back(yarpPlugin);
             }
 
+            //-- Iterate through manipulators
+            for(int i=0;i<manipulatorIndices.size();i++)
+            {
+                int manipulatorIndex = manipulatorIndices[i];
+                if(manipulatorIndex >= vectorOfManipulatorPtr.size())
+                {
+                    CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarp plugin. Bye!\n",manipulatorIndex,vectorOfManipulatorPtr.size());
+                    return false;
+                }
+                else if (manipulatorIndex < 0)
+                {
+                    CD_ERROR("manipulatorIndex %d < 0, not loading yarpPlugin.\n",manipulatorIndex);
+                    return false;
+                }
 
-            /*if(manipulatorIndex >= vectorOfManipulatorPtr.size())
-            {
-                CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarp plugin. Bye!\n",manipulatorIndex,vectorOfManipulatorPtr.size());
-                return false;
             }
-            else if (manipulatorIndex < 0)
-            {
-                CD_ERROR("manipulatorIndex %d < 0, not loading yarpPlugin.\n",manipulatorIndex);
-                return false;
-            }*/
         }
 
         /*
