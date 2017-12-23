@@ -72,14 +72,14 @@ public:
         std::stringstream ss(cmd);
 
         //-- Fill openStrings
-        std::vector<std::string*> openStrings;
+        std::vector<std::string> openStrings;
         while( ! ss.eof() )
         {
             std::string tmp;
             ss >> tmp;
             if(tmp == "open")
             {
-                std::string* openString = new std::string;
+                std::string openString;;
                 openStrings.push_back(openString);
             }
             else
@@ -89,23 +89,20 @@ public:
                     CD_ERROR("args must start with open, sorry! Bye!\n");
                     return 1;
                 }
-                openStrings[openStrings.size()-1]->append(tmp);
-                openStrings[openStrings.size()-1]->append(" ");
+                openStrings[openStrings.size()-1].append(tmp);
+                openStrings[openStrings.size()-1].append(" ");
             }
         }
 
         //-- Open each openString
         for(int i=0;i<openStrings.size();i++)
         {
-            CD_DEBUG("open[%d]: [%s]\n",i,openStrings[i]->c_str());
+            CD_DEBUG("open[%d]: [%s]\n",i,openStrings[i].c_str());
 
-            std::istringstream sinput( *(openStrings[i]) );
+            std::istringstream sinput( openStrings[i] );
             std::ostringstream sout;
             if( ! Open(sout,sinput) )
                 return 1;
-
-            delete openStrings[i];
-            openStrings[i] = 0;
         }
         return 0;
     }
