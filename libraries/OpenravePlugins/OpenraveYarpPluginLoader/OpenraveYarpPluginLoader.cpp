@@ -71,7 +71,7 @@ public:
         CD_DEBUG("[%s]\n", cmd.c_str());
         std::stringstream ss(cmd);
 
-        // Fill openStrings
+        //-- Fill openStrings
         std::vector<std::string*> openStrings;
         while( ! ss.eof() )
         {
@@ -93,11 +93,19 @@ public:
                 openStrings[openStrings.size()-1]->append(" ");
             }
         }
+
+        //-- Open each openString
         for(int i=0;i<openStrings.size();i++)
         {
             CD_DEBUG("open[%d]: [%s]\n",i,openStrings[i]->c_str());
-            //std::istream sinput;
-            //Open
+
+            std::istringstream sinput( *(openStrings[i]) );
+            std::ostringstream sout;
+            if( ! Open(sout,sinput) )
+                return 1;
+
+            delete openStrings[i];
+            openStrings[i] = 0;
         }
         return 0;
     }
