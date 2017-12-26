@@ -14,7 +14,7 @@ try:
     env.Load('/usr/local/share/robotDevastation-openrave-models/contexts/openrave/ecro/mapping_room.env.xml')
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
-    print OpenraveYarpPluginLoader.SendCommand('open --device YarpOpenraveGrabber --robotIndex 0 --sensorIndex 1 --prefix /drl')
+    print OpenraveYarpPluginLoader.SendCommand('open --device YarpOpenraveGrabber --robotIndex 0 --sensorIndex 1')
 
     while 1:
         pass
