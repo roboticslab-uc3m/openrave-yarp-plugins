@@ -37,11 +37,12 @@ The main approach is to develop OpenRAVE plugins (contained in the [OpenravePlug
 
 ![Architecture Block Diagram](doc/fig/architecture.png)
 
-Technically, the OpenRAVE plugin contains one or many `yarp::dev::PolyDriver`, and calls  `open(yarp::os::Searchable &config)` passing a `yarp::os::Property` (note that `Property` is a `Searchable`) with the following contents:
-- "device": A YARP plugin that is a general purpose network wrapper  (contrcontrolboardwrapper2, grabber...).
-- "subdevice": A YARP plugin from this repository (implements controlboard, grabber... functionality).
+Technically, the OpenRAVE plugin can directly open YARP ports, or contain one or many `yarp::dev::PolyDriver`. In the latter, it calls `yarp::dev::PolyDriver::open(yarp::os::Searchable &config)` passing a `yarp::os::Property` (note that `Property` is a `Searchable`), typically with the following contents:
+- "device": A YARP plugin that is a general purpose network wrapper and thus opens YARP ports (`controlboardwrapper2`, `grabber`...).
+- "subdevice": A YARP plugin from this repository (implementing `controlboard`, `grabber`... functionality).
 - "penv": A C-style pointer to the `OpenRAVE::Environment` to be used by the "subdevice".
-- Plus, whatever other information the "subdevice" YARP plugin requires (e.g. which manipulator of which robot it will control).
+- "name": Can be extracted from the `OpenRAVE::Environment` and can be used for the port names opened by the "device" too.
+- Plus, whatever other information the "subdevice" YARP plugin requires (e.g. which `robotIndex` and/or `manipulatorIndex` for control).
 
 # Tutorials: (How to use openrave-yarp-plugins as a replacement of teoSim)
 
