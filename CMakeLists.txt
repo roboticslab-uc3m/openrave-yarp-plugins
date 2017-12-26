@@ -15,7 +15,6 @@ project(OPENRAVE_YARP_PLUGINS)
 set(BUILD_SHARED_LIBS TRUE CACHE INTERNAL "hide this!")
 
 ### options: cpp libraries (openrave plugins)
-option(ENABLE_OpenraveYarpControlboard "Enable/disable option OpenraveYarpControlboard" TRUE)
 option(ENABLE_OpenraveYarpPaintSquares "Enable/disable option OpenraveYarpPaintSquares" TRUE)
 option(ENABLE_OpenraveWorldRpcResponder "Enable/disable option OpenraveWorldRpcResponder" TRUE)
 option(ENABLE_OpenraveYarpForceEstimator "Enable/disable option OpenraveYarpForceEstimator" TRUE)

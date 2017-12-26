@@ -33,22 +33,23 @@ Installation instructions for installing from source can be found [here](doc/ope
 
 ## Description
 
-The main approach is to develop OpenRAVE plugins (contained in the [openraveplugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/openraveplugins) folder), which internally load YARP plugins (contained in the [yarpplugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/yarpplugins) folder) that open ports thanks to their network wrappers. This can be seen in the following figure.
+The main approach is to develop OpenRAVE plugins (contained in the [OpenravePlugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/OpenravePlugins) folder), which internally load YARP plugins (contained in the [YarpPlugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/YarpPlugins) folder) that open ports thanks to their network wrappers. This can be seen in the following figure.
 
 ![Architecture Block Diagram](doc/fig/architecture.png)
 
-Technically, the OpenRAVE plugin contains one or many `yarp::dev::PolyDriver`, and calls  `open(yarp::os::Searchable &config)` passing a `yarp::os::Property` (note that `Property` is a `Searchable`) with the following contents:
-- "device": A YARP plugin that is a general purpose network wrapper  (contrcontrolboardwrapper2, grabber...).
-- "subdevice": A YARP plugin from this repository (implements controlboard, grabber... functionality).
+Technically, the OpenRAVE plugin can directly open YARP ports, or contain one or many `yarp::dev::PolyDriver`. In the latter, it calls `yarp::dev::PolyDriver::open(yarp::os::Searchable &config)` passing a `yarp::os::Property` (note that `Property` is a `Searchable`), typically with the following contents:
+- "device": A YARP plugin that is a general purpose network wrapper and thus opens YARP ports (`controlboardwrapper2`, `grabber`...).
+- "subdevice": A YARP plugin from this repository (implementing `controlboard`, `grabber`... functionality).
 - "penv": A C-style pointer to the `OpenRAVE::Environment` to be used by the "subdevice".
-- Plus, whatever other information the "subdevice" YARP plugin requires (e.g. which manipulator of which robot it will control).
+- "name": Can be extracted from the `OpenRAVE::Environment` and can be used for the port names opened by the "device" too.
+- Plus, whatever other information the "subdevice" YARP plugin requires (e.g. which `robotIndex` and/or `manipulatorIndex` for control).
 
 # Tutorials: (How to use openrave-yarp-plugins as a replacement of teoSim)
 
 ```bash
 yarpserver
 # new terminal
-python ~/repos/openrave-yarp-plugins/examples/openraveYarpControlboard.py
+python ~/repos/openrave-yarp-plugins/examples/openraveYarpPluginLoader-controlboard-allManipulators.py
 # Then the robot can be commanded via yarp with:
 yarp rpc /teoSim/[kinematic chain name]/rpc:i
 ```
@@ -58,10 +59,10 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 
 ```bash
 # new terminal to open the simulated robot
-python ~/repos/openrave-yarp-plugins/examples/openraveYarpControlboard.py
+python ~/repos/openrave-yarp-plugins/examples/openraveYarpPluginLoader-controlboard-allManipulators.py
 # new terminal to open the collision avoidance simulator 
 # NOTE: Expect LONG wait to load the padding model
-python ~/repos/openrave-yarp-plugins/examples/openraveYarpControlboard-collision-sim.py
+python ~/repos/openrave-yarp-plugins/examples/openraveYarpPluginLoader-controlboard-collision-sim.py
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teoSim/[kinematic chain name]/rpc:i
 ```
@@ -71,7 +72,7 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 
 ```bash
 # new terminal
-python ~/repos/openrave-yarp-plugins/examples/openraveYarpControlboard-collision-real.py
+python ~/repos/openrave-yarp-plugins/examples/openraveYarpPluginLoader-controlboard-collision-real.py
 # wait for the system to load the padding model
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teo/[kinematic chain name]/rpc:i
@@ -94,3 +95,4 @@ openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave
 ```
 
 To change the file type, [this](https://github.com/roboticslab-uc3m/tools/tree/develop/programs/openraveppToSTL) can be used.
+

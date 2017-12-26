@@ -6,15 +6,15 @@ from openravepy import *
 try:
     RaveInitialize()
 
-    if not RaveLoadPlugin('OpenraveYarpControlboard'):
+    if not RaveLoadPlugin('OpenraveYarpPluginLoader'):
         raveLogError("Plugin not correctly loaded")
 
     env=Environment()
     env.SetViewer('qtcoin')
     env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml')
 
-    OpenraveYarpControlboard = RaveCreateModule(env,'OpenraveYarpControlboard')
-    print OpenraveYarpControlboard.SendCommand('open collision /teo')
+    OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
+    print OpenraveYarpPluginLoader.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboardCollision --robotIndex 0 --allManipulators')
 
     # Convex Decomposition padding
     teo_robot = env.GetRobots()[0]

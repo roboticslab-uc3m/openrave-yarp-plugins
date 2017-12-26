@@ -4,7 +4,6 @@
 
 #IF (ENABLE_openraveplugins)
 
-add_subdirectory(OpenraveYarpControlboard)
 add_subdirectory(OpenraveYarpPaintSquares)
 add_subdirectory(OpenraveWorldRpcResponder)
 add_subdirectory(OpenraveYarpForceEstimator)
