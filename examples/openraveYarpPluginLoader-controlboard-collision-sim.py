@@ -14,7 +14,7 @@ try:
     env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml')
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
-    print OpenraveYarpPluginLoader.SendCommand('open collision')
+    print OpenraveYarpPluginLoader.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboardCollision --robotIndex 0 --allManipulators')
 
     # Convex Decomposition padding
     teo_robot = env.GetRobots()[0]
