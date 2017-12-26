@@ -33,7 +33,7 @@ Installation instructions for installing from source can be found [here](doc/ope
 
 ## Description
 
-The main approach is to develop OpenRAVE plugins (contained in the [openraveplugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/openraveplugins) folder), which internally load YARP plugins (contained in the [yarpplugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/yarpplugins) folder) that open ports thanks to their network wrappers. This can be seen in the following figure.
+The main approach is to develop OpenRAVE plugins (contained in the [OpenravePlugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/OpenravePlugins) folder), which internally load YARP plugins (contained in the [YarpPlugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/YarpPlugins) folder) that open ports thanks to their network wrappers. This can be seen in the following figure.
 
 ![Architecture Block Diagram](doc/fig/architecture.png)
 
