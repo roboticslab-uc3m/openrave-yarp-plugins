@@ -16,11 +16,11 @@ try:
     env.SetViewer('qtcoin')
     env.Load('/home/raul/repos/textiles/textiles/ironing/manipulation/ironingSim/ironingSim.env.xml')
 
-    OpenraveYarpControlboard0 = RaveCreateModule(env,'OpenraveYarpPluginLoader')
-    print OpenraveYarpControlboard0.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2 --genRefSpeed 999999')  # rightArm is maniplator 2
+    OpenraveYarpPluginLoader0 = RaveCreateModule(env,'OpenraveYarpPluginLoader')
+    print OpenraveYarpPluginLoader0.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2 --genRefSpeed 999999')  # rightArm is maniplator 2
     
-    OpenraveYarpControlboard2 = RaveCreateModule(env,'OpenraveYarpPluginLoader')
-    print OpenraveYarpControlboard2.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 --genRefSpeed 999999')  # trunk is manipulator 0
+    OpenraveYarpPluginLoader2 = RaveCreateModule(env,'OpenraveYarpPluginLoader')
+    print OpenraveYarpPluginLoader2.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 --genRefSpeed 999999')  # trunk is manipulator 0
     
     OpenraveYarpForceEstimator = RaveCreateModule(env,'OpenraveYarpForceEstimator')
     print OpenraveYarpForceEstimator.SendCommand('open')
