@@ -79,7 +79,7 @@ public:
             ss >> tmp;
             if(tmp == "open")
             {
-                std::string openString;;
+                std::string openString("open");
                 openStrings.push_back(openString);
             }
             else
@@ -89,8 +89,8 @@ public:
                     CD_ERROR("args must start with open, sorry! Bye!\n");
                     return 1;
                 }
-                openStrings[openStrings.size()-1].append(tmp);
                 openStrings[openStrings.size()-1].append(" ");
+                openStrings[openStrings.size()-1].append(tmp);
             }
         }
 
@@ -101,7 +101,7 @@ public:
 
             std::istringstream sinput( openStrings[i] );
             std::ostringstream sout;
-            if( ! Open(sout,sinput) )
+            if( ! SendCommand(sout,sinput) )
                 return 1;
         }
         return 0;
