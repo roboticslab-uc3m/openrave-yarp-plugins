@@ -14,7 +14,8 @@ try:
 
     env=Environment()
     env.SetViewer('qtcoin')
-    env.Load('/home/raul/repos/textiles/textiles/ironing/manipulation/ironingSim/ironingSim.env.xml')
+    #env.Load('/home/raul/repos/textiles/textiles/ironing/manipulation/ironingSim/ironingSim.env.xml')
+    env.Load('/usr/local/share/xgnitive/contexts/models/teo_cgda_iros_iron.env.xml')  # assumes XGNITIVE installed
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
 
