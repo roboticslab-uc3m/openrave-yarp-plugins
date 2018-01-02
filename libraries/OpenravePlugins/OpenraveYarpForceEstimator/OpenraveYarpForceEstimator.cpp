@@ -129,12 +129,12 @@ class TeoSimRateThread : public yarp::os::RateThread {
         KinBodyPtr _objPtr;
         KinBodyPtr _ironTable;
 
-        // ------------------------------- Private -------------------------------------
-        private:
-
         vector<int> sqIroned;
         yarp::os::Semaphore sqIronedSemaphore;
 
+
+        // ------------------------------- Private -------------------------------------
+        private:
 
         Transform T_base_object;
 
@@ -201,11 +201,11 @@ void TeoSimRateThread::run() {
 
         if( sqIronedValue == 1 )
         {
-            _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
+            _ironTable->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
         }
         else
         {
-            _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.5, 0.5, 0.5));
+            _ironTable->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.5, 0.5, 0.5));
         }
 
     }
@@ -252,7 +252,7 @@ public:
         char* dummyProgramName = "dummyProgramName";
         argv.push_back(dummyProgramName);
 
-        vector<string> argv;
+        //vector<string> argv;
 
         while(sinput)
         {
@@ -278,7 +278,7 @@ public:
         CD_INFO("wrinkle Size: %d\n",wrinkleSize);
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
-        OpenRAVE::EnvironmentBasePtr pEnv = GetEnv();
+        OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
         teoSimRateThread._objPtr = penv->GetKinBody("object");
         if(!teoSimRateThread._objPtr) {
@@ -297,10 +297,10 @@ public:
         probot->SetActiveManipulator("rightArm");
         probot->Grab(teoSimRateThread._objPtr);
 
-        sqPainted.resize(squares);
+        teoSimRateThread.sqIroned.resize(wrinkleSize);
 
-        processor.setPsqPainted(&sqPainted);
-        processor.setPsqPaintedSemaphore(&sqPaintedSemaphore);
+        processor.setPsqIroned(&teoSimRateThread.sqIroned);
+        processor.setPsqIronedSemaphore(&teoSimRateThread.sqIronedSemaphore);
         rpcServer.setReader(processor);
         rpcServer.open(portName);
 
@@ -351,6 +351,12 @@ public:
 private:
     yarp::os::Network yarp;
     TeoSimRateThread teoSimRateThread;
+
+    std::vector<char *> argv;
+
+    DataProcessor processor;
+    yarp::os::RpcServer rpcServer;
+
 
 };
 
