@@ -24,7 +24,7 @@ try:
     print OpenraveYarpPluginLoader.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 --genRefSpeed 999999')  # trunk is manipulator 0
     
     OpenraveYarpForceEstimator = RaveCreateModule(env,'OpenraveYarpForceEstimator')
-    print OpenraveYarpForceEstimator.SendCommand('open')
+    print OpenraveYarpForceEstimator.SendCommand('open --wrinkleSize 4')
 
     while 1:
         pass
