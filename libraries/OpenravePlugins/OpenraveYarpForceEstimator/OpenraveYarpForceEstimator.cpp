@@ -127,7 +127,7 @@ class TeoSimRateThread : public yarp::os::RateThread {
         yarp::os::Port port;
         // Not my fault :D
         KinBodyPtr _objPtr;
-        KinBodyPtr _ironTable;
+        KinBodyPtr _ironWrinkle;
 
         vector<int> sqIroned;
         yarp::os::Semaphore sqIronedSemaphore;
@@ -179,7 +179,7 @@ void TeoSimRateThread::run() {
     {
         stringstream ss;
         ss << "square" << i;
-        Transform pos_square = _ironTable->GetLink(ss.str())->GetGeometry(0)->GetTransform();
+        Transform pos_square = _ironWrinkle->GetLink(ss.str())->GetGeometry(0)->GetTransform();
 
         double pos_square_x = pos_square.trans.x;
         double pos_square_y = pos_square.trans.y;
@@ -201,11 +201,11 @@ void TeoSimRateThread::run() {
 
         if( sqIronedValue == 1 )
         {
-            _ironTable->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
+            _ironWrinkle->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
         }
         else
         {
-            _ironTable->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.5, 0.5, 0.5));
+            _ironWrinkle->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.5, 0.5, 0.5));
         }
 
     }
@@ -285,10 +285,10 @@ public:
             fprintf(stderr,"error: object \"object\" does not exist.\n");
         } else printf("sucess: object \"object\" exists.\n");
 
-        teoSimRateThread._ironTable = penv->GetKinBody("ironTable");
+        teoSimRateThread._ironWrinkle = penv->GetKinBody("ironWrinkle");
         if(!teoSimRateThread._objPtr) {
-            fprintf(stderr,"error: object \"ironTable\" does not exist.\n");
-        } else printf("sucess: object \"ironTable\" exists.\n");
+            fprintf(stderr,"error: object \"ironWrinkle\" does not exist.\n");
+        } else printf("sucess: object \"ironWrinkle\" exists.\n");
 
         std::vector<RobotBasePtr> robots;
         penv->GetRobots(robots);
