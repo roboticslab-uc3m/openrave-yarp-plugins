@@ -16,6 +16,7 @@ git clone https://github.com/roboticslab-uc3m/openrave-yarp-plugins.git  # Downl
 cd openrave-yarp-plugins; mkdir build; cd build; cmake ..  # Configure the openrave-yarp-plugins software
 make -j$(nproc)  # Compile
 sudo make install  # Install :-)
+sudo ldconfig  # Just in case...
 cd  # go home
 ```
 
