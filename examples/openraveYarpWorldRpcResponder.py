@@ -6,15 +6,15 @@ from openravepy import *
 try:
     RaveInitialize()
 
-    if not RaveLoadPlugin('OpenraveWorldRpcResponder'):
+    if not RaveLoadPlugin('OpenraveYarpWorldRpcResponder'):
         raveLogError("Plugin not correctly loaded")
         
     env=Environment()
     env.SetViewer('qtcoin')
     env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml')
 
-    OpenraveWorldRpcResponder = RaveCreateModule(env,'OpenraveWorldRpcResponder')
-    print OpenraveWorldRpcResponder.SendCommand('open')
+    OpenraveYarpWorldRpcResponder = RaveCreateModule(env,'OpenraveYarpWorldRpcResponder')
+    print OpenraveYarpWorldRpcResponder.SendCommand('open')
 
     while 1:
         pass

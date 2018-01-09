@@ -560,17 +560,17 @@ private:
 
 
 
-class OpenraveWorldRpcResponder : public ModuleBase
+class OpenraveYarpWorldRpcResponder : public ModuleBase
 {
 public:
 
-    OpenraveWorldRpcResponder(EnvironmentBasePtr penv) : ModuleBase(penv)
+    OpenraveYarpWorldRpcResponder(EnvironmentBasePtr penv) : ModuleBase(penv)
     {
-        __description = "OpenraveWorldRpcResponder plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveWorldRpcResponder::Open, this,_1,_2),"opens port");
+        __description = "OpenraveYarpWorldRpcResponder plugin.";
+        RegisterCommand("open",boost::bind(&OpenraveYarpWorldRpcResponder::Open, this,_1,_2),"opens port");
     }
 
-    virtual ~OpenraveWorldRpcResponder()
+    virtual ~OpenraveYarpWorldRpcResponder()
     {
         worldRpcServer.close();
     }
@@ -598,7 +598,7 @@ public:
             funcionArgs.push_back(funcionArg);
         }
 
-        string portName("/worldRpcResponder/rpc:s");
+        string portName("/openraveYarpWorldRpcResponder/rpc:s");
 
         if (funcionArgs.size() > 0)
         {
@@ -623,7 +623,7 @@ public:
         penv->GetRobots(robots);
         //-- Robot 0
         probot = robots.at(0);  // which is a RobotBasePtr
-        printf("OpenRaveWorldRpcResponder using robot 0 (%s) as main robot.\n", probot->GetName().c_str());
+        printf("OpenRaveYarpWorldRpcResponder using robot 0 (%s) as main robot.\n", probot->GetName().c_str());
 
         //-- processor
         processor.setEnvironment(penv);
@@ -647,16 +647,16 @@ private:
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv)
 {
-    if( type == PT_Module && interfacename == "openraveworldrpcresponder" )
+    if( type == PT_Module && interfacename == "openraveyarpworldrpcresponder" )
     {
-        return InterfaceBasePtr(new OpenraveWorldRpcResponder(penv));
+        return InterfaceBasePtr(new OpenraveYarpWorldRpcResponder(penv));
     }
     return InterfaceBasePtr();
 }
 
 void GetPluginAttributesValidated(PLUGININFO& info)
 {
-    info.interfacenames[PT_Module].push_back("OpenraveWorldRpcResponder");
+    info.interfacenames[PT_Module].push_back("OpenraveYarpWorldRpcResponder");
 }
 
 OPENRAVE_PLUGIN_API void DestroyPlugin()
