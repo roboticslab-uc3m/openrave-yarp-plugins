@@ -61,11 +61,19 @@ public:
     void setPsqIronedSemaphore(yarp::os::Semaphore* psqIronedSemaphore) {
         this->psqIronedSemaphore = psqIronedSemaphore;
     }
+    void setPforceValue(float* pforceValue) {
+        this->pforceValue = pforceValue;
+    }
+    void setPforceValueSemaphore(yarp::os::Semaphore* pforceValueSemaphore) {
+        this->pforceValueSemaphore = pforceValueSemaphore;
+    }
 
 private:
 
     vector<int>* psqIroned;
     yarp::os::Semaphore* psqIronedSemaphore;
+    float* pforceValue;
+    yarp::os::Semaphore* pforceValueSemaphore;
 
     virtual bool read(yarp::os::ConnectionReader& in)
     {
@@ -103,6 +111,14 @@ private:
             response.addString("ok");
             return response.write(*out);
         }
+        else if ( request.get(0).asString() == "force" )
+        {
+            pforceValueSemaphore->wait();
+            response.addDouble(pforceValue[0]);
+            pforceValueSemaphore->post();
+            response.addString("ok");
+            return response.write(*out);
+        }
 
         response.addString("unknown command");
         return response.write(*out);
@@ -131,6 +147,8 @@ class TeoSimRateThread : public yarp::os::RateThread {
 
         vector<int> sqIroned;
         yarp::os::Semaphore sqIronedSemaphore;
+        yarp::os::Semaphore forceValueSemaphore;
+        float forceValue;
 
 
         // ------------------------------- Private -------------------------------------
@@ -164,18 +182,23 @@ void TeoSimRateThread::run() {
     //Ironing for
     // if Z<-0.1
 
-    yarp::os::Bottle out;
     if(t1.trans.z<-0.1){
-        out.addDouble(-15);
+        forceValueSemaphore.wait();
+        forceValue=-15;
+        forceValueSemaphore.post();
     }
     else{
-        out.addDouble(0);
+        forceValueSemaphore.wait();
+        forceValue=0;
+        forceValueSemaphore.post();
     }
+
+
 
     //double estimatedForceZ = fabs((ERROR_GAIN * (t2.trans.z - t1.trans.z) ) - ERROR_OFFSET);
     //yarp::os::Bottle out;
     //out.addDouble(t1.trans.z);
-    port.write(out);
+    //port.write(out);
 
     //Calculate the % of wrinkle that have been ironed.
 
@@ -312,6 +335,8 @@ public:
 
         processor.setPsqIroned(&teoSimRateThread.sqIroned);
         processor.setPsqIronedSemaphore(&teoSimRateThread.sqIronedSemaphore);
+        processor.setPforceValue(&teoSimRateThread.forceValue);
+        processor.setPforceValueSemaphore(&teoSimRateThread.forceValueSemaphore);
         rpcServer.setReader(processor);
         rpcServer.open(portName);
 
