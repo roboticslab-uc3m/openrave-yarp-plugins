@@ -122,8 +122,8 @@ class TeoSimRateThread : public yarp::os::RateThread {
         void run();
 
         // public... buahahaha
-        KinBodyPtr pObject1;
-        KinBodyPtr pObject2;
+        //KinBodyPtr pObject1;
+        //KinBodyPtr pObject2;
         yarp::os::Port port;
         // Not my fault :D
         KinBodyPtr _objPtr;
@@ -142,8 +142,19 @@ class TeoSimRateThread : public yarp::os::RateThread {
 
 void TeoSimRateThread::run() {
     //printf("[TeoSimRateThread] run()\n");
-    Transform t1 = pObject1->GetTransform();
-    Transform t2 = pObject2->GetTransform();
+
+    /*
+    if(!_objPtr) {
+        fprintf(stderr,"error: object \"object\" does not exist.\n");
+    } else printf("sucess: object \"object\" exists.\n");
+
+    if(!_ironWrinkle) {
+        fprintf(stderr,"error: object \"ironWrinkle\" does not exist.\n");
+    } else printf("sucess: object \"ironWrinkle\" exists.\n");
+    */
+
+    Transform t1 = _objPtr->GetTransform();
+    Transform t2 = _ironWrinkle->GetTransform();
 
     /*t.trans.x
     t.trans.y
@@ -173,6 +184,7 @@ void TeoSimRateThread::run() {
     double T_base_object_x = T_base_object.trans.x;
     double T_base_object_y = T_base_object.trans.y;
     double T_base_object_z = T_base_object.trans.z;
+
 
     //Update psqIroned to the new values
     for(int i=0; i<(sqIroned.size()); i++)
@@ -209,7 +221,6 @@ void TeoSimRateThread::run() {
         }
 
     }
-
 
 }
 
@@ -286,7 +297,7 @@ public:
         } else printf("sucess: object \"object\" exists.\n");
 
         teoSimRateThread._ironWrinkle = penv->GetKinBody("ironWrinkle");
-        if(!teoSimRateThread._objPtr) {
+        if(!teoSimRateThread._ironWrinkle) {
             fprintf(stderr,"error: object \"ironWrinkle\" does not exist.\n");
         } else printf("sucess: object \"ironWrinkle\" exists.\n");
 
