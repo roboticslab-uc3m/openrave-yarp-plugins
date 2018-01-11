@@ -210,10 +210,13 @@ void TeoSimRateThread::run() {
     double T_base_object_ox = T_base_object.rot.x;
     double T_base_object_oy = T_base_object.rot.y;
     double T_base_object_oz = T_base_object.rot.z;
+    double T_base_object_ow = T_base_object.rot.w;
 
-    //CD_INFO("%d",T_base_object_ox);
-    //CD_INFO("%d",T_base_object_oy);
-    //CD_INFO("%d",T_base_object_oz);
+    cout<<"Orientacion X es: "<<T_base_object_ox<<endl;
+    cout<<"Orientacion Y es: "<<T_base_object_oy<<endl;
+    cout<<"Orientacion Z es: "<<T_base_object_oz<<endl;
+    cout<<"Valor W es: "<<T_base_object_ow<<endl;
+
 
     //Update psqIroned to the new values
     for(int i=0; i<(sqIroned.size()); i++)
