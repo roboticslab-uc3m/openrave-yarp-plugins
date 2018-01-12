@@ -20,7 +20,6 @@ list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
 include(YarpPlugin)
 
 #  yarp_begin_plugin_library(yarpplugins)
-    add_subdirectory(FakeControlboard)
     add_subdirectory(YarpOpenraveControlboard)
     add_subdirectory(YarpOpenraveControlboardCollision)
     add_subdirectory(YarpOpenraveGrabber)
