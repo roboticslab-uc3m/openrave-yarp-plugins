@@ -32,7 +32,7 @@ option(ENABLE_YarpOpenraveRGBDSensor  "Enable/disable option YarpOpenraveRGBDSen
 option(ENABLE_YarpOpenraveRobotManager "Enable/disable option YarpOpenraveRobotManager" TRUE)
 
 ### options: cpp programs
-option(ENABLE_teoSim "Choose if you want to compile (deprecated) teoSim" TRUE)
+#option(ENABLE_exampleProgram "Choose if you want to compile exampleProgram" TRUE)
 
 
 if(MSVC)
