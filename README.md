@@ -44,24 +44,24 @@ Technically, the OpenRAVE plugin can directly open YARP ports, or contain one or
 - "name": Can be extracted from the `OpenRAVE::Environment` and can be used for the port names opened by the "device" too.
 - Plus, whatever other information the "subdevice" YARP plugin requires (e.g. which `robotIndex` and/or `manipulatorIndex` for control).
 
-# Tutorials: (How to use openrave-yarp-plugins as a replacement of teoSim)
+# Tutorials: (How openrave-yarp-plugins is used to implement teoSim in teo-configuration-files)
 
 ```bash
 yarpserver
 # new terminal
-python ~/repos/openrave-yarp-plugins/examples/openraveYarpPluginLoader-controlboard-allManipulators.py
+openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators"
 # Then the robot can be commanded via yarp with:
 yarp rpc /teoSim/[kinematic chain name]/rpc:i
 ```
 
-If you do not have or want to use Python, the direct CLI one-liner succesor of `teoSim` is:
-```bash
-openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators"
-```
-
-We can even do funky commands like the following, where `open` acts as a delimiter:
+We can do funky commands like the following, where `open` acts as a delimiter:
 ```bash
 openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
+```
+
+If you prefer to use Python, the direct CLI one-liner equivalent of `teoSim` is:
+```bash
+python ~/repos/openrave-yarp-plugins/examples/openraveYarpPluginLoader-controlboard-allManipulators.py
 ```
 
 Note that OpenraveYarpPluginLoader uses OpenRAVE plugins `main()`, affected by [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60).
