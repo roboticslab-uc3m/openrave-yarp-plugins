@@ -23,7 +23,6 @@ option(ENABLE_OpenraveYarpPluginLoader "Enable/disable option OpenraveYarpPlugin
 option(ENABLE_OpenraveYarpCoupled "Enable/disable option OpenraveYarpCoupled" TRUE)
 
 ### options: cpp libraries (yarp plugins)
-option(ENABLE_FakeControlboard "Enable/disable compilation of FakeControlboard" TRUE)
 option(ENABLE_YarpOpenraveBase "Enable/disable option YarpOpenraveBase" TRUE)
 option(ENABLE_YarpOpenraveControlboard "Enable/disable option YarpOpenraveControlboard" TRUE)
 option(ENABLE_YarpOpenraveControlboardCollision "Enable/disable option YarpOpenraveControlboardCollision" TRUE)
