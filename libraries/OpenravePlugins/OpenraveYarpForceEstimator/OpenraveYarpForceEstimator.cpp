@@ -388,9 +388,9 @@ public:
         rpcServer.open(portName);
 
         teoSimRateThread.start();
+        */
 
         return true;
-        */
     }
 
 private:
