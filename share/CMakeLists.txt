@@ -10,5 +10,5 @@ yarp_configure_external_installation(roboticslab-openrave-yarp-plugins)
 
 ### Go through single applications
 
-add_subdirectory(teoSim)
+#add_subdirectory(example)
 

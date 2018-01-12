@@ -32,7 +32,7 @@ option(ENABLE_YarpOpenraveRGBDSensor  "Enable/disable option YarpOpenraveRGBDSen
 option(ENABLE_YarpOpenraveRobotManager "Enable/disable option YarpOpenraveRobotManager" TRUE)
 
 ### options: cpp programs
-option(ENABLE_teoSim "Choose if you want to compile (deprecated) teoSim" TRUE)
+#option(ENABLE_exampleProgram "Choose if you want to compile exampleProgram" TRUE)
 
 
 if(MSVC)
@@ -96,9 +96,9 @@ set(OPENRAVE_YARP_PLUGINS_LINK_DIRS CACHE INTERNAL "appended link dirs" FORCE)
 set(OPENRAVE_YARP_PLUGINS_LIBRARIES CACHE INTERNAL "appended libraries" FORCE)
 
 # add main contents
-add_subdirectory(share)
+#add_subdirectory(share)  # Currently empty
 add_subdirectory(libraries)
-add_subdirectory(programs)
+#add_subdirectory(programs)  # Currently empty
 
 # export our variables to a OPENRAVE_YARP_PLUGINSConfig.cmake creation
 set(OPENRAVE_YARP_PLUGINS_LINK_DIRS ${OPENRAVE_YARP_PLUGINS_LINK_DIRS} ${LIBRARY_OUTPUT_PATH})
