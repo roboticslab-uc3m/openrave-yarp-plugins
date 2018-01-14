@@ -59,12 +59,12 @@ We can do funky commands like the following, where `open` acts as a delimiter:
 openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
 ```
 
-If you prefer to use Python, the direct CLI one-liner equivalent of `teoSim` is:
+Note that OpenraveYarpPluginLoader uses OpenRAVE plugins `main()`, affected by [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60).
+
+If you prefer to use Python, the Python script equivalent to `teoSim` such that it is not affected by the above issues is contained in the `examples` directory:
 ```bash
 python ~/repos/openrave-yarp-plugins/examples/openraveYarpPluginLoader-controlboard-allManipulators.py
 ```
-
-Note that OpenraveYarpPluginLoader uses OpenRAVE plugins `main()`, affected by [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60).
 
 # Tutorials: (How to use openrave-yarp-plugins for collision avoidance of a simulated robot)
 The following commands explain how to use the openrave-yarp-plugins for collision avoidance, using the previous instance of openrave-yarp-plugins as the remote robot.
