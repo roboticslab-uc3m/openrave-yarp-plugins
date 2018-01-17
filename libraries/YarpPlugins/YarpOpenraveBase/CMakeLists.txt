@@ -1,33 +1,45 @@
 # Copyright: (C) 2017 Universidad Carlos III de Madrid
 # Author: Juan G. Victores
 
+option(ENABLE_YarpOpenraveBase "Enable/disable YarpOpenraveBase" ON)
+
 if(ENABLE_YarpOpenraveBase)
 
-set(CMAKE_MODULE_PATH ${TEO_MODULE_PATH} ${CMAKE_MODULE_PATH})
 find_package(YARP REQUIRED)
 find_package(OpenRAVE REQUIRED)
-find_package(Boost COMPONENTS iostreams python thread system)
+find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED COMPONENTS iostreams python thread system)
 
-if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
-  add_definitions("-fno-strict-aliasing -Wall")
-endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+link_directories(${OpenRAVE_LIBRARY_DIRS}
+                 ${Boost_LIBRARY_DIRS})
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${OpenRAVE_INCLUDE_DIRS})
-if( Boost_INCLUDE_DIRS )
-  include_directories(${Boost_INCLUDE_DIRS})
-endif()
+add_library(YarpOpenraveBase YarpOpenraveBase.hpp
+                             YarpOpenraveBase.cpp)
 
-link_directories(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
-
-add_library(YarpOpenraveBase YarpOpenraveBase.hpp YarpOpenraveBase.cpp)
 add_dependencies(YarpOpenraveBase COLOR_DEBUG)
-set_target_properties(${KEYWORD} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
-set_target_properties(${KEYWORD} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
-target_link_libraries(YarpOpenraveBase ${OpenRAVE_LIBRARIES} ${OpenRAVE_CORE_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${YARP_LIBRARIES})
-install(TARGETS YarpOpenraveBase DESTINATION lib )
 
-# Exporting dependencies for TEOConfig.cmake quite manually for now... 
-set(OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS ${OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended header dirs")
-#set(OPENRAVE_YARP_PLUGINS_LIBRARIES ${OPENRAVE_YARP_PLUGINS_LIBRARIES} YarpOpenraveBase CACHE INTERNAL "appended libraries")
+set_target_properties(YarpOpenraveBase PROPERTIES PUBLIC_HEADER YarpOpenraveBase.hpp
+                                                  COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+                                                  LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+
+target_link_libraries(YarpOpenraveBase YARP::YARP_OS
+                                       YARP::YARP_dev
+                                       ${OpenRAVE_CORE_LIBRARIES}
+                                       ${Boost_THREAD_LIBRARY}
+                                       ${Boost_SYSTEM_LIBRARY})
+
+target_include_directories(YarpOpenraveBase PUBLIC ${YARP_INCLUDE_DIRS}
+                                                   ${OpenRAVE_INCLUDE_DIRS}
+                                                   ${Boost_INCLUDE_DIRS}
+                                                   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+                                                   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+install(TARGETS YarpOpenraveBase
+        EXPORT ROBOTICSLAB_OPENRAVE_YARP_PLUGINS
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+set_property(GLOBAL APPEND PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_TARGETS YarpOpenraveBase)
 
 endif()
