@@ -29,12 +29,12 @@ yarp_add_plugin(YarpOpenraveControlboardCollision YarpOpenraveControlboardCollis
                                                   IControlMode2Impl.cpp
                                                   IEncodersImpl.cpp
                                                   IEncodersTimedImpl.cpp
-                                                  IPositionImpl.cpp
-                                                  IPosition2Impl.cpp
+                                                  IPositionControlImpl.cpp
+                                                  IPositionControl2Impl.cpp
                                                   IPositionDirectImpl.cpp
-                                                  ITorqueImpl.cpp
-                                                  IVelocityImpl.cpp
-                                                  IVelocity2Impl.cpp)
+                                                  ITorqueControlImpl.cpp
+                                                  IVelocityControlImpl.cpp
+                                                  IVelocityControl2Impl.cpp)
 
 add_dependencies(YarpOpenraveControlboardCollision COLOR_DEBUG)
 

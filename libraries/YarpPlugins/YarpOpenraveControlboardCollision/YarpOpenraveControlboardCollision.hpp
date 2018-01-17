@@ -54,7 +54,7 @@ class YarpOpenraveControlboardCollision : YarpOpenraveBase, public yarp::dev::De
         // Set the Thread Rate in the class constructor
         YarpOpenraveControlboardCollision() {}
 
-        // ------- IPositionControl declarations. Implementation in IPositionImpl.cpp -------
+        // ------- IPositionControl declarations. Implementation in IPositionControlImpl.cpp -------
 
                 /**
                  * Get the number of controlled axes. This command asks the number of controlled
@@ -171,7 +171,7 @@ class YarpOpenraveControlboardCollision : YarpOpenraveBase, public yarp::dev::De
                  */
                 virtual bool stop();
 
-            // ------- IPositionControl2 declarations. Implementation in IPosition2Impl.cpp -------
+            // ------- IPositionControl2 declarations. Implementation in IPositionControl2Impl.cpp -------
 
                 /** Set new reference point for a subset of joints.
                  * @param joints pointer to the array of joint numbers
@@ -356,7 +356,7 @@ class YarpOpenraveControlboardCollision : YarpOpenraveBase, public yarp::dev::De
                */
                virtual bool getEncoderTimed(int j, double *encs, double *time);
 
-            //  --------- IVelocityControl Declarations. Implementation in IVelocityImpl.cpp ---------
+            //  --------- IVelocityControl Declarations. Implementation in IVelocityControlImpl.cpp ---------
 
                 /**
                  * Start motion at a given speed, single joint.
@@ -373,7 +373,7 @@ class YarpOpenraveControlboardCollision : YarpOpenraveBase, public yarp::dev::De
                  */
                 virtual bool velocityMove(const double *sp);
 
-            //  --------- IVelocityControl2 Declarations. Implementation in IVelocity2Impl.cpp ---------
+            //  --------- IVelocityControl2 Declarations. Implementation in IVelocityControl2Impl.cpp ---------
 
                 /** Start motion at a given speed for a subset of joints.
                  * @param n_joint how many joints this command is referring to
@@ -534,7 +534,7 @@ class YarpOpenraveControlboardCollision : YarpOpenraveBase, public yarp::dev::De
                 */
                 virtual bool getControlModes(int *modes);
 
-            // -------- ITorqueControl declarations. Implementation in ITorqueImpl.cpp --------
+            // -------- ITorqueControl declarations. Implementation in ITorqueControlImpl.cpp --------
 
                /** Get the reference value of the torque for all joints.
                  * This is NOT the feedback (see getTorques instead).
@@ -713,7 +713,7 @@ class YarpOpenraveControlboardCollision : YarpOpenraveBase, public yarp::dev::De
                  */
                 virtual bool setTorqueOffset(int j, double v);
 
-            // -------- DeviceDriver declarations. Implementation in IDeviceImpl.cpp --------
+            // -------- DeviceDriver declarations. Implementation in DeviceDriverImpl.cpp --------
 
                 /**
                  * Open the DeviceDriver.
