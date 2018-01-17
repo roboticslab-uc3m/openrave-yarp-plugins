@@ -16,7 +16,8 @@ add_library(YarpOpenraveBase YarpOpenraveBase.hpp
 
 add_dependencies(YarpOpenraveBase COLOR_DEBUG)
 
-set_target_properties(YarpOpenraveBase PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+set_target_properties(YarpOpenraveBase PROPERTIES PUBLIC_HEADER YarpOpenraveBase.hpp
+                                                  COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
                                                   LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(YarpOpenraveBase YARP::YARP_OS
