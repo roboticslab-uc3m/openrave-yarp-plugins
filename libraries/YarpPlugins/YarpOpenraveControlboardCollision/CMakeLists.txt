@@ -5,7 +5,8 @@ yarp_prepare_plugin(YarpOpenraveControlboardCollision
                     CATEGORY device
                     TYPE roboticslab::YarpOpenraveControlboardCollision
                     INCLUDE YarpOpenraveControlboardCollision.hpp
-                    DEFAULT ON)
+                    DEFAULT ON
+                    DEPENDS ENABLE_YarpOpenraveBase)
 
 if(NOT SKIP_YarpOpenraveControlboardCollision)
 

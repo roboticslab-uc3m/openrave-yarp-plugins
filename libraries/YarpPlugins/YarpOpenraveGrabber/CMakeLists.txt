@@ -5,7 +5,8 @@ yarp_prepare_plugin(YarpOpenraveGrabber
                     CATEGORY device
                     TYPE roboticslab::YarpOpenraveGrabber
                     INCLUDE YarpOpenraveGrabber.hpp
-                    DEFAULT ON)
+                    DEFAULT ON
+                    DEPENDS ENABLE_YarpOpenraveBase)
 
 if(NOT SKIP_YarpOpenraveGrabber)
 

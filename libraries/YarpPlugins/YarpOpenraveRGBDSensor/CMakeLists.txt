@@ -5,7 +5,8 @@ yarp_prepare_plugin(YarpOpenraveRGBDSensor
                     CATEGORY device
                     TYPE roboticslab::YarpOpenraveRGBDSensor
                     INCLUDE YarpOpenraveRGBDSensor.hpp
-                    WRAPPER grabber)
+                    DEFAULT ON
+                    DEPENDS ENABLE_YarpOpenraveBase)
 
 if(NOT SKIP_YarpOpenraveRGBDSensor)
 

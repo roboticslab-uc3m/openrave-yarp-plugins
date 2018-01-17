@@ -5,7 +5,8 @@ yarp_prepare_plugin(YarpOpenraveControlboard
                     CATEGORY device
                     TYPE roboticslab::YarpOpenraveControlboard
                     INCLUDE YarpOpenraveControlboard.hpp
-                    DEFAULT ON)
+                    DEFAULT ON
+                    DEPENDS ENABLE_YarpOpenraveBase)
 
 if(NOT SKIP_YarpOpenraveControlboard)
 

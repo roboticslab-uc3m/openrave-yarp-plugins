@@ -5,7 +5,8 @@ yarp_prepare_plugin(YarpOpenraveRobotManager
                     CATEGORY device
                     TYPE roboticslab::YarpOpenraveRobotManager
                     INCLUDE YarpOpenraveRobotManager.hpp
-                    DEFAULT ON)
+                    DEFAULT ON
+                    DEPENDS ENABLE_YarpOpenraveBase)
 
 if(NOT SKIP_YarpOpenraveRobotManager)
 
@@ -24,6 +25,7 @@ if(Boost_INCLUDE_DIRS)
 endif()
 
 yarp_add_plugin(YarpOpenraveRobotManager YarpOpenraveRobotManager.hpp
+                                         IRobotManager.hpp
                                          DeviceDriverImpl.cpp
                                          IRobotManagerImpl.cpp)
 
@@ -33,11 +35,11 @@ set_target_properties(YarpOpenraveRobotManager PROPERTIES COMPILE_FLAGS "${OpenR
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(YarpOpenraveRobotManager YARP::YARP_OS
-                                             YARP::YARP_dev
-                                             ${OpenRAVE_CORE_LIBRARIES}
-                                             ${Boost_THREAD_LIBRARY}
-                                             ${Boost_SYSTEM_LIBRARY}
-                                             YarpOpenraveBase)
+                                               YARP::YARP_dev
+                                               ${OpenRAVE_CORE_LIBRARIES}
+                                               ${Boost_THREAD_LIBRARY}
+                                               ${Boost_SYSTEM_LIBRARY}
+                                               YarpOpenraveBase)
 
 yarp_install(TARGETS YarpOpenraveRobotManager
              EXPORT YARP
