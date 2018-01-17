@@ -7,19 +7,29 @@ if(ENABLE_OpenraveYarpCoupled)
 
 find_package(OpenRAVE REQUIRED)
 find_package(YARP REQUIRED)
-
 find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT COMPONENTS iostreams python thread)
 
-include_directories(${OpenRAVE_INCLUDE_DIRS}
+get_property(_common_dirs GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}
+                    ${OpenRAVE_INCLUDE_DIRS}
                     ${YARP_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
-                    ${CMAKE_CURRENT_SOURCE_DIR})
+                    ${_common_dirs})
 
 link_directories(${OpenRAVE_LIBRARY_DIRS}
                  ${Boost_LIBRARY_DIRS})
 
-include(BuildOpenravePlugin)
+add_library(OpenraveYarpCoupled SHARED OpenraveYarpCoupled.cpp)
 
-build_openrave_plugin(OpenraveYarpCoupled)
+set_target_properties(OpenraveYarpCoupled PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+                                                     LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+
+target_link_libraries(OpenraveYarpCoupled ${YARP_LIBRARIES}
+                                          ${OpenRAVE_LIBRARIES})
+
+include(InstallOpenravePlugin)
+
+install_openrave_plugin(OpenraveYarpCoupled)
 
 endif()
