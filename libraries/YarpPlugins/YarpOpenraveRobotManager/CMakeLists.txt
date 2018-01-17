@@ -18,7 +18,8 @@ get_property(_common_dirs GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCL
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
                     ${OpenRAVE_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
-                    ${_common_dirs})
+                    ${_common_dirs}
+                    $<TARGET_PROPERTY:YarpOpenraveBase,INTERFACE_INCLUDE_DIRECTORIES>)
 
 link_directories(${OpenRAVE_LIBRARY_DIRS}
                  ${Boost_LIBRARY_DIRS})
@@ -26,7 +27,8 @@ link_directories(${OpenRAVE_LIBRARY_DIRS}
 yarp_add_plugin(YarpOpenraveRobotManager YarpOpenraveRobotManager.hpp
                                          IRobotManager.hpp
                                          DeviceDriverImpl.cpp
-                                         IRobotManagerImpl.cpp)
+                                         IRobotManagerImpl.cpp
+                                         $<TARGET_OBJECTS:YarpOpenraveBase>)
 
 add_dependencies(YarpOpenraveRobotManager COLOR_DEBUG)
 
@@ -37,8 +39,7 @@ target_link_libraries(YarpOpenraveRobotManager YARP::YARP_OS
                                                YARP::YARP_dev
                                                ${OpenRAVE_CORE_LIBRARIES}
                                                ${Boost_THREAD_LIBRARY}
-                                               ${Boost_SYSTEM_LIBRARY}
-                                               YarpOpenraveBase)
+                                               ${Boost_SYSTEM_LIBRARY})
 
 yarp_install(TARGETS YarpOpenraveRobotManager
              EXPORT YARP
