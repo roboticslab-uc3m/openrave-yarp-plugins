@@ -26,12 +26,11 @@ endif()
 yarp_add_plugin(YarpOpenraveControlboardCollision YarpOpenraveControlboardCollision.hpp
                                                   DeviceDriverImpl.cpp
                                                   IControlLimits2Impl.cpp
-                                                  IControlMode2Impl.cpp
+                                                  IControlModeImpl.cpp
                                                   IEncodersImpl.cpp
                                                   IEncodersTimedImpl.cpp
                                                   IPositionControlImpl.cpp
                                                   IPositionControl2Impl.cpp
-                                                  IPositionDirectImpl.cpp
                                                   ITorqueControlImpl.cpp
                                                   IVelocityControlImpl.cpp
                                                   IVelocityControl2Impl.cpp)

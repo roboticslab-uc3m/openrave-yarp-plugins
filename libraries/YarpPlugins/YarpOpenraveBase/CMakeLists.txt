@@ -1,7 +1,7 @@
 # Copyright: (C) 2017 Universidad Carlos III de Madrid
 # Author: Juan G. Victores
 
-option(ENABLE_OpenraveYarpPaintSquares "Enable/disable YarpOpenraveBase" ON)
+option(ENABLE_YarpOpenraveBase "Enable/disable YarpOpenraveBase" ON)
 
 if(ENABLE_YarpOpenraveBase)
 
