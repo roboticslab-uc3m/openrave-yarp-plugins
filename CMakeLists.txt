@@ -15,6 +15,13 @@ project(OPENRAVE_YARP_PLUGINS)
 # Force building shared libraries and YARP DL modules.
 set(BUILD_SHARED_LIBS TRUE CACHE INTERNAL "hide this!")
 
+# C/C++ compile flags.
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+    # Starting from CMake 2.8.12, use add_compile_options().
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-strict-aliasing -Wall")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-strict-aliasing -Wall")
+endif()
+
 # Add suffix for debug libraries.
 if(MSVC)
     message(STATUS "Running on windows")

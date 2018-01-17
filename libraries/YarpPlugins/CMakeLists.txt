@@ -2,10 +2,6 @@
 # Author: Juan G. Victores, Raul Fernandez-Fernandez
 # CopyPolicy: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
 
-if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-    add_definitions("-fno-strict-aliasing -Wall -fPIC")
-endif()
-
 # Find YARP (common dependency for all devices).
 find_package(YARP REQUIRED)
 
