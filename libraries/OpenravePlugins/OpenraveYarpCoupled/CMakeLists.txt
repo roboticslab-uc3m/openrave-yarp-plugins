@@ -12,11 +12,8 @@ find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT COMPONENTS iostreams python t
 
 include_directories(${OpenRAVE_INCLUDE_DIRS}
                     ${YARP_INCLUDE_DIRS}
+                    ${Boost_INCLUDE_DIRS}
                     ${CMAKE_CURRENT_SOURCE_DIR})
-
-if(Boost_INCLUDE_DIRS)
-    include_directories(${Boost_INCLUDE_DIRS})
-endif()
 
 link_directories(${OpenRAVE_LIBRARY_DIRS}
                  ${Boost_LIBRARY_DIRS})

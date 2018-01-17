@@ -9,7 +9,8 @@ find_package(YARP REQUIRED)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED COMPONENTS iostreams python thread system)
 
-link_directories(${OpenRAVE_LIBRARY_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS}
+                 ${Boost_LIBRARY_DIRS})
 
 add_library(YarpOpenraveBase YarpOpenraveBase.hpp
                              YarpOpenraveBase.cpp)
@@ -28,12 +29,9 @@ target_link_libraries(YarpOpenraveBase YARP::YARP_OS
 
 target_include_directories(YarpOpenraveBase PUBLIC ${YARP_INCLUDE_DIRS}
                                                    ${OpenRAVE_INCLUDE_DIRS}
+                                                   ${Boost_INCLUDE_DIRS}
                                                    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                                                    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-
-if(Boost_INCLUDE_DIRS)
-    target_include_directories(YarpOpenraveBase PUBLIC ${Boost_INCLUDE_DIRS})
-endif()
 
 install(TARGETS YarpOpenraveBase
         EXPORT ROBOTICSLAB_OPENRAVE_YARP_PLUGINS

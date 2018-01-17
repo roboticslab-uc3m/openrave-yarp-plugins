@@ -18,13 +18,11 @@ get_property(_common_dirs GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCL
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
                     ${OpenRAVE_INCLUDE_DIRS}
+                    ${Boost_INCLUDE_DIRS}
                     ${_common_dirs})
 
-if(Boost_INCLUDE_DIRS)
-    include_directories(${Boost_INCLUDE_DIRS})
-endif()
-
-link_directories(${OpenRAVE_LIBRARY_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS}
+                 ${Boost_LIBRARY_DIRS})
 
 yarp_add_plugin(YarpOpenraveRGBDSensor YarpOpenraveRGBDSensor.hpp
                                        DeviceDriverImpl.cpp
