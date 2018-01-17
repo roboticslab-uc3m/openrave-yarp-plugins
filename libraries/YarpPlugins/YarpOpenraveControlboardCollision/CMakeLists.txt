@@ -18,7 +18,8 @@ get_property(_common_dirs GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCL
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
                     ${OpenRAVE_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
-                    ${_common_dirs})
+                    ${_common_dirs}
+                    $<TARGET_PROPERTY:YarpOpenraveBase,INTERFACE_INCLUDE_DIRECTORIES>)
 
 link_directories(${OpenRAVE_LIBRARY_DIRS}
                  ${Boost_LIBRARY_DIRS})
@@ -33,7 +34,8 @@ yarp_add_plugin(YarpOpenraveControlboardCollision YarpOpenraveControlboardCollis
                                                   IPositionControl2Impl.cpp
                                                   ITorqueControlImpl.cpp
                                                   IVelocityControlImpl.cpp
-                                                  IVelocityControl2Impl.cpp)
+                                                  IVelocityControl2Impl.cpp
+                                                  $<TARGET_OBJECTS:YarpOpenraveBase>)
 
 add_dependencies(YarpOpenraveControlboardCollision COLOR_DEBUG)
 
@@ -44,8 +46,7 @@ target_link_libraries(YarpOpenraveControlboardCollision YARP::YARP_OS
                                                         YARP::YARP_dev
                                                         ${OpenRAVE_CORE_LIBRARIES}
                                                         ${Boost_THREAD_LIBRARY}
-                                                        ${Boost_SYSTEM_LIBRARY}
-                                                        YarpOpenraveBase)
+                                                        ${Boost_SYSTEM_LIBRARY})
 
 yarp_install(TARGETS YarpOpenraveControlboardCollision
              COMPONENT runtime
