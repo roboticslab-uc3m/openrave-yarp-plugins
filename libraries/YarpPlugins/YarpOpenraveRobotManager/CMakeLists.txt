@@ -11,7 +11,7 @@ yarp_prepare_plugin(YarpOpenraveRobotManager
 if(NOT SKIP_YarpOpenraveRobotManager)
 
 find_package(OpenRAVE REQUIRED)
-find_package(Boost REQUIRED COMPONENTS iostreams python thread system)
+find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED COMPONENTS iostreams python thread system)
 
 get_property(_common_dirs GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS)
 
@@ -22,6 +22,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
 if(Boost_INCLUDE_DIRS)
     include_directories(${Boost_INCLUDE_DIRS})
 endif()
+
+link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 yarp_add_plugin(YarpOpenraveRobotManager YarpOpenraveRobotManager.hpp
                                          IRobotManager.hpp

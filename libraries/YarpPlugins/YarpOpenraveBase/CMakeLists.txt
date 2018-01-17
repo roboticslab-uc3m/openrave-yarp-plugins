@@ -7,9 +7,9 @@ if(ENABLE_YarpOpenraveBase)
 
 find_package(YARP REQUIRED)
 find_package(OpenRAVE REQUIRED)
-find_package(Boost REQUIRED COMPONENTS iostreams python thread system)
+find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED COMPONENTS iostreams python thread system)
 
-link_directories(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 add_library(YarpOpenraveBase YarpOpenraveBase.hpp
                              YarpOpenraveBase.cpp)
