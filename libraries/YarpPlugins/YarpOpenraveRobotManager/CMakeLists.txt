@@ -10,7 +10,6 @@ yarp_prepare_plugin(YarpOpenraveRobotManager
 
 if(NOT SKIP_YarpOpenraveRobotManager)
 
-find_package(YARP 2.3.70 REQUIRED)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost REQUIRED COMPONENTS iostreams python thread system)
 
