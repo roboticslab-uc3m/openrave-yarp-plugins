@@ -215,6 +215,7 @@ public:
         double T_base_object_z = T_base_object.trans.z;
 
         //Update psqpainted to the new values
+
         for(int i=0; i<(sqPainted.size()); i++)
         {
             stringstream ss;
@@ -228,7 +229,7 @@ public:
                                       + pow(T_base_object_y-pos_square_y,2)
                                       + pow(T_base_object_z-pos_square_z,2) );
 
-            if (dist < 0.13)
+            if (dist < 0.05)
             {
                 sqPaintedSemaphore.wait();
                 sqPainted[i]=1;
