@@ -214,6 +214,9 @@ public:
         double T_base_object_y = T_base_object.trans.y;
         double T_base_object_z = T_base_object.trans.z;
 
+        //Brush colour
+        int brushColour = 1; //Init to blue colour as default.
+
         //Update psqpainted to the new values
 
         for(int i=0; i<(sqPainted.size()); i++)
@@ -229,20 +232,42 @@ public:
                                       + pow(T_base_object_y-pos_square_y,2)
                                       + pow(T_base_object_z-pos_square_z,2) );
 
-            if (dist < 0.05)
+            if (dist < 0.05 && brushColour == 1 ) //Paint blue
             {
                 sqPaintedSemaphore.wait();
                 sqPainted[i]=1;
                 sqPaintedSemaphore.post();
             }
+            else if (dist < 0.05 && brushColour == 2 ) //Paint Green
+            {
+                sqPaintedSemaphore.wait();
+                sqPainted[i]=2;
+                sqPaintedSemaphore.post();
+            }
+
+            else if (dist < 0.05 && brushColour == 3 ) //Paint Red
+            {
+                sqPaintedSemaphore.wait();
+                sqPainted[i]=3;
+                sqPaintedSemaphore.post();
+            }
+
 
             sqPaintedSemaphore.wait();
             int sqPaintedValue = sqPainted[i];
             sqPaintedSemaphore.post();
 
-            if( sqPaintedValue == 1 )
+            if( sqPaintedValue == 1 ) //Blue
             {
                 _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
+            }
+            if( sqPaintedValue == 2 ) //Green
+            {
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 1.0, 0.0));
+            }
+            if( sqPaintedValue == 3 ) //Red
+            {
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(1.0, 0.0, 0.0));
             }
             else
             {
