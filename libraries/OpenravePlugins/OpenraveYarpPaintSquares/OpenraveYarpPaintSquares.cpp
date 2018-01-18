@@ -217,8 +217,24 @@ public:
         //Brush colour
         int brushColour = 1; //Init to blue colour as default.
 
-        //Update psqpainted to the new values
+        //Create new object in the scene "palete" to change brush colours.
+        for(int i=0; i<(sqPainted.size()); i++)
+        {
+            stringstream ss;
+            ss << "square" << i;
+            Transform pos_square = _wall->GetLink(ss.str())->GetGeometry(0)->GetTransform();
 
+            double pos_square_x = pos_square.trans.x;
+            double pos_square_y = pos_square.trans.y;
+            double pos_square_z = pos_square.trans.z;
+            double dist = sqrt(pow(T_base_object_x-pos_square_x,2)
+                                      + pow(T_base_object_y-pos_square_y,2)
+                                      + pow(T_base_object_z-pos_square_z,2));
+
+        }
+
+
+        //Update psqpainted to the new values
         for(int i=0; i<(sqPainted.size()); i++)
         {
             stringstream ss;
@@ -261,11 +277,11 @@ public:
             {
                 _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
             }
-            if( sqPaintedValue == 2 ) //Green
+            else if( sqPaintedValue == 2 ) //Green
             {
                 _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 1.0, 0.0));
             }
-            if( sqPaintedValue == 3 ) //Red
+            else if( sqPaintedValue == 3 ) //Red
             {
                 _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(1.0, 0.0, 0.0));
             }
