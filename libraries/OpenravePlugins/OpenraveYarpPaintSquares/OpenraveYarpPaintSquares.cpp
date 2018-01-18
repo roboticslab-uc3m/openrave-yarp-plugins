@@ -34,8 +34,8 @@
 
 #include "ColorDebug.hpp"
 
-#define DEFAULT_RATE_MS 0.5
-#define DEFAULT_SQUARES 16
+#define DEFAULT_RATE_MS 0.1
+#define DEFAULT_SQUARES 64
 #define DEFAULT_PORT_NAME "/openraveYarpPaintSquares/rpc:s"
 
 
