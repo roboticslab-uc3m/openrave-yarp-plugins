@@ -185,6 +185,21 @@ public:
             fprintf(stderr,"error: object \"wall\" does not exist.\n");
         } else printf("sucess: object \"wall\" exists.\n");
 
+        _palete_red = penv->GetKinBody("palete-red");
+        if(!_palete_red) {
+            fprintf(stderr,"error: object \"palete-red\" does not exist.\n");
+        } else printf("sucess: object \"palete-red\" exists.\n");
+
+        _palete_green = penv->GetKinBody("palete-green");
+        if(!_palete_green) {
+            fprintf(stderr,"error: object \"palete-green\" does not exist.\n");
+        } else printf("sucess: object \"palete-green\" exists.\n");
+
+        _palete_blue = penv->GetKinBody("palete-blue");
+        if(!_palete_blue) {
+            fprintf(stderr,"error: object \"palete-blue\" does not exist.\n");
+        } else printf("sucess: object \"palete-blue\" exists.\n");
+
         std::vector<RobotBasePtr> robots;
         penv->GetRobots(robots);
         std::cout << "Robot 0: " << robots.at(0)->GetName() << std::endl;  // default: teo
@@ -220,16 +235,39 @@ public:
         //Create new object in the scene "palete" to change brush colours.
         for(int i=0; i<(sqPainted.size()); i++)
         {
-            stringstream ss;
-            ss << "square" << i;
-            Transform pos_square = _wall->GetLink(ss.str())->GetGeometry(0)->GetTransform();
 
-            double pos_square_x = pos_square.trans.x;
-            double pos_square_y = pos_square.trans.y;
-            double pos_square_z = pos_square.trans.z;
-            double dist = sqrt(pow(T_base_object_x-pos_square_x,2)
-                                      + pow(T_base_object_y-pos_square_y,2)
-                                      + pow(T_base_object_z-pos_square_z,2));
+            Transform pos_palete_red = _palete_red->GetLink("palete-red")->GetGeometry(0)->GetTransform();
+            Transform pos_palete_green = _palete_green->GetLink("palete-green")->GetGeometry(0)->GetTransform();
+            Transform pos_palete_blue = _palete_blue->GetLink("palete-blue")->GetGeometry(0)->GetTransform();
+
+            double pos_blue_x = pos_palete_blue.trans.x;
+            double pos_blue_y = pos_palete_blue.trans.y;
+            double pos_blue_z = pos_palete_blue.trans.z;
+            double dist_blue = sqrt(pow(T_base_object_x-pos_blue_x,2)
+                                      + pow(T_base_object_y-pos_blue_y,2)
+                                      + pow(T_base_object_z-pos_blue_z,2));
+
+            double pos_green_x = pos_palete_green.trans.x;
+            double pos_green_y = pos_palete_green.trans.y;
+            double pos_green_z = pos_palete_green.trans.z;
+            double dist_green = sqrt(pow(T_base_object_x-pos_green_x,2)
+                                      + pow(T_base_object_y-pos_green_y,2)
+                                      + pow(T_base_object_z-pos_green_z,2));
+
+            double pos_red_x = pos_palete_red.trans.x;
+            double pos_red_y = pos_palete_red.trans.y;
+            double pos_red_z = pos_palete_red.trans.z;
+            double dist_red = sqrt(pow(T_base_object_x-pos_red_x,2)
+                                      + pow(T_base_object_y-pos_red_y,2)
+                                      + pow(T_base_object_z-pos_red_z,2));
+
+            //Choose the closer one
+            if(dist_blue<dist_red && dist_blue<dist_green && dist_blue<0.13)
+                brushColour = 1;
+            if(dist_green<dist_red && dist_green<dist_blue && dist_green<0.13)
+                brushColour = 2;
+            if(dist_red<dist_green && dist_red<dist_blue && dist_red<0.13)
+                brushColour = 3;
 
         }
 
@@ -307,6 +345,11 @@ private:
     Transform T_base_object;
     KinBodyPtr _objPtr;
     KinBodyPtr _wall;
+    KinBodyPtr _palete_red;
+    KinBodyPtr _palete_green;
+    KinBodyPtr _palete_blue;
+
+
 };
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
