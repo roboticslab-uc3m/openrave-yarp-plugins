@@ -32,8 +32,25 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
 {
     //CD_DEBUG("\n");
 
+    rgbSensorBasePtr->GetSensorData(rgbSensorDataPtr);
+
     rgbImage.setPixelCode(VOCAB_PIXEL_RGB);
     rgbImage.resize(rgbWidth,rgbHeight);
+
+    /*yarp::sig::ImageOf<yarp::sig::PixelRgb> image;
+    image.resize(rgbWidth,rgbHeight);
+    yarp::sig::PixelRgb p;
+    for (int i_x = 0; i_x < rgbWidth; ++i_x)
+    {
+        for (int i_y = 0; i_y < rgbHeight; ++i_y)
+        {
+            p.r = rgbSensorDataPtr->vimagedata[3*(i_x+(i_y*rgbWidth))];
+            p.g = rgbSensorDataPtr->vimagedata[1+3*(i_x+(i_y*rgbWidth))];
+            p.b = rgbSensorDataPtr->vimagedata[2+3*(i_x+(i_y*rgbWidth))];
+            image.safePixel(i_x,i_y) = p;
+        }
+    }*/
+    //rgbImage.copy(image);
 
     timeStamp->update( yarp::os::Time::now() );
 
