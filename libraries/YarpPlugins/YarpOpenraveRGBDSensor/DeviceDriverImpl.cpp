@@ -70,9 +70,9 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     depthSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
     rgbSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
 
-    // Show the sensor image in a separate window // Ok for Laser???
-    depthSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
-    rgbSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
+    // Render data on
+    depthSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);  // Show projected yellow shade
+    rgbSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);  // Show the sensor image in a separate window
 
     // Get pointer to geom properties of sensor
     boost::shared_ptr<OpenRAVE::SensorBase::LaserGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserGeomData const>(depthSensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Laser));
