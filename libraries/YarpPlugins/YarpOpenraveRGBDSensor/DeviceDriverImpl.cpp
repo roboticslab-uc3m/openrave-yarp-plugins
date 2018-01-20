@@ -75,20 +75,23 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     rgbSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);  // Show the sensor image in a separate window
 
     // Get pointer to geom properties of sensor
-    boost::shared_ptr<OpenRAVE::SensorBase::LaserGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserGeomData const>(depthSensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Laser));
+    boost::shared_ptr<OpenRAVE::SensorBase::LaserGeomData const> depthGeomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserGeomData const>(depthSensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Laser));
+    boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> rgbGeomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(rgbSensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
 
     // Get pointer to sensed data
     depthSensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserSensorData>(depthSensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Laser));
+    rgbSensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(rgbSensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
 
-    CD_INFO("Laser min_angle: %f   %f.\n",geomDataPtr->min_angle[0],geomDataPtr->min_angle[1]);  // boost::array<dReal,2>
-    CD_INFO("Laser max_angle: %f   %f.\n",geomDataPtr->max_angle[0],geomDataPtr->max_angle[1]);  // boost::array<dReal,2>
-    CD_INFO("Laser resolution: %f   %f.\n",geomDataPtr->resolution[0],geomDataPtr->resolution[1]);  // boost::array<dReal,2>
-    CD_INFO("Laser min_range, max_range: %f   %f.\n",geomDataPtr->min_range,geomDataPtr->max_range);
-    CD_INFO("Laser time_increment: %f   %f.\n",geomDataPtr->time_increment);
-    CD_INFO("Laser time_scan: %f   %f.\n",geomDataPtr->time_scan);
+    CD_INFO("Laser min_angle: %f   %f.\n",depthGeomDataPtr->min_angle[0],depthGeomDataPtr->min_angle[1]);  // boost::array<dReal,2>
+    CD_INFO("Laser max_angle: %f   %f.\n",depthGeomDataPtr->max_angle[0],depthGeomDataPtr->max_angle[1]);  // boost::array<dReal,2>
+    CD_INFO("Laser resolution: %f   %f.\n",depthGeomDataPtr->resolution[0],depthGeomDataPtr->resolution[1]);  // boost::array<dReal,2>
+    CD_INFO("Laser min_range, max_range: %f   %f.\n",depthGeomDataPtr->min_range,depthGeomDataPtr->max_range);
+    CD_INFO("Laser time_increment: %f   %f.\n",depthGeomDataPtr->time_increment);
+    CD_INFO("Laser time_scan: %f   %f.\n",depthGeomDataPtr->time_scan);
 
-    rgbHeight = 1;
-    rgbWidth = 1;
+    CD_INFO("Rgb width: %d, height: %d.\n",rgbGeomDataPtr->width,rgbGeomDataPtr->height);
+    rgbHeight = rgbGeomDataPtr->width;
+    rgbWidth = rgbGeomDataPtr->height;
     depthHeight = 0;
     depthWidth = 0;
 
