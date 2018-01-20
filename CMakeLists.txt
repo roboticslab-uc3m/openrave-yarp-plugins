@@ -10,7 +10,7 @@ if(POLICY CMP0046)
     cmake_policy(SET CMP0046 NEW)
 endif()
 
-project(OPENRAVE_YARP_PLUGINS)
+project(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS)
 
 # Force building shared libraries and YARP DL modules.
 set(BUILD_SHARED_LIBS TRUE CACHE INTERNAL "hide this!")
