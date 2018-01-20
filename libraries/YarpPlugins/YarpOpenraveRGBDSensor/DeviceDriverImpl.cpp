@@ -20,44 +20,64 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     if ( ! configureRobot(config) )
         return false;
 
-    int sensorIndex = config.check("sensorIndex",-1,"sensorIndex").asInt();
+    int depthSensorIndex = config.check("depthSensorIndex",-1,"depthSensorIndex").asInt();
+    int rgbSensorIndex = config.check("rgbSensorIndex",-1,"rgbSensorIndex").asInt();
 
     std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
-    if(sensorIndex >= vectorOfSensorPtr.size())
+    if(depthSensorIndex >= vectorOfSensorPtr.size())
     {
-        CD_ERROR("sensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",sensorIndex,vectorOfSensorPtr.size());
+        CD_ERROR("depthSensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",depthSensorIndex,vectorOfSensorPtr.size());
         return false;
     }
-    else if (sensorIndex < 0)
+    else if (depthSensorIndex < 0)
     {
-        CD_ERROR("sensorIndex %d < 0, not loading yarpPlugin.\n",sensorIndex);
+        CD_ERROR("depthSensorIndex %d < 0, not loading yarpPlugin.\n",depthSensorIndex);
+        return false;
+    }
+    if(rgbSensorIndex >= vectorOfSensorPtr.size())
+    {
+        CD_ERROR("rgbSensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",rgbSensorIndex,vectorOfSensorPtr.size());
+        return false;
+    }
+    else if (rgbSensorIndex < 0)
+    {
+        CD_ERROR("rgbSensorIndex %d < 0, not loading yarpPlugin.\n",rgbSensorIndex);
         return false;
     }
 
-    sensorBasePtr = vectorOfSensorPtr.at(sensorIndex)->GetSensor();
+    depthSensorBasePtr = vectorOfSensorPtr.at(depthSensorIndex)->GetSensor();
+    rgbSensorBasePtr = vectorOfSensorPtr.at(rgbSensorIndex)->GetSensor();
 
-    std::string tipo = sensorBasePtr->GetName();
+    std::string depthName = depthSensorBasePtr->GetName();
+    std::string rgbName = rgbSensorBasePtr->GetName();
 
-    printf("Sensor %d name: %s\n",sensorIndex,tipo.c_str());
+    printf("Depth sensor %d name: %s\n",depthSensorIndex,depthName.c_str());
+    printf("Rgb sensor %d name: %s\n",rgbSensorIndex,rgbName.c_str());
 
-    // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
+    // printf("Depth sensor %d description: %s\n",depthSensorIndex,depthSensorBasePtr->GetDescription().c_str());
+    // printf("Rgb sensor %d description: %s\n",rgbSensorIndex,rgbSensorBasePtr->GetDescription().c_str());
 
-    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Laser) )
+    if ( ! depthSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Laser) )
     {
-        CD_ERROR("Sensor %d does not support ST_Laser.\n", sensorIndex );
+        CD_ERROR("Depth sensor %d does not support ST_Laser.\n", depthSensorIndex );
+    }
+    if ( ! rgbSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
+    {
+        CD_ERROR("Rgb sensor %d does not support ST_Camera.\n", rgbSensorIndex );
     }
 
     // Activate the sensor
-    sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
+    depthSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
+    rgbSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
 
     // Show the sensor image in a separate window // Ok for Laser???
     //sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
 
     // Get pointer to geom properties of sensor
-    boost::shared_ptr<OpenRAVE::SensorBase::LaserGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Laser));
+    boost::shared_ptr<OpenRAVE::SensorBase::LaserGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserGeomData const>(depthSensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Laser));
 
     // Get pointer to sensed data
-    sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Laser));
+    depthSensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserSensorData>(depthSensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Laser));
 
     CD_INFO("Laser min_angle: %f   %f.\n",geomDataPtr->min_angle[0],geomDataPtr->min_angle[1]);  // boost::array<dReal,2>
     CD_INFO("Laser max_angle: %f   %f.\n",geomDataPtr->max_angle[0],geomDataPtr->max_angle[1]);  // boost::array<dReal,2>

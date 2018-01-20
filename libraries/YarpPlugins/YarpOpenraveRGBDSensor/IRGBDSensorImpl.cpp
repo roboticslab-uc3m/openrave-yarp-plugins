@@ -46,10 +46,10 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
 {
     //CD_DEBUG("\n");
 
-    sensorBasePtr->GetSensorData(sensorDataPtr);
+    depthSensorBasePtr->GetSensorData(depthSensorDataPtr);
 
-    std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorRanges = sensorDataPtr->ranges;
-    std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorPositions = sensorDataPtr->positions;
+    std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorRanges = depthSensorDataPtr->ranges;
+    std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorPositions = depthSensorDataPtr->positions;
 
     if( (depthHeight == 0) || (depthWidth == 0) )
     {
@@ -85,7 +85,7 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
         }
         //else CD_ERROR("unrecognized laser sensor data size.\n");
 
-        tinv = sensorDataPtr->__trans.inverse();
+        tinv = depthSensorDataPtr->__trans.inverse();
     }
 
     depthImage.resize(depthWidth,depthHeight);
