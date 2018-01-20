@@ -32,8 +32,25 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
 {
     //CD_DEBUG("\n");
 
+    rgbSensorBasePtr->GetSensorData(rgbSensorDataPtr);
+
     rgbImage.setPixelCode(VOCAB_PIXEL_RGB);
     rgbImage.resize(rgbWidth,rgbHeight);
+
+    /*yarp::sig::ImageOf<yarp::sig::PixelRgb> image;
+    image.resize(rgbWidth,rgbHeight);
+    yarp::sig::PixelRgb p;
+    for (int i_x = 0; i_x < rgbWidth; ++i_x)
+    {
+        for (int i_y = 0; i_y < rgbHeight; ++i_y)
+        {
+            p.r = rgbSensorDataPtr->vimagedata[3*(i_x+(i_y*rgbWidth))];
+            p.g = rgbSensorDataPtr->vimagedata[1+3*(i_x+(i_y*rgbWidth))];
+            p.b = rgbSensorDataPtr->vimagedata[2+3*(i_x+(i_y*rgbWidth))];
+            image.safePixel(i_x,i_y) = p;
+        }
+    }*/
+    //rgbImage.copy(image);
 
     timeStamp->update( yarp::os::Time::now() );
 
@@ -46,10 +63,10 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
 {
     //CD_DEBUG("\n");
 
-    sensorBasePtr->GetSensorData(sensorDataPtr);
+    depthSensorBasePtr->GetSensorData(depthSensorDataPtr);
 
-    std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorRanges = sensorDataPtr->ranges;
-    std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorPositions = sensorDataPtr->positions;
+    std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorRanges = depthSensorDataPtr->ranges;
+    std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorPositions = depthSensorDataPtr->positions;
 
     if( (depthHeight == 0) || (depthWidth == 0) )
     {
@@ -85,7 +102,7 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
         }
         //else CD_ERROR("unrecognized laser sensor data size.\n");
 
-        tinv = sensorDataPtr->__trans.inverse();
+        tinv = depthSensorDataPtr->__trans.inverse();
     }
 
     depthImage.resize(depthWidth,depthHeight);

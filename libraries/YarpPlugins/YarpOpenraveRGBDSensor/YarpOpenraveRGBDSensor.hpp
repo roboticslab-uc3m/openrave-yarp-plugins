@@ -173,8 +173,10 @@ private:
     int rgbHeight, rgbWidth, depthHeight, depthWidth;
 
     //OpenRAVE//
-    OpenRAVE::SensorBasePtr sensorBasePtr;
-    boost::shared_ptr<OpenRAVE::SensorBase::LaserSensorData> sensorDataPtr;
+    OpenRAVE::SensorBasePtr depthSensorBasePtr;
+    OpenRAVE::SensorBasePtr rgbSensorBasePtr;
+    boost::shared_ptr<OpenRAVE::SensorBase::LaserSensorData> depthSensorDataPtr;
+    boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> rgbSensorDataPtr;
     OpenRAVE::Transform tinv;
 
 };
