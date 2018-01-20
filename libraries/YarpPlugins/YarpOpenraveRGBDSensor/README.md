@@ -1,3 +1,3 @@
 # YarpOpenraveRGBDSensor
 
-Example invocation: `yarpdev --device YarpOpenraveRGBDSensor --name /teoSim/rightArm --env /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml  --robotIndex 0 --manipulatorIndex 2 --view`
+Example invocation: `yarpdev --device YarpOpenraveRGBDSensor --env /usr/local/share/robotDevastation-openrave-models/contexts/openrave/ecro/mapping_room.env.xml --robotIndex 0 --depthSensorIndex 0 --rgbSensorIndex 1 --view --name /robot`
