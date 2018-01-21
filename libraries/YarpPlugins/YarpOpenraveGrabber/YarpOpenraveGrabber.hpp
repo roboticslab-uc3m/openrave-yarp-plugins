@@ -39,7 +39,7 @@ namespace roboticslab
  * @brief Implements the YARP_dev IFrameGrabberImage, etc.
  * interface class member functions.
  */
-class YarpOpenraveGrabber : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IFrameGrabberImage
+class YarpOpenraveGrabber : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IFrameGrabberImage, public yarp::dev::IRgbVisualParams
 {
 public:
 
@@ -89,6 +89,19 @@ public:
      * @return image width
      */
     virtual int width() const;
+
+    // ------- IRgbVisualParams declarations. Look at IVisualParams.h for documentation. Implementation in IFrameGrabberImageImpl.cpp -------
+
+    virtual int  getRgbHeight();
+    virtual int  getRgbWidth();
+    virtual bool getRgbSupportedConfigurations(yarp::sig::VectorOf<yarp::dev::CameraConfig> &configurations) { return true; }
+    virtual bool getRgbResolution(int &width, int &height) { return true; }
+    virtual bool setRgbResolution(int width, int height) { return true; }
+    virtual bool getRgbFOV(double &horizontalFov, double &verticalFov) { return true; }
+    virtual bool setRgbFOV(double horizontalFov, double verticalFov) { return true; }
+    virtual bool getRgbIntrinsicParam(yarp::os::Property &intrinsic) { return true; }
+    virtual bool getRgbMirroring(bool &mirror) { return true; }
+    virtual bool setRgbMirroring(bool mirror) { return true; }
 
 private:
 
