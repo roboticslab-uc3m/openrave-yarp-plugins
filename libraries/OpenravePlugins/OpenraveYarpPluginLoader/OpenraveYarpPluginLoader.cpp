@@ -249,7 +249,10 @@ public:
                 CD_INFO("Not using --manipulatorIndex or --manipulatorIndices or --allManipulators parameter.\n");
                 CD_INFO("Not using --sensorIndex or --sensorIndices or --allSensors parameter.\n");
 
-                options.put("name",robotName);
+                if( ! options.check("name") )
+                {
+                    options.put("name",robotName);
+                }
 
                 yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
                 yarpPlugin->open(options);
@@ -284,7 +287,10 @@ public:
                 manipulatorName += "/";
                 manipulatorName += vectorOfManipulatorPtr[ manipulatorIndex ]->GetName();
 
-                options.put("name",manipulatorName);
+                if( ! options.check("name") )
+                {
+                    options.put("name",manipulatorName);
+                }
 
                 yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
                 yarpPlugin->open(options);
@@ -319,7 +325,10 @@ public:
                 sensorName += "/";
                 sensorName += vectorOfSensorPtr[ sensorIndex ]->GetName();
 
-                options.put("name",sensorName);
+                if( ! options.check("name") )
+                {
+                    options.put("name",sensorName);
+                }
 
                 yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
                 yarpPlugin->open(options);
