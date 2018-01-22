@@ -229,11 +229,7 @@ public:
         double T_base_object_y = T_base_object.trans.y;
         double T_base_object_z = T_base_object.trans.z;
 
-        //Brush colour
-        int brushColour = 1; //Init to blue colour as default.
-
         //Create new object in the scene "palete" to change brush colours.
-        std::cout<<"HASTA AQUI LLEGUE 1 "<<std::endl;
 
         Transform pos_palete_red = _palete_red->GetLink("palete-red")->GetGeometry(0)->GetTransform();
         Transform pos_palete_green = _palete_green->GetLink("palete-green")->GetGeometry(0)->GetTransform();
@@ -241,9 +237,9 @@ public:
 
 
 
-        std::cout<<"Base x obj : "<<T_base_object_x<<std::endl;
-        std::cout<<"Base y obj : "<<T_base_object_y<<std::endl;
-        std::cout<<"Base z obj : "<<T_base_object_z<<std::endl;
+        //std::cout<<"Base x obj : "<<T_base_object_x<<std::endl;
+        //std::cout<<"Base y obj : "<<T_base_object_y<<std::endl;
+        //std::cout<<"Base z obj : "<<T_base_object_z<<std::endl;
 
 
 
@@ -254,9 +250,9 @@ public:
                                 + pow(T_base_object_y-pos_blue_y,2)
                                 + pow(T_base_object_z-pos_blue_z,2));
 
-        std::cout<<"Pos x obj azul: "<<pos_blue_x<<std::endl;
-        std::cout<<"Pos y obj azul: "<<pos_blue_y<<std::endl;
-        std::cout<<"Pos z obj azul: "<<pos_blue_z<<std::endl;
+        //std::cout<<"Pos x obj azul: "<<pos_blue_x<<std::endl;
+        //std::cout<<"Pos y obj azul: "<<pos_blue_y<<std::endl;
+        //std::cout<<"Pos z obj azul: "<<pos_blue_z<<std::endl;
 
         double pos_green_x = pos_palete_green.trans.x;
         double pos_green_y = pos_palete_green.trans.y;
@@ -265,9 +261,9 @@ public:
                                  + pow(T_base_object_y-pos_green_y,2)
                                  + pow(T_base_object_z-pos_green_z,2));
 
-        std::cout<<"Pos x obj green: "<<pos_green_x<<std::endl;
-        std::cout<<"Pos y obj verde: "<<pos_green_y<<std::endl;
-        std::cout<<"Pos z obj verde: "<<pos_green_z<<std::endl;
+        //std::cout<<"Pos x obj green: "<<pos_green_x<<std::endl;
+        //std::cout<<"Pos y obj verde: "<<pos_green_y<<std::endl;
+        //std::cout<<"Pos z obj verde: "<<pos_green_z<<std::endl;
 
         double pos_red_x = pos_palete_red.trans.x;
         double pos_red_y = pos_palete_red.trans.y;
@@ -276,15 +272,15 @@ public:
                                + pow(T_base_object_y-pos_red_y,2)
                                + pow(T_base_object_z-pos_red_z,2));
 
-        std::cout<<"Pos x obj rojo: "<<pos_red_x<<std::endl;
-        std::cout<<"Pos y obj rojo: "<<pos_red_y<<std::endl;
-        std::cout<<"Pos z obj rojo: "<<pos_red_z<<std::endl;
+        //std::cout<<"Pos x obj rojo: "<<pos_red_x<<std::endl;
+        //std::cout<<"Pos y obj rojo: "<<pos_red_y<<std::endl;
+        //std::cout<<"Pos z obj rojo: "<<pos_red_z<<std::endl;
 
 
 
-        std::cout<<"La distancia a azul es: "<<dist_blue<<std::endl;
-        std::cout<<"La distancia a verde es: "<<dist_green<<std::endl;
-        std::cout<<"La distancia a rojo es: "<<dist_red<<std::endl;
+        //std::cout<<"La distancia a azul es: "<<dist_blue<<std::endl;
+        //std::cout<<"La distancia a verde es: "<<dist_green<<std::endl;
+        //std::cout<<"La distancia a rojo es: "<<dist_red<<std::endl;
 
 
         //Choose the closer one
@@ -318,12 +314,14 @@ public:
                 sqPaintedSemaphore.wait();
                 sqPainted[i]=1;
                 sqPaintedSemaphore.post();
+                std::cout<<"He pintado AZUL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
             }
             else if (dist < 0.05 && brushColour == 2 ) //Paint Green
             {
                 sqPaintedSemaphore.wait();
                 sqPainted[i]=2;
                 sqPaintedSemaphore.post();
+                std::cout<<"He pintado VERDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
             }
 
             else if (dist < 0.05 && brushColour == 3 ) //Paint Red
@@ -331,6 +329,7 @@ public:
                 sqPaintedSemaphore.wait();
                 sqPainted[i]=3;
                 sqPaintedSemaphore.post();
+                std::cout<<"He pintado ROJO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
             }
 
 
@@ -341,14 +340,17 @@ public:
             if( sqPaintedValue == 1 ) //Blue
             {
                 _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
+
             }
             else if( sqPaintedValue == 2 ) //Green
             {
                 _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 1.0, 0.0));
+
             }
             else if( sqPaintedValue == 3 ) //Red
             {
                 _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(1.0, 0.0, 0.0));
+
             }
             else
             {
@@ -375,6 +377,9 @@ private:
     KinBodyPtr _palete_red;
     KinBodyPtr _palete_green;
     KinBodyPtr _palete_blue;
+
+    //Brush colour
+    int brushColour = 1; //Init to blue colour as default.
 
 
 };
