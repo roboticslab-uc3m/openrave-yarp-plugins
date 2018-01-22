@@ -19,7 +19,7 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
         return false;
     }
 
-    yarp::sig::PixelRgb p;
+    /*yarp::sig::PixelRgb p;
     image.resize(_width,_height);
     for (int i_x = 0; i_x < image.width(); ++i_x)
     {
@@ -30,7 +30,8 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
             p.b = sensorDataPtr->vimagedata[2+3*(i_x+(i_y*image.width()))];
             image.safePixel(i_x,i_y) = p;
         }
-    }
+    }*/
+    image.setExternal(currentFrame.data(),_width,_height);
 
     return true;
 }
