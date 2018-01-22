@@ -233,43 +233,62 @@ public:
         int brushColour = 1; //Init to blue colour as default.
 
         //Create new object in the scene "palete" to change brush colours.
-        for(int i=0; i<(sqPainted.size()); i++)
-        {
 
-            Transform pos_palete_red = _palete_red->GetLink("palete-red")->GetGeometry(0)->GetTransform();
-            Transform pos_palete_green = _palete_green->GetLink("palete-green")->GetGeometry(0)->GetTransform();
-            Transform pos_palete_blue = _palete_blue->GetLink("palete-blue")->GetGeometry(0)->GetTransform();
+        Transform pos_palete_red = _palete_red->GetTransform();
+        Transform pos_palete_green = _palete_green->GetTransform();
+        Transform pos_palete_blue = _palete_blue->GetTransform();
 
-            double pos_blue_x = pos_palete_blue.trans.x;
-            double pos_blue_y = pos_palete_blue.trans.y;
-            double pos_blue_z = pos_palete_blue.trans.z;
-            double dist_blue = sqrt(pow(T_base_object_x-pos_blue_x,2)
-                                      + pow(T_base_object_y-pos_blue_y,2)
-                                      + pow(T_base_object_z-pos_blue_z,2));
 
-            double pos_green_x = pos_palete_green.trans.x;
-            double pos_green_y = pos_palete_green.trans.y;
-            double pos_green_z = pos_palete_green.trans.z;
-            double dist_green = sqrt(pow(T_base_object_x-pos_green_x,2)
-                                      + pow(T_base_object_y-pos_green_y,2)
-                                      + pow(T_base_object_z-pos_green_z,2));
+        double pos_blue_x = pos_palete_blue.trans.x;
+        double pos_blue_y = pos_palete_blue.trans.y;
+        double pos_blue_z = pos_palete_blue.trans.z;
+        double dist_blue = sqrt(pow(T_base_object_x-pos_blue_x,2)
+                                + pow(T_base_object_y-pos_blue_y,2)
+                                + pow(T_base_object_z-pos_blue_z,2));
 
-            double pos_red_x = pos_palete_red.trans.x;
-            double pos_red_y = pos_palete_red.trans.y;
-            double pos_red_z = pos_palete_red.trans.z;
-            double dist_red = sqrt(pow(T_base_object_x-pos_red_x,2)
-                                      + pow(T_base_object_y-pos_red_y,2)
-                                      + pow(T_base_object_z-pos_red_z,2));
+        std::cout<<"Pos x obj rojo: "<<pos_blue_x<<std::endl;
+        std::cout<<"Pos y obj rojo: "<<pos_blue_y<<std::endl;
+        std::cout<<"Pos z obj rojo: "<<pos_blue_z<<std::endl;
 
-            //Choose the closer one
-            if(dist_blue<dist_red && dist_blue<dist_green && dist_blue<0.13)
-                brushColour = 1;
-            if(dist_green<dist_red && dist_green<dist_blue && dist_green<0.13)
-                brushColour = 2;
-            if(dist_red<dist_green && dist_red<dist_blue && dist_red<0.13)
-                brushColour = 3;
+        double pos_green_x = pos_palete_green.trans.x;
+        double pos_green_y = pos_palete_green.trans.y;
+        double pos_green_z = pos_palete_green.trans.z;
+        double dist_green = sqrt(pow(T_base_object_x-pos_green_x,2)
+                                 + pow(T_base_object_y-pos_green_y,2)
+                                 + pow(T_base_object_z-pos_green_z,2));
 
-        }
+        std::cout<<"Pos x obj green: "<<pos_green_x<<std::endl;
+        std::cout<<"Pos y obj verde: "<<pos_green_y<<std::endl;
+        std::cout<<"Pos z obj verde: "<<pos_green_z<<std::endl;
+
+        double pos_red_x = pos_palete_red.trans.x;
+        double pos_red_y = pos_palete_red.trans.y;
+        double pos_red_z = pos_palete_red.trans.z;
+        double dist_red = sqrt(pow(T_base_object_x-pos_red_x,2)
+                               + pow(T_base_object_y-pos_red_y,2)
+                               + pow(T_base_object_z-pos_red_z,2));
+
+        std::cout<<"Pos x obj azul: "<<pos_red_x<<std::endl;
+        std::cout<<"Pos y obj azul: "<<pos_red_y<<std::endl;
+        std::cout<<"Pos z obj azul: "<<pos_red_z<<std::endl;
+
+
+
+        std::cout<<"La distancia a azul es: "<<dist_blue<<std::endl;
+        std::cout<<"La distancia a verde es: "<<dist_green<<std::endl;
+        std::cout<<"La distancia a rojo es: "<<dist_red<<std::endl;
+
+
+        //Choose the closer one
+        if(dist_blue<dist_red && dist_blue<dist_green && dist_blue<0.13)
+            brushColour = 1;
+        if(dist_green<dist_red && dist_green<dist_blue && dist_green<0.13)
+            brushColour = 2;
+        if(dist_red<dist_green && dist_red<dist_blue && dist_red<0.13)
+            brushColour = 3;
+
+        std::cout<<"El color con el que estoy pintando es: "<<brushColour<<std::endl;
+
 
 
         //Update psqpainted to the new values
