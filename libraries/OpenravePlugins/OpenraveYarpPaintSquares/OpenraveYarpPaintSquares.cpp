@@ -233,10 +233,18 @@ public:
         int brushColour = 1; //Init to blue colour as default.
 
         //Create new object in the scene "palete" to change brush colours.
+        std::cout<<"HASTA AQUI LLEGUE 1 "<<std::endl;
 
-        Transform pos_palete_red = _palete_red->GetTransform();
-        Transform pos_palete_green = _palete_green->GetTransform();
-        Transform pos_palete_blue = _palete_blue->GetTransform();
+        Transform pos_palete_red = _palete_red->GetLink("palete-red")->GetGeometry(0)->GetTransform();
+        Transform pos_palete_green = _palete_green->GetLink("palete-green")->GetGeometry(0)->GetTransform();
+        Transform pos_palete_blue = _palete_blue->GetLink("palete-blue")->GetGeometry(0)->GetTransform();
+
+
+
+        std::cout<<"Base x obj : "<<T_base_object_x<<std::endl;
+        std::cout<<"Base y obj : "<<T_base_object_y<<std::endl;
+        std::cout<<"Base z obj : "<<T_base_object_z<<std::endl;
+
 
 
         double pos_blue_x = pos_palete_blue.trans.x;
@@ -246,9 +254,9 @@ public:
                                 + pow(T_base_object_y-pos_blue_y,2)
                                 + pow(T_base_object_z-pos_blue_z,2));
 
-        std::cout<<"Pos x obj rojo: "<<pos_blue_x<<std::endl;
-        std::cout<<"Pos y obj rojo: "<<pos_blue_y<<std::endl;
-        std::cout<<"Pos z obj rojo: "<<pos_blue_z<<std::endl;
+        std::cout<<"Pos x obj azul: "<<pos_blue_x<<std::endl;
+        std::cout<<"Pos y obj azul: "<<pos_blue_y<<std::endl;
+        std::cout<<"Pos z obj azul: "<<pos_blue_z<<std::endl;
 
         double pos_green_x = pos_palete_green.trans.x;
         double pos_green_y = pos_palete_green.trans.y;
@@ -268,9 +276,9 @@ public:
                                + pow(T_base_object_y-pos_red_y,2)
                                + pow(T_base_object_z-pos_red_z,2));
 
-        std::cout<<"Pos x obj azul: "<<pos_red_x<<std::endl;
-        std::cout<<"Pos y obj azul: "<<pos_red_y<<std::endl;
-        std::cout<<"Pos z obj azul: "<<pos_red_z<<std::endl;
+        std::cout<<"Pos x obj rojo: "<<pos_red_x<<std::endl;
+        std::cout<<"Pos y obj rojo: "<<pos_red_y<<std::endl;
+        std::cout<<"Pos z obj rojo: "<<pos_red_z<<std::endl;
 
 
 
