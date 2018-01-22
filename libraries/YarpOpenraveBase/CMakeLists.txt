@@ -14,10 +14,24 @@ add_library(YarpOpenraveBase OBJECT YarpOpenraveBase.hpp
 
 add_dependencies(YarpOpenraveBase COLOR_DEBUG)
 
-# C++11 features.
-get_target_property(_yarp_os_compile_features YARP::YARP_OS INTERFACE_COMPILE_FEATURES)
+set(_compile_options "${OpenRAVE_CXX_FLAGS}")
 
-set_target_properties(YarpOpenraveBase PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS} ${_yarp_os_compile_features}"
+# C++11 features.
+if(NOT CMAKE_VERSION VERSION_LESS 3.1)
+    get_target_property(_yarp_os_compile_features YARP::YARP_OS INTERFACE_COMPILE_FEATURES)
+
+    if(_yarp_os_compile_features)
+        set_target_properties(YarpOpenraveBase PROPERTIES COMPILE_FEATURES "${_yarp_os_compile_features}")
+    endif()
+else()
+    get_target_property(_yarp_os_compile_options YARP::YARP_OS INTERFACE_COMPILE_OPTIONS)
+
+    if(_yarp_os_compile_options)
+        set(_compile_options "${_compile_options};${_yarp_os_compile_options}")
+    endif()
+endif()
+
+set_target_properties(YarpOpenraveBase PROPERTIES COMPILE_OPTIONS "${_compile_options}"
                                                   POSITION_INDEPENDENT_CODE TRUE)
 
 target_include_directories(YarpOpenraveBase PUBLIC ${YARP_INCLUDE_DIRS}
