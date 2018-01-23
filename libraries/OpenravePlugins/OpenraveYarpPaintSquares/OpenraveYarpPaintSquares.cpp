@@ -34,8 +34,8 @@
 
 #include "ColorDebug.hpp"
 
-#define DEFAULT_RATE_MS 0.5
-#define DEFAULT_SQUARES 16
+#define DEFAULT_RATE_MS 0.1
+#define DEFAULT_SQUARES 64
 #define DEFAULT_PORT_NAME "/openraveYarpPaintSquares/rpc:s"
 
 
@@ -185,6 +185,21 @@ public:
             fprintf(stderr,"error: object \"wall\" does not exist.\n");
         } else printf("sucess: object \"wall\" exists.\n");
 
+        _palete_magenta = penv->GetKinBody("palete-magenta");
+        if(!_palete_magenta) {
+            fprintf(stderr,"error: object \"palete-magenta\" does not exist.\n");
+        } else printf("sucess: object \"palete-magenta\" exists.\n");
+
+        _palete_yellow = penv->GetKinBody("palete-yellow");
+        if(!_palete_yellow) {
+            fprintf(stderr,"error: object \"palete-yellow\" does not exist.\n");
+        } else printf("sucess: object \"palete-yellow\" exists.\n");
+
+        _palete_cyan = penv->GetKinBody("palete-cyan");
+        if(!_palete_cyan) {
+            fprintf(stderr,"error: object \"palete-cyan\" does not exist.\n");
+        } else printf("sucess: object \"palete-cyan\" exists.\n");
+
         std::vector<RobotBasePtr> robots;
         penv->GetRobots(robots);
         std::cout << "Robot 0: " << robots.at(0)->GetName() << std::endl;  // default: teo
@@ -214,6 +229,72 @@ public:
         double T_base_object_y = T_base_object.trans.y;
         double T_base_object_z = T_base_object.trans.z;
 
+        //Create new object in the scene "palete" to change brush colours.
+
+        Transform pos_palete_magenta = _palete_magenta->GetLink("palete-magenta")->GetGeometry(0)->GetTransform();
+        Transform pos_palete_yellow = _palete_yellow->GetLink("palete-yellow")->GetGeometry(0)->GetTransform();
+        Transform pos_palete_cyan = _palete_cyan->GetLink("palete-cyan")->GetGeometry(0)->GetTransform();
+
+
+
+        //std::cout<<"Base x obj : "<<T_base_object_x<<std::endl;
+        //std::cout<<"Base y obj : "<<T_base_object_y<<std::endl;
+        //std::cout<<"Base z obj : "<<T_base_object_z<<std::endl;
+
+
+
+        double pos_cyan_x = pos_palete_cyan.trans.x;
+        double pos_cyan_y = pos_palete_cyan.trans.y;
+        double pos_cyan_z = pos_palete_cyan.trans.z;
+        double dist_cyan = sqrt(pow(T_base_object_x-pos_cyan_x,2)
+                                + pow(T_base_object_y-pos_cyan_y,2)
+                                + pow(T_base_object_z-pos_cyan_z,2));
+
+        //std::cout<<"Pos x obj azul: "<<pos_cyan_x<<std::endl;
+        //std::cout<<"Pos y obj azul: "<<pos_cyan_y<<std::endl;
+        //std::cout<<"Pos z obj azul: "<<pos_cyan_z<<std::endl;
+
+        double pos_yellow_x = pos_palete_yellow.trans.x;
+        double pos_yellow_y = pos_palete_yellow.trans.y;
+        double pos_yellow_z = pos_palete_yellow.trans.z;
+        double dist_yellow = sqrt(pow(T_base_object_x-pos_yellow_x,2)
+                                 + pow(T_base_object_y-pos_yellow_y,2)
+                                 + pow(T_base_object_z-pos_yellow_z,2));
+
+        //std::cout<<"Pos x obj yellow: "<<pos_yellow_x<<std::endl;
+        //std::cout<<"Pos y obj verde: "<<pos_yellow_y<<std::endl;
+        //std::cout<<"Pos z obj verde: "<<pos_yellow_z<<std::endl;
+
+        double pos_magenta_x = pos_palete_magenta.trans.x;
+        double pos_magenta_y = pos_palete_magenta.trans.y;
+        double pos_magenta_z = pos_palete_magenta.trans.z;
+        double dist_magenta = sqrt(pow(T_base_object_x-pos_magenta_x,2)
+                               + pow(T_base_object_y-pos_magenta_y,2)
+                               + pow(T_base_object_z-pos_magenta_z,2));
+
+        //std::cout<<"Pos x obj rojo: "<<pos_magenta_x<<std::endl;
+        //std::cout<<"Pos y obj rojo: "<<pos_magenta_y<<std::endl;
+        //std::cout<<"Pos z obj rojo: "<<pos_magenta_z<<std::endl;
+
+
+
+        //std::cout<<"La distancia a azul es: "<<dist_cyan<<std::endl;
+        //std::cout<<"La distancia a verde es: "<<dist_yellow<<std::endl;
+        //std::cout<<"La distancia a rojo es: "<<dist_magenta<<std::endl;
+
+
+        //Choose the closer one
+        if(dist_cyan<dist_magenta && dist_cyan<dist_yellow && dist_cyan<0.13)
+            brushColour = 1;
+        if(dist_yellow<dist_magenta && dist_yellow<dist_cyan && dist_yellow<0.13)
+            brushColour = 2;
+        if(dist_magenta<dist_yellow && dist_magenta<dist_cyan && dist_magenta<0.13)
+            brushColour = 3;
+
+        std::cout<<"El color con el que estoy pintando es: "<<brushColour<<std::endl;
+
+
+
         //Update psqpainted to the new values
         for(int i=0; i<(sqPainted.size()); i++)
         {
@@ -228,20 +309,45 @@ public:
                                       + pow(T_base_object_y-pos_square_y,2)
                                       + pow(T_base_object_z-pos_square_z,2) );
 
-            if (dist < 0.13)
+            if (dist < 0.05 && brushColour == 1 ) //Paint cyan
             {
                 sqPaintedSemaphore.wait();
                 sqPainted[i]=1;
                 sqPaintedSemaphore.post();
+                std::cout<<"He pintado AZUL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
             }
+            else if (dist < 0.05 && brushColour == 2 ) //Paint yellow
+            {
+                sqPaintedSemaphore.wait();
+                sqPainted[i]=2;
+                sqPaintedSemaphore.post();
+                std::cout<<"He pintado VERDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
+            }
+
+            else if (dist < 0.05 && brushColour == 3 ) //Paint magenta
+            {
+                sqPaintedSemaphore.wait();
+                sqPainted[i]=3;
+                sqPaintedSemaphore.post();
+                std::cout<<"He pintado ROJO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
+            }
+
 
             sqPaintedSemaphore.wait();
             int sqPaintedValue = sqPainted[i];
             sqPaintedSemaphore.post();
 
-            if( sqPaintedValue == 1 )
+            if( sqPaintedValue == 1 ) //cyan
             {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 1.0, 1.0));
+            }
+            else if( sqPaintedValue == 2 ) //yellow
+            {
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(1.0, 1.0, 0.0));
+            }
+            else if( sqPaintedValue == 3 ) //magenta
+            {
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(1.0, 0.0, 0.4));
             }
             else
             {
@@ -265,6 +371,14 @@ private:
     Transform T_base_object;
     KinBodyPtr _objPtr;
     KinBodyPtr _wall;
+    KinBodyPtr _palete_magenta;
+    KinBodyPtr _palete_yellow;
+    KinBodyPtr _palete_cyan;
+
+    //Brush colour
+    int brushColour = 1; //Init to cyan colour as default.
+
+
 };
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
