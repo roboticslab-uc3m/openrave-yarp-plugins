@@ -19,6 +19,15 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
         return false;
     }
 
+    //-- The following code works but provides a glitchy image on some machines, guess not thread safe.
+    // image.setExternal(currentFrame.data(),_width,_height);
+
+    //-- So the safe way seems to be using an intermediate image and making a copy.
+    yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
+    tmpImage.setExternal(currentFrame.data(),_width,_height);
+    image.copy(tmpImage);
+
+    //-- Here's the old inefficient pixel-by-pixel copy in case efficient code ever stops working.
     /*yarp::sig::PixelRgb p;
     image.resize(_width,_height);
     for (int i_x = 0; i_x < image.width(); ++i_x)
@@ -31,7 +40,6 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
             image.safePixel(i_x,i_y) = p;
         }
     }*/
-    image.setExternal(currentFrame.data(),_width,_height);
 
     return true;
 }
