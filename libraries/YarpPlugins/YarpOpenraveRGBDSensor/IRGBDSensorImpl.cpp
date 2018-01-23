@@ -45,10 +45,7 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
     yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
     tmpImage.setExternal(currentFrame.data(),rgbWidth,rgbHeight);
 
-    rgbImage.setPixelCode(VOCAB_PIXEL_RGB);
-    rgbImage.setQuantum(8);
-    rgbImage.setPixelSize(3);
-    rgbImage.resize(rgbWidth,rgbHeight);
+    //-- Similar to YarpOpenraveGrabber IFrameGrabberImageImpl.cpp, make copy to avoid glitch.
     rgbImage.copy(tmpImage);
 
     timeStamp->update( yarp::os::Time::now() );
