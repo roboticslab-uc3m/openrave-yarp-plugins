@@ -90,8 +90,8 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     CD_INFO("Laser time_scan: %f   %f.\n",depthGeomDataPtr->time_scan);
 
     CD_INFO("Rgb width: %d, height: %d.\n",rgbGeomDataPtr->width,rgbGeomDataPtr->height);
-    rgbHeight = rgbGeomDataPtr->width;
-    rgbWidth = rgbGeomDataPtr->height;
+    rgbWidth = rgbGeomDataPtr->width;
+    rgbHeight = rgbGeomDataPtr->height;
     depthHeight = 0;
     depthWidth = 0;
 
