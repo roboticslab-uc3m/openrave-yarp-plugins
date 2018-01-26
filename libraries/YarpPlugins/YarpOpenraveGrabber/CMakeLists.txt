@@ -10,6 +10,7 @@ yarp_prepare_plugin(YarpOpenraveGrabber
 
 if(NOT SKIP_YarpOpenraveGrabber)
 
+find_package(YARP 2.3.70 REQUIRED) # yarp::dev::CameraConfig
 find_package(OpenRAVE REQUIRED)
 find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED COMPONENTS iostreams python thread system)
 
