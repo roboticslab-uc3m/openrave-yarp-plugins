@@ -116,7 +116,6 @@ private:
             pforceValueSemaphore->wait();
             response.addDouble(pforceValue[0]);
             pforceValueSemaphore->post();
-            response.addString("ok");
             return response.write(*out);
         }
 
@@ -232,7 +231,7 @@ void TeoSimRateThread::run() {
                                   + pow(T_base_object_y-pos_square_y,2)
                                   + pow(T_base_object_z-pos_square_z,2) );
 
-        if (dist < 0.13)
+        if (dist < 0.06)
         {
             sqIronedSemaphore.wait();
             sqIroned[i]=1;
