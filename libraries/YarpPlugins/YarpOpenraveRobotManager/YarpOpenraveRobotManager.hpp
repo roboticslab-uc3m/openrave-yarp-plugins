@@ -41,7 +41,7 @@ namespace roboticslab
  * @brief Implements the YARP_dev DeviceDriver, and IRobotManager.
  * interface class member functions.
  */
-class YarpOpenraveRobotManager : YarpOpenraveBase, public yarp::dev::DeviceDriver, public rd::IRobotManager {
+class YarpOpenraveRobotManager : YarpOpenraveBase, public yarp::dev::DeviceDriver, public asrob::IRobotManager {
 public:
 
     YarpOpenraveRobotManager() {}
