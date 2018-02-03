@@ -10,8 +10,8 @@ bool roboticslab::YarpOpenraveControlboard::setLimits(int axis, double min, doub
     std::vector<OpenRAVE::dReal> vUpperLimit;
 
     //-- Our joints always have ony 1 DoF, therefore safe to use only [0].
-    vLowerLimit.push_back(min*M_PI/180.0);
-    vUpperLimit.push_back(max*M_PI/180.0);
+    vLowerLimit.push_back( degToRadIfNotPrismatic(axis,min) );
+    vUpperLimit.push_back( degToRadIfNotPrismatic(axis,max) );
 
     vectorOfJointPtr[axis]->SetLimits(vLowerLimit,vUpperLimit);
 
@@ -29,8 +29,8 @@ bool roboticslab::YarpOpenraveControlboard::getLimits(int axis, double *min, dou
     vectorOfJointPtr[axis]->GetLimits(vLowerLimit,vUpperLimit);
 
     //-- Our joints always have ony 1 DoF, therefore safe to use only [0].
-    *min = vLowerLimit[0]*180.0/M_PI;
-    *max = vUpperLimit[0]*180.0/M_PI;
+    *min = radToDegIfNotPrismatic(axis,vLowerLimit[0]);
+    *max = radToDegIfNotPrismatic(axis,vUpperLimit[0]);
 
     CD_INFO("Limits %d: [%f, %f]\n",axis,*min,*max);
 
@@ -40,14 +40,35 @@ bool roboticslab::YarpOpenraveControlboard::getLimits(int axis, double *min, dou
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setVelLimits(int axis, double min, double max) {
-    CD_INFO("Doing nothing.\n");
+    CD_WARNING("min not used, upstream hard-coded to -(max)\n");
+
+    if( max < refSpeeds[ axis ] )
+    {
+        CD_WARNING("Setting %f maxVelLimit below %f refSpeed. All joint %d movements will be immediate.\n",max,refSpeeds[ axis ],axis);
+    }
+
+    std::vector<OpenRAVE::dReal> vUpperLimitVel;
+    vUpperLimitVel.push_back( degToRadIfNotPrismatic(axis,max) );
+
+    vectorOfJointPtr[axis]->SetVelocityLimits(vUpperLimitVel);
+
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getVelLimits(int axis, double *min, double *max) {
-    CD_INFO("Doing nothing.\n");
+
+    //*min = 0;  // This would be a lower limit hard-coded to 0.
+    //*max = radToDegIfNotPrismatic(axis,vectorOfJointPtr[axis]->GetMaxVel());
+    //CD_INFO("(GetMaxVel) Velocity Limits %d: [%f, %f]\n",axis,*min,*max);
+
+    std::pair<OpenRAVE::dReal, OpenRAVE::dReal> velLimits = vectorOfJointPtr[axis]->GetVelocityLimit();
+    *min = radToDegIfNotPrismatic(axis, velLimits.first);  // This lower limit is in fact hard-coded upstream to -(max).
+    *max = radToDegIfNotPrismatic(axis, velLimits.second);
+
+    //CD_INFO("(GetVelocityLimit) Velocity Limits %d: [%f, %f]\n",axis,*min,*max);
+
     return true;
 }
 

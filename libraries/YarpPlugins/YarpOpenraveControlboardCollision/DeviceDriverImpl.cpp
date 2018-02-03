@@ -2,32 +2,27 @@
 
 #include "YarpOpenraveControlboardCollision.hpp"
 
+namespace roboticslab
+{
+
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool roboticslab::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config) {
+bool YarpOpenraveControlboardCollision::open(yarp::os::Searchable& config)
+{
+    CD_DEBUG("config: %s\n",config.toString().c_str());
 
-    //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
-    penv = *((OpenRAVE::EnvironmentBasePtr*)(config.find("penv").asBlob()));
-
-    int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
-    if( robotIndex < 0 )  // a.k.a. -1 one line above
-    {
-        CD_ERROR("Please review robotIndex.\n");
+    if ( ! configureEnvironment(config) )
         return false;
-    }
+
+    if ( ! configureOpenravePlugins(config) )
+        return false;
+
+    if ( ! configureRobot(config) )
+        return false;
+
     int manipulatorIndex = config.check("manipulatorIndex",-1,"manipulatorIndex").asInt();
-    if( manipulatorIndex < 0 )  // a.k.a. -1 one line above
-    {
-        CD_ERROR("Please review manipulatorIndex.\n");
-        return false;
-    }
 
-    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-    penv->GetRobots(vectorOfRobotPtr);
-    probot = vectorOfRobotPtr[robotIndex];
-
-    dEncRaw.resize( probot->GetDOF() );
-    std::fill(dEncRaw.begin(), dEncRaw.end(), 0);
+    dEncRaw.resize( probot->GetDOF(), 0.0 );
 
     std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
     manipulatorIDs = vectorOfManipulatorPtr[manipulatorIndex]->GetArmIndices();
@@ -42,24 +37,32 @@ bool roboticslab::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& 
     std::string YarpOpenraveControlboardStr("/YarpOpenraveControlboardCollision");
     options.put("local",YarpOpenraveControlboardStr+remoteStr);
     options.put("remote",remoteStr);  //-- Hard-code for now
+
     remoteDevice.open(options);
-    if( ! remoteDevice.isValid() ) {
+
+    if( ! remoteDevice.isValid() )
+    {
         CD_ERROR("robot remote not valid: %s.\n",remoteStr.c_str());
         return false;
     }
-    if( ! remoteDevice.view(iEncoders) ) {
+
+    if( ! remoteDevice.view(iEncoders) )
+    {
         CD_ERROR("Could not view iEncoders in: %s.\n",remoteStr.c_str());
         return false;
     }
-    if( ! remoteDevice.view(iPositionControl) ) {
+    if( ! remoteDevice.view(iPositionControl) )
+    {
         CD_ERROR("Could not view iPositionControl in: %s.\n",remoteStr.c_str());
         return false;
     }
-    if( ! remoteDevice.view(iControlLimits2) ) {
+    if( ! remoteDevice.view(iControlLimits2) )
+    {
         CD_ERROR("Could not view iControlLimits2 in: %s.\n",remoteStr.c_str());
         return false;
     }
-    if( ! remoteDevice.view(iControlMode) ) {
+    if( ! remoteDevice.view(iControlMode) )
+    {
         CD_ERROR("Could not view iControlMode in: %s.\n",remoteStr.c_str());
         return false;
     }
@@ -69,9 +72,12 @@ bool roboticslab::YarpOpenraveControlboardCollision::open(yarp::os::Searchable& 
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboardCollision::close() {
-    printf("[YarpOpenraveControlboardCollision] close()\n");
+bool YarpOpenraveControlboardCollision::close()
+{
+    CD_INFO("\n");
     return true;
 }
 
 // -----------------------------------------------------------------------------
+
+}  // namespace roboticslab

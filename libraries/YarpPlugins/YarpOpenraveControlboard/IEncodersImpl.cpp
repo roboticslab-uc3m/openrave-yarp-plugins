@@ -41,7 +41,7 @@ bool roboticslab::YarpOpenraveControlboard::setEncoders(const double *vals) {
 
 bool roboticslab::YarpOpenraveControlboard::getEncoder(int j, double *v) {
     //CD_INFO("\n");  //-- Way too verbose
-    *v = vectorOfJointPtr[j]->GetValue(0)  * 180.0 / M_PI;
+    *v = radToDegIfNotPrismatic(j, vectorOfJointPtr[j]->GetValue(0) );
 
     return true;
 }

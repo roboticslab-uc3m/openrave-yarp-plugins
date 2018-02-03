@@ -1,39 +1,22 @@
-#Copyright: (C) 2016 Universidad Carlos III de Madrid
+# Copyright: (C) 2016 Universidad Carlos III de Madrid
 # Author: Juan G. Victores, Raul Fernandez-Fernandez
 # CopyPolicy: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
 
-#IF (ENABLE_yarpplugins)
+# Find YARP (common dependency for all devices).
+find_package(YARP REQUIRED)
 
-#  option(ENABLE_launchyarpPlugins "Choose if you want to compile launchyarpPlugins" TRUE)
+# Include YARP CMake modules (needless since YARP 2.3.70).
+list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
 
-if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
-  add_definitions("-fno-strict-aliasing -Wall -fPIC")
-endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+# Utilities for creating YARP devices.
+include(YarpPlugin)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  add_definitions("-fPIC")
-endif ()
+# Common YARP includes for subdirectories (needless since YARP 2.3.70).
+include_directories(${YARP_INCLUDE_DIRS})
 
-  find_package(YARP REQUIRED)
-  include_directories(${YARP_INCLUDE_DIRS})
-  list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
-  include(YarpPlugin)
-
-
-#  yarp_begin_plugin_library(yarpplugins)
-    add_subdirectory(YarpOpenraveControlboard)
-    add_subdirectory(YarpOpenraveControlboardCollision)
-    add_subdirectory(FakeControlboard)
-#  yarp_end_plugin_library(yarpplugins)
-  
-#  IF (ENABLE_launchyarpPlugins)
-
-#    link_directories(${TEO_LINK_DIRS})
-    
-#    yarp_add_plugin_yarpdev_executable(launchyarpPlugins yarpplugins)
-#    install(TARGETS launchyarpPlugins DESTINATION bin)
-
-#  ENDIF (ENABLE_launchyarpPlugins)
-
-#ENDIF (ENABLE_yarpplugins)
-
+# YARP devices.
+add_subdirectory(YarpOpenraveControlboard)
+add_subdirectory(YarpOpenraveControlboardCollision)
+add_subdirectory(YarpOpenraveGrabber)
+add_subdirectory(YarpOpenraveRGBDSensor)
+add_subdirectory(YarpOpenraveRobotManager)

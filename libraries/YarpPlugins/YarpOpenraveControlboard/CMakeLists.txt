@@ -5,46 +5,57 @@ yarp_prepare_plugin(YarpOpenraveControlboard
                     CATEGORY device
                     TYPE roboticslab::YarpOpenraveControlboard
                     INCLUDE YarpOpenraveControlboard.hpp
-                    WRAPPER controlboardwrapper2)
+                    DEFAULT ON
+                    DEPENDS ENABLE_YarpOpenraveBase)
 
-IF (NOT SKIP_YarpOpenraveControlboard)
+if(NOT SKIP_YarpOpenraveControlboard)
 
-SET(CMAKE_MODULE_PATH ${TEO_MODULE_PATH} ${CMAKE_MODULE_PATH})
-FIND_PACKAGE(YARP REQUIRED)
-FIND_PACKAGE(OpenRAVE REQUIRED)
-find_package(Boost COMPONENTS iostreams python thread system)
+find_package(OpenRAVE REQUIRED)
+find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED COMPONENTS iostreams python thread system)
 
-if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
-  add_definitions("-fno-strict-aliasing -Wall")
-endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+get_property(_common_dirs GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS)
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${OpenRAVE_INCLUDE_DIRS})  # kdl name depends on version
-if( Boost_INCLUDE_DIRS )
-  include_directories(${Boost_INCLUDE_DIRS})
-endif()
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
+                    ${OpenRAVE_INCLUDE_DIRS}
+                    ${Boost_INCLUDE_DIRS}
+                    ${_common_dirs}
+                    $<TARGET_PROPERTY:YarpOpenraveBase,INTERFACE_INCLUDE_DIRECTORIES>)
 
-LINK_DIRECTORIES(${OPENRAVE_YARP_PLUGINS_LINK_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS}
+                 ${Boost_LIBRARY_DIRS})
 
-YARP_ADD_PLUGIN(YarpOpenraveControlboard YarpOpenraveControlboard.hpp DeviceDriverImpl.cpp IControlLimits2Impl.cpp IControlMode2Impl.cpp IEncodersImpl.cpp IEncodersTimedImpl.cpp IPositionImpl.cpp IPosition2Impl.cpp IVelocityImpl.cpp IVelocity2Impl.cpp ITorqueImpl.cpp)
+yarp_add_plugin(YarpOpenraveControlboard YarpOpenraveControlboard.hpp
+                                         DeviceDriverImpl.cpp
+                                         IControlLimits2Impl.cpp
+                                         IControlMode2Impl.cpp
+                                         IEncodersImpl.cpp
+                                         IEncodersTimedImpl.cpp
+                                         IPositionControlImpl.cpp
+                                         IPositionControl2Impl.cpp
+                                         IPositionDirectImpl.cpp
+                                         ITorqueControlImpl.cpp
+                                         IVelocityControlImpl.cpp
+                                         IVelocityControl2Impl.cpp
+                                         $<TARGET_OBJECTS:YarpOpenraveBase>)
+
 add_dependencies(YarpOpenraveControlboard COLOR_DEBUG)
-set_target_properties(${KEYWORD} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
-set_target_properties(${KEYWORD} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
-TARGET_LINK_LIBRARIES(YarpOpenraveControlboard ${OpenRAVE_LIBRARIES} ${OpenRAVE_CORE_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${YARP_LIBRARIES})
 
-# Exporting dependencies for TEOConfig.cmake quite manually for now... 
-set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")
-set(TEO_LIBRARIES ${TEO_LIBRARIES} TeoYarp YarpOpenraveControlboard CACHE INTERNAL "appended libraries")
+set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+                                                          LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-  #install(TARGETS YarpOpenraveControlboard DESTINATION lib)
-  yarp_install(TARGETS YarpOpenraveControlboard
-             EXPORT YARP
+target_link_libraries(YarpOpenraveControlboard YARP::YARP_OS
+                                               YARP::YARP_dev
+                                               ${OpenRAVE_CORE_LIBRARIES}
+                                               ${Boost_THREAD_LIBRARY}
+                                               ${Boost_SYSTEM_LIBRARY})
+
+yarp_install(TARGETS YarpOpenraveControlboard
              COMPONENT runtime
              LIBRARY DESTINATION ${YARP_DYNAMIC_PLUGINS_INSTALL_DIR}
              ARCHIVE DESTINATION ${YARP_STATIC_PLUGINS_INSTALL_DIR})
 
-  yarp_install(FILES YarpOpenraveControlboard.ini
-              COMPONENT runtime
-              DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
+yarp_install(FILES YarpOpenraveControlboard.ini
+             COMPONENT runtime
+             DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
 
-ENDIF (NOT SKIP_YarpOpenraveControlboard)
-
+endif()

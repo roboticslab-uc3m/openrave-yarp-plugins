@@ -16,6 +16,8 @@
 #include <sstream>
 #include <vector>
 
+#include "YarpOpenraveBase.hpp"
+
 #include "ColorDebug.hpp"
 
 #define DEFAULT_AXES 5
@@ -45,14 +47,14 @@ namespace roboticslab
 // Note: IPositionControl2 inherits from IPositionControl
 // Note: IVelocityControl2 inherits from IVelocityControl
 // Note: IControlLimits2 inherits from IControlLimits
-class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
+class YarpOpenraveControlboardCollision : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
         public yarp::dev::IControlLimits2, public yarp::dev::IControlMode, public yarp::dev::ITorqueControl {
     public:
 
         // Set the Thread Rate in the class constructor
         YarpOpenraveControlboardCollision() {}
 
-        // ------- IPositionControl declarations. Implementation in IPositionImpl.cpp -------
+        // ------- IPositionControl declarations. Implementation in IPositionControlImpl.cpp -------
 
                 /**
                  * Get the number of controlled axes. This command asks the number of controlled
@@ -169,7 +171,7 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
                  */
                 virtual bool stop();
 
-            // ------- IPositionControl2 declarations. Implementation in IPosition2Impl.cpp -------
+            // ------- IPositionControl2 declarations. Implementation in IPositionControl2Impl.cpp -------
 
                 /** Set new reference point for a subset of joints.
                  * @param joints pointer to the array of joint numbers
@@ -354,7 +356,7 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
                */
                virtual bool getEncoderTimed(int j, double *encs, double *time);
 
-            //  --------- IVelocityControl Declarations. Implementation in IVelocityImpl.cpp ---------
+            //  --------- IVelocityControl Declarations. Implementation in IVelocityControlImpl.cpp ---------
 
                 /**
                  * Start motion at a given speed, single joint.
@@ -371,7 +373,7 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
                  */
                 virtual bool velocityMove(const double *sp);
 
-            //  --------- IVelocityControl2 Declarations. Implementation in IVelocity2Impl.cpp ---------
+            //  --------- IVelocityControl2 Declarations. Implementation in IVelocityControl2Impl.cpp ---------
 
                 /** Start motion at a given speed for a subset of joints.
                  * @param n_joint how many joints this command is referring to
@@ -532,7 +534,7 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
                 */
                 virtual bool getControlModes(int *modes);
 
-            // -------- ITorqueControl declarations. Implementation in ITorqueImpl.cpp --------
+            // -------- ITorqueControl declarations. Implementation in ITorqueControlImpl.cpp --------
 
                /** Get the reference value of the torque for all joints.
                  * This is NOT the feedback (see getTorques instead).
@@ -711,7 +713,7 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
                  */
                 virtual bool setTorqueOffset(int j, double v);
 
-            // -------- DeviceDriver declarations. Implementation in IDeviceImpl.cpp --------
+            // -------- DeviceDriver declarations. Implementation in DeviceDriverImpl.cpp --------
 
                 /**
                  * Open the DeviceDriver.
@@ -768,10 +770,7 @@ class YarpOpenraveControlboardCollision : public yarp::dev::DeviceDriver, public
                 //
                 std::vector<int> mode;
 
-
                 //OpenRAVE//
-                OpenRAVE::EnvironmentBasePtr penv;
-                OpenRAVE::RobotBasePtr probot;
                 std::vector< int > manipulatorIDs;
                 std::vector<OpenRAVE::dReal> dEncRaw;
 

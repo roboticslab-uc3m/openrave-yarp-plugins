@@ -4,7 +4,6 @@
 #define __YARP_OPENRAVE_CONTROLBOARD_HPP__
 
 #include <yarp/os/all.h>
-#include <yarp/os/Semaphore.h>
 #include <yarp/dev/all.h>
 
 #include <openrave-core.h>
@@ -16,16 +15,14 @@
 #include <sstream>
 #include <vector>
 
+#include "YarpOpenraveBase.hpp"
+
 #include "ColorDebug.hpp"
 
-#define DEFAULT_AXES 5
+#define DEFAULT_GEN_REF_SPEED 7.5  // Exposed.
 
 namespace roboticslab
 {
-
-
-// Specific for --env parameter
-void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername, int _viewer);
 
 /**
  * @ingroup TeoYarp
@@ -44,19 +41,23 @@ void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername,
  * @brief Implements the YARP_dev IPositionControl, IVelocityControl, IEncodersTimed, etc.
  * interface class member functions.
  */
-// Note: IEncodersTimed inherits from IEncoders
-// Note: IPositionControl2 inherits from IPositionControl
-// Note: IVelocityControl2 inherits from IVelocityControl
-// Note: IControlLimits2 inherits from IControlLimits
-// Note: IControlMode2 inherits from IControlMode
-class YarpOpenraveControlboard : public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
-    public yarp::dev::IControlLimits2, public yarp::dev::IControlMode2, public yarp::dev::ITorqueControl {
+
+class YarpOpenraveControlboard : YarpOpenraveBase,
+        public yarp::dev::DeviceDriver,
+        public yarp::dev::IControlLimits2,    //-- IControlLimits2 inherits from IControlLimits
+        public yarp::dev::IControlMode2,      //-- IControlMode2 inherits from IControlMode
+        public yarp::dev::IEncodersTimed,     //-- IEncodersTimed inherits from IEncoders
+        public yarp::dev::IPositionControl2,  //-- IPositionControl2 inherits from IPositionControl
+        public yarp::dev::IPositionDirect,
+        public yarp::dev::ITorqueControl,
+        public yarp::dev::IVelocityControl2   //-- IVelocityControl2 inherits from IVelocityControl
+{
 public:
 
     // Set the Thread Rate in the class constructor
     YarpOpenraveControlboard() {}
 
-    // ------- IPositionControl declarations. Implementation in IPositionImpl.cpp -------
+    // ------- IPositionControl declarations. Implementation in IPositionControlImpl.cpp -------
 
     /**
      * Get the number of controlled axes. This command asks the number of controlled
@@ -173,7 +174,7 @@ public:
      */
     virtual bool stop();
 
-    // ------- IPositionControl2 declarations. Implementation in IPosition2Impl.cpp -------
+    // ------- IPositionControl2 declarations. Implementation in IPositionControl2Impl.cpp -------
 
     /** Set new reference point for a subset of joints.
      * @param joints pointer to the array of joint numbers
@@ -267,7 +268,35 @@ public:
      */
     virtual bool getTargetPositions(const int n_joint, const int *joints, double *refs);
 
-    //  ---------- IEncodersTimed Declarations. Implementation in IEncoderImpl.cpp ----------
+    // ------- IPositionDirect declarations. Implementation in IPositionDirectImpl.cpp -------
+
+    /** Set new position for a single axis.
+     * @param j joint number
+     * @param ref specifies the new ref point
+     * @return true/false on success/failure
+     */
+    virtual bool setPosition(int j, double ref);
+
+    /** Set new reference point for all axes.
+     * @param n_joint how many joints this command is referring to
+     * @param joints list of joints controlled. The size of this array is n_joints
+     * @param refs array, new reference points, one value for each joint, the size is n_joints.
+     *        The first value will be the new reference fot the joint joints[0].
+     *          for example:
+     *          n_joint  3
+     *          joints   0  2  4
+     *          refs    10 30 40
+     * @return true/false on success/failure
+     */
+    virtual bool setPositions(const int n_joint, const int *joints, double *refs);
+
+    /** Set new position for a set of axis.
+     * @param refs specifies the new reference points
+     * @return true/false on success/failure
+     */
+    virtual bool setPositions(const double *refs);
+
+    //  ---------- IEncoders Declarations. Implementation in IEncodersImpl.cpp ----------
 
     /**
      * Reset encoder, single joint. Set the encoder value to zero
@@ -341,6 +370,8 @@ public:
      */
     virtual bool getEncoderAccelerations(double *accs);
 
+    //  ---------- IEncodersTimed Declarations. Implementation in IEncodersTimedImpl.cpp ----------
+
     /**
     * Read the instantaneous acceleration of all axes.
     * \param encs pointer to the array that will contain the output
@@ -358,7 +389,7 @@ public:
     */
     virtual bool getEncoderTimed(int j, double *encs, double *time);
 
-    //  --------- IVelocityControl Declarations. Implementation in IVelocityImpl.cpp ---------
+    //  --------- IVelocityControl Declarations. Implementation in IVelocityControlImpl.cpp ---------
 
     /**
      * Start motion at a given speed, single joint.
@@ -375,7 +406,7 @@ public:
      */
     virtual bool velocityMove(const double *sp);
 
-    //  --------- IVelocityControl2 Declarations. Implementation in IVelocity2Impl.cpp ---------
+    //  --------- IVelocityControl2 Declarations. Implementation in IVelocityControl2Impl.cpp ---------
 
     /** Start motion at a given speed for a subset of joints.
      * @param n_joint how many joints this command is referring to
@@ -438,7 +469,7 @@ public:
      */
     virtual bool getVelPids(yarp::dev::Pid *pids);
 
-    //  --------- IControlLimits Declarations. Implementation in IControlLimitsImpl.cpp ---------
+    //  --------- IControlLimits Declarations. Implementation in IControlLimits2Impl.cpp ---------
 
     /**
      * Set the software limits for a particular axis, the behavior of the
@@ -457,6 +488,8 @@ public:
      * @return true if everything goes fine, false otherwise.
      */
     virtual bool getLimits(int axis, double *min, double *max);
+
+    //  --------- IControlLimits2 Declarations. Implementation in IControlLimits2Impl.cpp ---------
 
     /**
      * Set the software speed limits for a particular axis, the behavior of the
@@ -477,7 +510,7 @@ public:
      */
     virtual bool getVelLimits(int axis, double *min, double *max);
 
-    //  --------- IControlMode Declarations. Implementation in IControlModeImpl.cpp ---------
+    //  --------- IControlMode Declarations. Implementation in IControlMode2Impl.cpp ---------
 
     /**
     * Set position mode, single axis.
@@ -585,8 +618,8 @@ public:
     *         (e.g. the joint is on a fault condition or the desired mode is not implemented).
     */
     virtual bool setControlModes(int *modes);
-    // -------- ITorqueControl declarations. Implementation in ITorqueImpl.cpp --------
 
+    // -------- ITorqueControl declarations. Implementation in ITorqueControlImpl.cpp --------
 
     /** Get the reference value of the torque for all joints.
       * This is NOT the feedback (see getTorques instead).
@@ -788,44 +821,59 @@ public:
      */
     virtual bool close();
 
-    // -------- RateThread declarations. Implementation in RateThreadImpl.cpp --------
-
-    /**
-     * Initialization method. The thread executes this function
-     * when it starts and before "run". This is a good place to
-     * perform initialization tasks that need to be done by the
-     * thread itself (device drivers initialization, memory
-     * allocation etc). If the function returns false the thread
-     * quits and never calls "run". The return value of threadInit()
-     * is notified to the class and passed as a parameter
-     * to afterStart(). Note that afterStart() is called by the
-     * same thread that is executing the "start" method.
-     */
-    bool threadInit();
-
-    /**
-     * Loop function. This is the thread itself.
-     */
-    void run();
-
     // ------------------------------- Private -------------------------------------
 
 private:
 
     // General Joint Motion Controller parameters //
     unsigned int axes;
-    std::vector< int > controlModes;
+    std::vector<int> controlModes;
+    std::vector<double> refSpeeds;  // Exposed.
 
     //OpenRAVE//
-    OpenRAVE::EnvironmentBasePtr penv;
-    OpenRAVE::RobotBasePtr probot;
-    OpenRAVE::ControllerBasePtr pcontrol;
-    std::vector< int > manipulatorIDs;
-    std::vector<OpenRAVE::dReal> manipulatorTargets;
+    OpenRAVE::MultiControllerBasePtr multi;
+    std::vector<OpenRAVE::ControllerBasePtr> pcontrols;
+    std::vector<int> manipulatorIDs;
+    std::vector<OpenRAVE::dReal> manipulatorTargetRads;
     std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
 
-    // Specific for --env parameter with --view
-    boost::thread_group openraveThreads;
+    /**
+     * @brief Converts degrees to radians.
+     * @param deg Angle value expressed in degrees.
+     * @return Same value expressed in radians.
+     */
+    inline double degToRad(double deg) { return deg * M_PI / 180.0; }
+
+    /**
+     * @brief Converts radians to degrees.
+     * @param rad Angle value expressed in radians.
+     * @return Same value expressed in degrees.
+     */
+    inline double radToDeg(double rad) { return rad * 180.0 / M_PI; }
+
+    /**
+     * @brief Converts degrees to radians, unless joint j is prismatic.
+     * @param j Axis to check
+     * @param deg Angle value expressed in degrees.
+     * @return Same value expressed in radians.
+     */
+    inline double degToRadIfNotPrismatic(int j, double deg)
+    {
+        if( (vectorOfJointPtr[j])->IsPrismatic(0) ) return deg;
+        else return degToRad(deg);  //  revolute, circular
+    }
+
+    /**
+     * @brief Converts radians to degrees, unless joint j is prismatic.
+     * @param j Axis to check
+     * @param rad Angle value expressed in radians.
+     * @return Same value expressed in degrees.
+     */
+    inline double radToDegIfNotPrismatic(int j, double rad)
+    {
+        if( (vectorOfJointPtr[j])->IsPrismatic(0) ) return rad;
+        else return radToDeg(rad);  //  revolute, circular
+    }
 };
 
 }  // namespace roboticslab
