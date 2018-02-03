@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-# Uses RobotServer from https://github.com/asrob-uc3m/yarp-devices
+# Depends (update to `develop`):
+# https://github.com/asrob-uc3m/robotDevastation-openrave-models  # mapping_room.env.xml
+# https://github.com/asrob-uc3m/yarp-devices  # RobotServer
 
 import openravepy
 from openravepy import *
