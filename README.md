@@ -61,9 +61,9 @@ openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xm
 
 Note that OpenraveYarpPluginLoader uses OpenRAVE plugins `main()`, affected by [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60).
 
-If you prefer to use Python, the Python script equivalent to `teoSim` such that it is not affected by the above issues is contained in the `examples` directory:
+If you prefer to use Python, the Python script equivalent to `teoSim` such that it is not affected by the above issues is contained in the `example` directory:
 ```bash
-python ~/repos/openrave-yarp-plugins/examples/openraveYarpPluginLoader-controlboard-allManipulators.py
+python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-controlboard-allManipulators.py
 ```
 
 # Tutorials: (How to use openrave-yarp-plugins for collision avoidance of a simulated robot)
@@ -71,10 +71,10 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 
 ```bash
 # new terminal to open the simulated robot
-python ~/repos/openrave-yarp-plugins/examples/openraveYarpPluginLoader-controlboard-allManipulators.py
+python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-controlboard-allManipulators.py
 # new terminal to open the collision avoidance simulator 
 # NOTE: Expect LONG wait to load the padding model
-python ~/repos/openrave-yarp-plugins/examples/openraveYarpPluginLoader-controlboard-collision-sim.py
+python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-controlboard-collision-sim.py
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teoSim/[kinematic chain name]/rpc:i
 ```
@@ -84,7 +84,7 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 
 ```bash
 # new terminal
-python ~/repos/openrave-yarp-plugins/examples/openraveYarpPluginLoader-controlboard-collision-real.py
+python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-controlboard-collision-real.py
 # wait for the system to load the padding model
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teo/[kinematic chain name]/rpc:i
