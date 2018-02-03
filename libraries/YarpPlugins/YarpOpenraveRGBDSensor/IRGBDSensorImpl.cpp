@@ -32,10 +32,10 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
 {
     //CD_DEBUG("\n");
 
-    rgbSensorBasePtr->GetSensorData(rgbSensorDataPtr);
-
     if(rgb)
     {
+        rgbSensorBasePtr->GetSensorData(rgbSensorDataPtr);
+
         std::vector<uint8_t> currentFrame = rgbSensorDataPtr->vimagedata;
         //CD_DEBUG("Vector size: %d\n",currentFrame.size()); // i.e. 480 * 640 * 3 = 921600;
         if(0 == currentFrame.size())
@@ -48,6 +48,11 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
         tmpImage.setExternal(currentFrame.data(),rgbWidth,rgbHeight);
 
         //-- Similar to YarpOpenraveGrabber IFrameGrabberImageImpl.cpp, make copy to avoid glitch.
+        rgbImage.copy(tmpImage);
+    }
+    else
+    {
+        yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
         rgbImage.copy(tmpImage);
     }
 
@@ -94,12 +99,15 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
             depthWidth  = 2;
             depthHeight = 2;
         }
+        else if (sensorRanges.size()==0)
+        {
+            CD_WARNING("sensorRanges.size()==0\n");
+        }
         else
         {
             depthWidth  = sensorRanges.size();
             depthHeight = 1;
         }
-        //else CD_ERROR("unrecognized laser sensor data size.\n");
 
         tinv = depthSensorDataPtr->__trans.inverse();
     }

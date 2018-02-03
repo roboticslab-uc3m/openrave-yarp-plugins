@@ -20,31 +20,41 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     if ( ! configureRobot(config) )
         return false;
 
-    int depthSensorIndex = config.check("depthSensorIndex",-1,"depthSensorIndex").asInt();
-    int rgbSensorIndex = config.check("rgbSensorIndex",-1,"rgbSensorIndex").asInt();
+    const int notSet = -1;
+    int depthSensorIndex = config.check("depthSensorIndex",notSet,"depthSensorIndex").asInt();
+    int rgbSensorIndex = config.check("rgbSensorIndex",notSet,"rgbSensorIndex").asInt();
 
     std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
-    if(depthSensorIndex >= vectorOfSensorPtr.size())
+
+    if (depthSensorIndex == notSet)  // Must be checked before comparison  with size which may be unsigned.
+    {
+        CD_ERROR("depthSensorIndex %d not set, not loading yarpPlugin.\n",depthSensorIndex);
+        return false;
+    }
+    else if(depthSensorIndex >= vectorOfSensorPtr.size())
     {
         CD_ERROR("depthSensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",depthSensorIndex,vectorOfSensorPtr.size());
         return false;
     }
-    else if (depthSensorIndex < 0)
+    else if(depthSensorIndex < 0)
     {
         CD_ERROR("depthSensorIndex %d < 0, not loading yarpPlugin.\n",depthSensorIndex);
         return false;
     }
-    if(rgbSensorIndex >= vectorOfSensorPtr.size())
+
+    if (rgbSensorIndex == notSet)  // Must be checked before comparison  with size which may be unsigned.
+    {
+        CD_WARNING("rgbSensorIndex %d not set, special case, running with RGB disabled.\n",rgbSensorIndex);
+        rgb = false;
+        rgbWidth = 0;
+        rgbHeight = 0;
+    }
+    else if(rgbSensorIndex >= vectorOfSensorPtr.size())
     {
         CD_ERROR("rgbSensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",rgbSensorIndex,vectorOfSensorPtr.size());
         return false;
     }
-    else if (rgbSensorIndex == -1)
-    {
-        CD_WARNING("rgbSensorIndex %d == -1, special case.\n",rgbSensorIndex);
-        rgb = false;
-    }
-    else if (rgbSensorIndex < -1)
+    else if (rgbSensorIndex < 0)
     {
         CD_ERROR("rgbSensorIndex %d < 0, not loading yarpPlugin.\n",rgbSensorIndex);
         return false;
