@@ -39,7 +39,12 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
         CD_ERROR("rgbSensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",rgbSensorIndex,vectorOfSensorPtr.size());
         return false;
     }
-    else if (rgbSensorIndex < 0)
+    else if (rgbSensorIndex == -1)
+    {
+        CD_ERROR("rgbSensorIndex %d == -1, special case.\n",rgbSensorIndex);
+        return false;
+    }
+    else if (rgbSensorIndex < -1)
     {
         CD_ERROR("rgbSensorIndex %d < 0, not loading yarpPlugin.\n",rgbSensorIndex);
         return false;
