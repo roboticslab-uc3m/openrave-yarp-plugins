@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Uses RobotServer from https://github.com/asrob-uc3m/yarp-devices
+
 import openravepy
 from openravepy import *
 
