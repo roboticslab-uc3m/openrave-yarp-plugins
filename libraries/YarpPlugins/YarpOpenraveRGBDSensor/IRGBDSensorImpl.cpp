@@ -34,19 +34,22 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
 
     rgbSensorBasePtr->GetSensorData(rgbSensorDataPtr);
 
-    std::vector<uint8_t> currentFrame = rgbSensorDataPtr->vimagedata;
-    //CD_DEBUG("Vector size: %d\n",currentFrame.size()); // i.e. 480 * 640 * 3 = 921600;
-    if(0 == currentFrame.size())
+    if(rgb)
     {
-        //CD_DEBUG("Waiting for camera...\n");
-        return false;
+        std::vector<uint8_t> currentFrame = rgbSensorDataPtr->vimagedata;
+        //CD_DEBUG("Vector size: %d\n",currentFrame.size()); // i.e. 480 * 640 * 3 = 921600;
+        if(0 == currentFrame.size())
+        {
+            //CD_DEBUG("Waiting for camera...\n");
+            return false;
+        }
+
+        yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
+        tmpImage.setExternal(currentFrame.data(),rgbWidth,rgbHeight);
+
+        //-- Similar to YarpOpenraveGrabber IFrameGrabberImageImpl.cpp, make copy to avoid glitch.
+        rgbImage.copy(tmpImage);
     }
-
-    yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
-    tmpImage.setExternal(currentFrame.data(),rgbWidth,rgbHeight);
-
-    //-- Similar to YarpOpenraveGrabber IFrameGrabberImageImpl.cpp, make copy to avoid glitch.
-    rgbImage.copy(tmpImage);
 
     timeStamp->update( yarp::os::Time::now() );
 
