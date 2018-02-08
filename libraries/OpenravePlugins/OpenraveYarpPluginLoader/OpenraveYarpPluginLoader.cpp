@@ -249,7 +249,7 @@ public:
                 CD_INFO("Not using --manipulatorIndex or --manipulatorIndices or --allManipulators parameter.\n");
                 CD_INFO("Not using --sensorIndex or --sensorIndices or --allSensors parameter.\n");
 
-                if( ! options.check("name") )
+                if( ! options.check("forceName") )
                 {
                     options.put("name",robotName);
                 }
@@ -287,7 +287,7 @@ public:
                 manipulatorName += "/";
                 manipulatorName += vectorOfManipulatorPtr[ manipulatorIndex ]->GetName();
 
-                if( ! options.check("name") )
+                if( ! options.check("forceName") )
                 {
                     options.put("name",manipulatorName);
                 }
@@ -325,7 +325,7 @@ public:
                 sensorName += "/";
                 sensorName += vectorOfSensorPtr[ sensorIndex ]->GetName();
 
-                if( ! options.check("name") )
+                if( ! options.check("forceName") )
                 {
                     options.put("name",sensorName);
                 }
