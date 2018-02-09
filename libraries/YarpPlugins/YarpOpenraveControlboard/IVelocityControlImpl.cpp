@@ -24,7 +24,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
     double min = vLowerLimit[0];
     double max = vUpperLimit[0];
 
-    CD_DEBUG("Limits %d: [%f, %f]\n",j,min,max);
+    //CD_DEBUG("Limits %d: [%f, %f]\n",j,min,max);
 
     OpenRAVE::dReal dofTargetRads;
     if( sp > 0 )
@@ -34,11 +34,11 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
     else
     {
         this->stop(j);
-        CD_INFO("Done 0 vel (%d).\n",j);
+        //CD_INFO("Done 0 vel (%d).\n",j);
         return true;
     }
 
-    CD_DEBUG("Target %d: [%f]\n",j,dofTargetRads);
+    //CD_DEBUG("Target %d: [%f]\n",j,dofTargetRads);
 
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
