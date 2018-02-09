@@ -251,7 +251,11 @@ bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(double *accs) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::stop(int j) {
-    CD_INFO("Doing nothing.\n");
+    CD_INFO("\n");
+    OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
+    std::vector<OpenRAVE::dReal> tmp;
+    tmp.push_back(dofCurrentRads);
+    pcontrols[j]->SetDesired(tmp);
     return true;
 }
 

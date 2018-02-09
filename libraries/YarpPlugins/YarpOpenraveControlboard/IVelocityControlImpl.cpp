@@ -33,6 +33,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
         dofTargetRads = min;
     else
     {
+        this->stop(j);
         CD_INFO("Done 0 vel (%d).\n",j);
         return true;
     }
