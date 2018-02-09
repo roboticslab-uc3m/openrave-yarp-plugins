@@ -27,14 +27,15 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
     //CD_DEBUG("Limits %d: [%f, %f]\n",j,min,max);
 
     OpenRAVE::dReal dofTargetRads;
-    if( sp > 0 )
+    double tol = 0.0001;
+    if( sp > 0+tol )
         dofTargetRads = max;
-    else if ( sp < 0 )
+    else if ( sp < 0-tol )
         dofTargetRads = min;
     else
     {
         this->stop(j);
-        //CD_INFO("Done 0 vel (%d).\n",j);
+        //CD_INFO("Done near 0 vel (%d).\n",j);
         return true;
     }
 
