@@ -45,14 +45,6 @@ public:
 
     virtual ~OpenraveYarpPluginLoader()
     {
-        //-- Note that we start on element 1, first elem was not via new!!
-        for(size_t i=1;i<argv.size();i++)
-        {
-            //CD_DEBUG("Deleting [%s]\n",argv[i]);
-            delete argv[i];
-            argv[i] = 0;
-        }
-
         for(int i=0;i<yarpPlugins.size();i++)
         {
             yarpPlugins[i]->close();
@@ -119,6 +111,7 @@ public:
 
         //-- Given "std::istream& sinput", create equivalent to "int argc, char *argv[]"
         //-- Note that char* != const char* given by std::string::c_str();
+        std::vector<char *> argv;
         char* dummyProgramName = "dummyProgramName";
         argv.push_back(dummyProgramName);
 
@@ -133,8 +126,8 @@ public:
             argv.push_back(cstr);
         }
 
-        //for(size_t i=0;i<argv.size();i++)
-        //    CD_DEBUG("argv[%d] is [%s]\n",i,argv[i]);
+        for(size_t i=0;i<argv.size();i++)
+            CD_DEBUG("argv[%d] is [%s]\n",i,argv[i]);
 
         yarp::os::Property options;
         options.fromCommand(argv.size(),argv.data());
@@ -249,7 +242,7 @@ public:
                 CD_INFO("Not using --manipulatorIndex or --manipulatorIndices or --allManipulators parameter.\n");
                 CD_INFO("Not using --sensorIndex or --sensorIndices or --allSensors parameter.\n");
 
-                if( ! options.check("name") )
+                if( ! options.check("forceName") )
                 {
                     options.put("name",robotName);
                 }
@@ -287,7 +280,7 @@ public:
                 manipulatorName += "/";
                 manipulatorName += vectorOfManipulatorPtr[ manipulatorIndex ]->GetName();
 
-                if( ! options.check("name") )
+                if( ! options.check("forceName") )
                 {
                     options.put("name",manipulatorName);
                 }
@@ -325,7 +318,7 @@ public:
                 sensorName += "/";
                 sensorName += vectorOfSensorPtr[ sensorIndex ]->GetName();
 
-                if( ! options.check("name") )
+                if( ! options.check("forceName") )
                 {
                     options.put("name",sensorName);
                 }
@@ -343,12 +336,19 @@ public:
                 yarpPlugins.push_back(yarpPlugin);
             }
         }
+
+        //-- Note that we start on element 1, first elem was not via new!!
+        for(size_t i=1;i<argv.size();i++)
+        {
+            //CD_DEBUG("Deleting [%s]\n",argv[i]);
+            delete argv[i];
+            argv[i] = 0;
+        }
+
         return true;
     }
 
 private:
-    std::vector<char *> argv;
-
     yarp::os::Network yarp;
     std::vector<yarp::dev::PolyDriver*> yarpPlugins;
 };

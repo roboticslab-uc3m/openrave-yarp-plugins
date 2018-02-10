@@ -18,7 +18,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
     //-- Check if we are in position mode.
     if( controlModes[j] != VOCAB_CM_POSITION )
     {
-        CD_ERROR("Will not positionMove as not in positionMode\n");
+        CD_ERROR("Will not positionMove as not in positionMode (%d)\n",j);
         return false;
     }
 
@@ -106,7 +106,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
 
-        OpenRAVE::dReal dofTime = fabs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
+        OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
 
         CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
 
@@ -251,7 +251,11 @@ bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(double *accs) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::stop(int j) {
-    CD_INFO("Doing nothing.\n");
+    CD_INFO("\n");
+    OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
+    std::vector<OpenRAVE::dReal> tmp;
+    tmp.push_back(dofCurrentRads);
+    pcontrols[j]->SetDesired(tmp);
     return true;
 }
 
