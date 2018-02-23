@@ -9,3 +9,7 @@ yarp server
    ```bash
    yarpdev --device YarpOpenraveRobotManager --env /usr/local/share/robotDevastation-openrave-models/contexts/openrave/ecro/mapping_room.env.xml --physics ode --view --robotIndex 0 --name /robot
    ```
+   Then communicate via:
+   ```
+   yarp rpc /robot/rpc:s
+   ```
