@@ -26,7 +26,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 
     if (sensorIndex == NOT_SET)
     {
-        CD_ERROR("sensorIndex %d < 0, not loading yarpPlugin.\n",sensorIndex);
+        CD_ERROR("sensorIndex %d == NOT_SET, not loading yarpPlugin.\n",sensorIndex);
         return false;
     }
     std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
