@@ -1,6 +1,11 @@
 # YarpOpenraveGrabber
 
-Example invocation:
+First open a:
 ```bash
-yarpdev --device YarpOpenraveGrabber --env /usr/local/share/robotDevastation-openrave-models/contexts/openrave/ecro/mapping_room.env.xml --robotIndex 0 --sensorIndex 1 --view
+yarp server
 ```
+
+- Example 1 (requires [robotDevastation-openrave-models](https://github.com/roboticslab-uc3m/robotDevastation-openrave-models)): Open `YarpOpenraveGrabber` device with `mapping_room.env.xml` environment, view, apply to robot index `0` and sensor index `0` and call it `/robot`:
+   ```bash
+   yarpdev --device YarpOpenraveGrabber --env /usr/local/share/robotDevastation-openrave-models/contexts/openrave/ecro/mapping_room.env.xml --robotIndex 0 --sensorIndex 1 --view
+   ```
