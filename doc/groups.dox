@@ -1,8 +1,8 @@
 
 /**
-@brief The main, catch-all namespace for TEO.
+@brief The main, catch-all namespace for Robotics Lab UC3M.
  */
-namespace teo {}
+namespace roboticslab {}
 
 /**
  * \defgroup openrave-yarp-plugins-libraries openrave-yarp-plugins Libraries
