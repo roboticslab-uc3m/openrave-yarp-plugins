@@ -4,11 +4,11 @@
 
 #include <algorithm>  // Thanks: https://notfaq.wordpress.com/2007/08/04/cc-convert-string-to-upperlower-case/
 
-const double roboticslab::YarpOpenraveControlboard::DEFAULT_GEN_REF_SPEED = 7.5;
-const int roboticslab::YarpOpenraveControlboard::NOT_SET = -1;
-
 namespace roboticslab
 {
+
+const double YarpOpenraveControlboard::DEFAULT_GEN_REF_SPEED = 7.5;
+const int YarpOpenraveControlboard::NOT_SET = -1;
 
 // ------------------- DeviceDriver Related ------------------------------------
 
@@ -28,13 +28,13 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
     int manipulatorIndex = config.check("manipulatorIndex",NOT_SET,"manipulatorIndex").asInt();
     double genRefSpeed = config.check("genRefSpeed",DEFAULT_GEN_REF_SPEED,"general ref speed").asDouble();
 
-    std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
     if (manipulatorIndex == NOT_SET)
     {
         CD_ERROR("manipulatorIndex %d == NOT_SET, not loading yarpPlugin.\n",manipulatorIndex);
         return false;
     }
-    else if( (manipulatorIndex >= vectorOfManipulatorPtr.size()) || (manipulatorIndex < 0) )
+    std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
+    if( (manipulatorIndex >= vectorOfManipulatorPtr.size()) || (manipulatorIndex < 0) )
     {
         CD_ERROR("manipulatorIndex %d not within vectorOfManipulatorPtr of size() %d, not loading yarpPlugin.\n",manipulatorIndex,vectorOfManipulatorPtr.size());
         return false;
