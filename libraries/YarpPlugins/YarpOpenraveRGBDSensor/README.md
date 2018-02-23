@@ -2,6 +2,7 @@
 
 For now best use:
 - https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/develop/examples/python/openraveYarpPluginLoader-rgbdsensor.py
+   
    Open a viewer for RGB:
    ```bash
    yarpview --name /yarpview/rgb/img:i
