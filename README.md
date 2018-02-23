@@ -44,29 +44,9 @@ Technically, the OpenRAVE plugin can directly open YARP ports, or contain one or
 - "name": Can be extracted from the `OpenRAVE::Environment` and can be used for the port names opened by the "device" too.
 - Plus, whatever other information the "subdevice" YARP plugin requires (e.g. which `robotIndex` and/or `manipulatorIndex` for control).
 
-# Tutorials: (How openrave-yarp-plugins is used to implement teoSim in teo-configuration-files)
+# Tutorials
 
-```bash
-yarpserver
-# new terminal
-openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators"
-# Then the robot can be commanded via yarp with:
-yarp rpc /teoSim/[kinematic chain name]/rpc:i
-```
-
-We can do funky commands like the following, where `open` acts as a delimiter:
-```bash
-openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
-```
-
-Note that OpenraveYarpPluginLoader uses OpenRAVE plugins `main()`, affected by [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60).
-
-If you prefer to use Python, the Python script equivalent to `teoSim` such that it is not affected by the above issues is contained in the `example` directory:
-```bash
-python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-controlboard-allManipulators.py
-```
-
-# Tutorials: (How to use openrave-yarp-plugins for collision avoidance of a simulated robot)
+## How to use openrave-yarp-plugins for collision avoidance of a simulated robot
 The following commands explain how to use the openrave-yarp-plugins for collision avoidance, using the previous instance of openrave-yarp-plugins as the remote robot.
 
 ```bash
@@ -79,7 +59,7 @@ python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-con
 yarp rpc /safe/teoSim/[kinematic chain name]/rpc:i
 ```
 
-# Tutorials: (How to use openrave-yarp-plugins for collision avoidance of a real robot)
+## How to use openrave-yarp-plugins for collision avoidance of a real robot
 The following commands explain how to use the openrave-yarp-plugins for collision avoidance, using a real remote robot.
 
 ```bash
@@ -90,7 +70,7 @@ python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-con
 yarp rpc /safe/teo/[kinematic chain name]/rpc:i
 ```
 
-# Tutorials: (How to extract a .pp model from ConvexDecomposition)
+## How to extract a .pp model from ConvexDecomposition
 The following commands explain how to use openrave to create a 3D model (.pp) of the collision space that openrave uses to calculate collisions. Whereas openarave uses it continuously, here we can save the 3D files to use them.
 
 ```bash

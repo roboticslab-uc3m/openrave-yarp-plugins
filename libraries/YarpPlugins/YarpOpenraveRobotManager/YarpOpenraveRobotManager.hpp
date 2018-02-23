@@ -25,15 +25,10 @@ namespace roboticslab
 {
 
 /**
- * @ingroup TeoYarp
+ * @ingroup YarpPlugins
  * \defgroup YarpOpenraveRobotManager
  *
- * @brief Contains teo::YarpOpenraveRobotManager.
- *
- * @section YarpOpenraveRobotManager_install Installation
- *
- * The plugin is compiled when ENABLE_TeoYarp_YarpOpenraveRobotManager is activated (not default). For further
- * installation steps refer to <a class="el" href="pages.html">your own system installation guidelines</a>.
+ * @brief Contains roboticslab::YarpOpenraveRobotManager.
  */
 
 /**
@@ -113,4 +108,3 @@ private:
 }  // namespace roboticslab
 
 #endif  // __YARP_OPENRAVE_ROBOT_MANAGER_HPP__
-

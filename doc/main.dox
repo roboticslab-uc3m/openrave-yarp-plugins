@@ -6,10 +6,10 @@ Welcome to the openrave-yarp-plugins Repository documentation for the manipulati
  \li <a class=el href="https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/develop/doc/openrave-yarp-plugins-install.md">openrave-yarp-plugins install</a>
 
 Other internal links of interest:
- \li \ref openrave-yarp-plugins_programs
- \li \ref openrave-yarp-plugins_libraries
- \li \ref openrave-yarp-plugins_applications
- \li \ref openrave-yarp-plugins_examples
+ \li \ref openrave-yarp-plugins-programs
+ \li \ref openrave-yarp-plugins-libraries
+ \li \ref openrave-yarp-plugins-applications
+ \li \ref openrave-yarp-plugins-examples
 
 Even more internal links of interest:
  \li <a class=el href="http://robots.uc3m.es/dox-kinematics-dynamics/index.html">kinematics-dynamics</a>

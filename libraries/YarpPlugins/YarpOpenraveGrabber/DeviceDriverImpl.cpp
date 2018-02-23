@@ -5,6 +5,8 @@
 namespace roboticslab
 {
 
+const int YarpOpenraveGrabber::NOT_SET = -1;
+
 // ------------------- DeviceDriver Related ------------------------------------
 
 bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
@@ -20,17 +22,17 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
     if ( ! configureRobot(config) )
         return false;
 
-    int sensorIndex = config.check("sensorIndex",-1,"sensorIndex").asInt();
+    int sensorIndex = config.check("sensorIndex",NOT_SET,"sensorIndex").asInt();
 
-    std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
-    if(sensorIndex >= vectorOfSensorPtr.size())
+    if (sensorIndex == NOT_SET)
     {
-        CD_ERROR("sensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",sensorIndex,vectorOfSensorPtr.size());
+        CD_ERROR("sensorIndex %d == NOT_SET, not loading yarpPlugin.\n",sensorIndex);
         return false;
     }
-    else if (sensorIndex < 0)
+    std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
+    if( (sensorIndex >= vectorOfSensorPtr.size()) || (sensorIndex < 0) )
     {
-        CD_ERROR("sensorIndex %d < 0, not loading yarpPlugin.\n",sensorIndex);
+        CD_ERROR("sensorIndex %d not within vectorOfSensorPtr of size() %d, not loading yarpPlugin.\n",sensorIndex,vectorOfSensorPtr.size());
         return false;
     }
 
@@ -45,6 +47,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
     if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
     {
         CD_ERROR("Sensor %d does not support ST_Camera.\n", sensorIndex );
+        return false;
     }
 
     // Activate the sensor

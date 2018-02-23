@@ -1,33 +1,45 @@
 
 /**
-@brief The main, catch-all namespace for TEO.
+@brief The main, catch-all namespace for Robotics Lab UC3M.
  */
-namespace teo {}
+namespace roboticslab {}
 
 /**
- * \defgroup openrave-yarp-plugins_libraries openrave-yarp-plugins Libraries
+ * \defgroup openrave-yarp-plugins-libraries openrave-yarp-plugins Libraries
  *
  * @brief openrave-yarp-plugins libraries.
  *
  */
 
 /**
- * \defgroup openrave-yarp-plugins_programs openrave-yarp-plugins Programs
+ * @ingroup openrave-yarp-plugins-libraries
+ * \defgroup OpenravePlugins
+ *
+ * @brief Contains openrave-yarp-plugins libraries that implement OpenRAVE plugins.
+ */
+
+/**
+ * @ingroup openrave-yarp-plugins-libraries
+ * \defgroup YarpPlugins
+ *
+ * @brief Contains openrave-yarp-plugins libraries that implement YARP device interfaces
+ * and therefore can be invoked as YARP plugins.
+ */
+
+/**
+ * \defgroup openrave-yarp-plugins-programs openrave-yarp-plugins Programs
  *
  * @brief openrave-yarp-plugins programs.
  */
 
 /**
- * \defgroup openrave-yarp-plugins_applications openrave-yarp-plugins Applications (Collections of Programs)
+ * \defgroup openrave-yarp-plugins-applications openrave-yarp-plugins Applications (Collections of Programs)
  *
  * @brief openrave-yarp-plugins applications (collections of programs).
  */
 
 /**
- * \defgroup openrave-yarp-plugins_examples openrave-yarp-plugins Examples
+ * \defgroup openrave-yarp-plugins-examples openrave-yarp-plugins Examples
  *
  * @brief openrave-yarp-plugins examples.
  */
-
-
-

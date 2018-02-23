@@ -1,30 +1,5 @@
-/**
- * thanks Rosen Diankov
-   Every plugin contains a bunch of openrave interfaces, the plugincpp plugin creates a simple OpenRAVE::ModuleBase interface named \b mymodule.
-   Inside programs, load the plugin using the RaveLoadPlugin, and then create the module the plugin offers using
-   \verbatim
-   m=RaveCreateModule(env,"mymodule");
-   \endverbatim
-   To test things through the command line, do:
-   \verbatim
-   openrave --loadplugin libplugincpp.so --module mymodule "my args"
-   \endverbatim
-   This will load liboplugincpp.so and startup module "mymodule". From plugincpp, notice that mymodule
-   supports some "commands". These are in-process string-based calls invoked through
-   interface->SendCommand function.
-   If you are using octave or matlab, then can communicate with openrave through tcp/ip, check out: http://openrave.programmingvision.com/wiki/index.php/OctaveMATLAB
-   Most openrave users use python to dynamically interact with openrave. For example:
-   \verbatim
-   openrave.py -i  --loadplugin libplugincpp.so data/lab1.env.xml
-   \endverbatim
-   drops into the python promp with the plugin loaded and a scene loaded. Then it is possible to execute the following python commands to create the interface and call a command:
-   \verbatim
-   m=RaveCreateModule(env,'mymodule')
-   env.Add(m,true,'my args')
-   m.SendCommand('numbodies')
-   \endverbatim
-   <b>Full Example Code:</b>
- */
+// -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
+
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
 #include <boost/bind.hpp>
@@ -34,6 +9,17 @@
 
 #include "ColorDebug.hpp"
 
+/**
+ * @ingroup OpenravePlugins
+ * \defgroup OpenraveYarpPluginLoader
+ *
+ * @brief Contains roboticslab::OpenraveYarpPluginLoader.
+ */
+
+/**
+ * @ingroup OpenraveYarpPluginLoader
+ * @brief Loads one or several YARP Plugin, passing environment pointer.
+ */
 class OpenraveYarpPluginLoader : public OpenRAVE::ModuleBase
 {
 public:

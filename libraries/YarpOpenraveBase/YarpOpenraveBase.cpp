@@ -7,6 +7,8 @@
 namespace roboticslab
 {
 
+const int YarpOpenraveBase::NOT_SET = -1;
+
 // -------------------------------------------------------------------
 
 void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
@@ -191,18 +193,18 @@ bool YarpOpenraveBase::configureRobot(yarp::os::Searchable& config)
         return false;
     }
 
-    int robotIndex = config.check("robotIndex",-1,"robotIndex").asInt();
+    int robotIndex = config.check("robotIndex",NOT_SET,"robotIndex").asInt();
 
-    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-    penv->GetRobots(vectorOfRobotPtr);
-    if(robotIndex >= vectorOfRobotPtr.size())
+    if (robotIndex == NOT_SET)
     {
-        CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarpPlugin.\n",robotIndex,vectorOfRobotPtr.size());
+        CD_ERROR("robotIndex %d == NOT_SET, not loading yarpPlugin.\n",robotIndex);
         return false;
     }
-    else if (robotIndex < 0)
+    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
+    penv->GetRobots(vectorOfRobotPtr);
+    if((robotIndex >= vectorOfRobotPtr.size()) || (robotIndex < 0))
     {
-        CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotIndex);
+        CD_ERROR("robotIndex %d not in vectorOfRobotPtr ofsize() %d, not loading yarpPlugin.\n",robotIndex,vectorOfRobotPtr.size());
         return false;
     }
 

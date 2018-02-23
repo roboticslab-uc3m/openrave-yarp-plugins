@@ -26,12 +26,7 @@ namespace roboticslab
  * @ingroup YarpPlugins
  * \defgroup YarpOpenraveGrabber
  *
- * @brief Contains teo::YarpOpenraveGrabber.
- *
- * @section YarpOpenraveGrabber_install Installation
- *
- * The plugin is compiled when ENABLE_TeoYarp_YarpOpenraveGrabber is activated (not default). For further
- * installation steps refer to <a class="el" href="pages.html">your own system installation guidelines</a>.
+ * @brief Contains roboticslab::YarpOpenraveGrabber.
  */
 
 /**
@@ -112,6 +107,7 @@ private:
     OpenRAVE::SensorBasePtr sensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> sensorDataPtr;
 
+    static const int NOT_SET;
 };
 
 }  // namespace roboticslab
