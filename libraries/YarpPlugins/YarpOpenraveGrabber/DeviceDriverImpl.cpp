@@ -47,6 +47,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
     if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
     {
         CD_ERROR("Sensor %d does not support ST_Camera.\n", sensorIndex );
+        return false;
     }
 
     // Activate the sensor

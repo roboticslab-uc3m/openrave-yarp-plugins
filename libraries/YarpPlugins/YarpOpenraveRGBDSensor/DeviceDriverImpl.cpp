@@ -67,6 +67,7 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     if ( ! depthSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Laser) )
     {
         CD_ERROR("Depth sensor %d does not support ST_Laser.\n", depthSensorIndex );
+        return false;
     }
 
     // Activate the sensor
@@ -103,6 +104,7 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
         if ( ! rgbSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
         {
             CD_ERROR("Rgb sensor %d does not support ST_Camera.\n", rgbSensorIndex );
+            return false;
         }
 
         // Activate the sensor
