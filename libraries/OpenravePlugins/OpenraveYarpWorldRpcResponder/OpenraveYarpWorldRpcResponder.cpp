@@ -1,3 +1,5 @@
+// -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
+
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
 
@@ -10,10 +12,8 @@
 #include <yarp/os/BufferedPort.h>
 #include <yarp/os/Vocab.h>
 
-
 using namespace yarp::os;
 using namespace OpenRAVE;
-
 
 using namespace std;
 
@@ -559,7 +559,17 @@ private:
 };
 
 
+/**
+ * @ingroup OpenravePlugins
+ * \defgroup OpenraveYarpWorldRpcResponder
+ *
+ * @brief Contains roboticslab::OpenraveYarpWorldRpcResponder.
+ */
 
+/**
+ * @ingroup OpenraveYarpWorldRpcResponder
+ * @brief Opens YARP RpcPort, to control environment.
+ */
 class OpenraveYarpWorldRpcResponder : public ModuleBase
 {
 public:
