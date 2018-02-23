@@ -5,29 +5,26 @@
 namespace teo {}
 
 /**
- * \defgroup openrave-yarp-plugins_libraries openrave-yarp-plugins Libraries
+ * \defgroup openrave-yarp-plugins-libraries openrave-yarp-plugins Libraries
  *
  * @brief openrave-yarp-plugins libraries.
  *
  */
 
 /**
- * \defgroup openrave-yarp-plugins_programs openrave-yarp-plugins Programs
+ * \defgroup openrave-yarp-plugins-programs openrave-yarp-plugins Programs
  *
  * @brief openrave-yarp-plugins programs.
  */
 
 /**
- * \defgroup openrave-yarp-plugins_applications openrave-yarp-plugins Applications (Collections of Programs)
+ * \defgroup openrave-yarp-plugins-applications openrave-yarp-plugins Applications (Collections of Programs)
  *
  * @brief openrave-yarp-plugins applications (collections of programs).
  */
 
 /**
- * \defgroup openrave-yarp-plugins_examples openrave-yarp-plugins Examples
+ * \defgroup openrave-yarp-plugins-examples openrave-yarp-plugins Examples
  *
  * @brief openrave-yarp-plugins examples.
  */
-
-
-
