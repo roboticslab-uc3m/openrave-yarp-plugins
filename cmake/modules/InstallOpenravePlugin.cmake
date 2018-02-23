@@ -3,9 +3,16 @@ if(COMMAND install_openrave_plugin)
 endif()
 
 macro(install_openrave_plugin target)
-    execute_process(COMMAND openrave-config --prefix --plugins-dir
+    find_package(OpenRAVE REQUIRED)
+
+    execute_process(COMMAND "${OpenRAVE_ROOT_DIR}/bin/openrave-config" --prefix --plugins-dir
                     OUTPUT_VARIABLE _openrave_config_cmd_output
-                    OUTPUT_STRIP_TRAILING_WHITESPACE)
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    RESULT_VARIABLE _openrave_config_res)
+
+    if(_openrave_config_res)
+        message(FATAL_ERROR "Unable to install OpenRAVE plugins. \"${OpenRAVE_ROOT_DIR}/bin/openrave-config\": ${_openrave_config_res}")
+    endif()
 
     string(REPLACE "\n" ";" _openrave_config_results ${_openrave_config_cmd_output})
     list(LENGTH _openrave_config_results _len)
