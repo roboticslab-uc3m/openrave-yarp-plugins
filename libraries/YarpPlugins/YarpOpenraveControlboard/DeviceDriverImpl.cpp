@@ -31,12 +31,12 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
     std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
     if (manipulatorIndex == NOT_SET)
     {
-        CD_ERROR("manipulatorIndex %d == NOT_USED, not loading yarpPlugin.\n",manipulatorIndex);
+        CD_ERROR("manipulatorIndex %d == NOT_SET, not loading yarpPlugin.\n",manipulatorIndex);
         return false;
     }
-    else if(manipulatorIndex >= vectorOfManipulatorPtr.size())
+    else if( (manipulatorIndex >= vectorOfManipulatorPtr.size()) || (manipulatorIndex < 0) )
     {
-        CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarpPlugin.\n",manipulatorIndex,vectorOfManipulatorPtr.size());
+        CD_ERROR("manipulatorIndex %d not within vectorOfManipulatorPtr of size() %d, not loading yarpPlugin.\n",manipulatorIndex,vectorOfManipulatorPtr.size());
         return false;
     }
 
