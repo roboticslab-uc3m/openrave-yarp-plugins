@@ -13,6 +13,13 @@ namespace roboticslab {}
 
 /**
  * @ingroup openrave-yarp-plugins-libraries
+ * \defgroup OpenravePlugins
+ *
+ * @brief Contains openrave-yarp-plugins libraries that implement OpenRAVE plugins.
+ */
+
+/**
+ * @ingroup openrave-yarp-plugins-libraries
  * \defgroup YarpPlugins
  *
  * @brief Contains openrave-yarp-plugins libraries that implement YARP device interfaces
