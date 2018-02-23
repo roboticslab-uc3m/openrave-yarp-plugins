@@ -1,5 +1,10 @@
 # YarpOpenraveRGBDSensor
 
+First open a:
+```bash
+yarp server
+```
+
 For now best use:
 - Python example 1: https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/develop/examples/python/openraveYarpPluginLoader-rgbdsensor.py
    
