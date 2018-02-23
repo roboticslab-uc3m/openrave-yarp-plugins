@@ -1,9 +1,9 @@
 # YarpOpenraveRGBDSensor
 
 For now best use:
-- https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/develop/examples/python/openraveYarpPluginLoader-rgbdsensor.py
+- Python example 1: https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/develop/examples/python/openraveYarpPluginLoader-rgbdsensor.py
    
-   Open a viewer for RGB:
+   Then open a viewer for RGB:
    ```bash
    yarpview --name /yarpview/rgb/img:i
    ```
@@ -20,7 +20,16 @@ For now best use:
    yarp connect /ecroSim/depthImage:o /yarpview/depth/img:i
    ```
 
-- https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/develop/examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py
+- Python example 2 (no RGB): https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/develop/examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py
+
+   Open a viewer for depth:
+   ```bash
+   yarpview --name /yarpview/depth/img:i
+   ```
+   Connect the viewer for depth:
+   ```bash
+   yarp connect /ecroSim/depthImage:o /yarpview/depth/img:i
+   ```
 
 Example invocation not working due to https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60 and beyond:
 ```bash
