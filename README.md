@@ -46,16 +46,6 @@ Technically, the OpenRAVE plugin can directly open YARP ports, or contain one or
 
 # Tutorials
 
-## How openrave-yarp-plugins is used to implement teoSim in teo-configuration-files
-
-```bash
-yarpserver
-# new terminal
-openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators"
-# Then the robot can be commanded via yarp with:
-yarp rpc /teoSim/[kinematic chain name]/rpc:i
-```
-
 We can do funky commands like the following, where `open` acts as a delimiter:
 ```bash
 openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
