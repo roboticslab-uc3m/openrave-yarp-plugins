@@ -197,7 +197,7 @@ bool YarpOpenraveBase::configureRobot(yarp::os::Searchable& config)
 
     if (robotIndex == NOT_SET)
     {
-        CD_ERROR("robotIndex %d < 0, not loading yarpPlugin.\n",robotIndex);
+        CD_ERROR("robotIndex %d == NOT_SET, not loading yarpPlugin.\n",robotIndex);
         return false;
     }
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
