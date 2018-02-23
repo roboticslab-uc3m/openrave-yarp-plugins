@@ -27,11 +27,6 @@ namespace roboticslab
  * \defgroup YarpOpenraveRGBDSensor
  *
  * @brief Contains roboticslab::YarpOpenraveRGBDSensor.
- *
- * @section YarpOpenraveRGBDSensor_install Installation
- *
- * The plugin is compiled when ENABLE_TeoYarp_YarpOpenraveRGBDSensor is activated (not default). For further
- * installation steps refer to <a class="el" href="pages.html">your own system installation guidelines</a>.
  */
 
 /**
