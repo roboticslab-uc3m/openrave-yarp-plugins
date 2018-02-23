@@ -34,6 +34,7 @@
 
 #include "ColorDebug.hpp"
 
+
 class OpenraveYarpPluginLoader : public OpenRAVE::ModuleBase
 {
 public:
