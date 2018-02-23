@@ -7,7 +7,7 @@ yarp server
 
 Note that `OpenraveYarpPluginLoader` uses OpenRAVE plugins `main()`, affected by [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60). This affects the CLI/`bash` (non-Python) examples.
    
-- Example 1 (requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)): Open `teoSim` environment via OpenRAVE, call with OpenraveYarpPluginLoader with robot 0 and `--allManipulators` that takes care of names:
+- Example 1 (requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)): Open `teoSim` environment via OpenRAVE, call with OpenraveYarpPluginLoader with robot index `0` and `--allManipulators` that takes care of names:
    ```bash
    openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators"
    ```
