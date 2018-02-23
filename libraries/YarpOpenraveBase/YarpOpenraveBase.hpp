@@ -18,26 +18,19 @@
 namespace roboticslab
 {
 
-
 // Specific for --env parameter
 void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername);
 
 /**
- * @ingroup YarpPlugins
+ * @ingroup openrave-yarp-plugins-libraries
  * \defgroup YarpOpenraveBase
  *
  * @brief Contains roboticslab::YarpOpenraveBase.
- *
- * @section YarpOpenraveBase_install Installation
- *
- * The plugin is compiled when ENABLE_TeoYarp_YarpOpenraveBase is activated (not default). For further
- * installation steps refer to <a class="el" href="pages.html">your own system installation guidelines</a>.
  */
 
 /**
  * @ingroup YarpOpenraveBase
- * @brief Implements configure.
- * interface class member functions.
+ * @brief Implements shared configuration functions.
  */
 class YarpOpenraveBase
 {

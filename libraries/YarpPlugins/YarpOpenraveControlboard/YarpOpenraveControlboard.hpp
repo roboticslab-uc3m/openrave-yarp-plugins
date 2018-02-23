@@ -23,15 +23,10 @@ namespace roboticslab
 {
 
 /**
- * @ingroup TeoYarp
+ * @ingroup YarpPlugins
  * \defgroup YarpOpenraveControlboard
  *
- * @brief Contains teo::YarpOpenraveControlboard.
- *
- * @section YarpOpenraveControlboard_install Installation
- *
- * The plugin is compiled when ENABLE_TeoYarp_YarpOpenraveControlboard is activated (not default). For further
- * installation steps refer to <a class="el" href="pages.html">your own system installation guidelines</a>.
+ * @brief Contains roboticslab::YarpOpenraveControlboard.
  */
 
 /**
@@ -39,7 +34,6 @@ namespace roboticslab
  * @brief Implements the YARP_dev IPositionControl, IVelocityControl, IEncodersTimed, etc.
  * interface class member functions.
  */
-
 class YarpOpenraveControlboard : YarpOpenraveBase,
         public yarp::dev::DeviceDriver,
         public yarp::dev::IControlLimits2,    //-- IControlLimits2 inherits from IControlLimits
