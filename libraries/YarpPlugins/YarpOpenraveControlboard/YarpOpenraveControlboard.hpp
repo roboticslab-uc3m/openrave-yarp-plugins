@@ -34,7 +34,6 @@ namespace roboticslab
  * @brief Implements the YARP_dev IPositionControl, IVelocityControl, IEncodersTimed, etc.
  * interface class member functions.
  */
-
 class YarpOpenraveControlboard : YarpOpenraveBase,
         public yarp::dev::DeviceDriver,
         public yarp::dev::IControlLimits2,    //-- IControlLimits2 inherits from IControlLimits
