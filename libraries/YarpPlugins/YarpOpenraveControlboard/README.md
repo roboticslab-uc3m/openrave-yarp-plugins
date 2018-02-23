@@ -1,9 +1,6 @@
 # YarpOpenraveControlboard
 
-First open yarp server:
-```bash
-yarpserver
-```
+First open a `yarp server`.
 
 - Example 1: Open `YarpOpenraveControlboard` device with `teoSim` environment, apply to robot 0 manipulator 2 and call it `/teoSim/rightArm`:
    ```bash
