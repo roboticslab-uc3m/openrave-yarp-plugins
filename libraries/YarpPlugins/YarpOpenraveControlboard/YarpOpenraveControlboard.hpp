@@ -19,8 +19,6 @@
 
 #include "ColorDebug.hpp"
 
-#define DEFAULT_GEN_REF_SPEED 7.5  // Exposed.
-
 namespace roboticslab
 {
 
@@ -874,6 +872,9 @@ private:
         if( (vectorOfJointPtr[j])->IsPrismatic(0) ) return rad;
         else return radToDeg(rad);  //  revolute, circular
     }
+
+    static const double DEFAULT_GEN_REF_SPEED;
+    static const int NOT_SET;
 };
 
 }  // namespace roboticslab

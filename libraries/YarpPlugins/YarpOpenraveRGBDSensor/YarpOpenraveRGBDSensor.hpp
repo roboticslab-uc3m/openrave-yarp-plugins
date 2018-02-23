@@ -180,6 +180,7 @@ private:
     boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> rgbSensorDataPtr;
     OpenRAVE::Transform tinv;
 
+    static const int NOT_SET;
 };
 
 }  // namespace roboticslab

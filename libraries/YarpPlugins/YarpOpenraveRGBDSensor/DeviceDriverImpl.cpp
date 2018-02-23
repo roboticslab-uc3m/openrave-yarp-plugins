@@ -5,6 +5,8 @@
 namespace roboticslab
 {
 
+const int YarpOpenraveRGBDSensor::NOT_SET = -1;
+
 // ------------------- DeviceDriver Related ------------------------------------
 
 bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
@@ -20,31 +22,25 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     if ( ! configureRobot(config) )
         return false;
 
-    const int notSet = -1;
-    int depthSensorIndex = config.check("depthSensorIndex",notSet,"depthSensorIndex").asInt();
-    int rgbSensorIndex = config.check("rgbSensorIndex",notSet,"rgbSensorIndex").asInt();
+    int depthSensorIndex = config.check("depthSensorIndex",NOT_SET,"depthSensorIndex").asInt();
+    int rgbSensorIndex = config.check("rgbSensorIndex",NOT_SET,"rgbSensorIndex").asInt();
 
     std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
 
-    if (depthSensorIndex == notSet)  // Must be checked before comparison  with size which may be unsigned.
+    if (depthSensorIndex == NOT_SET)  // Must be checked before comparison  with size which may be unsigned.
     {
-        CD_ERROR("depthSensorIndex %d not set, not loading yarpPlugin.\n",depthSensorIndex);
+        CD_ERROR("depthSensorIndex %d == NOT_SET, not loading yarpPlugin.\n",depthSensorIndex);
         return false;
     }
-    else if(depthSensorIndex >= vectorOfSensorPtr.size())
+    else if((depthSensorIndex >= vectorOfSensorPtr.size()) || (depthSensorIndex < 0))
     {
-        CD_ERROR("depthSensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarpPlugin.\n",depthSensorIndex,vectorOfSensorPtr.size());
-        return false;
-    }
-    else if(depthSensorIndex < 0)
-    {
-        CD_ERROR("depthSensorIndex %d < 0, not loading yarpPlugin.\n",depthSensorIndex);
+        CD_ERROR("depthSensorIndex %d not in vectorOfSensorPtr of size() %d, not loading yarpPlugin.\n",depthSensorIndex,vectorOfSensorPtr.size());
         return false;
     }
 
-    if (rgbSensorIndex == notSet)  // Must be checked before comparison  with size which may be unsigned.
+    if (rgbSensorIndex == NOT_SET)  // Must be checked before comparison  with size which may be unsigned.
     {
-        CD_WARNING("rgbSensorIndex %d not set, special case, running with RGB disabled.\n",rgbSensorIndex);
+        CD_WARNING("rgbSensorIndex %d == NOT_SET, special case, running with RGB disabled.\n",rgbSensorIndex);
         rgb = false;
         rgbWidth = 0;
         rgbHeight = 0;
@@ -56,7 +52,7 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     }
     else if (rgbSensorIndex < 0)
     {
-        CD_ERROR("rgbSensorIndex %d < 0, not loading yarpPlugin.\n",rgbSensorIndex);
+        CD_ERROR("rgbSensorIndex %d < 0 (and not NOT_SET), not loading yarpPlugin.\n",rgbSensorIndex);
         return false;
     }
 

@@ -113,4 +113,3 @@ private:
 }  // namespace roboticslab
 
 #endif  // __YARP_OPENRAVE_ROBOT_MANAGER_HPP__
-

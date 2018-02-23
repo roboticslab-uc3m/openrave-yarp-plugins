@@ -57,9 +57,11 @@ protected:
 
     // Specific for --env parameter with --view
     boost::thread_group openraveThreads;
+
+private:
+    static const int NOT_SET;
 };
 
 }  // namespace roboticslab
 
 #endif  // __YARP_OPENRAVE_BASE_HPP__
-

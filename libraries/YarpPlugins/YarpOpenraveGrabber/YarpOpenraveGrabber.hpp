@@ -112,6 +112,7 @@ private:
     OpenRAVE::SensorBasePtr sensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> sensorDataPtr;
 
+    static const int NOT_SET;
 };
 
 }  // namespace roboticslab
