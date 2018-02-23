@@ -13,7 +13,7 @@ For now best use:
    ```
    Connect the viewer:
    ```bash
-   yarp connect /camera/img:o /yarpview/camera/img:i
+   yarp connect /BarrettWAM/camera /yarpview/camera/img:i
    ```
 
 Example invocation not working due to https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60 and beyond:
