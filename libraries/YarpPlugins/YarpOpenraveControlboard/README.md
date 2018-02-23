@@ -29,6 +29,5 @@ yarp server
    ```
    Then communicate via:
    ```bash
-   yarp rpc /teoSim/rightArm/rpc:i
+   yarp rpc /teoSim/[kinematic chain name]/rpc:i
    ```
-   or other.
