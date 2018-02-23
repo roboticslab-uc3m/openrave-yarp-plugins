@@ -6,7 +6,7 @@ yarp server
 ```
 - Example 1: Open `YarpOpenraveGrabber` device with `data/testwamcamera.env.xml` environment, view, apply to robot index `0` and sensor index `1` and call it `/camera/img:o`:
    ```bash
-   yarpdev --device YarpOpenraveGrabber --env data/testwamcamera.env.xml --view --robotIndex 0 --sensorIndex 1 --name /camera/img:o
+   yarpdev --device YarpOpenraveGrabber --env data/testwamcamera.env.xml --view --robotIndex 0 --sensorIndex 0 --name /camera/img:o
    ```
    Open a viewer:
    ```bash
