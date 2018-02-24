@@ -9,7 +9,7 @@ namespace roboticslab
 
 bool YarpOpenraveRobotManager::moveForward(int velocity)
 {
-    CD_DEBUG("\n");
+    CD_DEBUG("%d\n",velocity);
 
     switch (mode)
     {
@@ -127,9 +127,8 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
 
 bool YarpOpenraveRobotManager::moveBackwards(int velocity)
 {
-    CD_DEBUG("\n");
-    std::vector<OpenRAVE::dReal> values(4, -velocity);
-    pcontrol->SetDesired(values);
+    CD_DEBUG("%d\n",velocity);
+    moveForward(-velocity);
     return true;
 }
 
@@ -137,13 +136,8 @@ bool YarpOpenraveRobotManager::moveBackwards(int velocity)
 
 bool YarpOpenraveRobotManager::turnLeft(int velocity)
 {
-    CD_DEBUG("\n");
-    std::vector<OpenRAVE::dReal> values(4);
-    values[0] = -velocity;
-    values[1] = velocity;
-    values[2] = -velocity;
-    values[3] = velocity;
-    pcontrol->SetDesired(values);
+    CD_DEBUG("%d\n",velocity);
+    turnRight(-velocity);
     return true;
 }
 
@@ -151,7 +145,7 @@ bool YarpOpenraveRobotManager::turnLeft(int velocity)
 
 bool YarpOpenraveRobotManager::turnRight(int velocity)
 {
-    CD_DEBUG("\n");
+    CD_DEBUG("%d\n",velocity);
 
     switch (mode)
     {
@@ -167,7 +161,7 @@ bool YarpOpenraveRobotManager::turnRight(int velocity)
         //CD_DEBUG("H_0_src_aa: %f %f %f %f\n", H_0_src_axisAngle.x, H_0_src_axisAngle.y, H_0_src_axisAngle.z, H_0_src_axisAngle.w);
 
         OpenRAVE::Transform H_src_dst;
-        OpenRAVE::dReal angleRad = velocity * M_PI / 180.0;
+        OpenRAVE::dReal angleRad = - velocity * M_PI / 180.0; // why neg?
         H_src_dst.rot.x = cos( angleRad / 2.0);
         H_src_dst.rot.w = sin( angleRad / 2.0);
 
