@@ -163,7 +163,7 @@ bool YarpOpenraveRobotManager::turnRight(int velocity)
         //CD_DEBUG("H_0_src_aa: %f %f %f %f\n", H_0_src_axisAngle.x, H_0_src_axisAngle.y, H_0_src_axisAngle.z, H_0_src_axisAngle.w);
 
         OpenRAVE::Transform H_src_dst;
-        OpenRAVE::dReal angleRad = - velocity * M_PI / 180.0; // why neg?
+        OpenRAVE::dReal angleRad = velocity * M_PI / 180.0;
         H_src_dst.rot.x = cos( angleRad / 2.0);
         H_src_dst.rot.w = sin( angleRad / 2.0);
 
@@ -266,8 +266,22 @@ bool YarpOpenraveRobotManager::turnRight(int velocity)
 bool YarpOpenraveRobotManager::stopMovement()
 {
     CD_DEBUG("\n");
-    std::vector<OpenRAVE::dReal> values(4, 0.0);
-    pcontrol->SetDesired(values);
+    switch (mode)
+    {
+    case TRANSFORM_IDEALCONTROLLER:
+    {
+        moveForward(0);
+        break;
+    }
+    case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
+    {
+        std::vector<OpenRAVE::dReal> values(4, 0.0);
+        pcontrol->SetDesired(values);
+        break;
+    }
+    default:
+        return false;
+    }
     return true;
 }
 
