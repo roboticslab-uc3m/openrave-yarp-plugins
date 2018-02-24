@@ -40,6 +40,8 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
+
+
         switch (mode)
         {
         case TRANSFORM_IDEALCONTROLLER:
@@ -57,8 +59,8 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
             return false;
         }
 
-        std::vector<int> dofindices( probot->GetDOF() );
-        for(int i = 0; i < probot->GetDOF(); ++i)
+        std::vector<int> dofindices( probot->GetActiveDOF() );  // Was GetDOF, but now we want the active ones
+        for(int i = 0; i < probot->GetActiveDOF(); ++i)
         {
             dofindices[i] = i;
         }

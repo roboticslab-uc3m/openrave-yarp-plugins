@@ -10,8 +10,25 @@ namespace roboticslab
 bool YarpOpenraveRobotManager::moveForward(int velocity)
 {
     CD_DEBUG("\n");
-    std::vector<OpenRAVE::dReal> values(4, velocity);
-    pcontrol->SetDesired(values);
+
+    switch (mode)
+    {
+    case TRANSFORM_IDEALCONTROLLER:
+    {
+        std::vector<OpenRAVE::dReal> values(2,0.0);
+        values[0] = velocity;
+        pcontrol->SetDesired(values);
+        break;
+    }
+    case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
+    {
+        std::vector<OpenRAVE::dReal> values(4, velocity);
+        pcontrol->SetDesired(values);
+        break;
+    }
+    default:
+        return false;
+    }
     return true;
 }
 
