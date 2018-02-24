@@ -19,7 +19,10 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         //values[0] = velocity;
         //pcontrol->SetDesired(values);
 
-        OpenRAVE::dReal dofTargetRads = velocity;
+        //OpenRAVE::KinBodyPtr objPtr = penv->GetKinBody(robotName);
+        //OpenRAVE::Vector tr = objPtr->GetTransform().trans;
+        OpenRAVE::Vector H_0_robot = probot->GetTransform().trans;
+        CD_DEBUG("Robot at: %f %f %f\n", H_0_robot.x, H_0_robot.y, H_0_robot.z);
 
         //-- Our own ConfigurationSpecification
         OpenRAVE::ConfigurationSpecification oneDofConfigurationSpecification;
@@ -68,8 +71,10 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
 
         ptraj->Init(oneDofConfigurationSpecification);
 
-        OpenRAVE::dReal dofCurrentRads = 0.0;
+        OpenRAVE::dReal dofCurrentRads = H_0_robot.x;
         //OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
+
+        OpenRAVE::dReal dofTargetRads = dofCurrentRads + velocity;
 
         OpenRAVE::dReal dofTime = 2.0;
         //OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
