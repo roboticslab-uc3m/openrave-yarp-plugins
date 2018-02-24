@@ -74,12 +74,8 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
 
         ptraj->Init(configurationSpecification);
 
-        //OpenRAVE::dReal dofCurrentRads = H_0_src.x;
-        //OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
-
-        //OpenRAVE::dReal dofTargetRads = dofCurrentRads + velocity;
-
         OpenRAVE::dReal dofTime = 2.0;
+
         //OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
 
         //CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
