@@ -26,9 +26,8 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
 
         //-- Add the linear interpolation tag to the joint_values group
         OpenRAVE::ConfigurationSpecification::Group joint_values;
-        //std::string joint_valuesName("joint_values ");
-        std::string joint_valuesName("affine_transform  ");
-        joint_valuesName.append(robotName);
+        std::string joint_valuesName("affine_transform  ");  // Analogous to "joint_values ".
+        joint_valuesName.append(robotName);  // Checked that this is required even when examples put "__dummy__".
         joint_valuesName.append(" ");
         std::stringstream ss;
         //ss << manipulatorIDs[ j ];
