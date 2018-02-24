@@ -18,14 +18,22 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         //pcontrol->SetDesired(values,transform);
 
         OpenRAVE::Transform H_0_src = probot->GetTransform();
-        CD_DEBUG("H_0_robot: %f %f %f | %f %f %f %f\n",
+        CD_DEBUG("H_0_src: %f %f %f | %f %f %f %f\n",
                  H_0_src.trans.x, H_0_src.trans.y, H_0_src.trans.z,
                  H_0_src.rot.x, H_0_src.rot.y, H_0_src.rot.z, H_0_src.rot.w);
+        //OpenRAVE::Vector H_0_src_axisAngle = OpenRAVE::geometry::axisAngleFromQuat(H_0_src.rot);
+        //CD_DEBUG("H_0_src_aa: %f %f %f %f\n", H_0_src_axisAngle.x, H_0_src_axisAngle.y, H_0_src_axisAngle.z, H_0_src_axisAngle.w);
 
         OpenRAVE::Transform H_src_dst;
         H_src_dst.trans.x = velocity;
 
         OpenRAVE::Transform H_0_dst = H_0_src * H_src_dst;
+        CD_DEBUG("H_0_dst: %f %f %f | %f %f %f %f\n",
+                 H_0_dst.trans.x, H_0_dst.trans.y, H_0_dst.trans.z,
+                 H_0_dst.rot.x, H_0_dst.rot.y, H_0_dst.rot.z, H_0_dst.rot.w);
+        //OpenRAVE::Vector H_0_dst_axisAngle = OpenRAVE::geometry::axisAngleFromQuat(H_0_dst.rot);
+        //CD_DEBUG("H_0_dst_aa: %f %f %f %f\n", H_0_dst_axisAngle.x, H_0_dst_axisAngle.y, H_0_dst_axisAngle.z, H_0_dst_axisAngle.w);
+
 
         //-- Our own ConfigurationSpecification
         //Alternative: OpenRAVE::ConfigurationSpecification sc = OpenRAVE::RaveGetAffineConfigurationSpecification(OpenRAVE::DOF_X);
@@ -39,11 +47,11 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         std::stringstream ss;
         //ss << manipulatorIDs[ j ];
         //ss << "0 ";
-        ss << (OpenRAVE::DOF_X|OpenRAVE::DOF_Y);
+        ss << (OpenRAVE::DOF_X|OpenRAVE::DOF_Y|OpenRAVE::DOF_RotationAxis);
         joint_valuesName.append(ss.str());
         joint_values.name = joint_valuesName;
         joint_values.offset = 0;
-        joint_values.dof = 2;
+        joint_values.dof = 3;
         joint_values.interpolation = "linear";
         configurationSpecification.AddGroup(joint_values);
 
@@ -51,14 +59,14 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         //-- Perhaps also could be done via: int timeoffset = spec.AddDeltaTimeGroup();
         OpenRAVE::ConfigurationSpecification::Group deltatime;
         deltatime.name="deltatime";
-        deltatime.offset=2;
+        deltatime.offset=3;
         deltatime.dof=1;
         deltatime.interpolation="";
         configurationSpecification.AddGroup(deltatime);
 
         OpenRAVE::ConfigurationSpecification::Group iswaypoint;
         iswaypoint.name="iswaypoint";
-        iswaypoint.offset=3;
+        iswaypoint.offset=4;
         iswaypoint.dof=1;
         iswaypoint.interpolation="next";
         configurationSpecification.AddGroup(iswaypoint);
@@ -81,19 +89,21 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         //CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
-        std::vector<OpenRAVE::dReal> dofCurrentFull(4);
+        std::vector<OpenRAVE::dReal> dofCurrentFull(5);
         dofCurrentFull[0] = H_0_src.trans.x;  // joint_values
         dofCurrentFull[1] = H_0_src.trans.y;  // joint_values
-        dofCurrentFull[2] = 0;           // deltatime
-        dofCurrentFull[3] = 1;           // iswaypoint
+        dofCurrentFull[2] = 2.0*acos(H_0_src.rot.x);  // joint_values
+        dofCurrentFull[3] = 0;           // deltatime
+        dofCurrentFull[4] = 1;           // iswaypoint
         ptraj->Insert(0,dofCurrentFull);
 
         //-- ptraj[1] with position targets, with: 1 deltatime, 1 iswaypoint
-        std::vector<OpenRAVE::dReal> dofTargetFull(4);
+        std::vector<OpenRAVE::dReal> dofTargetFull(5);
         dofTargetFull[0] = H_0_dst.trans.x;  // joint_values
         dofTargetFull[1] = H_0_dst.trans.y;  // joint_values
-        dofTargetFull[2] = dofTime;    // deltatime
-        dofTargetFull[3] = 1;          // iswaypoint
+        dofTargetFull[2] = 2.0*acos(H_0_dst.rot.x);  // joint_values
+        dofTargetFull[3] = dofTime;    // deltatime
+        dofTargetFull[4] = 1;          // iswaypoint
         ptraj->Insert(1,dofTargetFull);
 
         //-- SetPath makes the controller perform the trajectory

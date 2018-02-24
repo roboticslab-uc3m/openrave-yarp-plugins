@@ -45,10 +45,9 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
         case TRANSFORM_IDEALCONTROLLER:
         {
             pcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
-            //probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X|OpenRAVE::DOF_Y|OpenRAVE::DOF_RotationAxis,OpenRAVE::Vector(0,0,1));
-            probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X|OpenRAVE::DOF_Y);
+            probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X|OpenRAVE::DOF_Y|OpenRAVE::DOF_RotationAxis,OpenRAVE::Vector(0,0,1));
 
-            probot->SetController(pcontrol,std::vector<int>(),OpenRAVE::DOF_X|OpenRAVE::DOF_Y);
+            probot->SetController(pcontrol,std::vector<int>(),OpenRAVE::DOF_X|OpenRAVE::DOF_Y|OpenRAVE::DOF_RotationAxis);
             break;
         }
         case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
