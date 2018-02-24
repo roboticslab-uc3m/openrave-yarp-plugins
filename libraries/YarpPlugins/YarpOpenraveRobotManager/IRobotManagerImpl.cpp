@@ -17,6 +17,10 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
     {
         //pcontrol->SetDesired(values,transform);
 
+        OpenRAVE::dReal realVelocity = 3.0;  // [m/s]
+        OpenRAVE::dReal dofTime = std::abs( OpenRAVE::dReal(velocity)  / realVelocity ); // Time in seconds
+        CD_DEBUG("abs(increment/vel) = abs(%d/%f) = %f [s]\n",velocity,realVelocity,dofTime);
+
         OpenRAVE::Transform H_0_src = probot->GetTransform();
         CD_DEBUG("H_0_src: %f %f %f | %f %f %f %f\n",
                  H_0_src.trans.x, H_0_src.trans.y, H_0_src.trans.z,
@@ -82,12 +86,6 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
 
         ptraj->Init(configurationSpecification);
 
-        OpenRAVE::dReal dofTime = 2.0;
-
-        //OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
-
-        //CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
-
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(5);
         dofCurrentFull[0] = H_0_src.trans.x;  // joint_values
@@ -152,6 +150,10 @@ bool YarpOpenraveRobotManager::turnRight(int velocity)
     case TRANSFORM_IDEALCONTROLLER:
     {
         //pcontrol->SetDesired(values,transform);
+
+        OpenRAVE::dReal realVelocity = 90.0;  // [deg/s]
+        OpenRAVE::dReal dofTime = std::abs( OpenRAVE::dReal(velocity)  / realVelocity ); // Time in seconds
+        CD_DEBUG("abs(increment/vel) = abs(%d/%f) = %f [s]\n",velocity,realVelocity,dofTime);
 
         OpenRAVE::Transform H_0_src = probot->GetTransform();
         CD_DEBUG("H_0_src: %f %f %f | %f %f %f %f\n",
@@ -219,12 +221,6 @@ bool YarpOpenraveRobotManager::turnRight(int velocity)
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
 
         ptraj->Init(configurationSpecification);
-
-        OpenRAVE::dReal dofTime = 2.0;
-
-        //OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
-
-        //CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(5);
