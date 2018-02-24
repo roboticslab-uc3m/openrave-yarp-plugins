@@ -47,7 +47,7 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
         case TRANSFORM_IDEALCONTROLLER:
         {
             pcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
-            probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X|OpenRAVE::DOF_Y); //|OpenRAVE::DOF_RotationAxis(OpenRAVE::DOF_Z));
+            probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X|OpenRAVE::DOF_Y|OpenRAVE::DOF_RotationAxis,OpenRAVE::Vector(0,0,1));
             break;
         }
         case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
@@ -62,6 +62,7 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
         std::vector<int> dofindices( probot->GetActiveDOF() );  // Was GetDOF, but now we want the active ones
         for(int i = 0; i < probot->GetActiveDOF(); ++i)
         {
+            CD_DEBUG("%d\n",i)
             dofindices[i] = i;
         }
 

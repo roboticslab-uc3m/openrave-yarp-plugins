@@ -15,9 +15,82 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
     {
     case TRANSFORM_IDEALCONTROLLER:
     {
-        std::vector<OpenRAVE::dReal> values(2,0.0);
-        values[0] = velocity;
-        pcontrol->SetDesired(values);
+        //std::vector<OpenRAVE::dReal> values(2,velocity);
+        //values[0] = velocity;
+        //pcontrol->SetDesired(values);
+
+        OpenRAVE::dReal dofTargetRads = velocity;
+
+        //-- Our own ConfigurationSpecification
+        OpenRAVE::ConfigurationSpecification oneDofConfigurationSpecification;
+
+        //-- Add the linear interpolation tag to the joint_values group
+        OpenRAVE::ConfigurationSpecification::Group joint_values;
+        std::string joint_valuesName("joint_values ");
+        joint_valuesName.append(robotName);
+        joint_valuesName.append(" ");
+        std::stringstream ss;
+        //ss << manipulatorIDs[ j ];
+        ss << "0 ";
+        joint_valuesName.append(ss.str());
+        joint_values.name = joint_valuesName;
+        joint_values.offset = 0;
+        joint_values.dof = 1;
+        joint_values.interpolation = "linear";
+        oneDofConfigurationSpecification.AddGroup(joint_values);
+
+        //-- Add a required deltatime group
+        //-- Perhaps also could be done via: int timeoffset = spec.AddDeltaTimeGroup();
+        OpenRAVE::ConfigurationSpecification::Group deltatime;
+        deltatime.name="deltatime";
+        deltatime.offset=1;
+        deltatime.dof=1;
+        deltatime.interpolation="";
+        oneDofConfigurationSpecification.AddGroup(deltatime);
+
+        OpenRAVE::ConfigurationSpecification::Group iswaypoint;
+        iswaypoint.name="iswaypoint";
+        iswaypoint.offset=2;
+        iswaypoint.dof=1;
+        iswaypoint.interpolation="next";
+        oneDofConfigurationSpecification.AddGroup(iswaypoint);
+
+        //-- Console output of the manually adjusted ConfigurationSpecification
+        //for (size_t i = 0; i < oneDofConfigurationSpecification._vgroups.size(); i++)
+        //{
+        //    OpenRAVE::ConfigurationSpecification::Group g = oneDofConfigurationSpecification._vgroups[i];
+        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        //}
+
+        OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
+
+        ptraj->Init(oneDofConfigurationSpecification);
+
+        OpenRAVE::dReal dofCurrentRads = 0.0;
+        //OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
+
+        OpenRAVE::dReal dofTime = 2.0;
+        //OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
+
+        //CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
+
+        //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
+        std::vector<OpenRAVE::dReal> dofCurrentFull(3);
+        dofCurrentFull[0] = dofCurrentRads;  // joint_values
+        dofCurrentFull[1] = 0;           // deltatime
+        dofCurrentFull[2] = 1;           // iswaypoint
+        ptraj->Insert(0,dofCurrentFull);
+
+        //-- ptraj[1] with position targets, with: 1 deltatime, 1 iswaypoint
+        std::vector<OpenRAVE::dReal> dofTargetFull(3);
+        dofTargetFull[0] = dofTargetRads;  // joint_values
+        dofTargetFull[1] = dofTime;    // deltatime
+        dofTargetFull[2] = 1;          // iswaypoint
+        ptraj->Insert(1,dofTargetFull);
+
+        //-- SetPath makes the controller perform the trajectory
+        pcontrol->SetPath(ptraj);
+
         break;
     }
     case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
