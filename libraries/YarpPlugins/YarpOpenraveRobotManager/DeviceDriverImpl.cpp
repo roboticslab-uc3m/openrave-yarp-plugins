@@ -49,11 +49,21 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
             pcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
             //probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X|OpenRAVE::DOF_Y|OpenRAVE::DOF_RotationAxis,OpenRAVE::Vector(0,0,1));
             probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X);
+            std::vector<int> dofindices( 1,0 );  // Was GetDOF, but now we want the active ones
+
+            probot->SetController(pcontrol,std::vector<int>(),OpenRAVE::DOF_X);
             break;
         }
         case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
         {
             pcontrol = OpenRAVE::RaveCreateController(penv,"idealvelocitycontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
+            std::vector<int> dofindices( probot->GetActiveDOF() );  // Was GetDOF, but now we want the active ones
+            for(int i = 0; i < probot->GetActiveDOF(); ++i)
+            {
+                dofindices[i] = i;
+            }
+
+            probot->SetController(pcontrol,dofindices,0);
             break;
         }
         default:
@@ -94,7 +104,7 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
             //joi
         }
 
-        probot->SetController(pcontrol,dofindices,0);
+        //probot->SetController(pcontrol,dofindices,0);
     }
 
     penv->StopSimulation();
