@@ -15,12 +15,8 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
     {
     case TRANSFORM_IDEALCONTROLLER:
     {
-        //std::vector<OpenRAVE::dReal> values(1,velocity);
-        //values[0] = velocity;
-        //pcontrol->SetDesired(values);
+        //pcontrol->SetDesired(values,transform);
 
-        //OpenRAVE::KinBodyPtr objPtr = penv->GetKinBody(robotName);
-        //OpenRAVE::Vector tr = objPtr->GetTransform().trans;
         OpenRAVE::Vector H_0_robot = probot->GetTransform().trans;
         CD_DEBUG("Robot at: %f %f %f\n", H_0_robot.x, H_0_robot.y, H_0_robot.z);
 
