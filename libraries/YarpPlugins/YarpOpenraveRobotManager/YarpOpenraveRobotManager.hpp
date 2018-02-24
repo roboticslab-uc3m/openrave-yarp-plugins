@@ -108,7 +108,7 @@ public:
 
 private:
 
-    robot_mode robotMode;
+    robot_mode mode;
 
     //OpenRAVE//
     OpenRAVE::ControllerBasePtr pcontrol;

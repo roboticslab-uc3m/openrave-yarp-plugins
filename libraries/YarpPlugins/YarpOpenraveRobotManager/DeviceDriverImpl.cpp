@@ -20,26 +20,27 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
     if ( ! configureRobot(config) )
         return false;
 
-    std::string robotModeStr = config.check("robotMode",yarp::os::Value("no mode"),"robot mode").asString();
-    if (robotModeStr == "4wd")
+    std::string modeStr = config.check("mode",yarp::os::Value("no mode"),"robot mode ('4wd' or 'transform')").asString();
+    if (modeStr == "4wd")
     {
-        robotMode = FOUR_WHEEL_IDEALVELOCITYCONTROLLER;
+        mode = FOUR_WHEEL_IDEALVELOCITYCONTROLLER;
     }
-    else if (robotModeStr == "transform")
+    else if (modeStr == "transform")
     {
-        robotMode = TRANSFORM_IDEALCONTROLLER;
+        mode = TRANSFORM_IDEALCONTROLLER;
     }
     else
     {
-        CD_ERROR("Unknown mode '%s'.\n",robotModeStr.c_str());
+        CD_ERROR("Unknown mode '%s' (use '4wd' or 'transform').\n",modeStr.c_str());
         return false;
     }
+    CD_DEBUG("Found --mode parameter: %s.\n", modeStr.c_str());
 
     //-- Create the controller, make sure to lock environment!
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-        switch (robotMode)
+        switch (mode)
         {
         case TRANSFORM_IDEALCONTROLLER:
         {
