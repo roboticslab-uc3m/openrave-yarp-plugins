@@ -27,7 +27,7 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
     }
     else if (robotModeStr == "transform")
     {
-        robotMode = TRANSFORM_IDEALPOSITIONCONTROLLER;
+        robotMode = TRANSFORM_IDEALCONTROLLER;
     }
     else
     {
@@ -39,7 +39,22 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-        pcontrol = OpenRAVE::RaveCreateController(penv,"idealvelocitycontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
+        switch (robotMode)
+        {
+        case TRANSFORM_IDEALCONTROLLER:
+        {
+            pcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
+            probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X|OpenRAVE::DOF_Y); //|OpenRAVE::DOF_RotationAxis(OpenRAVE::DOF_Z));
+            break;
+        }
+        case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
+        {
+            pcontrol = OpenRAVE::RaveCreateController(penv,"idealvelocitycontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
+            break;
+        }
+        default:
+            return false;
+        }
 
         std::vector<int> dofindices( probot->GetDOF() );
         for(int i = 0; i < probot->GetDOF(); ++i)

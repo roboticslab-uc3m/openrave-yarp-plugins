@@ -42,7 +42,7 @@ public:
     //! Lists available translational representations.
     enum robot_mode
     {
-        TRANSFORM_IDEALPOSITIONCONTROLLER,
+        TRANSFORM_IDEALCONTROLLER,
         FOUR_WHEEL_IDEALVELOCITYCONTROLLER
     };
 
