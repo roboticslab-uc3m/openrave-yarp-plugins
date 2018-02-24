@@ -22,7 +22,7 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
 
         //-- Our own ConfigurationSpecification
         //Alternative: OpenRAVE::ConfigurationSpecification sc = OpenRAVE::RaveGetAffineConfigurationSpecification(OpenRAVE::DOF_X);
-        OpenRAVE::ConfigurationSpecification oneDofConfigurationSpecification;
+        OpenRAVE::ConfigurationSpecification configurationSpecification;
 
         //-- Add the linear interpolation tag to the joint_values group
         OpenRAVE::ConfigurationSpecification::Group joint_values;
@@ -39,7 +39,7 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         joint_values.offset = 0;
         joint_values.dof = 1;
         joint_values.interpolation = "linear";
-        oneDofConfigurationSpecification.AddGroup(joint_values);
+        configurationSpecification.AddGroup(joint_values);
 
         //-- Add a required deltatime group
         //-- Perhaps also could be done via: int timeoffset = spec.AddDeltaTimeGroup();
@@ -48,25 +48,25 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         deltatime.offset=1;
         deltatime.dof=1;
         deltatime.interpolation="";
-        oneDofConfigurationSpecification.AddGroup(deltatime);
+        configurationSpecification.AddGroup(deltatime);
 
         OpenRAVE::ConfigurationSpecification::Group iswaypoint;
         iswaypoint.name="iswaypoint";
         iswaypoint.offset=2;
         iswaypoint.dof=1;
         iswaypoint.interpolation="next";
-        oneDofConfigurationSpecification.AddGroup(iswaypoint);
+        configurationSpecification.AddGroup(iswaypoint);
 
         //-- Console output of the manually adjusted ConfigurationSpecification
-        for (size_t i = 0; i < oneDofConfigurationSpecification._vgroups.size(); i++)
+        for (size_t i = 0; i < configurationSpecification._vgroups.size(); i++)
         {
-            OpenRAVE::ConfigurationSpecification::Group g = oneDofConfigurationSpecification._vgroups[i];
+            OpenRAVE::ConfigurationSpecification::Group g = configurationSpecification._vgroups[i];
             CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
         }
 
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
 
-        ptraj->Init(oneDofConfigurationSpecification);
+        ptraj->Init(configurationSpecification);
 
         OpenRAVE::dReal dofCurrentRads = H_0_robot.x;
         //OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
