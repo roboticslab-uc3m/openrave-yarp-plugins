@@ -47,7 +47,8 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
         case TRANSFORM_IDEALCONTROLLER:
         {
             pcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
-            probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X|OpenRAVE::DOF_Y|OpenRAVE::DOF_RotationAxis,OpenRAVE::Vector(0,0,1));
+            //probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X|OpenRAVE::DOF_Y|OpenRAVE::DOF_RotationAxis,OpenRAVE::Vector(0,0,1));
+            probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X);
             break;
         }
         case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
@@ -59,18 +60,45 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
             return false;
         }
 
+        boost::array< std::vector<OpenRAVE::dReal>, 3> _vlower, _vupper;
+        probot->GetDOFLimits(_vlower[0],_vupper[0]);
+        probot->GetDOFVelocityLimits(_vupper[1]);
+        probot->GetDOFAccelerationLimits(_vupper[2]);
+
+        std::vector<int> tmp = probot->GetActiveDOFIndices();
+        CD_DEBUG("----------------------------------\n");
+        for(int i=0;i<tmp.size();i++)
+        {
+            CD_DEBUG("%d: %d \n",i,tmp[i]);
+        }
+        CD_DEBUG("----------------------------------\n");
+        OpenRAVE::ConfigurationSpecification sc = OpenRAVE::RaveGetAffineConfigurationSpecification(OpenRAVE::DOF_X);
+        for (size_t i = 0; i < sc._vgroups.size(); i++)
+        {
+            OpenRAVE::ConfigurationSpecification::Group g = sc._vgroups[i];
+            CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        }
+        CD_DEBUG("----------------------------------\n");
+
         std::vector<int> dofindices( probot->GetActiveDOF() );  // Was GetDOF, but now we want the active ones
         for(int i = 0; i < probot->GetActiveDOF(); ++i)
         {
-            CD_DEBUG("%d\n",i)
             dofindices[i] = i;
+
+            CD_DEBUG("%d: %f %f | %f | %f\n",i,_vlower[0][i],_vupper[0][i],_vupper[1][i],_vupper[2][i]);
+
+            OpenRAVE::RobotBase::JointPtr jointPtr = probot->GetJointFromDOFIndex(i);
+
+            //vectorOfJointPtr.push_back(jointPtr);
+            //CD_DEBUG("Get JointPtr for manipulatorIDs[%d]: %d\n",i,manipulatorIDs[i]);
+            //joi
         }
 
         probot->SetController(pcontrol,dofindices,0);
     }
 
     penv->StopSimulation();
-    penv->StartSimulation(0.01);
+    penv->StartSimulation(0.001);
 
     return true;
 }

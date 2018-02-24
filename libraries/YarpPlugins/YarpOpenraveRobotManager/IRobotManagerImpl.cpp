@@ -15,7 +15,7 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
     {
     case TRANSFORM_IDEALCONTROLLER:
     {
-        //std::vector<OpenRAVE::dReal> values(2,velocity);
+        //std::vector<OpenRAVE::dReal> values(1,velocity);
         //values[0] = velocity;
         //pcontrol->SetDesired(values);
 
@@ -26,12 +26,14 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
 
         //-- Add the linear interpolation tag to the joint_values group
         OpenRAVE::ConfigurationSpecification::Group joint_values;
-        std::string joint_valuesName("joint_values ");
+        //std::string joint_valuesName("joint_values ");
+        std::string joint_valuesName("affine_transform  ");
         joint_valuesName.append(robotName);
         joint_valuesName.append(" ");
         std::stringstream ss;
         //ss << manipulatorIDs[ j ];
-        ss << "0 ";
+        //ss << "0 ";
+        ss << OpenRAVE::DOF_X;
         joint_valuesName.append(ss.str());
         joint_values.name = joint_valuesName;
         joint_values.offset = 0;
@@ -56,11 +58,11 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         oneDofConfigurationSpecification.AddGroup(iswaypoint);
 
         //-- Console output of the manually adjusted ConfigurationSpecification
-        //for (size_t i = 0; i < oneDofConfigurationSpecification._vgroups.size(); i++)
-        //{
-        //    OpenRAVE::ConfigurationSpecification::Group g = oneDofConfigurationSpecification._vgroups[i];
-        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
-        //}
+        for (size_t i = 0; i < oneDofConfigurationSpecification._vgroups.size(); i++)
+        {
+            OpenRAVE::ConfigurationSpecification::Group g = oneDofConfigurationSpecification._vgroups[i];
+            CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        }
 
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
 
