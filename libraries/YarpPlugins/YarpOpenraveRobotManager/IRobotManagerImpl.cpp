@@ -21,6 +21,7 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         CD_DEBUG("Robot at: %f %f %f\n", H_0_robot.x, H_0_robot.y, H_0_robot.z);
 
         //-- Our own ConfigurationSpecification
+        //Alternative: OpenRAVE::ConfigurationSpecification sc = OpenRAVE::RaveGetAffineConfigurationSpecification(OpenRAVE::DOF_X);
         OpenRAVE::ConfigurationSpecification oneDofConfigurationSpecification;
 
         //-- Add the linear interpolation tag to the joint_values group
