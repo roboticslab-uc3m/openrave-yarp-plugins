@@ -72,11 +72,11 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         configurationSpecification.AddGroup(iswaypoint);
 
         //-- Console output of the manually adjusted ConfigurationSpecification
-        for (size_t i = 0; i < configurationSpecification._vgroups.size(); i++)
-        {
-            OpenRAVE::ConfigurationSpecification::Group g = configurationSpecification._vgroups[i];
-            CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
-        }
+        //for (size_t i = 0; i < configurationSpecification._vgroups.size(); i++)
+        //{
+        //    OpenRAVE::ConfigurationSpecification::Group g = configurationSpecification._vgroups[i];
+        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        //}
 
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
 
