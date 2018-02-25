@@ -8,15 +8,11 @@
 #include <yarp/os/Vocab.h>
 
 #define VOCAB_MOVE_FORWARD VOCAB4('m','o','v','f')
-#define VOCAB_MOVE_BACKWARDS VOCAB4('m','o','v','b')
 #define VOCAB_TURN_LEFT VOCAB4('t','r','n','l')
-#define VOCAB_TURN_RIGHT VOCAB4('t','r','n','r')
 #define VOCAB_STOP_MOVEMENT VOCAB4('s','t','p','m')
 
-#define VOCAB_TILT_UP VOCAB4('t','l','t','u')
 #define VOCAB_TILT_DOWN VOCAB4('t','l','t','d')
 #define VOCAB_PAN_LEFT VOCAB4('p','a','n','l')
-#define VOCAB_PAN_RIGHT VOCAB4('p','a','n','r')
 #define VOCAB_STOP_CAMERA_MOVEMENT VOCAB4('s','t','p','c')
 
 namespace asrob{
@@ -31,18 +27,22 @@ namespace asrob{
 class IRobotManager
 {
     public:
-        //-- Robot movement related functions
-        virtual bool moveForward(int velocity) = 0;
-        virtual bool moveBackwards(int velocity) = 0;
-        virtual bool turnLeft(int velocity) = 0;
-        virtual bool turnRight(int velocity) = 0;
+        /// @brief Robot: Move forward (use negative value for move backward). position mode [m]. Velocity mode [m/s].
+        virtual bool moveForward(double value) = 0;
+
+        /// @brief Robot: Turn left (use negative value for turn left). position mode [deg]. Velocity mode [deg/s].
+        virtual bool turnLeft(double value) = 0;
+
+        /// @brief Robot: Stop movement.
         virtual bool stopMovement() = 0;
 
-        //-- Robot camera related functions
-        virtual bool tiltUp(int velocity) = 0;
-        virtual bool tiltDown(int velocity) = 0;
-        virtual bool panLeft(int velocity) = 0;
-        virtual bool panRight(int velocity) = 0;
+        /// @brief Robot camera: Tilt down (use negative value for tilt up). position mode [deg]. Velocity mode [deg/s].
+        virtual bool tiltDown(double value) = 0;
+
+        /// @brief Robot camera: Pan left (use negative value for pan right). position mode [deg]. Velocity mode [deg/s].
+        virtual bool panLeft(double value) = 0;
+
+        /// @brief Robot camera: Stop movement.
         virtual bool stopCameraMovement() = 0;
 
         //-- Robot connection related functions

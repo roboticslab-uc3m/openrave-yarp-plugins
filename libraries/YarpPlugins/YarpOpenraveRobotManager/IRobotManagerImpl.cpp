@@ -7,9 +7,9 @@ namespace roboticslab
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool YarpOpenraveRobotManager::moveForward(int velocity)
+bool YarpOpenraveRobotManager::moveForward(double value)
 {
-    CD_DEBUG("%d\n",velocity);
+    CD_DEBUG("%f\n",value);
 
     switch (mode)
     {
@@ -17,9 +17,9 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
     {
         //pcontrol->SetDesired(values,transform);
 
-        OpenRAVE::dReal realVelocity = 3.0;  // [m/s]
-        OpenRAVE::dReal dofTime = std::abs( OpenRAVE::dReal(velocity)  / realVelocity ); // Time in seconds
-        CD_DEBUG("abs(increment/vel) = abs(%d/%f) = %f [s]\n",velocity,realVelocity,dofTime);
+        OpenRAVE::dReal refVelocity = 3.0;  // [m/s]
+        OpenRAVE::dReal dofTime = std::abs( OpenRAVE::dReal(value)  / refVelocity ); // Time in seconds
+        CD_DEBUG("abs(increment/vel) = abs(%d/%f) = %f [s]\n",value,refVelocity,dofTime);
 
         OpenRAVE::Transform H_0_src = probot->GetTransform();
         CD_DEBUG("H_0_src: %f %f %f | %f %f %f %f\n",
@@ -29,7 +29,7 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         //CD_DEBUG("H_0_src_aa: %f %f %f %f\n", H_0_src_axisAngle.x, H_0_src_axisAngle.y, H_0_src_axisAngle.z, H_0_src_axisAngle.w);
 
         OpenRAVE::Transform H_src_dst;
-        H_src_dst.trans.x = velocity;
+        H_src_dst.trans.x = value;
 
         OpenRAVE::Transform H_0_dst = H_0_src * H_src_dst;
         CD_DEBUG("H_0_dst: %f %f %f | %f %f %f %f\n",
@@ -111,7 +111,7 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
     }
     case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
     {
-        std::vector<OpenRAVE::dReal> values(4, velocity);
+        std::vector<OpenRAVE::dReal> values(4, value);
         pcontrol->SetDesired(values);
         break;
     }
@@ -123,18 +123,9 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveRobotManager::moveBackwards(int velocity)
+bool YarpOpenraveRobotManager::turnLeft(double value)
 {
-    CD_DEBUG("%d\n",velocity);
-    moveForward(-velocity);
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveRobotManager::turnLeft(int velocity)
-{
-    CD_DEBUG("%d\n",velocity);
+    CD_DEBUG("%f\n",value);
 
     switch (mode)
     {
@@ -142,9 +133,9 @@ bool YarpOpenraveRobotManager::turnLeft(int velocity)
     {
         //pcontrol->SetDesired(values,transform);
 
-        OpenRAVE::dReal realVelocity = 90.0;  // [deg/s]
-        OpenRAVE::dReal dofTime = std::abs( OpenRAVE::dReal(velocity)  / realVelocity ); // Time in seconds
-        CD_DEBUG("abs(increment/vel) = abs(%d/%f) = %f [s]\n",velocity,realVelocity,dofTime);
+        OpenRAVE::dReal refVelocity = 90.0;  // [deg/s]
+        OpenRAVE::dReal dofTime = std::abs( OpenRAVE::dReal(value)  / refVelocity ); // Time in seconds
+        CD_DEBUG("abs(increment/vel) = abs(%d/%f) = %f [s]\n",value,refVelocity,dofTime);
 
         OpenRAVE::Transform H_0_src = probot->GetTransform();
         CD_DEBUG("H_0_src: %f %f %f | %f %f %f %f\n",
@@ -153,7 +144,7 @@ bool YarpOpenraveRobotManager::turnLeft(int velocity)
         //OpenRAVE::Vector H_0_src_axisAngle = OpenRAVE::geometry::axisAngleFromQuat(H_0_src.rot);
         //CD_DEBUG("H_0_src_aa: %f %f %f %f\n", H_0_src_axisAngle.x, H_0_src_axisAngle.y, H_0_src_axisAngle.z, H_0_src_axisAngle.w);
 
-        OpenRAVE::dReal relAngleRad = OpenRAVE::dReal(velocity) * M_PI / 180.0;
+        OpenRAVE::dReal relAngleRad = OpenRAVE::dReal(value) * M_PI / 180.0;
 
         OpenRAVE::Transform H_src_dst;
         H_src_dst.rot.x = cos( relAngleRad / 2.0);
@@ -242,26 +233,16 @@ bool YarpOpenraveRobotManager::turnLeft(int velocity)
     case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
     {
         std::vector<OpenRAVE::dReal> values(4);
-        values[0] = -velocity;
-        values[1] = velocity;
-        values[2] = -velocity;
-        values[3] = velocity;
+        values[0] = -value;
+        values[1] = value;
+        values[2] = -value;
+        values[3] = value;
         pcontrol->SetDesired(values);
         break;
     }
     default:
         return false;
     }
-
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveRobotManager::turnRight(int velocity)
-{
-    CD_DEBUG("%d\n",velocity);
-    turnLeft(-velocity);
 
     return true;
 }
@@ -292,33 +273,17 @@ bool YarpOpenraveRobotManager::stopMovement()
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveRobotManager::tiltUp(int velocity)
+bool YarpOpenraveRobotManager::tiltDown(double value)
 {
-    CD_DEBUG("\n");
+    CD_DEBUG("%f\n",value);
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveRobotManager::tiltDown(int velocity)
+bool YarpOpenraveRobotManager::panLeft(double value)
 {
-    CD_DEBUG("\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveRobotManager::panLeft(int velocity)
-{
-    CD_DEBUG("\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveRobotManager::panRight(int velocity)
-{
-    CD_DEBUG("\n");
+    CD_DEBUG("%f\n",value);
     return true;
 }
 

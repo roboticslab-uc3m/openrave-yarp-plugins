@@ -74,18 +74,22 @@ public:
 
     // ------- IRobotManager declarations. Implementation in IRobotManagerImpl.cpp -------
 
-    //-- Robot movement related functions
-    virtual bool moveForward(int velocity);
-    virtual bool moveBackwards(int velocity);
-    virtual bool turnLeft(int velocity);
-    virtual bool turnRight(int velocity);
+    /// @brief Robot: Move forward (use negative value for move backward). position mode [m]. Velocity mode [m/s].
+    virtual bool moveForward(double value);
+
+    /// @brief Robot: Turn left (use negative value for turn left). position mode [deg]. Velocity mode [deg/s].
+    virtual bool turnLeft(double value);
+
+    /// @brief Robot: Stop movement.
     virtual bool stopMovement();
 
-    //-- Robot camera related functions
-    virtual bool tiltUp(int velocity);
-    virtual bool tiltDown(int velocity);
-    virtual bool panLeft(int velocity);
-    virtual bool panRight(int velocity);
+    /// @brief Robot camera: Tilt down (use negative value for tilt up). position mode [deg]. Velocity mode [deg/s].
+    virtual bool tiltDown(double value);
+
+    /// @brief Robot camera: Pan left (use negative value for pan right). position mode [deg]. Velocity mode [deg/s].
+    virtual bool panLeft(double value);
+
+    /// @brief Robot camera: Stop movement.
     virtual bool stopCameraMovement();
 
     //-- Robot connection related functions
