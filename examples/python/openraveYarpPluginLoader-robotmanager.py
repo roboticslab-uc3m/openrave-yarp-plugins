@@ -19,9 +19,9 @@ try:
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
 
-    print OpenraveYarpPluginLoader.SendCommand('open --device RobotServer --subdevice YarpOpenraveRobotManager --robotIndex 0 --physics ode')
+    print OpenraveYarpPluginLoader.SendCommand('open --device RobotServer --subdevice YarpOpenraveRobotManager --robotIndex 0 --physics ode --mode transform')
 
-    print OpenraveYarpPluginLoader.SendCommand('open --device RobotServer --subdevice YarpOpenraveRobotManager --robotIndex 1 --physics ode')
+    print OpenraveYarpPluginLoader.SendCommand('open --device RobotServer --subdevice YarpOpenraveRobotManager --robotIndex 1 --physics ode --mode 4wd')
 
     while 1:
         pass
