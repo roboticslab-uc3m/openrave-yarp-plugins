@@ -135,15 +135,6 @@ bool YarpOpenraveRobotManager::moveBackwards(int velocity)
 bool YarpOpenraveRobotManager::turnLeft(int velocity)
 {
     CD_DEBUG("%d\n",velocity);
-    turnRight(-velocity);
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveRobotManager::turnRight(int velocity)
-{
-    CD_DEBUG("%d\n",velocity);
 
     switch (mode)
     {
@@ -165,6 +156,8 @@ bool YarpOpenraveRobotManager::turnRight(int velocity)
         OpenRAVE::Transform H_src_dst;
         OpenRAVE::dReal angleRad = velocity * M_PI / 180.0;
         H_src_dst.rot.x = cos( angleRad / 2.0);
+        H_src_dst.rot.y = 0.0;
+        H_src_dst.rot.z = 0.0;
         H_src_dst.rot.w = sin( angleRad / 2.0);
 
         OpenRAVE::Transform H_0_dst = H_0_src * H_src_dst;
@@ -248,16 +241,27 @@ bool YarpOpenraveRobotManager::turnRight(int velocity)
     case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
     {
         std::vector<OpenRAVE::dReal> values(4);
-        values[0] = velocity;
-        values[1] = -velocity;
-        values[2] = velocity;
-        values[3] = -velocity;
+        values[0] = -velocity;
+        values[1] = velocity;
+        values[2] = -velocity;
+        values[3] = velocity;
         pcontrol->SetDesired(values);
         break;
     }
     default:
         return false;
     }
+
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool YarpOpenraveRobotManager::turnRight(int velocity)
+{
+    CD_DEBUG("%d\n",velocity);
+    turnLeft(-velocity);
+
     return true;
 }
 
