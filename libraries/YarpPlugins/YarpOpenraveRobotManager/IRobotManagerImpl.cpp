@@ -9,7 +9,7 @@ namespace roboticslab
 
 bool YarpOpenraveRobotManager::moveForward(double value)
 {
-    CD_DEBUG("%d\n",value);
+    CD_DEBUG("%f\n",value);
 
     switch (mode)
     {
@@ -125,7 +125,7 @@ bool YarpOpenraveRobotManager::moveForward(double value)
 
 bool YarpOpenraveRobotManager::turnLeft(double value)
 {
-    CD_DEBUG("%d\n",value);
+    CD_DEBUG("%f\n",value);
 
     switch (mode)
     {
