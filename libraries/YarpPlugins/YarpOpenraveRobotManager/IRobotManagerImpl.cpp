@@ -90,7 +90,7 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         std::vector<OpenRAVE::dReal> dofCurrentFull(5);
         dofCurrentFull[0] = H_0_src.trans.x;  // joint_values
         dofCurrentFull[1] = H_0_src.trans.y;  // joint_values
-        dofCurrentFull[2] = 2.0*acos(H_0_src.rot.x);  // joint_values
+        dofCurrentFull[2] = 2.0*asin(H_0_src.rot.w); // bad sign: 2.0*acos(H_0_src.rot.x);  // joint_values
         dofCurrentFull[3] = 0;           // deltatime
         dofCurrentFull[4] = 1;           // iswaypoint
         ptraj->Insert(0,dofCurrentFull);
@@ -99,7 +99,7 @@ bool YarpOpenraveRobotManager::moveForward(int velocity)
         std::vector<OpenRAVE::dReal> dofTargetFull(5);
         dofTargetFull[0] = H_0_dst.trans.x;  // joint_values
         dofTargetFull[1] = H_0_dst.trans.y;  // joint_values
-        dofTargetFull[2] = 2.0*acos(H_0_dst.rot.x);  // joint_values
+        dofTargetFull[2] = 2.0*asin(H_0_dst.rot.w); // bad sign: 2.0*acos(H_0_dst.rot.x);  // joint_values
         dofTargetFull[3] = dofTime;    // deltatime
         dofTargetFull[4] = 1;          // iswaypoint
         ptraj->Insert(1,dofTargetFull);
@@ -153,12 +153,13 @@ bool YarpOpenraveRobotManager::turnLeft(int velocity)
         //OpenRAVE::Vector H_0_src_axisAngle = OpenRAVE::geometry::axisAngleFromQuat(H_0_src.rot);
         //CD_DEBUG("H_0_src_aa: %f %f %f %f\n", H_0_src_axisAngle.x, H_0_src_axisAngle.y, H_0_src_axisAngle.z, H_0_src_axisAngle.w);
 
+        OpenRAVE::dReal relAngleRad = OpenRAVE::dReal(velocity) * M_PI / 180.0;
+
         OpenRAVE::Transform H_src_dst;
-        OpenRAVE::dReal angleRad = velocity * M_PI / 180.0;
-        H_src_dst.rot.x = cos( angleRad / 2.0);
+        H_src_dst.rot.x = cos( relAngleRad / 2.0);
         H_src_dst.rot.y = 0.0;
         H_src_dst.rot.z = 0.0;
-        H_src_dst.rot.w = sin( angleRad / 2.0);
+        H_src_dst.rot.w = sin( relAngleRad / 2.0);
 
         OpenRAVE::Transform H_0_dst = H_0_src * H_src_dst;
         CD_DEBUG("H_0_dst: %f %f %f | %f %f %f %f\n",
@@ -219,7 +220,7 @@ bool YarpOpenraveRobotManager::turnLeft(int velocity)
         std::vector<OpenRAVE::dReal> dofCurrentFull(5);
         dofCurrentFull[0] = H_0_src.trans.x;  // joint_values
         dofCurrentFull[1] = H_0_src.trans.y;  // joint_values
-        dofCurrentFull[2] = 2.0*acos(H_0_src.rot.x);  // joint_values
+        dofCurrentFull[2] = 2.0*asin(H_0_src.rot.w); // bad sign: 2.0*acos(H_0_src.rot.x);  // joint_values
         dofCurrentFull[3] = 0;           // deltatime
         dofCurrentFull[4] = 1;           // iswaypoint
         ptraj->Insert(0,dofCurrentFull);
@@ -228,7 +229,7 @@ bool YarpOpenraveRobotManager::turnLeft(int velocity)
         std::vector<OpenRAVE::dReal> dofTargetFull(5);
         dofTargetFull[0] = H_0_dst.trans.x;  // joint_values
         dofTargetFull[1] = H_0_dst.trans.y;  // joint_values
-        dofTargetFull[2] = 2.0*acos(H_0_dst.rot.x);  // joint_values
+        dofTargetFull[2] = 2.0*asin(H_0_dst.rot.w); // bad sign: 2.0*acos(H_0_dst.rot.x);  // joint_values
         dofTargetFull[3] = dofTime;    // deltatime
         dofTargetFull[4] = 1;          // iswaypoint
         ptraj->Insert(1,dofTargetFull);
