@@ -44,7 +44,7 @@ class IRobotManager
 
         /// @brief Robot camera: Stop movement.
         virtual bool stopCameraMovement() = 0;
-        
+
         //-- Robot connection related functions
         /// @brief Connect to the remote robot
         virtual bool connect() = 0;
