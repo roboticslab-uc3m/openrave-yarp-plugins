@@ -20,7 +20,7 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
     if ( ! configureRobot(config) )
         return false;
 
-    std::string modeStr = config.check("mode",yarp::os::Value("transform"),"robot mode ('4wd' or 'transform')").asString();
+    std::string modeStr = config.check("mode",yarp::os::Value("4wd"),"robot mode ('4wd' or 'transform')").asString();
     if (modeStr == "transform")
     {
         mode = TRANSFORM_IDEALCONTROLLER;
