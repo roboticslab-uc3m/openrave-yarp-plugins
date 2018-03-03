@@ -44,22 +44,7 @@ class IRobotManager
 
         /// @brief Robot camera: Stop movement.
         virtual bool stopCameraMovement() = 0;
-
-        //-- Robot connection related functions
-        /// @brief Connect to the remote robot
-        virtual bool connect() = 0;
-
-        /// @brief Disconnect from the remote robot
-        virtual bool disconnect() = 0;
-
-        /// @brief Test connection (not in used yet)
-        virtual bool test() = 0;
-
-        /// @brief Enable/disable sending commands through the manager
-        virtual void setEnabled(bool enabled) = 0;
-
-        //-- Other
-        virtual void onDestroy() = 0;
+        
         virtual ~IRobotManager() {}
 };
 
