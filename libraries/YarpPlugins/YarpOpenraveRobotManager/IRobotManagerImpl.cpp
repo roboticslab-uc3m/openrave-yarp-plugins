@@ -297,44 +297,4 @@ bool YarpOpenraveRobotManager::stopCameraMovement()
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveRobotManager::connect()
-{
-    CD_DEBUG("\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveRobotManager::disconnect()
-{
-    CD_DEBUG("\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveRobotManager::test()
-{
-    CD_DEBUG("\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-void YarpOpenraveRobotManager::setEnabled(bool enabled)
-{
-    CD_DEBUG("\n");
-    return;
-}
-
-// -----------------------------------------------------------------------------
-
-void YarpOpenraveRobotManager::onDestroy()
-{
-    CD_DEBUG("\n");
-    return;
-}
-
-// -----------------------------------------------------------------------------
-
 }  // namespace roboticslab
