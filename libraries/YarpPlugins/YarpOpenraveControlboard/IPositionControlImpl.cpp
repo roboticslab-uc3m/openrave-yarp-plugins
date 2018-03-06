@@ -159,7 +159,7 @@ bool roboticslab::YarpOpenraveControlboard::relativeMove(const double *deltas) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::checkMotionDone(int j, bool *flag) {
-    CD_INFO("\n");
+    //CD_INFO("\n");
     *flag = pcontrols[j]->IsDone();
     return true;
 }
