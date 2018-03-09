@@ -95,9 +95,6 @@ if(USE_SYSTEM_COLOR_DEBUG)
     add_library(COLOR_DEBUG UNKNOWN IMPORTED)
 endif()
 
-# Store common include directories in global scope.
-set_property(GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS)
-
 # Store list of exported targets in global scope.
 set_property(GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_TARGETS)
 
@@ -109,7 +106,6 @@ add_subdirectory(libraries)
 export(PACKAGE ROBOTICSLAB_OPENRAVE_YARP_PLUGINS)
 
 # Retrieve global properties.
-get_property(_common_includes GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS)
 get_property(_exported_targets GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_TARGETS)
 
 # CMake installation path.
@@ -123,7 +119,6 @@ endif()
 include(CMakePackageConfigHelpers)
 
 # Set exported variables (build tree).
-set(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCLUDE_DIR "${_common_includes}")
 set(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR ${CMAKE_SOURCE_DIR}/cmake)
 
 # <pkg>Config.cmake (build tree).
@@ -131,20 +126,17 @@ configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/template/ROBOTICSLAB_OPE
                               ${CMAKE_BINARY_DIR}/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake
                               INSTALL_DESTINATION ${CMAKE_BINARY_DIR}
                               INSTALL_PREFIX ${CMAKE_BINARY_DIR}
-                              PATH_VARS ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCLUDE_DIR
-                                        ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR
+                              PATH_VARS ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR
                               NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 
 # Set exported variables (build tree).
-set(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCLUDE_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 set(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR ${CMAKE_INSTALL_DATADIR}/ROBOTICSLAB_OPENRAVE_YARP_PLUGINS/cmake)
 
 # <pkg>Config.cmake (install tree).
 configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/template/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake.in
                               ${CMAKE_BINARY_DIR}/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake.install
                               INSTALL_DESTINATION ${_cmake_destination}
-                              PATH_VARS ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCLUDE_DIR
-                                        ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR
+                              PATH_VARS ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR
                               NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 
 # Install <pkg>Config.cmake.
