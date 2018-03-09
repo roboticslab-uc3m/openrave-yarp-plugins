@@ -56,7 +56,8 @@ endif()
 
 # Pick up our cmake modules.
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake
-                              ${CMAKE_SOURCE_DIR}/cmake/modules)
+                              ${CMAKE_SOURCE_DIR}/cmake/modules
+                              ${CMAKE_SOURCE_DIR}/cmake/ycm-modules)
 
 # Bootstrap YCM. Stick to v0.2.2 because of:
 # https://github.com/robotology/ycm/issues/118
@@ -122,7 +123,7 @@ include(CMakePackageConfigHelpers)
 set(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR ${CMAKE_SOURCE_DIR}/cmake)
 
 # <pkg>Config.cmake (build tree).
-configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/template/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake.in
+configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/templates/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake.in
                               ${CMAKE_BINARY_DIR}/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake
                               INSTALL_DESTINATION ${CMAKE_BINARY_DIR}
                               INSTALL_PREFIX ${CMAKE_BINARY_DIR}
@@ -133,7 +134,7 @@ configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/template/ROBOTICSLAB_OPE
 set(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR ${CMAKE_INSTALL_DATADIR}/ROBOTICSLAB_OPENRAVE_YARP_PLUGINS/cmake)
 
 # <pkg>Config.cmake (install tree).
-configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/template/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake.in
+configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/templates/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake.in
                               ${CMAKE_BINARY_DIR}/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake.install
                               INSTALL_DESTINATION ${_cmake_destination}
                               PATH_VARS ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR
