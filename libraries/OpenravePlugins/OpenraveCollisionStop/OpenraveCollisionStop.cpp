@@ -22,7 +22,7 @@
 class OpenraveCollisionStop : public OpenRAVE::ModuleBase, yarp::os::RateThread
 {
 public:
-    OpenraveCollisionStop(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::RateThread(5.0)
+    OpenraveCollisionStop(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::RateThread(20.0)
     {
         __description = "OpenraveCollisionStop plugin.";
         RegisterCommand("open",boost::bind(&OpenraveCollisionStop::Open, this,_1,_2),"opens port");
@@ -52,19 +52,21 @@ public:
      */
     virtual void run()
     {
-        {
-        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
 
-        if(penv->CheckSelfCollision(vectorOfRobotPtr[0]))
-        {  // Check if we collide.
-            CD_WARNING("Collision!!! Invalid position. Going back to the initial position\n");
-        }
-        //-- Force robot 0 for now
-        /*OpenRAVE::CollisionReportPtr cr;
-        if(penv->CheckSelfCollision(vectorOfRobotPtr[0],cr)) {  // Check if we collide.
-            if(!!cr.get())
-                CD_WARNING("%s\n",cr->__str__().c_str());
-        }*/
+        {
+            OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
+
+            OpenRAVE::CollisionReportPtr _report(new OpenRAVE::CollisionReport());
+            if( penv->CheckCollision(OpenRAVE::KinBodyConstPtr(vectorOfRobotPtr[0]),_report) )
+            {
+                CD_WARNING("collsion in trajectory: %s\n",_report->__str__().c_str());
+            }
+
+            if( vectorOfRobotPtr[0]->CheckSelfCollision(_report) )
+            {
+                CD_WARNING("self collsion in trajectory: %s\n",_report->__str__().c_str());
+            }
+            //delete _report.get();
         }
 
         return;
