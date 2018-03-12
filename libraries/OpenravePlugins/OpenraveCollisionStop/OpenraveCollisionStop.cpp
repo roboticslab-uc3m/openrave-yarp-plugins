@@ -19,10 +19,10 @@
  * @ingroup OpenraveCollisionStop
  * @brief Loads one or several YARP Plugin, passing environment pointer.
  */
-class OpenraveCollisionStop : public OpenRAVE::ModuleBase
+class OpenraveCollisionStop : public OpenRAVE::ModuleBase, yarp::os::RateThread
 {
 public:
-    OpenraveCollisionStop(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
+    OpenraveCollisionStop(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::RateThread(5.0)
     {
         __description = "OpenraveCollisionStop plugin.";
         RegisterCommand("open",boost::bind(&OpenraveCollisionStop::Open, this,_1,_2),"opens port");
@@ -34,7 +34,40 @@ public:
 
     virtual void Destroy()
     {
-        RAVELOG_INFO("module unloaded from environment\n");
+        RAVELOG_INFO("module unloaded from environment (1/2)\n");
+        this->stop();
+        RAVELOG_INFO("module unloaded from environment (2/2)\n");
+    }
+
+    /**
+     * Loop function. This is the thread itself.
+     * The thread calls the run() function every <period> ms.
+     * At the end of each run, the thread will sleep the amounth of time
+     * required, taking into account the time spent inside the loop function.
+     * Example:  requested period is 10ms, the run() function take 3ms to
+     * be executed, the thread will sleep for 7ms.
+     *
+     * Note: after each run is completed, the thread will call a yield()
+     * in order to facilitate other threads to run.
+     */
+    virtual void run()
+    {
+        {
+        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
+
+        if(penv->CheckSelfCollision(vectorOfRobotPtr[0]))
+        {  // Check if we collide.
+            CD_WARNING("Collision!!! Invalid position. Going back to the initial position\n");
+        }
+        //-- Force robot 0 for now
+        /*OpenRAVE::CollisionReportPtr cr;
+        if(penv->CheckSelfCollision(vectorOfRobotPtr[0],cr)) {  // Check if we collide.
+            if(!!cr.get())
+                CD_WARNING("%s\n",cr->__str__().c_str());
+        }*/
+        }
+
+        return;
     }
 
     int main(const std::string& cmd)
@@ -107,13 +140,16 @@ public:
 
         //-- Get and put pointer to environment
         CD_INFO("penv: %p\n",GetEnv().get());
-        OpenRAVE::EnvironmentBasePtr penv = GetEnv();
+        penv = GetEnv();
 
         //-- Fill robotIndices from: robotIndex/robotIndices/allRobots
         std::vector<int> robotIndices;
 
-        std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
         penv->GetRobots(vectorOfRobotPtr);
+
+        this->start();
+
+        return true;
 
         if( options.check("robotIndex") )
         {
@@ -227,6 +263,8 @@ public:
     }
 
 private:
+    OpenRAVE::EnvironmentBasePtr penv;
+    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
 };
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
