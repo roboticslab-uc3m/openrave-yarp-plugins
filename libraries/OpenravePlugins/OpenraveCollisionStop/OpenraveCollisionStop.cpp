@@ -52,12 +52,27 @@ public:
      */
     virtual void run()
     {
+        std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ 0 ]->GetManipulators();
+        /*OpenRAVE::RobotBase::ManipulatorPtr p = vectorOfManipulatorPtr[0];
+        std::vector<OpenRAVE::RobotBase::LinkPtr> vlinks;
+        p->GetChildLinks(vlinks);*/
 
+        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
+
+        /*if( penv->CheckCollision(OpenRAVE::KinBodyConstPtr(vectorOfRobotPtr[0]),_report) )
         {
-            OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
+            CD_WARNING("collsion in trajectory: %s\n",_report->__str__().c_str());
+        }*/
 
-            OpenRAVE::CollisionReportPtr _report(new OpenRAVE::CollisionReport());
-            if( penv->CheckCollision(OpenRAVE::KinBodyConstPtr(vectorOfRobotPtr[0]),_report) )
+        if( vectorOfRobotPtr[0]->CheckSelfCollision(_report) )
+        {
+            CD_WARNING("collsion in trajectory: %s\n",_report->__str__().c_str());
+        }
+
+        //for(int i=0;i<vectorOfManipulatorPtr.size();i++)
+        //{
+
+            /*if( penv->CheckCollision(OpenRAVE::KinBodyConstPtr(vectorOfRobotPtr[0]),_report) )
             {
                 CD_WARNING("collsion in trajectory: %s\n",_report->__str__().c_str());
             }
@@ -65,9 +80,34 @@ public:
             if( vectorOfRobotPtr[0]->CheckSelfCollision(_report) )
             {
                 CD_WARNING("self collsion in trajectory: %s\n",_report->__str__().c_str());
-            }
+            }*/
+
+            /*if( vectorOfManipulatorPtr[i]->CheckEndEffectorCollision(_report) )
+            {
+                CD_WARNING("collsion in [%d]: %s\n",i,_report->__str__().c_str());
+            }*/
+
+            /*if( vectorOfManipulatorPtr[i]->CheckIndependentCollision(_report) )
+            {
+                CD_WARNING("collsion in [%d]: %s\n",i,_report->__str__().c_str());
+            }*/
+            //if( penv->CheckCollision(OpenRAVE::KinBody::LinkConstPtr(vlinks[j]),_report) )
+
+/*            std::vector<OpenRAVE::RobotBase::LinkPtr> vlinks;
+            vectorOfManipulatorPtr[i]->GetIndependentLinks(vlinks);
+
+            for(int j=0;j<vlinks.size();j++)
+            {
+                {
+                    if( _report->plink1 == vlinks[i] )
+                    {
+                        CD_WARNING("collsion in [%d, %d]: %s\n",i,j,_report->__str__().c_str());
+                    }
+                }
+            }*/
+
             //delete _report.get();
-        }
+       // }
 
         return;
     }
@@ -148,6 +188,8 @@ public:
         std::vector<int> robotIndices;
 
         penv->GetRobots(vectorOfRobotPtr);
+
+        _report.reset(new OpenRAVE::CollisionReport());
 
         this->start();
 
@@ -267,6 +309,8 @@ public:
 private:
     OpenRAVE::EnvironmentBasePtr penv;
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
+    OpenRAVE::CollisionReportPtr _report;
+
 };
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
