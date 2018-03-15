@@ -9,13 +9,10 @@ find_package(OpenRAVE REQUIRED)
 find_package(YARP REQUIRED)
 find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT COMPONENTS iostreams python thread)
 
-get_property(_common_dirs GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     ${OpenRAVE_INCLUDE_DIRS}
                     ${YARP_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS}
-                    ${_common_dirs})
+                    ${Boost_INCLUDE_DIRS})
 
 link_directories(${OpenRAVE_LIBRARY_DIRS}
                  ${Boost_LIBRARY_DIRS})

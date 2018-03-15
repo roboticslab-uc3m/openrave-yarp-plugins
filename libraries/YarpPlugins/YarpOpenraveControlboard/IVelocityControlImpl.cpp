@@ -111,7 +111,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
 
         OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
 
-        OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,sp) ) ); // Time in seconds
+        OpenRAVE::dReal dofTime = std::abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,sp) ) ); // Time in seconds
 
         CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,radToDegIfNotPrismatic(j,dofTargetRads),radToDegIfNotPrismatic(j,dofCurrentRads),sp,dofTime);
 

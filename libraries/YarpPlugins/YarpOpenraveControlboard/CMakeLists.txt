@@ -13,12 +13,9 @@ if(NOT SKIP_YarpOpenraveControlboard)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED COMPONENTS iostreams python thread system)
 
-get_property(_common_dirs GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_INCLUDE_DIRS)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
                     ${OpenRAVE_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
-                    ${_common_dirs}
                     $<TARGET_PROPERTY:YarpOpenraveBase,INTERFACE_INCLUDE_DIRECTORIES>)
 
 link_directories(${OpenRAVE_LIBRARY_DIRS}

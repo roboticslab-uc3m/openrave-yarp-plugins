@@ -106,7 +106,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
 
-        OpenRAVE::dReal dofTime = abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
+        OpenRAVE::dReal dofTime = std::abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
 
         CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
 
@@ -159,16 +159,23 @@ bool roboticslab::YarpOpenraveControlboard::relativeMove(const double *deltas) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::checkMotionDone(int j, bool *flag) {
-    CD_WARNING("Always returning true.\n");
-    *flag = true;
+    //CD_INFO("\n");
+    *flag = pcontrols[j]->IsDone();
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::checkMotionDone(bool *flag) {
-    CD_WARNING("Always returning true.\n");
-    *flag = true;
+    CD_INFO("\n");
+    bool done = true;
+    for(unsigned int j=0;j<axes;j++)
+    {
+        bool tmpDone;
+        checkMotionDone(j,&tmpDone);
+        done &= tmpDone;
+    }
+    *flag = done;
     return true;
 }
 
