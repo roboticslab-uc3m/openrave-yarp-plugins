@@ -13,11 +13,8 @@ try:
     env.SetViewer('qtcoin')
     env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml')
 
-    #OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
-    #print OpenraveYarpPluginLoader.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators')
-
-    OpenraveCollisionStop = RaveCreateModule(env,'OpenraveCollisionStop')
-    print OpenraveCollisionStop.SendCommand('open --robotIndex 0')
+    OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
+    print OpenraveYarpPluginLoader.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 --collision')
 
     # Convex Decomposition
     teo_robot = env.GetRobots()[0]
