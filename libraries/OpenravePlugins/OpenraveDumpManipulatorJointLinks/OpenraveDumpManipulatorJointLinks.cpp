@@ -8,25 +8,25 @@
 
 /**
  * @ingroup OpenravePlugins
- * \defgroup OpenraveCollisionStop
+ * \defgroup OpenraveDumpManipulatorJointLinks
  *
- * @brief Contains roboticslab::OpenraveCollisionStop.
+ * @brief Contains roboticslab::OpenraveDumpManipulatorJointLinks.
  */
 
 /**
- * @ingroup OpenraveCollisionStop
+ * @ingroup OpenraveDumpManipulatorJointLinks
  * @brief List joints and affected links.
  */
-class OpenraveCollisionStop : public OpenRAVE::ModuleBase
+class OpenraveDumpManipulatorJointLinks : public OpenRAVE::ModuleBase
 {
 public:
-    OpenraveCollisionStop(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
+    OpenraveDumpManipulatorJointLinks(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
     {
-        __description = "OpenraveCollisionStop plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveCollisionStop::Open, this,_1,_2),"opens port");
+        __description = "OpenraveDumpManipulatorJointLinks plugin.";
+        RegisterCommand("open",boost::bind(&OpenraveDumpManipulatorJointLinks::Open, this,_1,_2),"opens port");
     }
 
-    virtual ~OpenraveCollisionStop()
+    virtual ~OpenraveDumpManipulatorJointLinks()
     {
     }
 
@@ -147,16 +147,16 @@ private:
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
 {
-    if( type == OpenRAVE::PT_Module && interfacename == "openravecollisionstop")
+    if( type == OpenRAVE::PT_Module && interfacename == "openravedumpmanipulatorjointlinks")
     {
-        return OpenRAVE::InterfaceBasePtr(new OpenraveCollisionStop(penv));
+        return OpenRAVE::InterfaceBasePtr(new OpenraveDumpManipulatorJointLinks(penv));
     }
     return OpenRAVE::InterfaceBasePtr();
 }
 
 void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
 {
-    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveCollisionStop");
+    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveDumpManipulatorJointLinks");
 }
 
 OPENRAVE_PLUGIN_API void DestroyPlugin()
