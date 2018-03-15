@@ -146,9 +146,9 @@ public:
 
         std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ 0 ]->GetManipulators();
 
-        for(int manupulatorIndex=0;manupulatorIndex<vectorOfManipulatorPtr.size();manupulatorIndex++)
+        for(int manipulatorIndex=0;manipulatorIndex<vectorOfManipulatorPtr.size();manipulatorIndex++)
         {
-            OpenRAVE::RobotBase::ManipulatorPtr manipulatorPtr = vectorOfManipulatorPtr[manupulatorIndex];
+            OpenRAVE::RobotBase::ManipulatorPtr manipulatorPtr = vectorOfManipulatorPtr[manipulatorIndex];
 
             CD_DEBUG("* Manipulator: %s\n",manipulatorPtr->GetName().c_str());
 
