@@ -6,7 +6,7 @@ from openravepy import *
 try:
     RaveInitialize()
 
-    if not RaveLoadPlugin('OpenraveYarpPluginLoader'):
+    if not RaveLoadPlugin('OpenraveDumpManipulatorJointLinks'):
         raveLogError("Plugin not correctly loaded")
 
     env=Environment()
