@@ -283,6 +283,8 @@ public:
     }
 
 private:
+    yarp::os::Network yarp;  // [2018/03/15] Required by yarp::os::RateThread
+
     OpenRAVE::EnvironmentBasePtr penv;
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
     OpenRAVE::CollisionReportPtr _report;
