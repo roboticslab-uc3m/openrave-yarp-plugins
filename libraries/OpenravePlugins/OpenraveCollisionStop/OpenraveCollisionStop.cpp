@@ -4,7 +4,8 @@
 #include <openrave/plugin.h>
 #include <boost/bind.hpp>
 
-#include <yarp/os/all.h>
+#include <yarp/os/RateThread.h>
+#include <yarp/os/Network.h>  // [2018/03/15] Required by yarp::os::RateThread
 
 #include "ColorDebug.hpp"
 
