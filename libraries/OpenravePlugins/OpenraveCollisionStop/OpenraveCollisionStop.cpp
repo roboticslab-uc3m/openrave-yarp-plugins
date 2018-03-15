@@ -144,20 +144,30 @@ public:
 
         penv->GetRobots(vectorOfRobotPtr);
 
-        std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ 0 ]->GetManipulators();
+        OpenRAVE::RobotBasePtr probot = vectorOfRobotPtr[ 0 ];
+
+        std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
 
         for(int manipulatorIndex=0;manipulatorIndex<vectorOfManipulatorPtr.size();manipulatorIndex++)
         {
             OpenRAVE::RobotBase::ManipulatorPtr manipulatorPtr = vectorOfManipulatorPtr[manipulatorIndex];
 
-            CD_DEBUG("* Manipulator: %s\n",manipulatorPtr->GetName().c_str());
+            CD_DEBUG("* Manipulator [%d]: %s\n",manipulatorIndex,manipulatorPtr->GetName().c_str());
 
-            std::vector<OpenRAVE::RobotBase::LinkPtr> vectorOfLinkPtr;
-            manipulatorPtr->GetIndependentLinks(vectorOfLinkPtr);
+            std::vector<int> manipulatorJointIDs = vectorOfManipulatorPtr[manipulatorIndex]->GetArmIndices();
 
-            for(int linkIndex=0;linkIndex<vectorOfLinkPtr.size();linkIndex++)
+            std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
+
+            for(size_t i=0; i<manipulatorJointIDs.size(); i++)
             {
-                CD_DEBUG("** Link: %s\n",vectorOfLinkPtr[linkIndex]->GetName().c_str());
+                OpenRAVE::RobotBase::JointPtr jointPtr = probot->GetJointFromDOFIndex(manipulatorJointIDs[i]);
+                vectorOfJointPtr.push_back(jointPtr);
+                //CD_DEBUG("Get JointPtr for manipulatorJointIDs[%d]: %d\n",i,manipulatorJointIDs[i]);
+            }
+
+            for(int jointIndex=0;jointIndex<vectorOfJointPtr.size();jointIndex++)
+            {
+                CD_DEBUG("** Joint [%d]: %s\n",jointIndex,vectorOfJointPtr[jointIndex]->GetName().c_str());
 
                 //{
                     //CD_INFO("in [%d, %d]: %s\n",i,j,vlinks[j]->GetName().c_str());
@@ -167,6 +177,23 @@ public:
                     //}
                 //}
             }
+
+            /*std::vector<OpenRAVE::RobotBase::LinkPtr> vectorOfLinkPtr;
+            // manipulatorPtr->GetIndependentLinks(vectorOfLinkPtr);
+            //manipulatorPtr->GetChildLinks(vectorOfLinkPtr);
+
+            for(int linkIndex=0;linkIndex<vectorOfLinkPtr.size();linkIndex++)
+            {
+                CD_DEBUG("** Link [%d]: %s\n",linkIndex,vectorOfLinkPtr[linkIndex]->GetName().c_str());
+
+                //{
+                    //CD_INFO("in [%d, %d]: %s\n",i,j,vlinks[j]->GetName().c_str());
+                    //if( _report->plink1 == vlinks[j] )
+                    //{
+                    //    //CD_WARNING("collsion in [%d, %d]: %s\n",i,j,_report->__str__().c_str());
+                    //}
+                //}
+            }*/
 
         }
 
