@@ -11,7 +11,13 @@ try:
 
     env=Environment()
     env.SetViewer('qtcoin')
-    env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml')
+
+    example = "default"  # "default" or "teo"
+
+    if example == "teo":
+        env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml')
+    else:
+        env.Load('data/lab1.env.xml')
 
     OpenraveDumpManipulatorJointLinks = RaveCreateModule(env,'OpenraveDumpManipulatorJointLinks')
     print OpenraveDumpManipulatorJointLinks.SendCommand('open')
