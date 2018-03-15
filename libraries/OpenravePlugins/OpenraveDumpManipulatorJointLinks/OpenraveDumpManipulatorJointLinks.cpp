@@ -115,7 +115,7 @@ public:
                         {
                             CD_INFO_NO_HEADER("*** Affects: %s\n", linkPtr->GetName().c_str());
                         }
-                    }
+                    }  // link
                 }  // joint
             }  // manipulator
         }  // robot
