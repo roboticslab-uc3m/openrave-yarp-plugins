@@ -112,31 +112,7 @@ public:
                         CD_DEBUG("*** Affects: %s\n", linkPtr->GetName().c_str());
                     }
                 }
-
-                //{
-                    //CD_INFO("in [%d, %d]: %s\n",i,j,vlinks[j]->GetName().c_str());
-                    //if( _report->plink1 == vlinks[j] )
-                    //{
-                    //    //CD_WARNING("collsion in [%d, %d]: %s\n",i,j,_report->__str__().c_str());
-                    //}
-                //}
             }
-
-            /*std::vector<OpenRAVE::RobotBase::LinkPtr> vectorOfLinkPtr;
-
-            for(int linkIndex=0;linkIndex<vectorOfLinkPtr.size();linkIndex++)
-            {
-                CD_DEBUG("** Link [%d]: %s\n",linkIndex,vectorOfLinkPtr[linkIndex]->GetName().c_str());
-
-                //{
-                    //CD_INFO("in [%d, %d]: %s\n",i,j,vlinks[j]->GetName().c_str());
-                    //if( _report->plink1 == vlinks[j] )
-                    //{
-                    //    //CD_WARNING("collsion in [%d, %d]: %s\n",i,j,_report->__str__().c_str());
-                    //}
-                //}
-            }*/
-
         }
 
         return true;
