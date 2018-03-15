@@ -156,18 +156,20 @@ public:
 
             std::vector<int> manipulatorJointIDs = vectorOfManipulatorPtr[manipulatorIndex]->GetArmIndices();
 
-            std::vector<OpenRAVE::RobotBase::JointPtr> vectorOfJointPtr;
+            std::vector<OpenRAVE::RobotBase::LinkPtr> vectorOfLinkPtr = probot->GetLinks();
 
-            for(size_t i=0; i<manipulatorJointIDs.size(); i++)
+            for(int jointIndex=0;jointIndex<manipulatorJointIDs.size();jointIndex++)
             {
-                OpenRAVE::RobotBase::JointPtr jointPtr = probot->GetJointFromDOFIndex(manipulatorJointIDs[i]);
-                vectorOfJointPtr.push_back(jointPtr);
-                //CD_DEBUG("Get JointPtr for manipulatorJointIDs[%d]: %d\n",i,manipulatorJointIDs[i]);
-            }
+                CD_DEBUG("** Joint [%d]: %s\n",jointIndex,probot->GetJointFromDOFIndex(manipulatorJointIDs[jointIndex])->GetName().c_str());
 
-            for(int jointIndex=0;jointIndex<vectorOfJointPtr.size();jointIndex++)
-            {
-                CD_DEBUG("** Joint [%d]: %s\n",jointIndex,vectorOfJointPtr[jointIndex]->GetName().c_str());
+                for(int linkIndex=0;linkIndex<vectorOfLinkPtr.size();linkIndex++)
+                {
+                    OpenRAVE::RobotBase::LinkPtr linkPtr = vectorOfLinkPtr[linkIndex];
+                    if( probot->DoesAffect(manipulatorJointIDs[jointIndex],linkPtr->GetIndex()) )
+                    {
+                        CD_DEBUG("*** Affects: %s\n", linkPtr->GetName().c_str());
+                    }
+                }
 
                 //{
                     //CD_INFO("in [%d, %d]: %s\n",i,j,vlinks[j]->GetName().c_str());
@@ -179,8 +181,6 @@ public:
             }
 
             /*std::vector<OpenRAVE::RobotBase::LinkPtr> vectorOfLinkPtr;
-            // manipulatorPtr->GetIndependentLinks(vectorOfLinkPtr);
-            //manipulatorPtr->GetChildLinks(vectorOfLinkPtr);
 
             for(int linkIndex=0;linkIndex<vectorOfLinkPtr.size();linkIndex++)
             {
