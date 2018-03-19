@@ -6,12 +6,10 @@ option(ENABLE_OpenraveDumpManipulatorJointLinks "Enable/disable OpenraveDumpMani
 if(ENABLE_OpenraveDumpManipulatorJointLinks)
 
 find_package(OpenRAVE REQUIRED)
-find_package(YARP REQUIRED)
 find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT COMPONENTS iostreams python thread)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     ${OpenRAVE_INCLUDE_DIRS}
-                    ${YARP_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS})
 
 link_directories(${OpenRAVE_LIBRARY_DIRS}
@@ -20,10 +18,9 @@ link_directories(${OpenRAVE_LIBRARY_DIRS}
 add_library(OpenraveDumpManipulatorJointLinks SHARED OpenraveDumpManipulatorJointLinks.cpp)
 
 set_target_properties(OpenraveDumpManipulatorJointLinks PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
-                                                          LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+                                                                   LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-target_link_libraries(OpenraveDumpManipulatorJointLinks ${YARP_LIBRARIES}
-                                               ${OpenRAVE_LIBRARIES})
+target_link_libraries(OpenraveDumpManipulatorJointLinks ${OpenRAVE_LIBRARIES})
 
 include(InstallOpenravePlugin)
 
