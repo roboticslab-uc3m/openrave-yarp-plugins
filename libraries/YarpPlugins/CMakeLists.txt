@@ -16,7 +16,6 @@ include_directories(${YARP_INCLUDE_DIRS})
 
 # YARP devices.
 add_subdirectory(YarpOpenraveControlboard)
-add_subdirectory(YarpOpenraveControlboardCollision)
 add_subdirectory(YarpOpenraveGrabber)
 add_subdirectory(YarpOpenraveRGBDSensor)
 add_subdirectory(YarpOpenraveRobotManager)
