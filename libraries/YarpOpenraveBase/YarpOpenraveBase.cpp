@@ -51,7 +51,7 @@ bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
         penv = OpenRAVE::RaveCreateEnvironment();  // Create the main OpenRAVE environment, set the EnvironmentBasePtr
         penv->StopSimulation();  // NEEDED??
 
-        if ( config.check("view") )
+        if ( config.check("view","open viewer") )
         {
             boost::thread openraveViewerThread(boost::bind(SetViewer,penv,"qtcoin"));
             openraveThreads.add_thread(&openraveViewerThread);
