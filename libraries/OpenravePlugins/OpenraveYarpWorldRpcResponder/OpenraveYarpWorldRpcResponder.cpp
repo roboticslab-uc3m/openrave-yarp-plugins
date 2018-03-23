@@ -577,7 +577,7 @@ public:
     OpenraveYarpWorldRpcResponder(EnvironmentBasePtr penv) : ModuleBase(penv)
     {
         __description = "OpenraveYarpWorldRpcResponder plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveYarpWorldRpcResponder::Open, this,_1,_2),"opens port");
+        RegisterCommand("open",boost::bind(&OpenraveYarpWorldRpcResponder::Open, this,_1,_2),"opens OpenraveYarpWorldRpcResponder");
     }
 
     virtual ~OpenraveYarpWorldRpcResponder()

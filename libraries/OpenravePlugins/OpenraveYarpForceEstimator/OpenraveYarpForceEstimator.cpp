@@ -261,7 +261,7 @@ public:
     OpenraveYarpForceEstimator(EnvironmentBasePtr penv) : ModuleBase(penv) {
         //YARP_REGISTER_PLUGINS(yarpplugins);
         __description = "OpenraveYarpForceEstimator plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveYarpForceEstimator::Open, this,_1,_2),"opens port");
+        RegisterCommand("open",boost::bind(&OpenraveYarpForceEstimator::Open, this,_1,_2),"opens OpenraveYarpForceEstimator");
     }
 
     virtual ~OpenraveYarpForceEstimator() {

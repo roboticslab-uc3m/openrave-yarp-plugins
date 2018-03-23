@@ -23,7 +23,7 @@ public:
     OpenraveDumpManipulatorJointLinks(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
     {
         __description = "OpenraveDumpManipulatorJointLinks plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveDumpManipulatorJointLinks::Open, this,_1,_2),"opens port");
+        RegisterCommand("open",boost::bind(&OpenraveDumpManipulatorJointLinks::Open, this,_1,_2),"opens OpenraveDumpManipulatorJointLinks");
     }
 
     virtual ~OpenraveDumpManipulatorJointLinks()
