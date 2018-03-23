@@ -6,7 +6,6 @@ option(ENABLE_OpenraveYarpCoupled "Enable/disable OpenraveYarpCoupled" ON)
 if(ENABLE_OpenraveYarpCoupled)
 
 find_package(OpenRAVE REQUIRED)
-find_package(YARP REQUIRED)
 find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT COMPONENTS iostreams python thread)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
