@@ -5,9 +5,6 @@ option(ENABLE_OpenraveYarpPluginLoader "Enable/disable OpenraveYarpPluginLoader"
 
 if(ENABLE_OpenraveYarpPluginLoader)
 
-find_package(OpenRAVE REQUIRED)
-find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT COMPONENTS iostreams python thread)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     ${OpenRAVE_INCLUDE_DIRS}
                     ${YARP_INCLUDE_DIRS}
@@ -16,7 +13,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 link_directories(${OpenRAVE_LIBRARY_DIRS}
                  ${Boost_LIBRARY_DIRS})
 
-add_library(OpenraveYarpPluginLoader SHARED OpenraveYarpPluginLoader.cpp)
+add_library(OpenraveYarpPluginLoader OpenraveYarpPluginLoader.cpp)
 
 set_target_properties(OpenraveYarpPluginLoader PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

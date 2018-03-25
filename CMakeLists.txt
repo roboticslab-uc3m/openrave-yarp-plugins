@@ -102,6 +102,11 @@ set_property(GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_TARGETS)
 # Create targets if specific requirements are satisfied.
 include(CMakeDependentOption)
 
+# Find OpenRAVE+Boost (main dependency).
+find_package(OpenRAVE REQUIRED)
+find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED
+             COMPONENTS iostreams python thread system)
+
 # Find YARP (main dependency).
 find_package(YARP REQUIRED)
 

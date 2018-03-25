@@ -5,9 +5,6 @@ option(ENABLE_YarpOpenraveBase "Enable/disable YarpOpenraveBase" ON)
 
 if(ENABLE_YarpOpenraveBase)
 
-find_package(OpenRAVE REQUIRED)
-find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED COMPONENTS iostreams python thread system)
-
 add_library(YarpOpenraveBase OBJECT YarpOpenraveBase.hpp
                                     YarpOpenraveBase.cpp)
 
