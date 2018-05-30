@@ -109,8 +109,6 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
             depthWidth  = sensorRanges.size();
             depthHeight = 1;
         }
-
-        tinv = depthSensorDataPtr->__trans.inverse();
     }
 
     depthImage.resize(depthWidth, depthHeight);
