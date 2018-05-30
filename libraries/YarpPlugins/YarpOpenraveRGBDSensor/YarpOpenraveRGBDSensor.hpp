@@ -173,7 +173,6 @@ private:
     OpenRAVE::SensorBasePtr rgbSensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::LaserSensorData> depthSensorDataPtr;
     boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> rgbSensorDataPtr;
-    OpenRAVE::Transform tinv;
 
     static const int NOT_SET;
 };
