@@ -261,7 +261,7 @@ public:
     OpenraveYarpForceEstimator(EnvironmentBasePtr penv) : ModuleBase(penv) {
         //YARP_REGISTER_PLUGINS(yarpplugins);
         __description = "OpenraveYarpForceEstimator plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveYarpForceEstimator::Open, this,_1,_2),"opens port");
+        RegisterCommand("open",boost::bind(&OpenraveYarpForceEstimator::Open, this,_1,_2),"opens OpenraveYarpForceEstimator");
     }
 
     virtual ~OpenraveYarpForceEstimator() {
@@ -316,7 +316,7 @@ public:
         std::string portName = options.check("name",yarp::os::Value(DEFAULT_PORT_NAME),"port name").asString();
         CD_INFO("port name: %s\n",portName.c_str());
 
-        int wrinkleSize = options.check("wrinkleSize",DEFAULT_WRINKLESIZE,"wrinkle Size").asInt();
+        int wrinkleSize = options.check("wrinkleSize",yarp::os::Value(DEFAULT_WRINKLESIZE),"wrinkle Size").asInt();
         CD_INFO("wrinkle Size: %d\n",wrinkleSize);
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());

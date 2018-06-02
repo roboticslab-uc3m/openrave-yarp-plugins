@@ -30,7 +30,7 @@ bool roboticslab::YarpOpenraveControlboard::setPosition(int j, double ref)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setPositions(const int n_joint, const int *joints, double *refs)
+bool roboticslab::YarpOpenraveControlboard::setPositions(const int n_joint, const int *joints, const double *refs)
 {
     //CD_INFO("\n");
     bool ok = true;

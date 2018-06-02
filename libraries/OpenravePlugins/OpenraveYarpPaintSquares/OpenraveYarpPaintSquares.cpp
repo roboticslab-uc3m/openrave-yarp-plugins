@@ -106,7 +106,7 @@ class OpenraveYarpPaintSquares : public ModuleBase, public yarp::os::RateThread
 public:
     OpenraveYarpPaintSquares(EnvironmentBasePtr penv) : ModuleBase(penv), RateThread(DEFAULT_RATE_MS) {
         __description = "OpenraveYarpPaintSquares plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens port");
+        RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens OpenraveYarpPaintSquares");
     }
 
     virtual ~OpenraveYarpPaintSquares()
@@ -169,7 +169,7 @@ public:
         std::string portName = options.check("name",yarp::os::Value(DEFAULT_PORT_NAME),"port name").asString();
         CD_INFO("port name: %s\n",portName.c_str());
 
-        int squares = options.check("squares",DEFAULT_SQUARES,"number of squares").asInt();
+        int squares = options.check("squares",yarp::os::Value(DEFAULT_SQUARES),"number of squares").asInt();
         CD_INFO("squares: %d\n",squares);
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());

@@ -22,8 +22,8 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     if ( ! configureRobot(config) )
         return false;
 
-    int depthSensorIndex = config.check("depthSensorIndex",NOT_SET,"depthSensorIndex").asInt();
-    int rgbSensorIndex = config.check("rgbSensorIndex",NOT_SET,"rgbSensorIndex").asInt();
+    int depthSensorIndex = config.check("depthSensorIndex",yarp::os::Value(NOT_SET),"depth sensor index").asInt();
+    int rgbSensorIndex = config.check("rgbSensorIndex",yarp::os::Value(NOT_SET),"RGB sensor index").asInt();
 
     std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
 

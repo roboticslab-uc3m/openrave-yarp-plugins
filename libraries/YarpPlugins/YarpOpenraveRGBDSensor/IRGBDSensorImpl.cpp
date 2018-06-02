@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveRGBDSensor.hpp"
 
+#include <cmath>
+
 namespace roboticslab
 {
 
@@ -69,8 +71,7 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
 
     depthSensorBasePtr->GetSensorData(depthSensorDataPtr);
 
-    std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorRanges = depthSensorDataPtr->ranges;
-    std::vector< OpenRAVE::RaveVector< OpenRAVE::dReal > > sensorPositions = depthSensorDataPtr->positions;
+    std::vector<OpenRAVE::Vector> sensorRanges = depthSensorDataPtr->ranges;
 
     if( (depthHeight == 0) || (depthWidth == 0) )
     {
@@ -108,30 +109,17 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
             depthWidth  = sensorRanges.size();
             depthHeight = 1;
         }
-
-        tinv = depthSensorDataPtr->__trans.inverse();
     }
 
-    depthImage.resize(depthWidth,depthHeight);
+    depthImage.resize(depthWidth, depthHeight);
 
     for (int i_y = 0; i_y < depthImage.height(); ++i_y)
-    {  // was y in x before
+    {
         for (int i_x = 0; i_x < depthImage.width(); ++i_x)
         {
-            //double p = sensorRanges[i_y+(i_x*depthImage.height())].z;
-            double p;
-            if( sensorPositions.size() > 0 )
-            {
-                OpenRAVE::Vector v = tinv*(sensorRanges[i_y+(i_x*depthImage.height())] + sensorPositions[0]);
-                p = (float)v.z;
-            }
-            else
-            {
-                OpenRAVE::Vector v = tinv*(sensorRanges[i_y+(i_x*depthImage.height())]);
-                p = (float)v.z;
-            }
-            depthImage(i_x,i_y) = p*1000.0;  // give mm
-            //*(yarp::sig::PixelFloat*)depthImage.getPixelAddress(0, 0) = 0.0;
+            OpenRAVE::Vector ranges = sensorRanges[i_y + (i_x * depthImage.height())];
+            double distance = std::sqrt(ranges.lengthsqr3());
+            depthImage(i_x, i_y) = distance * 1000.0;  // give mm
         }
     }
 

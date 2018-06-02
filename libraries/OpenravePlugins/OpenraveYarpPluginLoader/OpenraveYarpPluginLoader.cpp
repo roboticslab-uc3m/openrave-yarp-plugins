@@ -26,7 +26,7 @@ public:
     OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
     {
         __description = "OpenraveYarpPluginLoader plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens port");
+        RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens OpenraveYarpPluginLoader");
     }
 
     virtual ~OpenraveYarpPluginLoader()

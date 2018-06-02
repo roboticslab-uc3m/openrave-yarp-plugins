@@ -235,7 +235,7 @@ public:
     OpenraveYarpCoulped(EnvironmentBasePtr penv) : ModuleBase(penv) {
         //YARP_REGISTER_PLUGINS(yarpplugins);
         __description = "OpenraveYarpCoulped plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveYarpCoulped::Open, this,_1,_2),"opens port");
+        RegisterCommand("open",boost::bind(&OpenraveYarpCoulped::Open, this,_1,_2),"opens OpenraveYarpCoulped");
     }
 
     virtual ~OpenraveYarpCoulped() {

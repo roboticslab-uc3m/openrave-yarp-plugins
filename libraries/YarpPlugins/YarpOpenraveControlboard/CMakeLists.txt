@@ -10,9 +10,6 @@ yarp_prepare_plugin(YarpOpenraveControlboard
 
 if(NOT SKIP_YarpOpenraveControlboard)
 
-find_package(OpenRAVE REQUIRED)
-find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED COMPONENTS iostreams python thread system)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
                     ${OpenRAVE_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
@@ -46,13 +43,18 @@ target_link_libraries(YarpOpenraveControlboard YARP::YARP_OS
                                                ${Boost_THREAD_LIBRARY}
                                                ${Boost_SYSTEM_LIBRARY})
 
+# Hack, fool CMake to think that YARP already switched to 3.0 while still at devel.
+if(NOT YARP_VERSION_SHORT VERSION_LESS 2.3.73)
+    target_compile_definitions(YarpOpenraveControlboard PUBLIC YARP_VERSION_MAJOR=3)
+endif()
+
 yarp_install(TARGETS YarpOpenraveControlboard
              COMPONENT runtime
-             LIBRARY DESTINATION ${YARP_DYNAMIC_PLUGINS_INSTALL_DIR}
-             ARCHIVE DESTINATION ${YARP_STATIC_PLUGINS_INSTALL_DIR})
+             LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
+             ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR})
 
 yarp_install(FILES YarpOpenraveControlboard.ini
              COMPONENT runtime
-             DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
+             DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
 
 endif()

@@ -15,9 +15,6 @@ yarp_prepare_plugin(YarpOpenraveGrabber
 
 if(NOT SKIP_YarpOpenraveGrabber)
 
-    find_package(OpenRAVE REQUIRED)
-    find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED COMPONENTS iostreams python thread system)
-
     include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
                         ${OpenRAVE_INCLUDE_DIRS}
                         ${Boost_INCLUDE_DIRS}
@@ -45,12 +42,12 @@ if(NOT SKIP_YarpOpenraveGrabber)
     yarp_install(TARGETS YarpOpenraveGrabber
                  EXPORT YARP
                  COMPONENT runtime
-                 LIBRARY DESTINATION ${YARP_DYNAMIC_PLUGINS_INSTALL_DIR}
-                 ARCHIVE DESTINATION ${YARP_STATIC_PLUGINS_INSTALL_DIR})
+                 LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
+                 ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR})
 
     yarp_install(FILES YarpOpenraveGrabber.ini
                  COMPONENT runtime
-                 DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
+                 DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
 
 else()
 
