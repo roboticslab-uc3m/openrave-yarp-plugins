@@ -43,6 +43,11 @@ target_link_libraries(YarpOpenraveControlboard YARP::YARP_OS
                                                ${Boost_THREAD_LIBRARY}
                                                ${Boost_SYSTEM_LIBRARY})
 
+# Hack, fool CMake to think that YARP already switched to 3.0 while still at devel.
+if(NOT YARP_VERSION_SHORT VERSION_LESS 2.3.73)
+    target_compile_definitions(YarpOpenraveControlboard PUBLIC YARP_VERSION_MAJOR=3)
+endif()
+
 yarp_install(TARGETS YarpOpenraveControlboard
              COMPONENT runtime
              LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
