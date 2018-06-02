@@ -25,8 +25,8 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
     if ( ! configureRobot(config) )
         return false;
 
-    int manipulatorIndex = config.check("manipulatorIndex",NOT_SET,"manipulator index").asInt();
-    double genRefSpeed = config.check("genRefSpeed",DEFAULT_GEN_REF_SPEED,"general reference speed [m/s] or [deg/s]").asDouble();
+    int manipulatorIndex = config.check("manipulatorIndex",yarp::os::Value(NOT_SET),"manipulator index").asInt();
+    double genRefSpeed = config.check("genRefSpeed",yarp::os::Value(DEFAULT_GEN_REF_SPEED),"general reference speed [m/s] or [deg/s]").asDouble();
 
     if (manipulatorIndex == NOT_SET)
     {

@@ -193,7 +193,7 @@ bool YarpOpenraveBase::configureRobot(yarp::os::Searchable& config)
         return false;
     }
 
-    int robotIndex = config.check("robotIndex",NOT_SET,"robot index").asInt();
+    int robotIndex = config.check("robotIndex",yarp::os::Value(NOT_SET),"robot index").asInt();
 
     if (robotIndex == NOT_SET)
     {
