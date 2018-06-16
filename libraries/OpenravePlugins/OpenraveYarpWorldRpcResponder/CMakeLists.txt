@@ -12,7 +12,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 link_directories(${OpenRAVE_LIBRARY_DIRS}
                  ${Boost_LIBRARY_DIRS})
 
-add_library(OpenraveYarpWorldRpcResponder OpenraveYarpWorldRpcResponder.cpp)
+add_library(OpenraveYarpWorldRpcResponder MODULE OpenraveYarpWorldRpcResponder.cpp)
 
 set_target_properties(OpenraveYarpWorldRpcResponder PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
                                                                LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

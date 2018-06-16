@@ -12,7 +12,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 link_directories(${OpenRAVE_LIBRARY_DIRS}
                  ${Boost_LIBRARY_DIRS})
 
-add_library(OpenraveYarpPluginLoader OpenraveYarpPluginLoader.cpp)
+add_library(OpenraveYarpPluginLoader MODULE OpenraveYarpPluginLoader.cpp)
 
 set_target_properties(OpenraveYarpPluginLoader PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

@@ -12,9 +12,6 @@ endif()
 
 project(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS)
 
-# Force building shared libraries and YARP DL modules.
-set(BUILD_SHARED_LIBS TRUE CACHE INTERNAL "hide this!")
-
 # C/C++ compile flags.
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
     # Starting from CMake 2.8.12, use add_compile_options().
@@ -63,6 +60,9 @@ find_package(YARP 3.0 QUIET COMPONENTS OS dev sig)
 if(NOT YARP_FOUND)
     find_package(YARP 2.3.70 REQUIRED)
 endif()
+
+# Always build YARP devices as MODULE libraries.
+set(YARP_FORCE_DYNAMIC_PLUGINS TRUE CACHE INTERNAL "Force dynamic plugins")
 
 # Configure installation paths for YARP resources.
 yarp_configure_external_installation(roboticslab-openrave-yarp-plugins WITH_PLUGINS)
