@@ -4,7 +4,7 @@
 #include <openrave/plugin.h>
 #include <boost/bind.hpp>
 
-#include "ColorDebug.h"
+#include <ColorDebug.h>
 
 /**
  * @ingroup OpenravePlugins

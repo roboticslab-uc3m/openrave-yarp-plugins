@@ -7,7 +7,6 @@ if(ENABLE_OpenraveYarpWorldRpcResponder)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     ${OpenRAVE_INCLUDE_DIRS}
-                    ${YARP_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS})
 
 link_directories(${OpenRAVE_LIBRARY_DIRS}
@@ -18,7 +17,8 @@ add_library(OpenraveYarpWorldRpcResponder OpenraveYarpWorldRpcResponder.cpp)
 set_target_properties(OpenraveYarpWorldRpcResponder PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
                                                                LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-target_link_libraries(OpenraveYarpWorldRpcResponder ${YARP_LIBRARIES}
+target_link_libraries(OpenraveYarpWorldRpcResponder YARP::YARP_OS
+                                                    YARP::YARP_init
                                                     ${OpenRAVE_LIBRARIES})
 
 include(InstallOpenravePlugin)

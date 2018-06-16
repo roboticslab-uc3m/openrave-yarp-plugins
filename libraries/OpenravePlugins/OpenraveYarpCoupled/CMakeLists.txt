@@ -7,7 +7,6 @@ if(ENABLE_OpenraveYarpCoupled)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     ${OpenRAVE_INCLUDE_DIRS}
-                    ${YARP_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS})
 
 link_directories(${OpenRAVE_LIBRARY_DIRS}
@@ -18,7 +17,10 @@ add_library(OpenraveYarpCoupled OpenraveYarpCoupled.cpp)
 set_target_properties(OpenraveYarpCoupled PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
                                                      LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-target_link_libraries(OpenraveYarpCoupled ${YARP_LIBRARIES}
+target_link_libraries(OpenraveYarpCoupled YARP::YARP_OS
+                                          YARP::YARP_init
+                                          YARP::YARP_dev
+                                          YARP::YARP_sig
                                           ${OpenRAVE_LIBRARIES})
 
 include(InstallOpenravePlugin)

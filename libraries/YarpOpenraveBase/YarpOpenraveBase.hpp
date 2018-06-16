@@ -4,7 +4,6 @@
 #define __YARP_OPENRAVE_BASE_HPP__
 
 #include <yarp/os/all.h>
-#include <yarp/dev/all.h>
 
 #include <openrave-core.h>
 

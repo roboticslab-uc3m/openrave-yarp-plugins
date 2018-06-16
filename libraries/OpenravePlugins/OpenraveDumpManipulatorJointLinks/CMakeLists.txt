@@ -17,7 +17,8 @@ add_library(OpenraveDumpManipulatorJointLinks OpenraveDumpManipulatorJointLinks.
 set_target_properties(OpenraveDumpManipulatorJointLinks PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
                                                                    LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-target_link_libraries(OpenraveDumpManipulatorJointLinks ${OpenRAVE_LIBRARIES})
+target_link_libraries(OpenraveDumpManipulatorJointLinks ${OpenRAVE_LIBRARIES}
+                                                        ROBOTICSLAB::ColorDebug)
 
 include(InstallOpenravePlugin)
 

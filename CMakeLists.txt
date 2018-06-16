@@ -58,15 +58,10 @@ find_package(COLOR_DEBUG REQUIRED)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED
              COMPONENTS iostreams python thread system)
-
-# Find YARP (main dependency).
-find_package(YARP REQUIRED)
-
-# Load YARP modules.
-if(YARP_VERSION_SHORT VERSION_LESS 2.3.70)
-    list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
-    include(YarpPlugin)
-    include(YarpInstallationHelpers)
+find_package(YARP 3.0 QUIET COMPONENTS OS dev sig)
+# https://github.com/roboticslab-uc3m/questions-and-answers/issues/65
+if(NOT YARP_FOUND)
+    find_package(YARP 2.3.70 REQUIRED)
 endif()
 
 # Configure installation paths for YARP resources.

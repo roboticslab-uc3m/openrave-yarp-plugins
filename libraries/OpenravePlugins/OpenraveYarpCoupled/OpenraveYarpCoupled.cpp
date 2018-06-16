@@ -31,6 +31,7 @@
 
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
+#include <yarp/sig/all.h>
 
 using namespace std;
 using namespace OpenRAVE;

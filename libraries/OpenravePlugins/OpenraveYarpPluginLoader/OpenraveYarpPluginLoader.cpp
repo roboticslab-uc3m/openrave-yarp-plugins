@@ -7,7 +7,7 @@
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
 
-#include "ColorDebug.h"
+#include <ColorDebug.h>
 
 /**
  * @ingroup OpenravePlugins
