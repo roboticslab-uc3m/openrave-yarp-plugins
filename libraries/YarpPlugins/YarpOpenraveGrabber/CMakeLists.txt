@@ -23,7 +23,7 @@ yarp_add_plugin(YarpOpenraveGrabber YarpOpenraveGrabber.hpp
                                     IFrameGrabberImageImpl.cpp
                                     $<TARGET_OBJECTS:YarpOpenraveBase>)
 
-set_target_properties(YarpOpenraveGrabber PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+set_target_properties(YarpOpenraveGrabber PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                      LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(YarpOpenraveGrabber YARP::YARP_OS

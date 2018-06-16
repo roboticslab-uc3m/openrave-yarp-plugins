@@ -14,7 +14,7 @@ link_directories(${OpenRAVE_LIBRARY_DIRS}
 
 add_library(OpenraveYarpForceEstimator MODULE OpenraveYarpForceEstimator.cpp)
 
-set_target_properties(OpenraveYarpForceEstimator PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+set_target_properties(OpenraveYarpForceEstimator PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                             LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(OpenraveYarpForceEstimator YARP::YARP_OS

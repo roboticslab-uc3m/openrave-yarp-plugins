@@ -14,7 +14,7 @@ link_directories(${OpenRAVE_LIBRARY_DIRS}
 
 add_library(OpenraveYarpCoupled MODULE OpenraveYarpCoupled.cpp)
 
-set_target_properties(OpenraveYarpCoupled PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+set_target_properties(OpenraveYarpCoupled PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                      LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(OpenraveYarpCoupled YARP::YARP_OS

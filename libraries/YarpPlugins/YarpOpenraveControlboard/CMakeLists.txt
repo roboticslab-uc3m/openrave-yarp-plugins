@@ -32,7 +32,7 @@ yarp_add_plugin(YarpOpenraveControlboard YarpOpenraveControlboard.hpp
                                          IVelocityControl2Impl.cpp
                                          $<TARGET_OBJECTS:YarpOpenraveBase>)
 
-set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(YarpOpenraveControlboard YARP::YARP_OS
