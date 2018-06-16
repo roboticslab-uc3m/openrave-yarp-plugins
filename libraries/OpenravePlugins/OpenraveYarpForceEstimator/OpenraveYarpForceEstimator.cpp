@@ -31,7 +31,7 @@
 
 #include <yarp/os/all.h>
 
-#include "ColorDebug.hpp"
+#include <ColorDebug.h>
 
 using namespace std;
 using namespace OpenRAVE;

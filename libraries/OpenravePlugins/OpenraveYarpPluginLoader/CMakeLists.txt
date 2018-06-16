@@ -7,19 +7,21 @@ if(ENABLE_OpenraveYarpPluginLoader)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     ${OpenRAVE_INCLUDE_DIRS}
-                    ${YARP_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS})
 
 link_directories(${OpenRAVE_LIBRARY_DIRS}
                  ${Boost_LIBRARY_DIRS})
 
-add_library(OpenraveYarpPluginLoader OpenraveYarpPluginLoader.cpp)
+add_library(OpenraveYarpPluginLoader MODULE OpenraveYarpPluginLoader.cpp)
 
-set_target_properties(OpenraveYarpPluginLoader PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+set_target_properties(OpenraveYarpPluginLoader PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-target_link_libraries(OpenraveYarpPluginLoader ${YARP_LIBRARIES}
-                                               ${OpenRAVE_LIBRARIES})
+target_link_libraries(OpenraveYarpPluginLoader YARP::YARP_OS
+                                               YARP::YARP_init
+                                               YARP::YARP_dev
+                                               ${OpenRAVE_LIBRARIES}
+                                               ROBOTICSLAB::ColorDebug)
 
 include(InstallOpenravePlugin)
 

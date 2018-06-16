@@ -32,21 +32,15 @@ yarp_add_plugin(YarpOpenraveControlboard YarpOpenraveControlboard.hpp
                                          IVelocityControl2Impl.cpp
                                          $<TARGET_OBJECTS:YarpOpenraveBase>)
 
-add_dependencies(YarpOpenraveControlboard COLOR_DEBUG)
-
-set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(YarpOpenraveControlboard YARP::YARP_OS
                                                YARP::YARP_dev
                                                ${OpenRAVE_CORE_LIBRARIES}
                                                ${Boost_THREAD_LIBRARY}
-                                               ${Boost_SYSTEM_LIBRARY})
-
-# Hack, fool CMake to think that YARP already switched to 3.0 while still at devel.
-if(NOT YARP_VERSION_SHORT VERSION_LESS 2.3.73)
-    target_compile_definitions(YarpOpenraveControlboard PUBLIC YARP_VERSION_MAJOR=3)
-endif()
+                                               ${Boost_SYSTEM_LIBRARY}
+                                               ROBOTICSLAB::ColorDebug)
 
 yarp_install(TARGETS YarpOpenraveControlboard
              COMPONENT runtime
