@@ -2,13 +2,12 @@
 
 First install the dependencies:
 - [Install CMake](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-cmake.md)
+- [Install YCM](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-ycm.md)
 - [Install YARP](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-yarp.md)
 - [Install OpenRAVE](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-openrave.md)
 - [Install color-debug](https://github.com/roboticslab-uc3m/color-debug)
 
-Additionally, this project depends on YCM to download and use additional CMake modules. Although this process is intended to run automatically during the CMake configuration phase, you may still want to install YCM by yourself. In that respect, refer to [Install YCM](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-ycm.md).
-
-### Install openrave-yarp-plugins on Ubuntu (working on all tested versions)
+# Install openrave-yarp-plugins on Ubuntu (working on all tested versions)
 
 Our software integrates the previous dependencies. Note that you will be prompted for your password upon using `sudo` a couple of times:
 
