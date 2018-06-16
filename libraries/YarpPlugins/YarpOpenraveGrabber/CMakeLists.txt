@@ -28,8 +28,6 @@ if(NOT SKIP_YarpOpenraveGrabber)
                                         IFrameGrabberImageImpl.cpp
                                         $<TARGET_OBJECTS:YarpOpenraveBase>)
 
-    add_dependencies(YarpOpenraveGrabber COLOR_DEBUG)
-
     set_target_properties(YarpOpenraveGrabber PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
                                                          LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
@@ -37,7 +35,8 @@ if(NOT SKIP_YarpOpenraveGrabber)
                                               YARP::YARP_dev
                                               ${OpenRAVE_CORE_LIBRARIES}
                                               ${Boost_THREAD_LIBRARY}
-                                              ${Boost_SYSTEM_LIBRARY})
+                                              ${Boost_SYSTEM_LIBRARY}
+                                              ROBOTICSLAB::ColorDebug)
 
     yarp_install(TARGETS YarpOpenraveGrabber
                  EXPORT YARP

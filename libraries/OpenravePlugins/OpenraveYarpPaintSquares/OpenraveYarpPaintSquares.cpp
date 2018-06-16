@@ -32,7 +32,7 @@
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
 
-#include "ColorDebug.hpp"
+#include "ColorDebug.h"
 
 #define DEFAULT_RATE_MS 0.1
 #define DEFAULT_SQUARES 64

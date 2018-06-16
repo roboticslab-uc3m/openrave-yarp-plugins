@@ -28,8 +28,6 @@ if(NOT SKIP_YarpOpenraveRGBDSensor)
                                            IRGBDSensorImpl.cpp
                                            $<TARGET_OBJECTS:YarpOpenraveBase>)
 
-    add_dependencies(YarpOpenraveRGBDSensor COLOR_DEBUG)
-
     set_target_properties(YarpOpenraveRGBDSensor PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
                                                             LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
@@ -37,7 +35,8 @@ if(NOT SKIP_YarpOpenraveRGBDSensor)
                                                  YARP::YARP_dev
                                                  ${OpenRAVE_CORE_LIBRARIES}
                                                  ${Boost_THREAD_LIBRARY}
-                                                 ${Boost_SYSTEM_LIBRARY})
+                                                 ${Boost_SYSTEM_LIBRARY}
+                                                 ROBOTICSLAB::ColorDebug)
 
     yarp_install(TARGETS YarpOpenraveRGBDSensor
                  EXPORT YARP

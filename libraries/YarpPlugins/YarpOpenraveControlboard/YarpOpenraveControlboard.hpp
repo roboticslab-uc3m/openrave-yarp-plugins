@@ -18,7 +18,7 @@
 
 #include "YarpOpenraveBase.hpp"
 
-#include "ColorDebug.hpp"
+#include "ColorDebug.h"
 
 namespace roboticslab
 {
