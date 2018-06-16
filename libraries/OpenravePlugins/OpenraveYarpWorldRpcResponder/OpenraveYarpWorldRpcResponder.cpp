@@ -6,11 +6,13 @@
 #include <boost/bind.hpp>
 
 #include <yarp/os/all.h>
-#include <yarp/dev/all.h>
 
 #include <yarp/os/Port.h>
 #include <yarp/os/BufferedPort.h>
 #include <yarp/os/Vocab.h>
+
+#define VOCAB_OK VOCAB2('o','k')
+#define VOCAB_FAILED VOCAB4('f','a','i','l')
 
 using namespace yarp::os;
 using namespace OpenRAVE;

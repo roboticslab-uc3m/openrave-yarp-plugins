@@ -32,16 +32,15 @@ yarp_add_plugin(YarpOpenraveControlboard YarpOpenraveControlboard.hpp
                                          IVelocityControl2Impl.cpp
                                          $<TARGET_OBJECTS:YarpOpenraveBase>)
 
-add_dependencies(YarpOpenraveControlboard COLOR_DEBUG)
-
-set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(YarpOpenraveControlboard YARP::YARP_OS
                                                YARP::YARP_dev
                                                ${OpenRAVE_CORE_LIBRARIES}
                                                ${Boost_THREAD_LIBRARY}
-                                               ${Boost_SYSTEM_LIBRARY})
+                                               ${Boost_SYSTEM_LIBRARY}
+                                               ROBOTICSLAB::ColorDebug)
 
 yarp_install(TARGETS YarpOpenraveControlboard
              COMPONENT runtime

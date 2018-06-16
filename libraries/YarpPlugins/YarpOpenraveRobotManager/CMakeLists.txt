@@ -24,16 +24,15 @@ yarp_add_plugin(YarpOpenraveRobotManager YarpOpenraveRobotManager.hpp
                                          IRobotManagerImpl.cpp
                                          $<TARGET_OBJECTS:YarpOpenraveBase>)
 
-add_dependencies(YarpOpenraveRobotManager COLOR_DEBUG)
-
-set_target_properties(YarpOpenraveRobotManager PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}"
+set_target_properties(YarpOpenraveRobotManager PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(YarpOpenraveRobotManager YARP::YARP_OS
                                                YARP::YARP_dev
                                                ${OpenRAVE_CORE_LIBRARIES}
                                                ${Boost_THREAD_LIBRARY}
-                                               ${Boost_SYSTEM_LIBRARY})
+                                               ${Boost_SYSTEM_LIBRARY}
+                                               ROBOTICSLAB::ColorDebug)
 
 yarp_install(TARGETS YarpOpenraveRobotManager
              EXPORT YARP
