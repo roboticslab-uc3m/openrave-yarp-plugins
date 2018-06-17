@@ -77,9 +77,6 @@ if(ENABLE_coverage)
     endif()
 endif()
 
-# Store list of exported targets in global scope.
-set_property(GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_TARGETS)
-
 # Create targets if specific requirements are satisfied.
 include(CMakeDependentOption)
 
