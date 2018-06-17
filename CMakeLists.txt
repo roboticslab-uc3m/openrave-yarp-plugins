@@ -2,7 +2,7 @@
 # Authors: Juan G. Victores and Raul Fernandez-Fernandez
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 project(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS LANGUAGES CXX)
 
@@ -42,7 +42,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake
                               ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 # Find project's hard dependencies.
-find_package(YCM 0.2 REQUIRED)
+find_package(YCM 0.8 REQUIRED)
 find_package(COLOR_DEBUG REQUIRED)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED
@@ -73,7 +73,7 @@ option(ENABLE_coverage "Choose if you want to enable coverage collection" OFF)
 if(ENABLE_coverage)
     # List supported compilers.
     if(CMAKE_COMPILER_IS_GNUCXX)
-        add_compile_options(-fprofile-arcs -ftest-coverage)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
     endif()
 endif()
 
