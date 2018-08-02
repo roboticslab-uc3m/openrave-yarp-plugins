@@ -30,4 +30,12 @@ target_include_directories(YarpOpenraveBase PUBLIC ${_yarp_os_include_dirs}
                                                    ${CMAKE_CURRENT_SOURCE_DIR}
                                             PRIVATE ${_color_debug_include_dirs})
 
+get_target_property(_yorb_include_dirs YarpOpenraveBase INTERFACE_INCLUDE_DIRECTORIES)
+
+# Alternative interface target for ease of use by downstreams, see:
+# https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/62#issuecomment-361017934
+add_library(YarpOpenraveBaseInterface INTERFACE)
+target_include_directories(YarpOpenraveBaseInterface INTERFACE ${_yorb_include_dirs})
+set_target_properties(YarpOpenraveBaseInterface PROPERTIES INTERFACE_SOURCES $<TARGET_OBJECTS:YarpOpenraveBase>)
+
 endif()

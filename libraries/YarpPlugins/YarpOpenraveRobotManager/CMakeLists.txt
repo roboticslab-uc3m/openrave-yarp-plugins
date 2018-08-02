@@ -11,16 +11,14 @@ yarp_prepare_plugin(YarpOpenraveRobotManager
 if(NOT SKIP_YarpOpenraveRobotManager)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
-                    ${OpenRAVE_INCLUDE_DIRS}
-                    $<TARGET_PROPERTY:YarpOpenraveBase,INTERFACE_INCLUDE_DIRECTORIES>)
+                    ${OpenRAVE_INCLUDE_DIRS})
 
 link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 yarp_add_plugin(YarpOpenraveRobotManager YarpOpenraveRobotManager.hpp
                                          IRobotManager.hpp
                                          DeviceDriverImpl.cpp
-                                         IRobotManagerImpl.cpp
-                                         $<TARGET_OBJECTS:YarpOpenraveBase>)
+                                         IRobotManagerImpl.cpp)
 
 set_target_properties(YarpOpenraveRobotManager PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
@@ -28,7 +26,8 @@ set_target_properties(YarpOpenraveRobotManager PROPERTIES COMPILE_OPTIONS "${Ope
 target_link_libraries(YarpOpenraveRobotManager YARP::YARP_OS
                                                YARP::YARP_dev
                                                ${OpenRAVE_LIBRARIES}
-                                               ROBOTICSLAB::ColorDebug)
+                                               ROBOTICSLAB::ColorDebug
+                                               YarpOpenraveBaseInterface)
 
 yarp_install(TARGETS YarpOpenraveRobotManager
              EXPORT YARP
