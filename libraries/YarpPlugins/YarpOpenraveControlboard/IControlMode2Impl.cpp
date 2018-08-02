@@ -6,48 +6,6 @@
 
 // ------------------- IControlMode Related ------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setPositionMode(int j) {
-    CD_INFO("(%d)\n",j);
-    return setControlMode(j, VOCAB_CM_POSITION);
-}
-
-// -----------------------------------------------------------------------------
-
-bool roboticslab::YarpOpenraveControlboard::setVelocityMode(int j) {
-    CD_INFO("(%d)\n",j);
-    return setControlMode(j, VOCAB_CM_VELOCITY);
-}
-
-// -----------------------------------------------------------------------------
-
-bool roboticslab::YarpOpenraveControlboard::setTorqueMode(int j)  {
-    CD_INFO("(%d)\n",j);
-    return setControlMode(j, VOCAB_CM_TORQUE);
-}
-
-// -----------------------------------------------------------------------------
-
-bool roboticslab::YarpOpenraveControlboard::setImpedancePositionMode(int j) {
-    CD_INFO("(%d)\n",j);
-    return setControlMode(j, VOCAB_CM_IMPEDANCE_POS);
-}
-
-// -----------------------------------------------------------------------------
-
-bool roboticslab::YarpOpenraveControlboard::setImpedanceVelocityMode(int j) {
-    CD_INFO("(%d)\n",j);
-    return setControlMode(j, VOCAB_CM_IMPEDANCE_VEL);
-}
-
-// -----------------------------------------------------------------------------
-
-bool roboticslab::YarpOpenraveControlboard::setOpenLoopMode(int j) {
-    CD_ERROR("(%d)\n",j);  //-- Removed in YARP 2.3.70
-    return false;
-}
-
-// -----------------------------------------------------------------------------
-
 bool roboticslab::YarpOpenraveControlboard::getControlMode(int j, int *mode) {
     //CD_DEBUG("Doing nothing.\n");  //-- Way too verbose.
 
