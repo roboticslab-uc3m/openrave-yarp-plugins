@@ -5,8 +5,7 @@ option(ENABLE_OpenraveYarpPaintSquares "Enable/disable OpenraveYarpPaintSquares"
 
 if(ENABLE_OpenraveYarpPaintSquares)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-                    ${OpenRAVE_INCLUDE_DIRS})
+include_directories(${OpenRAVE_INCLUDE_DIRS})
 
 link_directories(${OpenRAVE_LIBRARY_DIRS})
 

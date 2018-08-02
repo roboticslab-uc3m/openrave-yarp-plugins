@@ -26,7 +26,7 @@ set_target_properties(YarpOpenraveGrabber PROPERTIES COMPILE_OPTIONS "${OpenRAVE
 
 target_link_libraries(YarpOpenraveGrabber YARP::YARP_OS
                                           YARP::YARP_dev
-                                          ${OpenRAVE_CORE_LIBRARIES}
+                                          ${OpenRAVE_LIBRARIES}
                                           Boost::boost
                                           ROBOTICSLAB::ColorDebug)
 

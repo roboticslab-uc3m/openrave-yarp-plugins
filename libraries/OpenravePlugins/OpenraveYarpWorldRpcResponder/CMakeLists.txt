@@ -5,8 +5,7 @@ option(ENABLE_OpenraveYarpWorldRpcResponder "Enable/disable OpenraveYarpWorldRpc
 
 if(ENABLE_OpenraveYarpWorldRpcResponder)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-                    ${OpenRAVE_INCLUDE_DIRS})
+include_directories(${OpenRAVE_INCLUDE_DIRS})
 
 link_directories(${OpenRAVE_LIBRARY_DIRS})
 

@@ -35,7 +35,7 @@ set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_OPTIONS "${Ope
 
 target_link_libraries(YarpOpenraveControlboard YARP::YARP_OS
                                                YARP::YARP_dev
-                                               ${OpenRAVE_CORE_LIBRARIES}
+                                               ${OpenRAVE_LIBRARIES}
                                                Boost::boost
                                                ROBOTICSLAB::ColorDebug)
 

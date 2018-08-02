@@ -27,7 +27,7 @@ set_target_properties(YarpOpenraveRobotManager PROPERTIES COMPILE_OPTIONS "${Ope
 
 target_link_libraries(YarpOpenraveRobotManager YARP::YARP_OS
                                                YARP::YARP_dev
-                                               ${OpenRAVE_CORE_LIBRARIES}
+                                               ${OpenRAVE_LIBRARIES}
                                                ROBOTICSLAB::ColorDebug)
 
 yarp_install(TARGETS YarpOpenraveRobotManager

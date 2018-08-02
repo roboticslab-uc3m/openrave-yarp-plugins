@@ -5,8 +5,7 @@ option(ENABLE_OpenraveDumpManipulatorJointLinks "Enable/disable OpenraveDumpMani
 
 if(ENABLE_OpenraveDumpManipulatorJointLinks)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-                    ${OpenRAVE_INCLUDE_DIRS})
+include_directories(${OpenRAVE_INCLUDE_DIRS})
 
 link_directories(${OpenRAVE_LIBRARY_DIRS})
 

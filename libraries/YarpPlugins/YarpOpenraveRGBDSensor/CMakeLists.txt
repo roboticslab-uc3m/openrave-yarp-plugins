@@ -26,7 +26,7 @@ set_target_properties(YarpOpenraveRGBDSensor PROPERTIES COMPILE_OPTIONS "${OpenR
 
 target_link_libraries(YarpOpenraveRGBDSensor YARP::YARP_OS
                                              YARP::YARP_dev
-                                             ${OpenRAVE_CORE_LIBRARIES}
+                                             ${OpenRAVE_LIBRARIES}
                                              Boost::boost
                                              ROBOTICSLAB::ColorDebug)
 
