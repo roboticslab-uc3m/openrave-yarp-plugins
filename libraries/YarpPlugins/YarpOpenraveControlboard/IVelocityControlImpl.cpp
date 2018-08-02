@@ -2,6 +2,12 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include <ColorDebug.h>
+
 // ------------------ IVelocity Related ----------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
@@ -148,4 +154,3 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(const double *sp) {
 }
 
 // ----------------------------------------------------------------------------
-

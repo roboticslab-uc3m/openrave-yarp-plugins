@@ -2,6 +2,13 @@
 
 #include "YarpOpenraveRGBDSensor.hpp"
 
+#include <string>
+#include <vector>
+
+#include <yarp/os/Value.h>
+
+#include <ColorDebug.h>
+
 namespace roboticslab
 {
 
@@ -138,4 +145,3 @@ bool YarpOpenraveRGBDSensor::close()
 // -----------------------------------------------------------------------------
 
 }  // namespace roboticslab
-

@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <ColorDebug.h>
+
 // ------------------ IVelocity2 Related ----------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::velocityMove(const int n_joint, const int *joints, const double *spds)
@@ -70,4 +72,3 @@ bool roboticslab::YarpOpenraveControlboard::getVelPids(yarp::dev::Pid *pids)
 }
 
 // -----------------------------------------------------------------------------
-

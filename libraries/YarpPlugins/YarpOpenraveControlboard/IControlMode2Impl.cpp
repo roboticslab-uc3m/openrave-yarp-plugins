@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <ColorDebug.h>
+
 // ------------------- IControlMode Related ------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setPositionMode(int j) {

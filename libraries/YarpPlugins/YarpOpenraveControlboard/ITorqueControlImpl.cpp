@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <ColorDebug.h>
+
 // ------------------- IForceControl Related ------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getRefTorques(double *t){

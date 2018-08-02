@@ -2,6 +2,16 @@
 
 #include "YarpOpenraveBase.hpp"
 
+#include <sstream>
+#include <vector>
+
+#include <yarp/os/Bottle.h>
+#include <yarp/os/Time.h>
+#include <yarp/os/Value.h>
+
+#include <boost/assert.hpp>
+#include <boost/bind/bind.hpp>
+
 #include <ColorDebug.h>
 
 namespace roboticslab
@@ -225,4 +235,3 @@ bool YarpOpenraveBase::clean()
 // -----------------------------------------------------------------------------
 
 }  // namespace roboticslab
-

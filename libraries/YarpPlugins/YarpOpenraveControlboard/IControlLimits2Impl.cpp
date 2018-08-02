@@ -2,6 +2,11 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <utility> // std::pair
+#include <vector>
+
+#include <ColorDebug.h>
+
 // ------------------- IControlLimits Related ------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setLimits(int axis, double min, double max) {
