@@ -2,6 +2,12 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include <ColorDebug.h>
+
 // ------------------- IPositionControl Related --------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getAxes(int *ax) {
@@ -277,4 +283,3 @@ bool roboticslab::YarpOpenraveControlboard::stop() {
 }
 
 // -----------------------------------------------------------------------------
-

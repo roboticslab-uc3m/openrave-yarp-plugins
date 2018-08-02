@@ -3,21 +3,14 @@
 #ifndef __YARP_OPENRAVE_RGBDSENSOR_HPP__
 #define __YARP_OPENRAVE_RGBDSENSOR_HPP__
 
-#include <yarp/os/all.h>
-#include <yarp/dev/all.h>
+#include <yarp/dev/DeviceDriver.h>
+#include <yarp/dev/IRGBDSensor.h>
 
-#include <openrave-core.h>
+#include <openrave/openrave.h>
 
-#include <boost/make_shared.hpp>
-
-#include <iostream>
-#include <stdio.h>
-#include <sstream>
-#include <vector>
+#include <boost/smart_ptr/shared_ptr.hpp>
 
 #include "YarpOpenraveBase.hpp"
-
-#include "ColorDebug.h"
 
 namespace roboticslab
 {

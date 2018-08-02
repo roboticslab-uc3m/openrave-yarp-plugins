@@ -3,22 +3,14 @@
 #ifndef __YARP_OPENRAVE_CONTROLBOARD_HPP__
 #define __YARP_OPENRAVE_CONTROLBOARD_HPP__
 
-#include <yarp/os/all.h>
-#include <yarp/dev/all.h>
-#include <yarp/dev/IControlLimits2.h>
-
-#include <openrave-core.h>
-
-#include <boost/make_shared.hpp>
-
-#include <iostream>
-#include <stdio.h>
-#include <sstream>
 #include <vector>
 
-#include "YarpOpenraveBase.hpp"
+#include <yarp/dev/ControlBoardInterfaces.h>
+#include <yarp/dev/IControlLimits2.h>
 
-#include "ColorDebug.h"
+#include <openrave/openrave.h>
+
+#include "YarpOpenraveBase.hpp"
 
 namespace roboticslab
 {

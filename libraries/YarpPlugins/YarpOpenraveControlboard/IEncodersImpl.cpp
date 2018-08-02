@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <ColorDebug.h>
+
 // ------------------ IEncoders Related -----------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::resetEncoder(int j) {
@@ -90,4 +92,3 @@ bool roboticslab::YarpOpenraveControlboard::getEncoderAccelerations(double *accs
 }
 
 // -----------------------------------------------------------------------------
-

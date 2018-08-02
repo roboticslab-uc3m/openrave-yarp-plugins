@@ -5,12 +5,9 @@ option(ENABLE_OpenraveYarpPluginLoader "Enable/disable OpenraveYarpPluginLoader"
 
 if(ENABLE_OpenraveYarpPluginLoader)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-                    ${OpenRAVE_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS})
+include_directories(${OpenRAVE_INCLUDE_DIRS})
 
-link_directories(${OpenRAVE_LIBRARY_DIRS}
-                 ${Boost_LIBRARY_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 add_library(OpenraveYarpPluginLoader MODULE OpenraveYarpPluginLoader.cpp)
 
@@ -21,6 +18,7 @@ target_link_libraries(OpenraveYarpPluginLoader YARP::YARP_OS
                                                YARP::YARP_init
                                                YARP::YARP_dev
                                                ${OpenRAVE_LIBRARIES}
+                                               Boost::boost
                                                ROBOTICSLAB::ColorDebug)
 
 include(InstallOpenravePlugin)

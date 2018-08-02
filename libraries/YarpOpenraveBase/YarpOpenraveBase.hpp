@@ -3,16 +3,13 @@
 #ifndef __YARP_OPENRAVE_BASE_HPP__
 #define __YARP_OPENRAVE_BASE_HPP__
 
-#include <yarp/os/all.h>
+#include <string>
+
+#include <yarp/os/Searchable.h>
 
 #include <openrave-core.h>
 
-#include <boost/make_shared.hpp>
-
-#include <iostream>
-#include <stdio.h>
-#include <sstream>
-#include <vector>
+#include <boost/thread/thread.hpp>
 
 namespace roboticslab
 {

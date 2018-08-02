@@ -2,6 +2,10 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <vector>
+
+#include <ColorDebug.h>
+
 // ------------------- IPositionDirect Related --------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setPosition(int j, double ref)

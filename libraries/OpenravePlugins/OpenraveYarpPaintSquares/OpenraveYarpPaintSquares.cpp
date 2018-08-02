@@ -25,11 +25,30 @@
    \endverbatim
    <b>Full Example Code:</b>
  */
+
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
-#include <boost/bind.hpp>
 
-#include <yarp/os/all.h>
+#include <boost/bind/bind.hpp>
+
+#include <yarp/os/Bottle.h>
+#include <yarp/os/ConnectionWriter.h>
+#include <yarp/os/Network.h>
+#include <yarp/os/PortReader.h>
+#include <yarp/os/Property.h>
+#include <yarp/os/RateThread.h>
+#include <yarp/os/RpcServer.h>
+#include <yarp/os/Semaphore.h>
+#include <yarp/os/Value.h>
 
 #include <ColorDebug.h>
 
@@ -37,14 +56,10 @@
 #define DEFAULT_SQUARES 64
 #define DEFAULT_PORT_NAME "/openraveYarpPaintSquares/rpc:s"
 
-
-using namespace std;
-using namespace OpenRAVE;
-
 class DataProcessor : public yarp::os::PortReader {
 
 public:
-    void setPsqPainted(vector<int>* psqPainted) {
+    void setPsqPainted(std::vector<int>* psqPainted) {
         this->psqPainted = psqPainted;
     }
     void setPsqPaintedSemaphore(yarp::os::Semaphore* psqPaintedSemaphore) {
@@ -53,7 +68,7 @@ public:
 
 private:
 
-    vector<int>* psqPainted;
+    std::vector<int>* psqPainted;
     yarp::os::Semaphore* psqPaintedSemaphore;
 
     virtual bool read(yarp::os::ConnectionReader& in)
@@ -100,12 +115,12 @@ private:
 
 };
 
-class OpenraveYarpPaintSquares : public ModuleBase, public yarp::os::RateThread
+class OpenraveYarpPaintSquares : public OpenRAVE::ModuleBase, public yarp::os::RateThread
 {
 public:
-    OpenraveYarpPaintSquares(EnvironmentBasePtr penv) : ModuleBase(penv), RateThread(DEFAULT_RATE_MS) {
+    OpenraveYarpPaintSquares(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::RateThread(DEFAULT_RATE_MS) {
         __description = "OpenraveYarpPaintSquares plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens OpenraveYarpPaintSquares");
+        OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens OpenraveYarpPaintSquares");
     }
 
     virtual ~OpenraveYarpPaintSquares()
@@ -131,7 +146,7 @@ public:
         return 0;
     }*/
 
-    bool Open(ostream& sout, istream& sinput)
+    bool Open(std::ostream& sout, std::istream& sinput)
     {
         CD_INFO("Checking for yarp network...\n");
         if ( ! yarp.checkNetwork() )
@@ -153,7 +168,7 @@ public:
             if(str.length() == 0)  //-- Omits empty string that is usually at end via openrave.
                 continue;
             char *cstr = new char[str.length() + 1];  // pushed to member argv to be deleted in ~.
-            strcpy(cstr, str.c_str());
+            std::strcpy(cstr, str.c_str());
             argv.push_back(cstr);
         }
 
@@ -176,33 +191,33 @@ public:
 
         _objPtr = penv->GetKinBody("object");
         if(!_objPtr) {
-            fprintf(stderr,"error: object \"object\" does not exist.\n");
-        } else printf("sucess: object \"object\" exists.\n");
+            std::fprintf(stderr,"error: object \"object\" does not exist.\n");
+        } else std::printf("sucess: object \"object\" exists.\n");
 
         _wall = penv->GetKinBody("wall");
         if(!_wall) {
-            fprintf(stderr,"error: object \"wall\" does not exist.\n");
-        } else printf("sucess: object \"wall\" exists.\n");
+            std::fprintf(stderr,"error: object \"wall\" does not exist.\n");
+        } else std::printf("sucess: object \"wall\" exists.\n");
 
         _palete_magenta = penv->GetKinBody("palete-magenta");
         if(!_palete_magenta) {
-            fprintf(stderr,"error: object \"palete-magenta\" does not exist.\n");
-        } else printf("sucess: object \"palete-magenta\" exists.\n");
+            std::fprintf(stderr,"error: object \"palete-magenta\" does not exist.\n");
+        } else std::printf("sucess: object \"palete-magenta\" exists.\n");
 
         _palete_yellow = penv->GetKinBody("palete-yellow");
         if(!_palete_yellow) {
-            fprintf(stderr,"error: object \"palete-yellow\" does not exist.\n");
-        } else printf("sucess: object \"palete-yellow\" exists.\n");
+            std::fprintf(stderr,"error: object \"palete-yellow\" does not exist.\n");
+        } else std::printf("sucess: object \"palete-yellow\" exists.\n");
 
         _palete_cyan = penv->GetKinBody("palete-cyan");
         if(!_palete_cyan) {
-            fprintf(stderr,"error: object \"palete-cyan\" does not exist.\n");
-        } else printf("sucess: object \"palete-cyan\" exists.\n");
+            std::fprintf(stderr,"error: object \"palete-cyan\" does not exist.\n");
+        } else std::printf("sucess: object \"palete-cyan\" exists.\n");
 
-        std::vector<RobotBasePtr> robots;
+        std::vector<OpenRAVE::RobotBasePtr> robots;
         penv->GetRobots(robots);
         std::cout << "Robot 0: " << robots.at(0)->GetName() << std::endl;  // default: teo
-        RobotBasePtr probot = robots.at(0);
+        OpenRAVE::RobotBasePtr probot = robots.at(0);
         probot->SetActiveManipulator("rightArm");
         probot->Grab(_objPtr);
 
@@ -230,9 +245,9 @@ public:
 
         //Create new object in the scene "palete" to change brush colours.
 
-        Transform pos_palete_magenta = _palete_magenta->GetLink("palete-magenta")->GetGeometry(0)->GetTransform();
-        Transform pos_palete_yellow = _palete_yellow->GetLink("palete-yellow")->GetGeometry(0)->GetTransform();
-        Transform pos_palete_cyan = _palete_cyan->GetLink("palete-cyan")->GetGeometry(0)->GetTransform();
+        OpenRAVE::Transform pos_palete_magenta = _palete_magenta->GetLink("palete-magenta")->GetGeometry(0)->GetTransform();
+        OpenRAVE::Transform pos_palete_yellow = _palete_yellow->GetLink("palete-yellow")->GetGeometry(0)->GetTransform();
+        OpenRAVE::Transform pos_palete_cyan = _palete_cyan->GetLink("palete-cyan")->GetGeometry(0)->GetTransform();
 
 
 
@@ -245,9 +260,9 @@ public:
         double pos_cyan_x = pos_palete_cyan.trans.x;
         double pos_cyan_y = pos_palete_cyan.trans.y;
         double pos_cyan_z = pos_palete_cyan.trans.z;
-        double dist_cyan = sqrt(pow(T_base_object_x-pos_cyan_x,2)
-                                + pow(T_base_object_y-pos_cyan_y,2)
-                                + pow(T_base_object_z-pos_cyan_z,2));
+        double dist_cyan = std::sqrt(std::pow(T_base_object_x-pos_cyan_x,2)
+                                        + std::pow(T_base_object_y-pos_cyan_y,2)
+                                        + std::pow(T_base_object_z-pos_cyan_z,2));
 
         //std::cout<<"Pos x obj azul: "<<pos_cyan_x<<std::endl;
         //std::cout<<"Pos y obj azul: "<<pos_cyan_y<<std::endl;
@@ -256,9 +271,9 @@ public:
         double pos_yellow_x = pos_palete_yellow.trans.x;
         double pos_yellow_y = pos_palete_yellow.trans.y;
         double pos_yellow_z = pos_palete_yellow.trans.z;
-        double dist_yellow = sqrt(pow(T_base_object_x-pos_yellow_x,2)
-                                 + pow(T_base_object_y-pos_yellow_y,2)
-                                 + pow(T_base_object_z-pos_yellow_z,2));
+        double dist_yellow = std::sqrt(std::pow(T_base_object_x-pos_yellow_x,2)
+                                         + std::pow(T_base_object_y-pos_yellow_y,2)
+                                         + std::pow(T_base_object_z-pos_yellow_z,2));
 
         //std::cout<<"Pos x obj yellow: "<<pos_yellow_x<<std::endl;
         //std::cout<<"Pos y obj verde: "<<pos_yellow_y<<std::endl;
@@ -267,9 +282,9 @@ public:
         double pos_magenta_x = pos_palete_magenta.trans.x;
         double pos_magenta_y = pos_palete_magenta.trans.y;
         double pos_magenta_z = pos_palete_magenta.trans.z;
-        double dist_magenta = sqrt(pow(T_base_object_x-pos_magenta_x,2)
-                               + pow(T_base_object_y-pos_magenta_y,2)
-                               + pow(T_base_object_z-pos_magenta_z,2));
+        double dist_magenta = std::sqrt(std::pow(T_base_object_x-pos_magenta_x,2)
+                                       + std::pow(T_base_object_y-pos_magenta_y,2)
+                                       + std::pow(T_base_object_z-pos_magenta_z,2));
 
         //std::cout<<"Pos x obj rojo: "<<pos_magenta_x<<std::endl;
         //std::cout<<"Pos y obj rojo: "<<pos_magenta_y<<std::endl;
@@ -297,16 +312,16 @@ public:
         //Update psqpainted to the new values
         for(int i=0; i<(sqPainted.size()); i++)
         {
-            stringstream ss;
+            std::stringstream ss;
             ss << "square" << i;
-            Transform pos_square = _wall->GetLink(ss.str())->GetGeometry(0)->GetTransform();
+            OpenRAVE::Transform pos_square = _wall->GetLink(ss.str())->GetGeometry(0)->GetTransform();
 
             double pos_square_x = pos_square.trans.x;
             double pos_square_y = pos_square.trans.y;
             double pos_square_z = pos_square.trans.z;
-            double dist = sqrt(pow(T_base_object_x-pos_square_x,2)
-                                      + pow(T_base_object_y-pos_square_y,2)
-                                      + pow(T_base_object_z-pos_square_z,2) );
+            double dist = std::sqrt(std::pow(T_base_object_x-pos_square_x,2)
+                                      + std::pow(T_base_object_y-pos_square_y,2)
+                                      + std::pow(T_base_object_z-pos_square_z,2) );
 
             if (dist < 0.05 && brushColour == 1 ) //Paint cyan
             {
@@ -338,19 +353,19 @@ public:
 
             if( sqPaintedValue == 1 ) //cyan
             {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 1.0, 1.0));
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.0, 1.0, 1.0));
             }
             else if( sqPaintedValue == 2 ) //yellow
             {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(1.0, 1.0, 0.0));
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(1.0, 1.0, 0.0));
             }
             else if( sqPaintedValue == 3 ) //magenta
             {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(1.0, 0.0, 0.4));
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(1.0, 0.0, 0.4));
             }
             else
             {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.5, 0.5, 0.5));
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.5, 0.5, 0.5));
             }
 
         }
@@ -364,15 +379,15 @@ private:
     yarp::os::RpcServer rpcServer;
     DataProcessor processor;
 
-    vector<int> sqPainted;
+    std::vector<int> sqPainted;
     yarp::os::Semaphore sqPaintedSemaphore;
 
-    Transform T_base_object;
-    KinBodyPtr _objPtr;
-    KinBodyPtr _wall;
-    KinBodyPtr _palete_magenta;
-    KinBodyPtr _palete_yellow;
-    KinBodyPtr _palete_cyan;
+    OpenRAVE::Transform T_base_object;
+    OpenRAVE::KinBodyPtr _objPtr;
+    OpenRAVE::KinBodyPtr _wall;
+    OpenRAVE::KinBodyPtr _palete_magenta;
+    OpenRAVE::KinBodyPtr _palete_yellow;
+    OpenRAVE::KinBodyPtr _palete_cyan;
 
     //Brush colour
     int brushColour = 1; //Init to cyan colour as default.
@@ -380,15 +395,15 @@ private:
 
 };
 
-InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
-    if( type == PT_Module && interfacename == "openraveyarppaintsquares" ) {
-        return InterfaceBasePtr(new OpenraveYarpPaintSquares(penv));
+OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv) {
+    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarppaintsquares" ) {
+        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPaintSquares(penv));
     }
-    return InterfaceBasePtr();
+    return OpenRAVE::InterfaceBasePtr();
 }
 
-void GetPluginAttributesValidated(PLUGININFO& info) {
-    info.interfacenames[PT_Module].push_back("OpenraveYarpPaintSquares");
+void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info) {
+    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpPaintSquares");
 }
 
 OPENRAVE_PLUGIN_API void DestroyPlugin() {

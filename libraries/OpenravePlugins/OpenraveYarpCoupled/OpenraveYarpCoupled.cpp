@@ -25,28 +25,36 @@
    \endverbatim
    <b>Full Example Code:</b>
  */
+
+#include <cstdio>
+
+#include <sstream>
+#include <string>
+#include <vector>
+
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
-#include <boost/bind.hpp>
 
-#include <yarp/os/all.h>
-#include <yarp/dev/all.h>
-#include <yarp/sig/all.h>
+#include <boost/bind/bind.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
 
-using namespace std;
-using namespace OpenRAVE;
+#include <yarp/os/Bottle.h>
+#include <yarp/os/BufferedPort.h>
+#include <yarp/os/ConstString.h>
+#include <yarp/os/Network.h>
+#include <yarp/os/RateThread.h>
 
+#include <yarp/dev/PolyDriver.h>
+
+#include <yarp/sig/Image.h>
 
 #define NULL_JMC_MS 20
-
-//YARP_DECLARE_PLUGINS(yarpplugins)
-
 
 class TeoSimRateThread : public yarp::os::RateThread {
      public:
 
         // Set the Thread Rate in the class constructor
-        TeoSimRateThread() : RateThread(NULL_JMC_MS) {}  // In ms
+        TeoSimRateThread() : yarp::os::RateThread(NULL_JMC_MS) {}  // In ms
 
         void setEnvironmentPtr(const OpenRAVE::EnvironmentBasePtr& environmentPtr) {
             this->environmentPtr = environmentPtr;
@@ -230,16 +238,16 @@ void TeoSimRateThread::run() {
 
 }
 
-class OpenraveYarpCoulped : public ModuleBase
+class OpenraveYarpCoupled : public OpenRAVE::ModuleBase
 {
 public:
-    OpenraveYarpCoulped(EnvironmentBasePtr penv) : ModuleBase(penv) {
+    OpenraveYarpCoupled(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv) {
         //YARP_REGISTER_PLUGINS(yarpplugins);
         __description = "OpenraveYarpCoulped plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveYarpCoulped::Open, this,_1,_2),"opens OpenraveYarpCoulped");
+        OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpCoupled::Open, this,_1,_2),"opens OpenraveYarpCoulped");
     }
 
-    virtual ~OpenraveYarpCoulped() {
+    virtual ~OpenraveYarpCoupled() {
         for(int i=0;i<robotDevices.size();i++)
         {
             robotDevices[i]->close();
@@ -257,14 +265,14 @@ public:
         return 0;
     }*/
 
-    bool Open(ostream& sout, istream& sinput)
+    bool Open(std::ostream& sout, std::istream& sinput)
     {
         bool alternativeRobotName = false;
 
-        vector<string> funcionArgs;
+        std::vector<std::string> funcionArgs;
         while(sinput)
         {
-            string funcionArg;
+            std::string funcionArg;
             sinput >> funcionArg;
             funcionArgs.push_back(funcionArg);
         }
@@ -285,14 +293,14 @@ public:
 
         for ( unsigned int robotIter = 0; robotIter<vectorOfRobotPtr.size(); robotIter++ ) {
             std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> sensors = vectorOfRobotPtr.at(robotIter)->GetAttachedSensors();
-            printf("Sensors found on robot %d (%s): %d.\n",robotIter,vectorOfRobotPtr.at(robotIter)->GetName().c_str(),(int)sensors.size());
+            std::printf("Sensors found on robot %d (%s): %d.\n",robotIter,vectorOfRobotPtr.at(robotIter)->GetName().c_str(),(int)sensors.size());
             for ( unsigned int sensorIter = 0; sensorIter<sensors.size(); sensorIter++ ) {
                 OpenRAVE::SensorBasePtr psensorbase = sensors.at(sensorIter)->GetSensor();
                 std::string tipo = psensorbase->GetName();
-                printf("Sensor %d name: %s\n",sensorIter,tipo.c_str());
+                std::printf("Sensor %d name: %s\n",sensorIter,tipo.c_str());
                 // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
                 if (psensorbase->Supports(OpenRAVE::SensorBase::ST_Camera)) {
-                    printf("Sensor %d supports ST_Camera.\n", sensorIter);
+                    std::printf("Sensor %d supports ST_Camera.\n", sensorIter);
                     // Activate the camera
                     psensorbase->Configure(OpenRAVE::SensorBase::CC_PowerOn);
                     // Show the camera image in a separate window
@@ -319,7 +327,7 @@ public:
                     tmpPort->open(tmpName);
                     vectorOfRgbPortPtr.push_back(tmpPort);
                 } else if (psensorbase->Supports(OpenRAVE::SensorBase::ST_Laser)) {
-                    printf("Sensor %d supports ST_Laser.\n", sensorIter);
+                    std::printf("Sensor %d supports ST_Laser.\n", sensorIter);
                     // Activate the sensor
                     psensorbase->Configure(OpenRAVE::SensorBase::CC_PowerOn);
                     // Paint the rays in the OpenRAVE viewer
@@ -346,7 +354,7 @@ public:
                     tmpPort->open(tmpName);
                     vectorOfIntPortPtr.push_back(tmpPort);
                 } else if (psensorbase->Supports(OpenRAVE::SensorBase::ST_Force6D)) {
-                    printf("Sensor %d supports ST_Force6D.\n", sensorIter);
+                    std::printf("Sensor %d supports ST_Force6D.\n", sensorIter);
                     // Activate the sensor
                     psensorbase->Configure(OpenRAVE::SensorBase::CC_PowerOn);
                     // Get a pointer to access the force6D data stream
@@ -359,7 +367,7 @@ public:
                     portName += sensorName.substr (pos+1,sensorName.size());
                     tmpPort->open(portName);
                     vectorOfForce6DPortPtr.push_back(tmpPort);
-                } else printf("Sensor %d not supported.\n", robotIter);
+                } else std::printf("Sensor %d not supported.\n", robotIter);
             }
         }
 
@@ -407,15 +415,15 @@ private:
 
 };
 
-InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
-    if( type == PT_Module && interfacename == "openraveyarpcoupled" ) {
-        return InterfaceBasePtr(new OpenraveYarpCoulped(penv));
+OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv) {
+    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpcoupled" ) {
+        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpCoupled(penv));
     }
-    return InterfaceBasePtr();
+    return OpenRAVE::InterfaceBasePtr();
 }
 
-void GetPluginAttributesValidated(PLUGININFO& info) {
-    info.interfacenames[PT_Module].push_back("OpenraveYarpCoulped");
+void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info) {
+    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpCoulped");
 }
 
 OPENRAVE_PLUGIN_API void DestroyPlugin() {
