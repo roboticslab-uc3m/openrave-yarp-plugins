@@ -6,11 +6,9 @@ option(ENABLE_OpenraveYarpPaintSquares "Enable/disable OpenraveYarpPaintSquares"
 if(ENABLE_OpenraveYarpPaintSquares)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-                    ${OpenRAVE_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS})
+                    ${OpenRAVE_INCLUDE_DIRS})
 
-link_directories(${OpenRAVE_LIBRARY_DIRS}
-                 ${Boost_LIBRARY_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 add_library(OpenraveYarpPaintSquares MODULE OpenraveYarpPaintSquares.cpp)
 
@@ -20,6 +18,7 @@ set_target_properties(OpenraveYarpPaintSquares PROPERTIES COMPILE_OPTIONS "${Ope
 target_link_libraries(OpenraveYarpPaintSquares YARP::YARP_OS
                                                YARP::YARP_init
                                                ${OpenRAVE_LIBRARIES}
+                                               Boost::boost
                                                ROBOTICSLAB::ColorDebug)
 
 include(InstallOpenravePlugin)

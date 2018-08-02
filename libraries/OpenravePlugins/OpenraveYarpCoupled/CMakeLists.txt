@@ -6,11 +6,9 @@ option(ENABLE_OpenraveYarpCoupled "Enable/disable OpenraveYarpCoupled" ON)
 if(ENABLE_OpenraveYarpCoupled)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-                    ${OpenRAVE_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS})
+                    ${OpenRAVE_INCLUDE_DIRS})
 
-link_directories(${OpenRAVE_LIBRARY_DIRS}
-                 ${Boost_LIBRARY_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 add_library(OpenraveYarpCoupled MODULE OpenraveYarpCoupled.cpp)
 
@@ -21,7 +19,8 @@ target_link_libraries(OpenraveYarpCoupled YARP::YARP_OS
                                           YARP::YARP_init
                                           YARP::YARP_dev
                                           YARP::YARP_sig
-                                          ${OpenRAVE_LIBRARIES})
+                                          ${OpenRAVE_LIBRARIES}
+                                          Boost::boost)
 
 include(InstallOpenravePlugin)
 

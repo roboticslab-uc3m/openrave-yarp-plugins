@@ -45,8 +45,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake
 find_package(YCM 0.8 REQUIRED)
 find_package(COLOR_DEBUG REQUIRED)
 find_package(OpenRAVE REQUIRED)
-find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED
-             COMPONENTS iostreams python thread system)
+find_package(Boost "${OpenRAVE_Boost_VERSION}" EXACT REQUIRED COMPONENTS thread)
 find_package(YARP 3.0 QUIET)
 # https://github.com/roboticslab-uc3m/questions-and-answers/issues/65
 if(NOT YARP_FOUND)

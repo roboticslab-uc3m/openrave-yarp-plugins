@@ -12,11 +12,9 @@ if(NOT SKIP_YarpOpenraveGrabber)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
                     ${OpenRAVE_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS}
                     $<TARGET_PROPERTY:YarpOpenraveBase,INTERFACE_INCLUDE_DIRECTORIES>)
 
-link_directories(${OpenRAVE_LIBRARY_DIRS}
-                 ${Boost_LIBRARY_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 yarp_add_plugin(YarpOpenraveGrabber YarpOpenraveGrabber.hpp
                                     DeviceDriverImpl.cpp
@@ -29,8 +27,7 @@ set_target_properties(YarpOpenraveGrabber PROPERTIES COMPILE_OPTIONS "${OpenRAVE
 target_link_libraries(YarpOpenraveGrabber YARP::YARP_OS
                                           YARP::YARP_dev
                                           ${OpenRAVE_CORE_LIBRARIES}
-                                          ${Boost_THREAD_LIBRARY}
-                                          ${Boost_SYSTEM_LIBRARY}
+                                          Boost::boost
                                           ROBOTICSLAB::ColorDebug)
 
 yarp_install(TARGETS YarpOpenraveGrabber

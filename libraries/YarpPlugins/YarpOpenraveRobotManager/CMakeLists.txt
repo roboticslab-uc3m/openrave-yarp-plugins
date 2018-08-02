@@ -12,11 +12,9 @@ if(NOT SKIP_YarpOpenraveRobotManager)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
                     ${OpenRAVE_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS}
                     $<TARGET_PROPERTY:YarpOpenraveBase,INTERFACE_INCLUDE_DIRECTORIES>)
 
-link_directories(${OpenRAVE_LIBRARY_DIRS}
-                 ${Boost_LIBRARY_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 yarp_add_plugin(YarpOpenraveRobotManager YarpOpenraveRobotManager.hpp
                                          IRobotManager.hpp
@@ -30,8 +28,6 @@ set_target_properties(YarpOpenraveRobotManager PROPERTIES COMPILE_OPTIONS "${Ope
 target_link_libraries(YarpOpenraveRobotManager YARP::YARP_OS
                                                YARP::YARP_dev
                                                ${OpenRAVE_CORE_LIBRARIES}
-                                               ${Boost_THREAD_LIBRARY}
-                                               ${Boost_SYSTEM_LIBRARY}
                                                ROBOTICSLAB::ColorDebug)
 
 yarp_install(TARGETS YarpOpenraveRobotManager
