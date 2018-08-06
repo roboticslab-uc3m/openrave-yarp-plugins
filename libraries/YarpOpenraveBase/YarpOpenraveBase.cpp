@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveBase.hpp"
 
+#include <cassert>
+
 #include <sstream>
 #include <vector>
 
@@ -9,7 +11,6 @@
 #include <yarp/os/Time.h>
 #include <yarp/os/Value.h>
 
-#include <boost/assert.hpp>
 #include <boost/bind/bind.hpp>
 
 #include <ColorDebug.h>
@@ -24,7 +25,7 @@ const int YarpOpenraveBase::NOT_SET = -1;
 void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
 {
     OpenRAVE::ViewerBasePtr viewer = OpenRAVE::RaveCreateViewer(penv,viewername);
-    BOOST_ASSERT(!!viewer);
+    assert(!!viewer);
 
     // attach it to the environment:
     penv->AddViewer(viewer);  // penv->AttachViewer(viewer);
