@@ -10,7 +10,7 @@
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionWriter.h>
