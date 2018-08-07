@@ -41,7 +41,7 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake
                               ${CMAKE_SOURCE_DIR}/cmake/modules)
 
-# Find project's hard dependencies.
+# Hard dependencies.
 find_package(YCM 0.8 REQUIRED)
 find_package(COLOR_DEBUG REQUIRED)
 find_package(OpenRAVE 0.9 REQUIRED)
@@ -51,6 +51,9 @@ find_package(YARP 3.0 QUIET)
 if(NOT YARP_FOUND)
     find_package(YARP 2.3.70 REQUIRED)
 endif()
+
+# Soft dependencies.
+find_package(ASROB_YARP_DEVICES QUIET)
 
 # Always build YARP devices as MODULE libraries.
 set(YARP_FORCE_DYNAMIC_PLUGINS TRUE CACHE INTERNAL "Force dynamic plugins")
