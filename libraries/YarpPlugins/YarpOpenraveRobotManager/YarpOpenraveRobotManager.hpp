@@ -7,8 +7,9 @@
 
 #include <openrave/openrave.h>
 
+#include <IRobotManager.hpp>
+
 #include "YarpOpenraveBase.hpp"
-#include "IRobotManager.hpp"
 
 namespace roboticslab
 {

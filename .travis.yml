@@ -87,6 +87,14 @@ install:
     --repo-url https://github.com/roboticslab-uc3m/color-debug
     --repo-checkout master
 
+  #-- Install yarp-devices (asrob-uc3m)
+  - >
+    source "$TRAVIS_BUILD_DIR/scripts/travis/git-cache-dependency.sh"
+    --package-name ROBOTICSLAB_YARP_DEVICES
+    --repo-url https://github.com/asrob-uc3m/yarp-devices
+    --repo-checkout develop
+    --additional-export-paths "YARP_DATA_DIRS;share/asrob-yarp-devices"
+
 before_script:
   - mkdir -p "$TRAVIS_BUILD_DIR/build" && cd "$_"
   - cmake .. -DCMAKE_INSTALL_PREFIX="$PWD/install" -DENABLE_coverage:BOOL=ON
