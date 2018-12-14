@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <ColorDebug.h>
+
 // ------------------ IVelocity2 Related ----------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::velocityMove(const int n_joint, const int *joints, const double *spds)
@@ -38,36 +40,3 @@ bool roboticslab::YarpOpenraveControlboard::getRefVelocities(const int n_joint, 
 }
 
 // -----------------------------------------------------------------------------
-
-bool roboticslab::YarpOpenraveControlboard::setVelPid(int j, const yarp::dev::Pid &pid)
-{
-    CD_ERROR("Not implemented yet.\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool roboticslab::YarpOpenraveControlboard::setVelPids(const yarp::dev::Pid *pids)
-{
-    CD_ERROR("Not implemented yet.\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool roboticslab::YarpOpenraveControlboard::getVelPid(int j, yarp::dev::Pid *pid)
-{
-    CD_ERROR("Not implemented yet.\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool roboticslab::YarpOpenraveControlboard::getVelPids(yarp::dev::Pid *pids)
-{
-    CD_ERROR("Not implemented yet.\n");
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-

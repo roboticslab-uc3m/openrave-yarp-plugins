@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <ColorDebug.h>
+
 // ------------------- IPositionControl2 Related --------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::positionMove(const int n_joint, const int *joints, const double *refs)

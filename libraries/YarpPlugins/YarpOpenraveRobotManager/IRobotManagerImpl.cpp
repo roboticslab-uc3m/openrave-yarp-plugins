@@ -2,6 +2,14 @@
 
 #include "YarpOpenraveRobotManager.hpp"
 
+#include <cmath> // std::abs
+
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include <ColorDebug.h>
+
 namespace roboticslab
 {
 

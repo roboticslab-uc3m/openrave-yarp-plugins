@@ -5,12 +5,9 @@ option(ENABLE_OpenraveYarpForceEstimator "Enable/disable OpenraveYarpForceEstima
 
 if(ENABLE_OpenraveYarpForceEstimator)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-                    ${OpenRAVE_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS})
+include_directories(${OpenRAVE_INCLUDE_DIRS})
 
-link_directories(${OpenRAVE_LIBRARY_DIRS}
-                 ${Boost_LIBRARY_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 add_library(OpenraveYarpForceEstimator MODULE OpenraveYarpForceEstimator.cpp)
 
@@ -20,6 +17,7 @@ set_target_properties(OpenraveYarpForceEstimator PROPERTIES COMPILE_OPTIONS "${O
 target_link_libraries(OpenraveYarpForceEstimator YARP::YARP_OS
                                                  YARP::YARP_init
                                                  ${OpenRAVE_LIBRARIES}
+                                                 Boost::boost
                                                  ROBOTICSLAB::ColorDebug)
 
 include(InstallOpenravePlugin)

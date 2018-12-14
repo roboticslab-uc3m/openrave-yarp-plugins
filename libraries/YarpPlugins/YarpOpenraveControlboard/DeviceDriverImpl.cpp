@@ -2,7 +2,17 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <cstddef> // std::size_t
+
 #include <algorithm>  // Thanks: https://notfaq.wordpress.com/2007/08/04/cc-convert-string-to-upperlower-case/
+#include <string>
+#include <vector>
+
+#include <yarp/os/Value.h>
+
+#include <boost/smart_ptr/shared_ptr.hpp>
+
+#include <ColorDebug.h>
 
 namespace roboticslab
 {
@@ -47,7 +57,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
     controlModes.resize( axes, VOCAB_CM_POSITION );
     refSpeeds.resize( axes, genRefSpeed );
 
-    for(size_t i=0; i<manipulatorIDs.size(); i++)
+    for(std::size_t i=0; i<manipulatorIDs.size(); i++)
     {
         OpenRAVE::RobotBase::JointPtr jointPtr = probot->GetJointFromDOFIndex(manipulatorIDs[i]);
         vectorOfJointPtr.push_back(jointPtr);
@@ -60,7 +70,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
 
         std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
         //--- Console output robot active DOF
-        //for(size_t i=0; i<activeDOFIndices.size(); i++)
+        //for(std::size_t i=0; i<activeDOFIndices.size(); i++)
         //{
         //    CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
         //}
@@ -91,7 +101,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
         //-- Safe to assume we have a multicontroller, store for usage.
         multi = boost::dynamic_pointer_cast< OpenRAVE::MultiControllerBase >(pcontrol);
 
-        for(size_t i=0; i<manipulatorIDs.size(); i++)
+        for(std::size_t i=0; i<manipulatorIDs.size(); i++)
         {
             OpenRAVE::ControllerBasePtr pIndivControlFromMulti = multi->GetController( manipulatorIDs[i] );
             if( !! pIndivControlFromMulti )
@@ -113,7 +123,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
 
         //-- Console output of the robot ConfigurationSpecification
         //OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
-        //for (size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
+        //for (std::size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
         //{
         //    CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
         //}

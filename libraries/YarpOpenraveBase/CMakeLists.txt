@@ -8,21 +8,23 @@ if(ENABLE_YarpOpenraveBase)
 add_library(YarpOpenraveBase OBJECT YarpOpenraveBase.hpp
                                     YarpOpenraveBase.cpp)
 
-# Transitive headers.
-get_target_property(_color_debug_include_dirs ROBOTICSLAB::ColorDebug INTERFACE_INCLUDE_DIRECTORIES)
-get_target_property(_yarp_os_include_dirs YARP::YARP_OS INTERFACE_INCLUDE_DIRECTORIES)
-
-# C++11 features.
-get_target_property(_yarp_os_compile_features YARP::YARP_OS INTERFACE_COMPILE_FEATURES)
-
 set_target_properties(YarpOpenraveBase PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
-                                                  COMPILE_FEATURES "${_yarp_os_compile_features}"
-                                                  POSITION_INDEPENDENT_CODE TRUE)
+                                                  POSITION_INDEPENDENT_CODE TRUE
+                                                  COMPILE_FEATURES "$<TARGET_PROPERTY:YARP::YARP_OS,INTERFACE_COMPILE_FEATURES>")
 
-target_include_directories(YarpOpenraveBase PUBLIC ${_yarp_os_include_dirs}
+target_include_directories(YarpOpenraveBase PUBLIC $<TARGET_PROPERTY:YARP::YARP_OS,INTERFACE_INCLUDE_DIRECTORIES>
                                                    ${OpenRAVE_INCLUDE_DIRS}
-                                                   ${Boost_INCLUDE_DIRS}
+                                                   $<TARGET_PROPERTY:Boost::thread,INTERFACE_INCLUDE_DIRECTORIES>
                                                    ${CMAKE_CURRENT_SOURCE_DIR}
-                                            PRIVATE ${_color_debug_include_dirs})
+                                            PRIVATE $<TARGET_PROPERTY:ROBOTICSLAB::ColorDebug,INTERFACE_INCLUDE_DIRECTORIES>)
+
+# Alternative interface target for ease of use by downstreams, see:
+# https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/62#issuecomment-361017934
+add_library(YarpOpenraveBaseInterface INTERFACE)
+set_target_properties(YarpOpenraveBaseInterface PROPERTIES INTERFACE_SOURCES $<TARGET_OBJECTS:YarpOpenraveBase>)
+target_include_directories(YarpOpenraveBaseInterface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(YarpOpenraveBaseInterface INTERFACE YARP::YARP_OS
+                                                          ${OpenRAVE_CORE_LIBRARIES}
+                                                          Boost::thread)
 
 endif()

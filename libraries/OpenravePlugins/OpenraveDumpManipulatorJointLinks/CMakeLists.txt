@@ -5,12 +5,9 @@ option(ENABLE_OpenraveDumpManipulatorJointLinks "Enable/disable OpenraveDumpMani
 
 if(ENABLE_OpenraveDumpManipulatorJointLinks)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-                    ${OpenRAVE_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS})
+include_directories(${OpenRAVE_INCLUDE_DIRS})
 
-link_directories(${OpenRAVE_LIBRARY_DIRS}
-                 ${Boost_LIBRARY_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 add_library(OpenraveDumpManipulatorJointLinks MODULE OpenraveDumpManipulatorJointLinks.cpp)
 
@@ -18,6 +15,7 @@ set_target_properties(OpenraveDumpManipulatorJointLinks PROPERTIES COMPILE_OPTIO
                                                                    LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(OpenraveDumpManipulatorJointLinks ${OpenRAVE_LIBRARIES}
+                                                        Boost::boost
                                                         ROBOTICSLAB::ColorDebug)
 
 include(InstallOpenravePlugin)

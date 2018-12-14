@@ -11,27 +11,23 @@ yarp_prepare_plugin(YarpOpenraveRGBDSensor
 if(NOT SKIP_YarpOpenraveRGBDSensor)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
-                    ${OpenRAVE_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS}
-                    $<TARGET_PROPERTY:YarpOpenraveBase,INTERFACE_INCLUDE_DIRECTORIES>)
+                    ${OpenRAVE_INCLUDE_DIRS})
 
-link_directories(${OpenRAVE_LIBRARY_DIRS}
-                 ${Boost_LIBRARY_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 yarp_add_plugin(YarpOpenraveRGBDSensor YarpOpenraveRGBDSensor.hpp
                                        DeviceDriverImpl.cpp
-                                       IRGBDSensorImpl.cpp
-                                       $<TARGET_OBJECTS:YarpOpenraveBase>)
+                                       IRGBDSensorImpl.cpp)
 
 set_target_properties(YarpOpenraveRGBDSensor PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                         LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(YarpOpenraveRGBDSensor YARP::YARP_OS
                                              YARP::YARP_dev
-                                             ${OpenRAVE_CORE_LIBRARIES}
-                                             ${Boost_THREAD_LIBRARY}
-                                             ${Boost_SYSTEM_LIBRARY}
-                                             ROBOTICSLAB::ColorDebug)
+                                             ${OpenRAVE_LIBRARIES}
+                                             Boost::boost
+                                             ROBOTICSLAB::ColorDebug
+                                             YarpOpenraveBaseInterface)
 
 yarp_install(TARGETS YarpOpenraveRGBDSensor
              EXPORT YARP

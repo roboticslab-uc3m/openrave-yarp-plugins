@@ -11,12 +11,9 @@ yarp_prepare_plugin(YarpOpenraveControlboard
 if(NOT SKIP_YarpOpenraveControlboard)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
-                    ${OpenRAVE_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS}
-                    $<TARGET_PROPERTY:YarpOpenraveBase,INTERFACE_INCLUDE_DIRECTORIES>)
+                    ${OpenRAVE_INCLUDE_DIRS})
 
-link_directories(${OpenRAVE_LIBRARY_DIRS}
-                 ${Boost_LIBRARY_DIRS})
+link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 yarp_add_plugin(YarpOpenraveControlboard YarpOpenraveControlboard.hpp
                                          DeviceDriverImpl.cpp
@@ -29,18 +26,17 @@ yarp_add_plugin(YarpOpenraveControlboard YarpOpenraveControlboard.hpp
                                          IPositionDirectImpl.cpp
                                          ITorqueControlImpl.cpp
                                          IVelocityControlImpl.cpp
-                                         IVelocityControl2Impl.cpp
-                                         $<TARGET_OBJECTS:YarpOpenraveBase>)
+                                         IVelocityControl2Impl.cpp)
 
 set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(YarpOpenraveControlboard YARP::YARP_OS
                                                YARP::YARP_dev
-                                               ${OpenRAVE_CORE_LIBRARIES}
-                                               ${Boost_THREAD_LIBRARY}
-                                               ${Boost_SYSTEM_LIBRARY}
-                                               ROBOTICSLAB::ColorDebug)
+                                               ${OpenRAVE_LIBRARIES}
+                                               Boost::boost
+                                               ROBOTICSLAB::ColorDebug
+                                               YarpOpenraveBaseInterface)
 
 yarp_install(TARGETS YarpOpenraveControlboard
              COMPONENT runtime

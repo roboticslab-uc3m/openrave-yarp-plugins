@@ -2,7 +2,16 @@
 
 #include "YarpOpenraveRGBDSensor.hpp"
 
+#include <stdint.h> // uint8_t
+
 #include <cmath>
+
+#include <vector>
+
+#include <yarp/os/Time.h>
+#include <yarp/sig/Image.h>
+
+#include <ColorDebug.h>
 
 namespace roboticslab
 {

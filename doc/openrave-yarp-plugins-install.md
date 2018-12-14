@@ -1,10 +1,13 @@
 ## openrave-yarp-plugins: Installation from Source Code
 
 First install the dependencies:
-- [Install CMake](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-cmake.md)
-- [Install YCM](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-ycm.md)
-- [Install YARP](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-yarp.md)
-- [Install OpenRAVE](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-openrave.md)
+- [Install CMake 3.5+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-cmake.md)
+- [Install YCM 0.8+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-ycm.md)
+- [Install YARP 2.3.70+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-yarp.md)
+- [Install OpenRAVE 0.9+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-openrave.md)
+- [Install Boost](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-boost.md) (implicitly required by OpenRAVE)
+  - Compiled components: Boost.Thread
+  - Header-only components: Boost.Bind, Boost.SmartPtr
 - [Install color-debug](https://github.com/roboticslab-uc3m/color-debug)
 
 # Install openrave-yarp-plugins on Ubuntu (working on all tested versions)

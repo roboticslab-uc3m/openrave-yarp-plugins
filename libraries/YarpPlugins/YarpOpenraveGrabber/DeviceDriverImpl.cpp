@@ -2,6 +2,13 @@
 
 #include "YarpOpenraveGrabber.hpp"
 
+#include <string>
+#include <vector>
+
+#include <yarp/os/Value.h>
+
+#include <ColorDebug.h>
+
 namespace roboticslab
 {
 
@@ -80,4 +87,3 @@ bool YarpOpenraveGrabber::close()
 // -----------------------------------------------------------------------------
 
 }  // namespace roboticslab
-

@@ -25,17 +25,33 @@
    \endverbatim
    <b>Full Example Code:</b>
  */
+
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
-#include <boost/bind.hpp>
 
-#include <yarp/os/all.h>
+#include <boost/bind/bind.hpp>
+
+#include <yarp/os/Bottle.h>
+#include <yarp/os/ConnectionWriter.h>
+#include <yarp/os/Network.h>
+#include <yarp/os/Port.h>
+#include <yarp/os/PortReader.h>
+#include <yarp/os/Property.h>
+#include <yarp/os/RateThread.h>
+#include <yarp/os/RpcServer.h>
+#include <yarp/os/Semaphore.h>
+#include <yarp/os/Value.h>
 
 #include <ColorDebug.h>
-
-using namespace std;
-using namespace OpenRAVE;
-
 
 #define NULL_JMC_MS 20
 
@@ -55,7 +71,7 @@ using namespace OpenRAVE;
 class DataProcessor : public yarp::os::PortReader {
 
 public:
-    void setPsqIroned(vector<int>* psqIroned) {
+    void setPsqIroned(std::vector<int>* psqIroned) {
         this->psqIroned = psqIroned;
     }
     void setPsqIronedSemaphore(yarp::os::Semaphore* psqIronedSemaphore) {
@@ -70,7 +86,7 @@ public:
 
 private:
 
-    vector<int>* psqIroned;
+    std::vector<int>* psqIroned;
     yarp::os::Semaphore* psqIronedSemaphore;
     float* pforceValue;
     yarp::os::Semaphore* pforceValueSemaphore;
@@ -129,7 +145,7 @@ class TeoSimRateThread : public yarp::os::RateThread {
      public:
 
         // Set the Thread Rate in the class constructor
-        TeoSimRateThread() : RateThread(NULL_JMC_MS) {}  // In ms
+        TeoSimRateThread() : yarp::os::RateThread(NULL_JMC_MS) {}  // In ms
 
         /**
          * Loop function. This is the thread itself.
@@ -141,10 +157,10 @@ class TeoSimRateThread : public yarp::os::RateThread {
         //KinBodyPtr pObject2;
         yarp::os::Port port;
         // Not my fault :D
-        KinBodyPtr _objPtr;
-        KinBodyPtr _ironWrinkle;
+        OpenRAVE::KinBodyPtr _objPtr;
+        OpenRAVE::KinBodyPtr _ironWrinkle;
 
-        vector<int> sqIroned;
+        std::vector<int> sqIroned;
         yarp::os::Semaphore sqIronedSemaphore;
         yarp::os::Semaphore forceValueSemaphore;
         float forceValue;
@@ -153,7 +169,7 @@ class TeoSimRateThread : public yarp::os::RateThread {
         // ------------------------------- Private -------------------------------------
         private:
 
-        Transform T_base_object;
+        OpenRAVE::Transform T_base_object;
 
 };
 
@@ -170,8 +186,8 @@ void TeoSimRateThread::run() {
     } else printf("sucess: object \"ironWrinkle\" exists.\n");
     */
 
-    Transform t1 = _objPtr->GetTransform();
-    Transform t2 = _ironWrinkle->GetTransform();
+    OpenRAVE::Transform t1 = _objPtr->GetTransform();
+    OpenRAVE::Transform t2 = _ironWrinkle->GetTransform();
 
     /*t.trans.x
     t.trans.y
@@ -220,16 +236,16 @@ void TeoSimRateThread::run() {
     //Update psqIroned to the new values
     for(int i=0; i<(sqIroned.size()); i++)
     {
-        stringstream ss;
+        std::stringstream ss;
         ss << "square" << i;
-        Transform pos_square = _ironWrinkle->GetLink(ss.str())->GetGeometry(0)->GetTransform();
+        OpenRAVE::Transform pos_square = _ironWrinkle->GetLink(ss.str())->GetGeometry(0)->GetTransform();
 
         double pos_square_x = pos_square.trans.x;
         double pos_square_y = pos_square.trans.y;
         double pos_square_z = pos_square.trans.z;
-        double dist = sqrt(pow(T_base_object_x-pos_square_x,2)
-                                  + pow(T_base_object_y-pos_square_y,2)
-                                  + pow(T_base_object_z-pos_square_z,2) );
+        double dist = std::sqrt(std::pow(T_base_object_x-pos_square_x,2)
+                                      + std::pow(T_base_object_y-pos_square_y,2)
+                                      + std::pow(T_base_object_z-pos_square_z,2) );
 
         if (dist < 0.06)
         {
@@ -244,24 +260,24 @@ void TeoSimRateThread::run() {
 
         if( sqIronedValue == 1 )
         {
-            _ironWrinkle->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.0, 0.0, 1.0));
+            _ironWrinkle->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.0, 0.0, 1.0));
         }
         else
         {
-            _ironWrinkle->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(RaveVector<float>(0.5, 0.5, 0.5));
+            _ironWrinkle->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.5, 0.5, 0.5));
         }
 
     }
 
 }
 
-class OpenraveYarpForceEstimator : public ModuleBase
+class OpenraveYarpForceEstimator : public OpenRAVE::ModuleBase
 {
 public:
-    OpenraveYarpForceEstimator(EnvironmentBasePtr penv) : ModuleBase(penv) {
+    OpenraveYarpForceEstimator(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv) {
         //YARP_REGISTER_PLUGINS(yarpplugins);
         __description = "OpenraveYarpForceEstimator plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveYarpForceEstimator::Open, this,_1,_2),"opens OpenraveYarpForceEstimator");
+        OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpForceEstimator::Open, this,_1,_2),"opens OpenraveYarpForceEstimator");
     }
 
     virtual ~OpenraveYarpForceEstimator() {
@@ -278,7 +294,7 @@ public:
         return 0;
     }*/
 
-    bool Open(ostream& sout, istream& sinput)
+    bool Open(std::ostream& sout, std::istream& sinput)
     {
 
         CD_INFO("Checking for yarp network...\n");
@@ -303,7 +319,7 @@ public:
             if(str.length() == 0)  //-- Omits empty string that is usually at end via openrave.
                 continue;
             char *cstr = new char[str.length() + 1];  // pushed to member argv to be deleted in ~.
-            strcpy(cstr, str.c_str());
+            std::strcpy(cstr, str.c_str());
 
             argv.push_back(cstr);
         }
@@ -324,18 +340,18 @@ public:
 
         teoSimRateThread._objPtr = penv->GetKinBody("object");
         if(!teoSimRateThread._objPtr) {
-            fprintf(stderr,"error: object \"object\" does not exist.\n");
-        } else printf("sucess: object \"object\" exists.\n");
+            std::fprintf(stderr,"error: object \"object\" does not exist.\n");
+        } else std::printf("sucess: object \"object\" exists.\n");
 
         teoSimRateThread._ironWrinkle = penv->GetKinBody("ironWrinkle");
         if(!teoSimRateThread._ironWrinkle) {
-            fprintf(stderr,"error: object \"ironWrinkle\" does not exist.\n");
-        } else printf("sucess: object \"ironWrinkle\" exists.\n");
+            std::fprintf(stderr,"error: object \"ironWrinkle\" does not exist.\n");
+        } else std::printf("sucess: object \"ironWrinkle\" exists.\n");
 
-        std::vector<RobotBasePtr> robots;
+        std::vector<OpenRAVE::RobotBasePtr> robots;
         penv->GetRobots(robots);
         std::cout << "Robot 0: " << robots.at(0)->GetName() << std::endl;  // default: teo
-        RobotBasePtr probot = robots.at(0);
+        OpenRAVE::RobotBasePtr probot = robots.at(0);
         probot->SetActiveManipulator("rightArm");
         probot->Grab(teoSimRateThread._objPtr);
 
@@ -404,15 +420,15 @@ private:
 
 };
 
-InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
-    if( type == PT_Module && interfacename == "openraveyarpforceestimator" ) {
-        return InterfaceBasePtr(new OpenraveYarpForceEstimator(penv));
+OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv) {
+    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpforceestimator" ) {
+        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpForceEstimator(penv));
     }
-    return InterfaceBasePtr();
+    return OpenRAVE::InterfaceBasePtr();
 }
 
-void GetPluginAttributesValidated(PLUGININFO& info) {
-    info.interfacenames[PT_Module].push_back("OpenraveYarpForceEstimator");
+void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info) {
+    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpForceEstimator");
 }
 
 OPENRAVE_PLUGIN_API void DestroyPlugin() {

@@ -1,8 +1,13 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
+#include <sstream>
+#include <string>
+#include <vector>
+
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
-#include <boost/bind.hpp>
+
+#include <boost/bind/bind.hpp>
 
 #include <ColorDebug.h>
 
@@ -23,7 +28,7 @@ public:
     OpenraveDumpManipulatorJointLinks(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
     {
         __description = "OpenraveDumpManipulatorJointLinks plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveDumpManipulatorJointLinks::Open, this,_1,_2),"opens OpenraveDumpManipulatorJointLinks");
+        OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveDumpManipulatorJointLinks::Open, this,_1,_2),"opens OpenraveDumpManipulatorJointLinks");
     }
 
     virtual ~OpenraveDumpManipulatorJointLinks()
@@ -70,7 +75,7 @@ public:
 
             std::istringstream sinput( openStrings[i] );
             std::ostringstream sout;
-            if( ! SendCommand(sout,sinput) )
+            if( ! OpenRAVE::InterfaceBase::SendCommand(sout,sinput) )
                 return 1;
         }
         return 0;

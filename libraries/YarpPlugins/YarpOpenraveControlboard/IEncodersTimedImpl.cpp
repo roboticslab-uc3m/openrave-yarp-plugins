@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
+#include <yarp/os/Time.h>
+
 // ------------------ IEncodersTimed Related -----------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getEncodersTimed(double *encs, double *time) {

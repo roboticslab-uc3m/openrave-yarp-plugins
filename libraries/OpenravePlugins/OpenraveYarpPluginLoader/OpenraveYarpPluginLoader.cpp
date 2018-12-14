@@ -1,11 +1,21 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
+#include <cstring>
+
+#include <sstream>
+#include <string>
+#include <vector>
+
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
-#include <boost/bind.hpp>
 
-#include <yarp/os/all.h>
-#include <yarp/dev/all.h>
+#include <boost/bind/bind.hpp>
+
+#include <yarp/os/Network.h>
+#include <yarp/os/Property.h>
+#include <yarp/os/Value.h>
+
+#include <yarp/dev/PolyDriver.h>
 
 #include <ColorDebug.h>
 
@@ -26,7 +36,7 @@ public:
     OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
     {
         __description = "OpenraveYarpPluginLoader plugin.";
-        RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens OpenraveYarpPluginLoader");
+        OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens OpenraveYarpPluginLoader");
     }
 
     virtual ~OpenraveYarpPluginLoader()
@@ -79,7 +89,7 @@ public:
 
             std::istringstream sinput( openStrings[i] );
             std::ostringstream sout;
-            if( ! SendCommand(sout,sinput) )
+            if( ! OpenRAVE::InterfaceBase::SendCommand(sout,sinput) )
                 return 1;
         }
         return 0;
@@ -108,7 +118,7 @@ public:
             if(str.length() == 0)  //-- Omits empty string that is usually at end via openrave.
                 continue;
             char *cstr = new char[str.length() + 1];  // pushed to member argv to be deleted in ~.
-            strcpy(cstr, str.c_str());
+            std::strcpy(cstr, str.c_str());
             argv.push_back(cstr);
         }
 

@@ -2,7 +2,7 @@
 # Authors: Juan G. Victores and Raul Fernandez-Fernandez
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 project(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS LANGUAGES CXX)
 
@@ -41,17 +41,19 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake
                               ${CMAKE_SOURCE_DIR}/cmake/modules)
 
-# Find project's hard dependencies.
-find_package(YCM 0.2 REQUIRED)
+# Hard dependencies.
+find_package(YCM 0.8 REQUIRED)
 find_package(COLOR_DEBUG REQUIRED)
-find_package(OpenRAVE REQUIRED)
-find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT REQUIRED
-             COMPONENTS iostreams python thread system)
-find_package(YARP 3.0 QUIET COMPONENTS OS dev sig)
+find_package(OpenRAVE 0.9 REQUIRED)
+find_package(Boost "${OpenRAVE_Boost_VERSION}" REQUIRED COMPONENTS thread)
+find_package(YARP 3.0 QUIET)
 # https://github.com/roboticslab-uc3m/questions-and-answers/issues/65
 if(NOT YARP_FOUND)
     find_package(YARP 2.3.70 REQUIRED)
 endif()
+
+# Soft dependencies.
+find_package(ASROB_YARP_DEVICES QUIET)
 
 # Always build YARP devices as MODULE libraries.
 set(YARP_FORCE_DYNAMIC_PLUGINS TRUE CACHE INTERNAL "Force dynamic plugins")
@@ -73,12 +75,9 @@ option(ENABLE_coverage "Choose if you want to enable coverage collection" OFF)
 if(ENABLE_coverage)
     # List supported compilers.
     if(CMAKE_COMPILER_IS_GNUCXX)
-        add_compile_options(-fprofile-arcs -ftest-coverage)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
     endif()
 endif()
-
-# Store list of exported targets in global scope.
-set_property(GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_TARGETS)
 
 # Create targets if specific requirements are satisfied.
 include(CMakeDependentOption)
