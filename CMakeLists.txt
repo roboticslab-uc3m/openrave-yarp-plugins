@@ -44,7 +44,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake
 # Hard dependencies.
 find_package(YCM 0.8 REQUIRED)
 find_package(COLOR_DEBUG REQUIRED)
-find_package(OpenRAVE 0.9 REQUIRED)
+find_package(OpenRAVE REQUIRED)
 find_package(Boost "${OpenRAVE_Boost_VERSION}" REQUIRED COMPONENTS thread)
 find_package(YARP 3.0 QUIET)
 # https://github.com/roboticslab-uc3m/questions-and-answers/issues/65
