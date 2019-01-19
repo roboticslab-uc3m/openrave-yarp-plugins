@@ -77,6 +77,7 @@ install:
     --package-name OpenRAVE
     --repo-url https://github.com/rdiankov/openrave
     --repo-checkout master
+    --additional-cmake-options "-DOPT_VIDEORECORDING:BOOL=OFF"
     --prepend-to-linker-path lib
 
   #-- Install color-debug
