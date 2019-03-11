@@ -643,9 +643,9 @@ public:
 
     // ------- IRemoteVariables declarations. Implementation in IRemoteVariablesImpl.cpp -------
 
-    virtual bool getRemoteVariable(std::string key, yarp::os::Bottle& val);
+    virtual bool getRemoteVariable(yarp::os::ConstString key, yarp::os::Bottle& val);
 
-    virtual bool setRemoteVariable(std::string key, const yarp::os::Bottle& val);
+    virtual bool setRemoteVariable(yarp::os::ConstString key, const yarp::os::Bottle& val);
 
     virtual bool getRemoteVariablesList(yarp::os::Bottle* listOfKeys);
 

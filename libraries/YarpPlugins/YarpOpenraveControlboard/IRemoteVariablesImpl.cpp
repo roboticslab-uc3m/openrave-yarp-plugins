@@ -8,7 +8,7 @@
 
 // ------------------- IRemoteVariables Related ------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRemoteVariable(std::string key, yarp::os::Bottle& val)
+bool roboticslab::YarpOpenraveControlboard::getRemoteVariable(yarp::os::ConstString key, yarp::os::Bottle& val)
 {
     CD_DEBUG("%s\n", key.c_str());
 
@@ -24,7 +24,7 @@ bool roboticslab::YarpOpenraveControlboard::getRemoteVariable(std::string key, y
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setRemoteVariable(std::string key, const yarp::os::Bottle& val)
+bool roboticslab::YarpOpenraveControlboard::setRemoteVariable(yarp::os::ConstString key, const yarp::os::Bottle& val)
 {
     CD_DEBUG("%s\n", key.c_str());
     return true;
