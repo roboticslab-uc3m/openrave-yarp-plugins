@@ -29,13 +29,14 @@ namespace roboticslab
  */
 class YarpOpenraveControlboard : YarpOpenraveBase,
         public yarp::dev::DeviceDriver,
-        public yarp::dev::IControlLimits2,    //-- IControlLimits2 inherits from IControlLimits
-        public yarp::dev::IControlMode2,      //-- IControlMode2 inherits from IControlMode
-        public yarp::dev::IEncodersTimed,     //-- IEncodersTimed inherits from IEncoders
-        public yarp::dev::IPositionControl2,  //-- IPositionControl2 inherits from IPositionControl
+        public yarp::dev::IControlLimits2,
+        public yarp::dev::IControlMode2,
+        public yarp::dev::IEncodersTimed,
+        public yarp::dev::IPositionControl2,
         public yarp::dev::IPositionDirect,
         public yarp::dev::ITorqueControl,
-        public yarp::dev::IVelocityControl2   //-- IVelocityControl2 inherits from IVelocityControl
+        public yarp::dev::IVelocityControl2,
+        public yarp::dev::IRemoteVariables
 {
 public:
 
@@ -639,6 +640,14 @@ public:
      */
     virtual bool setBemfParam(int j, double bemf);
 #endif // YARP_VERSION_MAJOR != 3
+
+    // ------- IRemoteVariables declarations. Implementation in IRemoteVariablesImpl.cpp -------
+
+    virtual bool getRemoteVariable(std::string key, yarp::os::Bottle& val);
+
+    virtual bool setRemoteVariable(std::string key, const yarp::os::Bottle& val);
+
+    virtual bool getRemoteVariablesList(yarp::os::Bottle* listOfKeys);
 
     // -------- DeviceDriver declarations. Implementation in IDeviceImpl.cpp --------
 

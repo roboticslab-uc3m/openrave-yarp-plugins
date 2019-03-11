@@ -24,6 +24,7 @@ yarp_add_plugin(YarpOpenraveControlboard YarpOpenraveControlboard.hpp
                                          IPositionControlImpl.cpp
                                          IPositionControl2Impl.cpp
                                          IPositionDirectImpl.cpp
+                                         IRemoteVariablesImpl.cpp
                                          ITorqueControlImpl.cpp
                                          IVelocityControlImpl.cpp
                                          IVelocityControl2Impl.cpp)
