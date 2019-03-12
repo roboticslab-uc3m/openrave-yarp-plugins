@@ -36,7 +36,8 @@ bool roboticslab::YarpOpenraveControlboard::getRemoteVariablesList(yarp::os::Bot
 {
     CD_DEBUG("\n");
     listOfKeys->clear();
-    listOfKeys->addString("ptModeMs");
+    // Place each key in its own list so that clients can just call check('<key>') or !find('<key>').isNull().
+    listOfKeys->addList().addString("ptModeMs");
     return true;
 }
 
