@@ -42,7 +42,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake
                               ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 # Hard dependencies.
-find_package(YCM 0.8 REQUIRED)
+find_package(YCM 0.10 REQUIRED)
 find_package(COLOR_DEBUG REQUIRED)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost "${OpenRAVE_Boost_VERSION}" REQUIRED COMPONENTS thread)
@@ -54,6 +54,7 @@ endif()
 
 # Soft dependencies.
 find_package(ASROB_YARP_DEVICES QUIET)
+find_package(Doxygen QUIET)
 
 # Always build YARP devices as MODULE libraries.
 set(YARP_FORCE_DYNAMIC_PLUGINS TRUE CACHE INTERNAL "Force dynamic plugins")
@@ -86,6 +87,7 @@ include(CMakeDependentOption)
 add_subdirectory(cmake)
 add_subdirectory(libraries)
 #add_subdirectory(share)
+add_subdirectory(doc)
 
 # Store the package in the user registry.
 export(PACKAGE ROBOTICSLAB_OPENRAVE_YARP_PLUGINS)

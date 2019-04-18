@@ -5,12 +5,10 @@
 # crontab -e
 # 30 2 * * * /your/command
 
+path="$HOME/openrave-yarp-plugins"
 echo "Update openrave-yarp-plugins..."
-cd $HOME/openrave-yarp-plugins
-git pull
+git -C "$path" pull
 echo "Doxy openrave-yarp-plugins..."
-cd doc
-rm -r html
-/usr/bin/doxygen
-cd ../..
-
+path="$path/doc/build"
+mkdir -p "$path"
+make -C "$path" clean && make -C "$path" dox
