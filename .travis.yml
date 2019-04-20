@@ -76,6 +76,7 @@ install:
     --repo-checkout master
     --additional-cmake-options "-DOPT_VIDEORECORDING:BOOL=OFF"
     --prepend-to-linker-path lib
+    --cmake-env 'CFLAGS="-w" CXXFLAGS="-w"'
 
   #-- Install color-debug
   - >
