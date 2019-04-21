@@ -29,6 +29,11 @@ target_link_libraries(YarpOpenraveRGBDSensor YARP::YARP_OS
                                              ROBOTICSLAB::ColorDebug
                                              YarpOpenraveBaseInterface)
 
+# https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/92
+if(NOT YARP_VERSION_SHORT VERSION_LESS 2.3.72 AND NOT YARP_VERSION_SHORT VERSION_GREATER 3.1.0)
+    target_compile_definitions(YarpOpenraveRGBDSensor PRIVATE -DOR_RGBDSENSOR_IFRAMEGRABBERCONTROLS_IMPL)
+endif()
+
 yarp_install(TARGETS YarpOpenraveRGBDSensor
              EXPORT YARP
              COMPONENT runtime
