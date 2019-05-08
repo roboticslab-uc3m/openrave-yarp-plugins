@@ -69,7 +69,7 @@ bool roboticslab::YarpOpenraveControlboard::getTorque(int j, double *t) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getTorques(double *t) {
-    CD_INFO("\n");
+    //CD_INFO("\n");
     return true;
 }
 
