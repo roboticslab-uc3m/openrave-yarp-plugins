@@ -31,15 +31,15 @@ namespace roboticslab
  * interface class member functions.
  */
 class YarpOpenraveControlboard : YarpOpenraveBase,
-        public yarp::dev::DeviceDriver,
-        public yarp::dev::IControlLimits,
-        public yarp::dev::IControlMode,
-        public yarp::dev::IEncodersTimed,
-        public yarp::dev::IPositionControl,
-        public yarp::dev::IPositionDirect,
-        public yarp::dev::ITorqueControl,
-        public yarp::dev::IVelocityControl,
-        public yarp::dev::IRemoteVariables
+                                 public yarp::dev::DeviceDriver,
+                                 public yarp::dev::IControlLimits,
+                                 public yarp::dev::IControlMode,
+                                 public yarp::dev::IEncodersTimed,
+                                 public yarp::dev::IPositionControl,
+                                 public yarp::dev::IPositionDirect,
+                                 public yarp::dev::ITorqueControl,
+                                 public yarp::dev::IVelocityControl,
+                                 public yarp::dev::IRemoteVariables
 {
 public:
 
@@ -163,8 +163,6 @@ public:
      */
     virtual bool stop();
 
-    // ------- IPositionControl2 declarations. Implementation in IPositionControl2Impl.cpp -------
-
     /** Set new reference point for a subset of joints.
      * @param joints pointer to the array of joint numbers
      * @param refs   pointer to the array specifing the new reference points
@@ -278,13 +276,6 @@ public:
      * @return true/false on success/failure
      */
     virtual bool setPositions(const int n_joint, const int *joints, const double *refs);
-
-#if YARP_VERSION_MAJOR != 3
-    virtual bool setPositions(const int n_joint, const int *joints, double *refs)
-    {
-        return setPositions(n_joint, joints, const_cast<const double *>(refs));
-    }
-#endif // YARP_VERSION_MAJOR != 3
 
     /** Set new position for a set of axis.
      * @param refs specifies the new reference points
@@ -402,8 +393,6 @@ public:
      */
     virtual bool velocityMove(const double *sp);
 
-    //  --------- IVelocityControl2 Declarations. Implementation in IVelocityControl2Impl.cpp ---------
-
     /** Start motion at a given speed for a subset of joints.
      * @param n_joint how many joints this command is referring to
      * @param joints of joints controlled. The size of this array is n_joints
@@ -439,7 +428,7 @@ public:
      */
     virtual bool getRefVelocities(const int n_joint, const int *joints, double *vels);
 
-    //  --------- IControlLimits Declarations. Implementation in IControlLimits2Impl.cpp ---------
+    //  --------- IControlLimits Declarations. Implementation in IControlLimitsImpl.cpp ---------
 
     /**
      * Set the software limits for a particular axis, the behavior of the
@@ -458,8 +447,6 @@ public:
      * @return true if everything goes fine, false otherwise.
      */
     virtual bool getLimits(int axis, double *min, double *max);
-
-    //  --------- IControlLimits2 Declarations. Implementation in IControlLimits2Impl.cpp ---------
 
     /**
      * Set the software speed limits for a particular axis, the behavior of the
@@ -480,7 +467,7 @@ public:
      */
     virtual bool getVelLimits(int axis, double *min, double *max);
 
-    //  --------- IControlMode Declarations. Implementation in IControlMode2Impl.cpp ---------
+    //  --------- IControlMode Declarations. Implementation in IControlModeImpl.cpp ---------
 
     /**
     * Get the current control mode.
@@ -496,8 +483,6 @@ public:
     * @return: true/false success failure.
     */
     virtual bool getControlModes(int *modes);
-
-    //  --------- IControlMode2 Declarations. Implementation in IControlMode2Impl.cpp ---------
 
     /**
     * Get the current control mode for a subset of axes.
@@ -627,22 +612,6 @@ public:
      * @return true/false on success/failure
      */
     virtual bool getTorqueRanges(double *min, double *max);
-
-#if YARP_VERSION_MAJOR != 3
-    /** Set the back-efm compensation gain for a given joint.
-     * @param j joint number
-     * @param bemf the returned bemf gain of joint j
-     * @return true/false on success/failure
-     */
-    virtual bool getBemfParam(int j, double *bemf);
-
-    /** Set the back-efm compensation gain for a given joint.
-     * @param j joint number
-     * @param bemf new value
-     * @return true/false on success/failure
-     */
-    virtual bool setBemfParam(int j, double bemf);
-#endif // YARP_VERSION_MAJOR != 3
 
     // ------- IRemoteVariables declarations. Implementation in IRemoteVariablesImpl.cpp -------
 

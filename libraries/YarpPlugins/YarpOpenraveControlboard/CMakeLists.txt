@@ -17,17 +17,15 @@ link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 yarp_add_plugin(YarpOpenraveControlboard YarpOpenraveControlboard.hpp
                                          DeviceDriverImpl.cpp
-                                         IControlLimits2Impl.cpp
-                                         IControlMode2Impl.cpp
+                                         IControlLimitsImpl.cpp
+                                         IControlModeImpl.cpp
                                          IEncodersImpl.cpp
                                          IEncodersTimedImpl.cpp
                                          IPositionControlImpl.cpp
-                                         IPositionControl2Impl.cpp
                                          IPositionDirectImpl.cpp
                                          IRemoteVariablesImpl.cpp
                                          ITorqueControlImpl.cpp
-                                         IVelocityControlImpl.cpp
-                                         IVelocityControl2Impl.cpp)
+                                         IVelocityControlImpl.cpp)
 
 set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
