@@ -20,8 +20,15 @@
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Vocab.h>
 
+#include <yarp/conf/version.h>
+
+#if YARP_VERSION_MAJOR == 3 && YARP_VERSION_MINOR >= 1
 #define VOCAB_OK yarp::os::createVocab('o','k')
 #define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
+#else
+#define VOCAB_OK VOCAB2('o','k')
+#define VOCAB_FAILED VOCAB4('f','a','i','l')
+#endif // YARP_VERSION_MAJOR == 3 && YARP_VERSION_MINOR >= 1
 
 class DataProcessor : public yarp::os::PortReader
 {
