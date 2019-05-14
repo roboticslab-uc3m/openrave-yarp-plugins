@@ -43,9 +43,9 @@
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionWriter.h>
 #include <yarp/os/Network.h>
+#include <yarp/os/PeriodicThread.h>
 #include <yarp/os/PortReader.h>
 #include <yarp/os/Property.h>
-#include <yarp/os/RateThread.h>
 #include <yarp/os/RpcServer.h>
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Value.h>
@@ -115,10 +115,10 @@ private:
 
 };
 
-class OpenraveYarpPaintSquares : public OpenRAVE::ModuleBase, public yarp::os::RateThread
+class OpenraveYarpPaintSquares : public OpenRAVE::ModuleBase, public yarp::os::PeriodicThread
 {
 public:
-    OpenraveYarpPaintSquares(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::RateThread(DEFAULT_RATE_MS) {
+    OpenraveYarpPaintSquares(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::PeriodicThread(DEFAULT_RATE_MS * 0.001) {
         __description = "OpenraveYarpPaintSquares plugin.";
         OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens OpenraveYarpPaintSquares");
     }
@@ -228,7 +228,7 @@ public:
         rpcServer.setReader(processor);
         rpcServer.open(portName);
 
-        this->start();  // start yarp::os::RateThread (calls run periodically)
+        this->start();  // start yarp::os::PeriodicThread (calls run periodically)
 
         return true;
     }

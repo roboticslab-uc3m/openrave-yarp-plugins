@@ -14,15 +14,14 @@
 
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionWriter.h>
-#include <yarp/os/ConstString.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/PortReader.h>
 #include <yarp/os/RpcServer.h>
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Vocab.h>
 
-#define VOCAB_OK VOCAB2('o','k')
-#define VOCAB_FAILED VOCAB4('f','a','i','l')
+#define VOCAB_OK yarp::os::createVocab('o','k')
+#define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
 
 class DataProcessor : public yarp::os::PortReader
 {
@@ -84,7 +83,7 @@ private:
         std::printf("[WorldRpcResponder] Got %s\n", in.toString().c_str());
         yarp::os::ConnectionWriter *returnToSender = connection.getWriter();
         if (returnToSender==NULL) return false;
-        yarp::os::ConstString choice = in.get(0).asString();
+        std::string choice = in.get(0).asString();
         if (in.get(0).getCode() != BOTTLE_TAG_STRING) choice="";
         if (choice=="help")    ///////////////////////////////// help /////////////////////////////////
         {
@@ -148,7 +147,7 @@ private:
                         // lock the environment!
                         OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                         OpenRAVE::KinBodyPtr boxKinBodyPtr = OpenRAVE::RaveCreateKinBody(pEnv,"");
-                        yarp::os::ConstString boxName("box_");
+                        std::string boxName("box_");
                         std::ostringstream s;  // boxName += std::to_string(boxKinBodyPtrs.size()+1);  // C++11 only
                         s << boxKinBodyPtrs.size()+1;
                         boxName += s.str();
@@ -176,7 +175,7 @@ private:
                         // lock the environment!
                         OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                         OpenRAVE::KinBodyPtr sboxKinBodyPtr = OpenRAVE::RaveCreateKinBody(pEnv,"");
-                        yarp::os::ConstString sboxName("sbox_");
+                        std::string sboxName("sbox_");
                         std::ostringstream s;  // sboxName += std::to_string(sboxKinBodyPtrs.size()+1);  // C++11 only
                         s << sboxKinBodyPtrs.size()+1;
                         sboxName += s.str();
@@ -198,7 +197,7 @@ private:
                         // lock the environment!
                         OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                         OpenRAVE::KinBodyPtr ssphKinBodyPtr = OpenRAVE::RaveCreateKinBody(pEnv,"");
-                        yarp::os::ConstString ssphName("ssph_");
+                        std::string ssphName("ssph_");
                         std::ostringstream s;  // ssphName += std::to_string(ssphKinBodyPtrs.size()+1);  // C++11 only
                         s << ssphKinBodyPtrs.size()+1;
                         ssphName += s.str();
@@ -219,7 +218,7 @@ private:
                         // lock the environment!
                         OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                         OpenRAVE::KinBodyPtr scylKinBodyPtr = OpenRAVE::RaveCreateKinBody(pEnv,"");
-                        yarp::os::ConstString scylName("scyl_");
+                        std::string scylName("scyl_");
                         std::ostringstream s;  // scylName += std::to_string(scylKinBodyPtrs.size()+1);  // C++11 only
                         s << scylKinBodyPtrs.size()+1;
                         scylName += s.str();
@@ -251,7 +250,7 @@ private:
                         // lock the environment!
                         OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                         OpenRAVE::KinBodyPtr meshKinBodyPtr = RaveCreateKinBody(pEnv,"");
-                        yarp::os::ConstString meshName("mesh_");
+                        std::string meshName("mesh_");
                         std::ostringstream s;  // meshName += std::to_string(meshKinBodyPtrs.size()+1);  // C++11 only
                         s << meshKinBodyPtrs.size()+1;
                         meshName += s.str();

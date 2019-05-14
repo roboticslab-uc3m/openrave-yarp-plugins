@@ -4,9 +4,12 @@
 #define __YARP_OPENRAVE_CONTROLBOARD_HPP__
 
 #include <vector>
-
 #include <yarp/dev/ControlBoardInterfaces.h>
-#include <yarp/dev/IControlLimits2.h>
+#include <yarp/conf/version.h>
+
+#if YARP_VERSION_MAJOR == 3 && YARP_VERSION_MINOR == 0
+#include <yarp/dev/IControlLimits.h>
+#endif // YARP_VERSION_MAJOR == 3 && YARP_VERSION_MINOR == 0
 
 #include <openrave/openrave.h>
 
@@ -29,13 +32,13 @@ namespace roboticslab
  */
 class YarpOpenraveControlboard : YarpOpenraveBase,
         public yarp::dev::DeviceDriver,
-        public yarp::dev::IControlLimits2,
-        public yarp::dev::IControlMode2,
+        public yarp::dev::IControlLimits,
+        public yarp::dev::IControlMode,
         public yarp::dev::IEncodersTimed,
-        public yarp::dev::IPositionControl2,
+        public yarp::dev::IPositionControl,
         public yarp::dev::IPositionDirect,
         public yarp::dev::ITorqueControl,
-        public yarp::dev::IVelocityControl2,
+        public yarp::dev::IVelocityControl,
         public yarp::dev::IRemoteVariables
 {
 public:
@@ -643,9 +646,9 @@ public:
 
     // ------- IRemoteVariables declarations. Implementation in IRemoteVariablesImpl.cpp -------
 
-    virtual bool getRemoteVariable(yarp::os::ConstString key, yarp::os::Bottle& val);
+    virtual bool getRemoteVariable(std::string key, yarp::os::Bottle& val);
 
-    virtual bool setRemoteVariable(yarp::os::ConstString key, const yarp::os::Bottle& val);
+    virtual bool setRemoteVariable(std::string key, const yarp::os::Bottle& val);
 
     virtual bool getRemoteVariablesList(yarp::os::Bottle* listOfKeys);
 

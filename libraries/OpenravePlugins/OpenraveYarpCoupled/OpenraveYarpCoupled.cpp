@@ -40,9 +40,8 @@
 
 #include <yarp/os/Bottle.h>
 #include <yarp/os/BufferedPort.h>
-#include <yarp/os/ConstString.h>
 #include <yarp/os/Network.h>
-#include <yarp/os/RateThread.h>
+#include <yarp/os/PeriodicThread.h>
 
 #include <yarp/dev/PolyDriver.h>
 
@@ -50,11 +49,11 @@
 
 #define NULL_JMC_MS 20
 
-class TeoSimRateThread : public yarp::os::RateThread {
+class TeoSimRateThread : public yarp::os::PeriodicThread {
      public:
 
         // Set the Thread Rate in the class constructor
-        TeoSimRateThread() : yarp::os::RateThread(NULL_JMC_MS) {}  // In ms
+        TeoSimRateThread() : yarp::os::PeriodicThread(NULL_JMC_MS * 0.001) {}  // In seconds
 
         void setEnvironmentPtr(const OpenRAVE::EnvironmentBasePtr& environmentPtr) {
             this->environmentPtr = environmentPtr;
@@ -314,8 +313,8 @@ public:
                     vectorOfCameraSensorDataPtr.push_back(boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(psensorbase->CreateSensorData(OpenRAVE::SensorBase::ST_Camera)));
                     vectorOfSensorPtrForCameras.push_back(psensorbase);  // "save"
                     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >* tmpPort = new yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >;
-                    yarp::os::ConstString tmpName("/");
-                    yarp::os::ConstString cameraSensorString(psensorbase->GetName());
+                    std::string tmpName("/");
+                    std::string cameraSensorString(psensorbase->GetName());
                     size_t pos = cameraSensorString.find("imageMap");
                     if ( pos != std::string::npos) {
                         tmpName += cameraSensorString.substr (0,pos-1);
@@ -341,8 +340,8 @@ public:
                     vectorOfLaserSensorDataPtr.push_back(boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserSensorData>(psensorbase->CreateSensorData(OpenRAVE::SensorBase::ST_Laser)));
                     vectorOfSensorPtrForLasers.push_back(psensorbase);  // "save"
                     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelInt> >* tmpPort = new yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelInt> >;
-                    yarp::os::ConstString tmpName("/");
-                    yarp::os::ConstString depthSensorString(psensorbase->GetName());
+                    std::string tmpName("/");
+                    std::string depthSensorString(psensorbase->GetName());
                     size_t pos = depthSensorString.find("depthMap");
                     if ( pos != std::string::npos) {
                         tmpName += depthSensorString.substr (0,pos-1);

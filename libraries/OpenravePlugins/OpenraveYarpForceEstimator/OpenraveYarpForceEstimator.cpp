@@ -43,10 +43,10 @@
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionWriter.h>
 #include <yarp/os/Network.h>
+#include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Port.h>
 #include <yarp/os/PortReader.h>
 #include <yarp/os/Property.h>
-#include <yarp/os/RateThread.h>
 #include <yarp/os/RpcServer.h>
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Value.h>
@@ -141,11 +141,11 @@ private:
 
 };
 
-class TeoSimRateThread : public yarp::os::RateThread {
+class TeoSimRateThread : public yarp::os::PeriodicThread {
      public:
 
         // Set the Thread Rate in the class constructor
-        TeoSimRateThread() : yarp::os::RateThread(NULL_JMC_MS) {}  // In ms
+        TeoSimRateThread() : yarp::os::PeriodicThread(NULL_JMC_MS * 0.001) {}  // In seconds
 
         /**
          * Loop function. This is the thread itself.
