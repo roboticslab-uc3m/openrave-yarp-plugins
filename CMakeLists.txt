@@ -46,7 +46,7 @@ find_package(YCM 0.10 REQUIRED)
 find_package(COLOR_DEBUG REQUIRED)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost "${OpenRAVE_Boost_VERSION}" REQUIRED COMPONENTS thread)
-find_package(YARP 3.0 REQUIRED COMPONENTS OS dev sig)
+find_package(YARP 3.1 REQUIRED COMPONENTS OS dev sig)
 
 # Soft dependencies.
 find_package(ASROB_YARP_DEVICES QUIET)

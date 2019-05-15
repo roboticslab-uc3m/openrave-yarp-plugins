@@ -7,10 +7,6 @@
 #include <yarp/dev/ControlBoardInterfaces.h>
 #include <yarp/conf/version.h>
 
-#if YARP_VERSION_MAJOR == 3 && YARP_VERSION_MINOR == 0
-#include <yarp/dev/IControlLimits2.h>
-#endif // YARP_VERSION_MAJOR == 3 && YARP_VERSION_MINOR == 0
-
 #include <openrave/openrave.h>
 
 #include "YarpOpenraveBase.hpp"

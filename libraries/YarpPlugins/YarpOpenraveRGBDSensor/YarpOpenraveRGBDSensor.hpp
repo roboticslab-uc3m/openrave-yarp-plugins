@@ -6,10 +6,6 @@
 #include <yarp/dev/DeviceDriver.h>
 #include <yarp/dev/IRGBDSensor.h>
 
-#ifdef OR_RGBDSENSOR_IFRAMEGRABBERCONTROLS_IMPL
-# include <yarp/dev/FrameGrabberControl2.h>
-#endif // OR_RGBDSENSOR_IFRAMEGRABBERCONTROLS_IMPL
-
 #include <openrave/openrave.h>
 
 #include <boost/smart_ptr/shared_ptr.hpp>
@@ -31,11 +27,7 @@ namespace roboticslab
  * @brief Implements the YARP_dev IRGBDSensor, etc.
  * interface class member functions.
  */
-class YarpOpenraveRGBDSensor :
-#ifdef OR_RGBDSENSOR_IFRAMEGRABBERCONTROLS_IMPL
-                               public yarp::dev::IFrameGrabberControls2,
-#endif // OR_RGBDSENSOR_IFRAMEGRABBERCONTROLS_IMPL
-                               YarpOpenraveBase,
+class YarpOpenraveRGBDSensor : YarpOpenraveBase,
                                public yarp::dev::DeviceDriver,
                                public yarp::dev::IRGBDSensor
 {
@@ -164,46 +156,6 @@ public:
      * if any error is present
      */
     virtual RGBDSensor_status getSensorStatus();
-
-#ifdef OR_RGBDSENSOR_IFRAMEGRABBERCONTROLS_IMPL
-    // ------- IFrameGrabberControls declarations. -------
-
-    virtual bool setBrightness(double v) { return false; }
-    virtual bool setExposure(double v) { return false; }
-    virtual bool setSharpness(double v) { return false; }
-    virtual bool setWhiteBalance(double blue, double red) { return false; }
-    virtual bool setHue(double v) { return false; }
-    virtual bool setSaturation(double v) { return false; }
-    virtual bool setGamma(double v) { return false; }
-    virtual bool setShutter(double v) { return false; }
-    virtual bool setGain(double v) { return false; }
-    virtual bool setIris(double v) { return false; }
-    virtual double getBrightness() { return 0.0; }
-    virtual double getExposure() { return 0.0; }
-    virtual double getSharpness() { return 0.0; }
-    virtual bool getWhiteBalance(double &blue, double &red) { return false; }
-    virtual double getHue() { return 0.0; }
-    virtual double getSaturation() { return 0.0; }
-    virtual double getGamma() { return 0.0; }
-    virtual double getShutter() { return 0.0; }
-    virtual double getGain() { return 0.0; }
-    virtual double getIris() { return 0.0; }
-    virtual bool getCameraDescription(CameraDescriptor *camera) { return false; }
-    virtual bool hasFeature(int feature, bool *hasFeature) { return false; }
-    virtual bool setFeature(int feature, double value) { return false; }
-    virtual bool getFeature(int feature, double *value) { return false; }
-    virtual bool setFeature(int feature, double value1, double value2) { return false; }
-    virtual bool getFeature(int feature, double *value1, double *value2) { return false; }
-    virtual bool hasOnOff(int feature, bool *HasOnOff) { return false; }
-    virtual bool setActive(int feature, bool onoff) { return false; }
-    virtual bool getActive(int feature, bool *isActive) { return false; }
-    virtual bool hasAuto(int feature, bool *hasAuto) { return false; }
-    virtual bool hasManual(int feature, bool *hasManual) { return false; }
-    virtual bool hasOnePush(int feature, bool *hasOnePush) { return false; }
-    virtual bool setMode(int feature, FeatureMode mode) { return false; }
-    virtual bool getMode(int feature, FeatureMode *mode) { return false; }
-    virtual bool setOnePush(int feature) { return false; }
-#endif // OR_RGBDSENSOR_IFRAMEGRABBERCONTROLS_IMPL
 
 private:
 
