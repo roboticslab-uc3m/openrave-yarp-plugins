@@ -226,12 +226,12 @@ void TeoSimRateThread::run() {
         ptrVectorOfSensorPtrForForce6Ds->at(force6DIter)->GetSensorData(ptrVectorOfForce6DSensorDataPtr->at(force6DIter));
         yarp::os::Bottle& b = ptrVectorOfForce6DPortPtr->at(force6DIter)->prepare();
         b.clear();
-        b.addDouble( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->force[0] );
-        b.addDouble( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->force[1] );
-        b.addDouble( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->force[2] );
-        b.addDouble( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->torque[0] );
-        b.addDouble( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->torque[1] );
-        b.addDouble( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->torque[2] );
+        b.addFloat64( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->force[0] );
+        b.addFloat64( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->force[1] );
+        b.addFloat64( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->force[2] );
+        b.addFloat64( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->torque[0] );
+        b.addFloat64( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->torque[1] );
+        b.addFloat64( ptrVectorOfForce6DSensorDataPtr->at(force6DIter)->torque[2] );
         ptrVectorOfForce6DPortPtr->at(force6DIter)->write();
     }
 

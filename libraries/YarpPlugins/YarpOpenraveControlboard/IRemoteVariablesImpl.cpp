@@ -16,7 +16,7 @@ bool roboticslab::YarpOpenraveControlboard::getRemoteVariable(std::string key, y
 
     if (key == "ptModeMs")
     {
-        val.addInt(std::numeric_limits<int>::max());
+        val.addInt32(std::numeric_limits<int>::max());
     }
 
     return true;

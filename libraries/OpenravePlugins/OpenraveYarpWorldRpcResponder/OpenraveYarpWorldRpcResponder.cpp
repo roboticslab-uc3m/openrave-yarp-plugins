@@ -154,8 +154,8 @@ private:
                         boxKinBodyPtr->SetName(boxName.c_str());
                         //
                         std::vector<OpenRAVE::AABB> boxes(1);
-                        boxes[0].extents = OpenRAVE::Vector(in.get(3).asDouble(), in.get(4).asDouble(), in.get(5).asDouble());
-                        boxes[0].pos = OpenRAVE::Vector(in.get(6).asDouble(), in.get(7).asDouble(), in.get(8).asDouble());
+                        boxes[0].extents = OpenRAVE::Vector(in.get(3).asFloat64(), in.get(4).asFloat64(), in.get(5).asFloat64());
+                        boxes[0].pos = OpenRAVE::Vector(in.get(6).asFloat64(), in.get(7).asFloat64(), in.get(8).asFloat64());
                         boxKinBodyPtr->InitFromBoxes(boxes,true);
                         boxKinBodyPtr->GetLinks()[0]->SetMass(1);
                         OpenRAVE::Vector inertia(1,1,1);
@@ -182,8 +182,8 @@ private:
                         sboxKinBodyPtr->SetName(sboxName.c_str());
                         //
                         std::vector<OpenRAVE::AABB> boxes(1);
-                        boxes[0].extents = OpenRAVE::Vector(in.get(3).asDouble(), in.get(4).asDouble(), in.get(5).asDouble());
-                        boxes[0].pos = OpenRAVE::Vector(in.get(6).asDouble(), in.get(7).asDouble(), in.get(8).asDouble());
+                        boxes[0].extents = OpenRAVE::Vector(in.get(3).asFloat64(), in.get(4).asFloat64(), in.get(5).asFloat64());
+                        boxes[0].pos = OpenRAVE::Vector(in.get(6).asFloat64(), in.get(7).asFloat64(), in.get(8).asFloat64());
                         sboxKinBodyPtr->InitFromBoxes(boxes,true);
                         //
                         pEnv->Add(sboxKinBodyPtr,true);
@@ -204,7 +204,7 @@ private:
                         ssphKinBodyPtr->SetName(ssphName.c_str());
                         //
                         std::vector<OpenRAVE::Vector> spheres(1);
-                        spheres.push_back( OpenRAVE::Vector(in.get(4).asDouble(), in.get(5).asDouble(), in.get(6).asDouble(), in.get(3).asDouble() ));
+                        spheres.push_back( OpenRAVE::Vector(in.get(4).asFloat64(), in.get(5).asFloat64(), in.get(6).asFloat64(), in.get(3).asFloat64() ));
                         ssphKinBodyPtr->InitFromSpheres(spheres,true);
                         //
                         pEnv->Add(ssphKinBodyPtr,true);
@@ -227,11 +227,11 @@ private:
                         std::list<OpenRAVE::KinBody::Link::GeometryInfo> scylInfoList;
                         OpenRAVE::KinBody::Link::GeometryInfo scylInfo;
                         scylInfo._type = OpenRAVE::KinBody::Link::GeomCylinder;
-                        OpenRAVE::Transform pose(OpenRAVE::Vector(1,0,0,0),OpenRAVE::Vector(in.get(5).asDouble(),in.get(6).asDouble(),in.get(7).asDouble()));
+                        OpenRAVE::Transform pose(OpenRAVE::Vector(1,0,0,0),OpenRAVE::Vector(in.get(5).asFloat64(),in.get(6).asFloat64(),in.get(7).asFloat64()));
                         scylInfo._t = pose;
                         OpenRAVE::Vector volume;
-                        volume.x = in.get(3).asDouble();
-                        volume.y = in.get(4).asDouble();
+                        volume.x = in.get(3).asFloat64();
+                        volume.y = in.get(4).asFloat64();
                         scylInfo._vGeomData = volume;
                         scylInfo._bVisible = true;
                         //scylInfo._vDiffuseColor = [1,0,0];
@@ -257,8 +257,8 @@ private:
                         meshKinBodyPtr->SetName(meshName.c_str());
                         //
                         //std::vector<AABB> boxes(1);
-                        //boxes[0].extents = Vector(in.get(3).asDouble(), in.get(4).asDouble(), in.get(5).asDouble());
-                        //boxes[0].pos = Vector(in.get(6).asDouble(), in.get(7).asDouble(), in.get(8).asDouble());
+                        //boxes[0].extents = Vector(in.get(3).asFloat64(), in.get(4).asFloat64(), in.get(5).asFloat64());
+                        //boxes[0].pos = Vector(in.get(6).asFloat64(), in.get(7).asFloat64(), in.get(8).asFloat64());
                         OpenRAVE::KinBody::Link::TRIMESH raveMesh;
                         raveMesh.indices.resize(6);
                         raveMesh.indices[0]=0;
@@ -301,9 +301,9 @@ private:
             {
                 OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(in.get(2).asString().c_str());
                 OpenRAVE::Transform T = objPtr->GetTransform();
-                T.trans.x = in.get(3).asDouble();  // [m]
-                T.trans.y = in.get(4).asDouble();  // [m]
-                T.trans.z = in.get(5).asDouble();  // [m]
+                T.trans.x = in.get(3).asFloat64();  // [m]
+                T.trans.y = in.get(4).asFloat64();  // [m]
+                T.trans.z = in.get(5).asFloat64();  // [m]
                 objPtr->SetTransform(T);
                 out.addVocab(VOCAB_OK);
 
@@ -350,17 +350,17 @@ private:
 
                 if(in.get(3).asString()=="box")
                 {
-                    int inIndex = (in.get(4).asInt()); // -- index of the object
+                    int inIndex = (in.get(4).asInt32()); // -- index of the object
                     if ( (inIndex>=1) && (inIndex<=(int)boxKinBodyPtrs.size()) )
                     {
-                        if (in.get(5).asInt()==1)
+                        if (in.get(5).asInt32()==1)
                         {
                             pRobot->SetActiveManipulator(in.get(2).asString()); // <in.get(2).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
                             pRobot->Grab(boxKinBodyPtrs[inIndex-1]);
                             std::printf("The box is grabbed!!\n");
                             out.addVocab(VOCAB_OK);
                         }
-                        else if (in.get(5).asInt()==0)
+                        else if (in.get(5).asInt32()==0)
                         {
                             pRobot->SetActiveManipulator(in.get(2).asString());
                             pRobot->Release(boxKinBodyPtrs[inIndex-1]);
@@ -373,17 +373,17 @@ private:
                 }
                 else if(in.get(3).asString()=="sbox")
                 {
-                    int inIndex = (in.get(4).asInt());
+                    int inIndex = (in.get(4).asInt32());
                     if ( (inIndex>=1) && (inIndex<=(int)sboxKinBodyPtrs.size()) )
                     {
-                        if (in.get(5).asInt()==1)
+                        if (in.get(5).asInt32()==1)
                         {
                             pRobot->SetActiveManipulator(in.get(2).asString());
                             pRobot->Grab(sboxKinBodyPtrs[inIndex-1]);
                             std::printf("The sbox is grabbed!!\n");
                             out.addVocab(VOCAB_OK);
                         }
-                        else if (in.get(5).asInt()==0)
+                        else if (in.get(5).asInt32()==0)
                         {
                             pRobot->SetActiveManipulator(in.get(2).asString());
                             pRobot->Release(sboxKinBodyPtrs[inIndex-1]);
@@ -396,17 +396,17 @@ private:
                 }
                 else if(in.get(3).asString()=="ssph")
                 {
-                    int inIndex = (in.get(4).asInt());
+                    int inIndex = (in.get(4).asInt32());
                     if ( (inIndex>=1) && (inIndex<=(int)ssphKinBodyPtrs.size()) )
                     {
-                        if (in.get(5).asInt()==1)
+                        if (in.get(5).asInt32()==1)
                         {
                             pRobot->SetActiveManipulator(in.get(2).asString());
                             pRobot->Grab(ssphKinBodyPtrs[inIndex-1]);
                             std::printf("The sphere is grabbed!!\n");
                             out.addVocab(VOCAB_OK);
                         }
-                        else if (in.get(5).asInt()==0)
+                        else if (in.get(5).asInt32()==0)
                         {
                             pRobot->SetActiveManipulator(in.get(2).asString());
                             pRobot->Release(ssphKinBodyPtrs[inIndex-1]);
@@ -419,17 +419,17 @@ private:
                 }
                 else if(in.get(3).asString()=="scyl")
                 {
-                    int inIndex = (in.get(4).asInt());
+                    int inIndex = (in.get(4).asInt32());
                     if ( (inIndex>=1) && (inIndex<=(int)scylKinBodyPtrs.size()) )
                     {
-                        if (in.get(5).asInt()==1)
+                        if (in.get(5).asInt32()==1)
                         {
                             pRobot->SetActiveManipulator(in.get(2).asString());
                             pRobot->Grab(scylKinBodyPtrs[inIndex-1]);
                             std::printf("The cylinder is grabbed!!\n");
                             out.addVocab(VOCAB_OK);
                         }
-                        else if (in.get(5).asInt()==0)
+                        else if (in.get(5).asInt32()==0)
                         {
                             pRobot->SetActiveManipulator(in.get(2).asString());
                             pRobot->Release(scylKinBodyPtrs[inIndex-1]);
@@ -446,14 +446,14 @@ private:
                     if(objPtr)
                     {
                         std::printf("[WorldRpcResponder] success: object %s exists.\n", in.get(4).asString().c_str());
-                        if (in.get(5).asInt()==1)
+                        if (in.get(5).asInt32()==1)
                         {
                             pRobot->SetActiveManipulator(in.get(2).asString());
                             std::printf("The cylinder is grabbed!!\n");
                             pRobot->Grab(objPtr);
                             out.addVocab(VOCAB_OK);
                         }
-                        else if (in.get(5).asInt()==0)
+                        else if (in.get(5).asInt32()==0)
                         {
                             pRobot->SetActiveManipulator(in.get(2).asString());
                             std::printf("The cylinder is released!!\n");
@@ -485,9 +485,9 @@ private:
                         OpenRAVE::Vector tr = objPtr->GetTransform().trans;
                         std::printf("[WorldRpcResponder] success: object %s at %f, %f, %f.\n", in.get(3).asString().c_str(), tr.x,tr.y,tr.z);
                         yarp::os::Bottle trans;
-                        trans.addDouble(tr.x);
-                        trans.addDouble(tr.y);
-                        trans.addDouble(tr.z);
+                        trans.addFloat64(tr.x);
+                        trans.addFloat64(tr.y);
+                        trans.addFloat64(tr.z);
                         out.addList() = trans;
                         out.addVocab(VOCAB_OK);
                     }
@@ -512,9 +512,9 @@ private:
                     //Transform tcp = ee;
                     std::printf("[WorldRpcResponder] success: TCP at %f, %f, %f.\n", tcp.trans.x, tcp.trans.y, tcp.trans.z);
                     yarp::os::Bottle trans;
-                    trans.addDouble(tcp.trans.x);
-                    trans.addDouble(tcp.trans.y);
-                    trans.addDouble(tcp.trans.z);
+                    trans.addFloat64(tcp.trans.x);
+                    trans.addFloat64(tcp.trans.y);
+                    trans.addFloat64(tcp.trans.z);
                     out.addList() = trans;
                     out.addVocab(VOCAB_OK);
 
@@ -528,7 +528,7 @@ private:
             }
             else if (in.get(1).asString()=="draw")
             {
-                if (in.get(2).asInt() == 0)
+                if (in.get(2).asInt32() == 0)
                 {
                     std::printf("[WorldRpcResponder] success: Turning draw OFF.\n");
                     robotDraw = 0;
@@ -537,13 +537,13 @@ private:
                 else
                 {
                     std::printf("[WorldRpcResponder] success: Turning draw ON.\n");
-                    robotDraw = in.get(2).asInt();
-                    if (in.size() >= 4) drawRadius = in.get(3).asDouble();
+                    robotDraw = in.get(2).asInt32();
+                    if (in.size() >= 4) drawRadius = in.get(3).asFloat64();
                     if (in.size() >= 7)
                     {
-                        drawR = in.get(4).asDouble();
-                        drawG = in.get(5).asDouble();
-                        drawB = in.get(6).asDouble();
+                        drawR = in.get(4).asFloat64();
+                        drawG = in.get(5).asFloat64();
+                        drawB = in.get(6).asFloat64();
                     }
                     out.addVocab(VOCAB_OK);
                 }

@@ -84,7 +84,7 @@ private:
         {
             psqPaintedSemaphore->wait();
             for(int i=0; i<psqPainted->size();i++)
-                response.addInt(psqPainted->operator[](i));
+                response.addInt32(psqPainted->operator[](i));
             psqPaintedSemaphore->post();
             return response.write(*out);
         }
@@ -93,7 +93,7 @@ private:
 
             psqPaintedSemaphore->wait();
             for(int i=0; i<psqPainted->size();i++)
-                psqPainted->operator[](i) |= request.get(i+1).asInt();  // logic OR
+                psqPainted->operator[](i) |= request.get(i+1).asInt32();  // logic OR
             psqPaintedSemaphore->post();
             response.addString("ok");
             return response.write(*out);
@@ -183,7 +183,7 @@ public:
         std::string portName = options.check("name",yarp::os::Value(DEFAULT_PORT_NAME),"port name").asString();
         CD_INFO("port name: %s\n",portName.c_str());
 
-        int squares = options.check("squares",yarp::os::Value(DEFAULT_SQUARES),"number of squares").asInt();
+        int squares = options.check("squares",yarp::os::Value(DEFAULT_SQUARES),"number of squares").asInt32();
         CD_INFO("squares: %d\n",squares);
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());

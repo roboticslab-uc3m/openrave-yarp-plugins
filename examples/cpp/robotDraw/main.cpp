@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
         printf("\t--height (default: \"%f\")\n",height);
     }
     if (options.check("robot")) robotName = options.find("robot").asString();
-    if (options.check("height")) height = options.find("height").asDouble();
+    if (options.check("height")) height = options.find("height").asFloat64();
     printf("robotDraw using robot: %s, height.\n",robotName.c_str(),height);
 
     printf("--------------------------------------------------------------\n");
@@ -117,14 +117,14 @@ int main(int argc, char *argv[]) {
         bOut.addVocab(VOCAB_OK);
         pointsRpcServer.reply(bOut);  // send reply
 
-        double aprox0[5] = {targets[0]+bIn.get(5).asDouble(), targets[1]+bIn.get(6).asDouble(),
+        double aprox0[5] = {targets[0]+bIn.get(5).asFloat64(), targets[1]+bIn.get(6).asFloat64(),
             targets[2]+.1, targets[3], targets[4]};
         printf("[movj] To aprox0.\n");                
         cartesianClient.movj(aprox0);
         Time::delay(.1);
         cartesianClient.wait();
 
-        double p0[5] = {targets[0]+bIn.get(5).asDouble(), targets[1]+bIn.get(6).asDouble(),
+        double p0[5] = {targets[0]+bIn.get(5).asFloat64(), targets[1]+bIn.get(6).asFloat64(),
             targets[2], targets[3], targets[4]};
         printf("[movl] To p0.\n");          
         cartesianClient.movl(p0);
@@ -135,19 +135,19 @@ int main(int argc, char *argv[]) {
         miOutput.clear();
         miOutput.addString("world");
         miOutput.addString("draw");
-        miOutput.addInt(1);  // ON
-        miOutput.addDouble(bIn.get(1).asDouble());  // Radius: 0.005
-        miOutput.addDouble(bIn.get(2).asDouble());  // R: 0.0980392
-        miOutput.addDouble(bIn.get(3).asDouble());  // G: 0.705882
-        miOutput.addDouble(bIn.get(4).asDouble());  // B: 0.686274
+        miOutput.addInt32(1);  // ON
+        miOutput.addFloat64(bIn.get(1).asFloat64());  // Radius: 0.005
+        miOutput.addFloat64(bIn.get(2).asFloat64());  // R: 0.0980392
+        miOutput.addFloat64(bIn.get(3).asFloat64());  // G: 0.705882
+        miOutput.addFloat64(bIn.get(4).asFloat64());  // B: 0.686274
         worldRpcClient.write(miOutput, miInput);
         Time::delay(.1);
 
 //        for (int i=3; i<(bIn.size());i=i+2) {
         for (int i=7; i<(bIn.size());i=i+2) {
             double tmpTargets[5];
-            tmpTargets[0] = targets[0] + bIn.get(i).asDouble();
-            tmpTargets[1] = targets[1] + bIn.get(i+1).asDouble();
+            tmpTargets[0] = targets[0] + bIn.get(i).asFloat64();
+            tmpTargets[1] = targets[1] + bIn.get(i+1).asFloat64();
             tmpTargets[2] = targets[2];
             tmpTargets[3] = targets[3];
             tmpTargets[4] = targets[4];
@@ -159,11 +159,11 @@ int main(int argc, char *argv[]) {
         miOutput.clear();
         miOutput.addString("world");
         miOutput.addString("draw");
-        miOutput.addInt(0);
+        miOutput.addInt32(0);
         worldRpcClient.write(miOutput, miInput);
         Time::delay(.1);
 
-        double aproxN[5] = {targets[0]+bIn.get(bIn.size()-2).asDouble(), targets[1]+bIn.get(bIn.size()-1).asDouble(),
+        double aproxN[5] = {targets[0]+bIn.get(bIn.size()-2).asFloat64(), targets[1]+bIn.get(bIn.size()-1).asFloat64(),
             height+.1, targets[3], targets[4]};
         printf("[movl] To aproxN.\n");                
         cartesianClient.movl(aproxN);
