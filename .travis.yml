@@ -82,13 +82,21 @@ install:
     --repo-url https://github.com/roboticslab-uc3m/color-debug
     --repo-checkout develop
 
-  #-- Install yarp-devices (asrob-uc3m)
+  #-- Install asrob-uc3m/yarp-devices (for YarpOpenraveRobotManager)
   - >
     source "$TRAVIS_BUILD_DIR/scripts/travis/git-cache-dependency.sh"
-    --package-name ROBOTICSLAB_YARP_DEVICES
+    --package-name ASROB_YARP_DEVICES
     --repo-url https://github.com/asrob-uc3m/yarp-devices
     --repo-checkout develop
     --additional-export-paths "YARP_DATA_DIRS;share/asrob-yarp-devices"
+
+  #-- Install kinematics-dynamics (for robotDraw example)
+  - >
+    source "$TRAVIS_BUILD_DIR/scripts/travis/git-cache-dependency.sh"
+    --package-name ROBOTICSLAB_KINEMATICS_DYNAMICS
+    --repo-url https://github.com/roboticslab-uc3m/kinematics-dynamics
+    --repo-checkout develop
+    --additional-export-paths "YARP_DATA_DIRS;share/roboticslab-kinematics-dynamics"
 
 before_script:
   - mkdir -p "$TRAVIS_BUILD_DIR/build" && cd "$_"
