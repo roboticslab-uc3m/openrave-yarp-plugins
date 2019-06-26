@@ -370,7 +370,7 @@ public:
             }
             else if( sqPaintedValue == 3 ) //magenta
             {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(paintMemory[i]/NUM_MAX_STROKES, 0.0, paintMemory[i]/(NUM_MAX_STROKES*1.5));
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(paintMemory[i]/NUM_MAX_STROKES, 0.0, paintMemory[i]/(NUM_MAX_STROKES*1.5)));
             }
             else
             {
