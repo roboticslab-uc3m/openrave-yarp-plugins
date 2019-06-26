@@ -55,6 +55,7 @@
 #define DEFAULT_RATE_MS 0.1
 #define DEFAULT_SQUARES 64
 #define DEFAULT_PORT_NAME "/openraveYarpPaintSquares/rpc:s"
+#define NUM_MAX_STROKES 10
 
 class DataProcessor : public yarp::os::PortReader {
 
@@ -223,6 +224,10 @@ public:
 
         sqPainted.resize(squares);
 
+        //Paint memory resize to num_squares and set to zero
+        paintMemory.resize(squares);
+        std::fill(paintMemory.begin(), paintMemory.end(), 0);
+
         processor.setPsqPainted(&sqPainted);
         processor.setPsqPaintedSemaphore(&sqPaintedSemaphore);
         rpcServer.setReader(processor);
@@ -329,6 +334,8 @@ public:
                 sqPainted[i]=1;
                 sqPaintedSemaphore.post();
                 std::cout<<"He pintado AZUL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
+                paintMemory[i] += 1;
+
             }
             else if (dist < 0.05 && brushColour == 2 ) //Paint yellow
             {
@@ -336,6 +343,7 @@ public:
                 sqPainted[i]=2;
                 sqPaintedSemaphore.post();
                 std::cout<<"He pintado VERDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
+                paintMemory[i] += 1;
             }
 
             else if (dist < 0.05 && brushColour == 3 ) //Paint magenta
@@ -344,6 +352,7 @@ public:
                 sqPainted[i]=3;
                 sqPaintedSemaphore.post();
                 std::cout<<"He pintado ROJO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
+                paintMemory[i] += 1;
             }
 
 
@@ -353,19 +362,19 @@ public:
 
             if( sqPaintedValue == 1 ) //cyan
             {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.0, 1.0, 1.0));
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.0, paintMemory[i]/NUM_MAX_STROKES, paintMemory[i]/NUM_MAX_STROKES));
             }
             else if( sqPaintedValue == 2 ) //yellow
             {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(1.0, 1.0, 0.0));
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(paintMemory[i]/NUM_MAX_STROKES, paintMemory[i]/NUM_MAX_STROKES, 0.0));
             }
             else if( sqPaintedValue == 3 ) //magenta
             {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(1.0, 0.0, 0.4));
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(paintMemory[i]/NUM_MAX_STROKES, 0.0, paintMemory[i]/(NUM_MAX_STROKES*1.5));
             }
             else
             {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.5, 0.5, 0.5));
+                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(paintMemory[i]/(NUM_MAX_STROKES*2), paintMemory[i]/(NUM_MAX_STROKES*2), paintMemory[i]/(NUM_MAX_STROKES*2)));
             }
 
         }
@@ -381,6 +390,8 @@ private:
 
     std::vector<int> sqPainted;
     yarp::os::Semaphore sqPaintedSemaphore;
+    //Aux var for number of strokes
+    std::vector<int> paintMemory;
 
     OpenRAVE::Transform T_base_object;
     OpenRAVE::KinBodyPtr _objPtr;
