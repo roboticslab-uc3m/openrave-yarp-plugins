@@ -11,15 +11,7 @@
 bool roboticslab::YarpOpenraveControlboard::getRemoteVariable(std::string key, yarp::os::Bottle& val)
 {
     CD_DEBUG("%s\n", key.c_str());
-
-    val.clear();
-
-    if (key == "ptModeMs")
-    {
-        val.addInt32(std::numeric_limits<int>::max());
-    }
-
-    return true;
+    return false;
 }
 
 // -----------------------------------------------------------------------------
@@ -27,7 +19,7 @@ bool roboticslab::YarpOpenraveControlboard::getRemoteVariable(std::string key, y
 bool roboticslab::YarpOpenraveControlboard::setRemoteVariable(std::string key, const yarp::os::Bottle& val)
 {
     CD_DEBUG("%s\n", key.c_str());
-    return true;
+    return false;
 }
 
 // -----------------------------------------------------------------------------
@@ -37,7 +29,6 @@ bool roboticslab::YarpOpenraveControlboard::getRemoteVariablesList(yarp::os::Bot
     CD_DEBUG("\n");
     listOfKeys->clear();
     // Place each key in its own list so that clients can just call check('<key>') or !find('<key>').isNull().
-    listOfKeys->addList().addString("ptModeMs");
     return true;
 }
 
