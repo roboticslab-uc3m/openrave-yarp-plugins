@@ -310,9 +310,18 @@ bool roboticslab::YarpOpenraveControlboard::relativeMove(const int n_joint, cons
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flags)
+bool roboticslab::YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flag)
 {
-    CD_ERROR("Not implemented yet.\n");
+    //CD_INFO("\n");
+    bool ok = true;
+    bool done = true;
+    for(int i=0;i<n_joint;i++)
+    {
+        bool tmpDone;
+        ok &= checkMotionDone(joints[i],&tmpDone);
+        done &= tmpDone;
+    }
+    *flag = done;
     return true;
 }
 
@@ -346,24 +355,37 @@ bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const int n_join
 
 bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    CD_INFO("\n");
+    bool ok = true;
+    for(int i=0;i<n_joint;i++)
+    {
+        ok &= getRefSpeed(joints[i],&spds[i]);
+    }
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    CD_INFO("\n");
+    bool ok = true;
+    for(int i=0;i<n_joint;i++)
+    {
+        ok &= getRefAcceleration(joints[i],&accs[i]);
+    }
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::stop(const int n_joint, const int *joints)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    CD_INFO("\n");
+    bool ok = true;
+    for(unsigned int i=0;i<n_joint;i++)
+        ok &= stop(joints[i]);
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
