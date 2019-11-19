@@ -28,6 +28,7 @@ namespace roboticslab
  */
 class YarpOpenraveControlboard : YarpOpenraveBase,
                                  public yarp::dev::DeviceDriver,
+                                 public yarp::dev::IAxisInfo,
                                  public yarp::dev::IControlLimits,
                                  public yarp::dev::IControlMode,
                                  public yarp::dev::IEncodersTimed,
@@ -41,6 +42,22 @@ public:
 
     // Set the Thread Rate in the class constructor
     YarpOpenraveControlboard() {}
+
+    // ------- IAxisInfo declarations. Implementation in IAxisInfoImpl.cpp -------
+
+    /* Get the name for a particular axis.
+    * @param axis joint number
+    * @param name the axis name
+    * @return true if everything goes fine, false otherwise.
+    */
+    virtual bool getAxisName(int axis, std::string& name);
+
+    /* Get the joint type (e.g. revolute/prismatic) for a particular axis.
+    * @param axis joint number
+    * @param type the joint type
+    * @return true if everything goes fine, false otherwise.
+    */
+    virtual bool getJointType(int axis, yarp::dev::JointTypeEnum& type);
 
     // ------- IPositionControl declarations. Implementation in IPositionControlImpl.cpp -------
 

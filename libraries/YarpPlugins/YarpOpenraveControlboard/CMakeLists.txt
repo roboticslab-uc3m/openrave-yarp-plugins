@@ -17,6 +17,7 @@ if(NOT SKIP_YarpOpenraveControlboard)
 
     yarp_add_plugin(YarpOpenraveControlboard YarpOpenraveControlboard.hpp
                                              DeviceDriverImpl.cpp
+                                             IAxisInfoImpl.cpp
                                              IControlLimitsImpl.cpp
                                              IControlModeImpl.cpp
                                              IEncodersImpl.cpp
