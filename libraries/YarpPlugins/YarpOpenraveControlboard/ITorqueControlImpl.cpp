@@ -69,7 +69,7 @@ bool roboticslab::YarpOpenraveControlboard::getTorque(int j, double *t) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getTorques(double *t) {
-    CD_INFO("\n");
+    //CD_INFO("\n");
     return true;
 }
 
@@ -88,39 +88,3 @@ bool roboticslab::YarpOpenraveControlboard::getTorqueRanges(double *min, double 
 }
 
 // -----------------------------------------------------------------------------
-
-#if YARP_VERSION_MAJOR != 3
-bool roboticslab::YarpOpenraveControlboard::getBemfParam(int j, double *bemf) {
-    CD_INFO("joint: %d.\n",j);
-
-    yarp::dev::MotorTorqueParameters params;
-
-    if (!getMotorTorqueParams(j, &params))
-    {
-        return false;
-    }
-
-    *bemf = params.bemf;
-
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool roboticslab::YarpOpenraveControlboard::setBemfParam(int j, double bemf) {
-    CD_INFO("joint: %d, bemf: %f.\n",j,bemf);
-
-    yarp::dev::MotorTorqueParameters params;
-
-    if (!getMotorTorqueParams(j, &params))
-    {
-        return false;
-    }
-
-    params.bemf = bemf;
-
-    return setMotorTorqueParams(j, params);
-}
-
-// -----------------------------------------------------------------------------
-#endif // YARP_VERSION_MAJOR != 3

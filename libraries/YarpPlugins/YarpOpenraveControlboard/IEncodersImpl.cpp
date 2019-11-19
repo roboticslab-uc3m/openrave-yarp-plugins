@@ -51,7 +51,7 @@ bool roboticslab::YarpOpenraveControlboard::getEncoder(int j, double *v) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getEncoders(double *encs) {
-    CD_INFO("\n");
+    //CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= getEncoder(i,&encs[i]);
@@ -70,7 +70,7 @@ bool roboticslab::YarpOpenraveControlboard::getEncoderSpeed(int j, double *sp) {
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getEncoderSpeeds(double *spds) {
-    CD_INFO("\n");
+    //CD_INFO("\n");
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= getEncoderSpeed(i,&spds[i]);
@@ -87,7 +87,7 @@ bool roboticslab::YarpOpenraveControlboard::getEncoderAcceleration(int j, double
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getEncoderAccelerations(double *accs) {
-    CD_INFO("\n");
+    //CD_INFO("\n");
     return false;
 }
 

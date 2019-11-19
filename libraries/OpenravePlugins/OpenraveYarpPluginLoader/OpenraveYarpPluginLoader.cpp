@@ -144,7 +144,7 @@ public:
 
         if( options.check("robotIndex") )
         {
-            int robotIndex = options.find("robotIndex").asInt();
+            int robotIndex = options.find("robotIndex").asInt32();
             robotIndices.push_back(robotIndex);
         }
         else if( options.check("robotIndices") )
@@ -205,7 +205,7 @@ public:
 
             if( options.check("manipulatorIndex") )
             {
-                int manipulatorIndex = options.find("manipulatorIndex").asInt();
+                int manipulatorIndex = options.find("manipulatorIndex").asInt32();
                 manipulatorIndices.push_back(manipulatorIndex);
             }
             else if( options.check("manipulatorIndices") )
@@ -220,7 +220,7 @@ public:
             }
             else if( options.check("sensorIndex") )
             {
-                int sensorIndex = options.find("sensorIndex").asInt();
+                int sensorIndex = options.find("sensorIndex").asInt32();
                 sensorIndices.push_back(sensorIndex);
             }
             else if( options.check("sensorIndices") )

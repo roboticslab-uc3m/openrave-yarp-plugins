@@ -43,9 +43,9 @@
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionWriter.h>
 #include <yarp/os/Network.h>
+#include <yarp/os/PeriodicThread.h>
 #include <yarp/os/PortReader.h>
 #include <yarp/os/Property.h>
-#include <yarp/os/RateThread.h>
 #include <yarp/os/RpcServer.h>
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Value.h>
@@ -84,7 +84,7 @@ private:
         {
             psqPaintedSemaphore->wait();
             for(int i=0; i<psqPainted->size();i++)
-                response.addInt(psqPainted->operator[](i));
+                response.addInt32(psqPainted->operator[](i));
             psqPaintedSemaphore->post();
             return response.write(*out);
         }
@@ -93,7 +93,7 @@ private:
 
             psqPaintedSemaphore->wait();
             for(int i=0; i<psqPainted->size();i++)
-                psqPainted->operator[](i) |= request.get(i+1).asInt();  // logic OR
+                psqPainted->operator[](i) |= request.get(i+1).asInt32();  // logic OR
             psqPaintedSemaphore->post();
             response.addString("ok");
             return response.write(*out);
@@ -115,10 +115,10 @@ private:
 
 };
 
-class OpenraveYarpPaintSquares : public OpenRAVE::ModuleBase, public yarp::os::RateThread
+class OpenraveYarpPaintSquares : public OpenRAVE::ModuleBase, public yarp::os::PeriodicThread
 {
 public:
-    OpenraveYarpPaintSquares(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::RateThread(DEFAULT_RATE_MS) {
+    OpenraveYarpPaintSquares(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::PeriodicThread(DEFAULT_RATE_MS * 0.001) {
         __description = "OpenraveYarpPaintSquares plugin.";
         OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens OpenraveYarpPaintSquares");
     }
@@ -183,7 +183,7 @@ public:
         std::string portName = options.check("name",yarp::os::Value(DEFAULT_PORT_NAME),"port name").asString();
         CD_INFO("port name: %s\n",portName.c_str());
 
-        int squares = options.check("squares",yarp::os::Value(DEFAULT_SQUARES),"number of squares").asInt();
+        int squares = options.check("squares",yarp::os::Value(DEFAULT_SQUARES),"number of squares").asInt32();
         CD_INFO("squares: %d\n",squares);
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
@@ -228,7 +228,7 @@ public:
         rpcServer.setReader(processor);
         rpcServer.open(portName);
 
-        this->start();  // start yarp::os::RateThread (calls run periodically)
+        this->start();  // start yarp::os::PeriodicThread (calls run periodically)
 
         return true;
     }

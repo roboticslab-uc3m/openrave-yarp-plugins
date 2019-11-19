@@ -43,10 +43,10 @@
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionWriter.h>
 #include <yarp/os/Network.h>
+#include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Port.h>
 #include <yarp/os/PortReader.h>
 #include <yarp/os/Property.h>
-#include <yarp/os/RateThread.h>
 #include <yarp/os/RpcServer.h>
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Value.h>
@@ -104,7 +104,7 @@ private:
         {
             psqIronedSemaphore->wait();
             for(int i=0; i<psqIroned->size();i++)
-                response.addInt(psqIroned->operator[](i));
+                response.addInt32(psqIroned->operator[](i));
             psqIronedSemaphore->post();
             return response.write(*out);
         }
@@ -113,7 +113,7 @@ private:
 
             psqIronedSemaphore->wait();
             for(int i=0; i<psqIroned->size();i++)
-                psqIroned->operator[](i) |= request.get(i+1).asInt();  // logic OR
+                psqIroned->operator[](i) |= request.get(i+1).asInt32();  // logic OR
             psqIronedSemaphore->post();
             response.addString("ok");
             return response.write(*out);
@@ -130,7 +130,7 @@ private:
         else if ( request.get(0).asString() == "force" )
         {
             pforceValueSemaphore->wait();
-            response.addDouble(pforceValue[0]);
+            response.addFloat64(pforceValue[0]);
             pforceValueSemaphore->post();
             return response.write(*out);
         }
@@ -141,11 +141,11 @@ private:
 
 };
 
-class TeoSimRateThread : public yarp::os::RateThread {
+class TeoSimRateThread : public yarp::os::PeriodicThread {
      public:
 
         // Set the Thread Rate in the class constructor
-        TeoSimRateThread() : yarp::os::RateThread(NULL_JMC_MS) {}  // In ms
+        TeoSimRateThread() : yarp::os::PeriodicThread(NULL_JMC_MS * 0.001) {}  // In seconds
 
         /**
          * Loop function. This is the thread itself.
@@ -212,7 +212,7 @@ void TeoSimRateThread::run() {
 
     //double estimatedForceZ = fabs((ERROR_GAIN * (t2.trans.z - t1.trans.z) ) - ERROR_OFFSET);
     //yarp::os::Bottle out;
-    //out.addDouble(t1.trans.z);
+    //out.addFloat64(t1.trans.z);
     //port.write(out);
 
     //Calculate the % of wrinkle that have been ironed.
@@ -332,7 +332,7 @@ public:
         std::string portName = options.check("name",yarp::os::Value(DEFAULT_PORT_NAME),"port name").asString();
         CD_INFO("port name: %s\n",portName.c_str());
 
-        int wrinkleSize = options.check("wrinkleSize",yarp::os::Value(DEFAULT_WRINKLESIZE),"wrinkle Size").asInt();
+        int wrinkleSize = options.check("wrinkleSize",yarp::os::Value(DEFAULT_WRINKLESIZE),"wrinkle Size").asInt32();
         CD_INFO("wrinkle Size: %d\n",wrinkleSize);
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());

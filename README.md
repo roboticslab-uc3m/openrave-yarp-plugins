@@ -25,7 +25,7 @@ Installation instructions for installing from source can be found [here](doc/ope
 
 ## Status
 
-[![Build Status (Linux/OSX)](https://travis-ci.org/roboticslab-uc3m/openrave-yarp-plugins.svg?branch=master)](https://travis-ci.org/roboticslab-uc3m/openrave-yarp-plugins)
+[![Build Status (Linux)](https://travis-ci.com/roboticslab-uc3m/openrave-yarp-plugins.svg?branch=develop)](https://travis-ci.com/roboticslab-uc3m/openrave-yarp-plugins)
 
 [![Coverage Status](https://coveralls.io/repos/roboticslab-uc3m/openrave-yarp-plugins/badge.svg)](https://coveralls.io/r/roboticslab-uc3m/openrave-yarp-plugins)
 
@@ -44,9 +44,9 @@ Technically, the OpenRAVE plugin can directly open YARP ports, or contain one or
 - "name": Can be extracted from the `OpenRAVE::Environment` and can be used for the port names opened by the "device" too.
 - Plus, whatever other information the "subdevice" YARP plugin requires (e.g. which `robotIndex` and/or `manipulatorIndex` for control).
 
-# Tutorials
+## Tutorials
 
-## How to use openrave-yarp-plugins for collision avoidance of a simulated robot
+### How to use openrave-yarp-plugins for collision avoidance of a simulated robot
 The following commands explain how to use the openrave-yarp-plugins for collision avoidance, using the previous instance of openrave-yarp-plugins as the remote robot.
 
 ```bash
@@ -59,7 +59,7 @@ python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-con
 yarp rpc /safe/teoSim/[kinematic chain name]/rpc:i
 ```
 
-## How to use openrave-yarp-plugins for collision avoidance of a real robot
+### How to use openrave-yarp-plugins for collision avoidance of a real robot
 The following commands explain how to use the openrave-yarp-plugins for collision avoidance, using a real remote robot.
 
 ```bash
@@ -70,7 +70,7 @@ python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-con
 yarp rpc /safe/teo/[kinematic chain name]/rpc:i
 ```
 
-## How to extract a .pp model from ConvexDecomposition
+### How to extract a .pp model from ConvexDecomposition
 The following commands explain how to use openrave to create a 3D model (.pp) of the collision space that openrave uses to calculate collisions. Whereas openarave uses it continuously, here we can save the 3D files to use them.
 
 ```bash
@@ -88,3 +88,5 @@ openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave
 
 To change the file type, [this](https://github.com/roboticslab-uc3m/tools/tree/develop/programs/openraveppToSTL) can be used.
 
+## Similar and Related Projects
+- http://www.iearobotics.com/wiki/index.php?title=OpenRave_y_robots_modulares

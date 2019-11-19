@@ -1,5 +1,5 @@
 language: cpp
-dist: trusty
+dist: xenial
 os: linux
 
 compiler:
@@ -11,9 +11,7 @@ env:
     - CACHE_DIR=~/cached-deps
   matrix:
     - YARP_CHECKOUT=master
-    - YARP_CHECKOUT=30dce54 # hotfix for v3.0.1
-    - YARP_CHECKOUT=v2.3.72.1
-    - YARP_CHECKOUT=v2.3.70.2
+    - YARP_CHECKOUT=v3.1.2
 
 matrix:
   include:
@@ -46,10 +44,6 @@ addons:
     - lcov
 
 before_install:
-  #-- Configure Git (needed by YCM)
-  - if [ ! `git config --get user.email` ]; then `git config --global user.email 'user@example.com'`; fi
-  - if [ ! `git config --get user.name` ]; then `git config --global user.name 'Travis CI'`; fi
-
   #-- Code coverage
   - if [ "$CXX" = "g++" ]; then gem install coveralls-lcov; fi
 
@@ -77,7 +71,9 @@ install:
     --package-name OpenRAVE
     --repo-url https://github.com/rdiankov/openrave
     --repo-checkout master
+    --additional-cmake-options "-DOPT_VIDEORECORDING:BOOL=OFF -DOPT_IKFAST_FLOAT32:BOOL=OFF"
     --prepend-to-linker-path lib
+    --cmake-env 'CFLAGS="-w" CXXFLAGS="-w"'
 
   #-- Install color-debug
   - >
@@ -86,20 +82,33 @@ install:
     --repo-url https://github.com/roboticslab-uc3m/color-debug
     --repo-checkout develop
 
-  #-- Install yarp-devices (asrob-uc3m)
+  #-- Install asrob-uc3m/yarp-devices (for YarpOpenraveRobotManager)
   - >
     source "$TRAVIS_BUILD_DIR/scripts/travis/git-cache-dependency.sh"
-    --package-name ROBOTICSLAB_YARP_DEVICES
+    --package-name ASROB_YARP_DEVICES
     --repo-url https://github.com/asrob-uc3m/yarp-devices
     --repo-checkout develop
     --additional-export-paths "YARP_DATA_DIRS;share/asrob-yarp-devices"
+
+  #-- Install kinematics-dynamics (for robotDraw example)
+  - >
+    source "$TRAVIS_BUILD_DIR/scripts/travis/git-cache-dependency.sh"
+    --package-name ROBOTICSLAB_KINEMATICS_DYNAMICS
+    --repo-url https://github.com/roboticslab-uc3m/kinematics-dynamics
+    --repo-checkout develop
+    --additional-export-paths "YARP_DATA_DIRS;share/roboticslab-kinematics-dynamics"
 
 before_script:
   - mkdir -p "$TRAVIS_BUILD_DIR/build" && cd "$_"
   - cmake .. -DCMAKE_INSTALL_PREFIX="$PWD/install" -DENABLE_coverage:BOOL=ON
   - make install
+
   - export LD_LIBRARY_PATH=$PWD/install/lib:$LD_LIBRARY_PATH
   - export YARP_DATA_DIRS=$PWD/install/share/roboticslab-openrave-yarp-plugins:$YARP_DATA_DIRS
+  - export CMAKE_PREFIX_PATH="$PWD/install/lib/cmake/ROBOTICSLAB_OPERNAVE_YARP_PLUGINS:$CMAKE_PREFIX_PATH"
+
+  - mkdir -p "$TRAVIS_BUILD_DIR/build/robotDraw" && cd "$_"
+  - cmake "$TRAVIS_BUILD_DIR/examples/cpp/robotDraw" && make
 
 script:
   - echo "No unit tests available"
@@ -108,4 +117,4 @@ after_success:
   #-- Code coverage
   - if [ "$CXX" = "g++" ]; then source "$TRAVIS_BUILD_DIR/scripts/travis/coverage.sh"; fi
 
-  - make uninstall
+  - cd "$TRAVIS_BUILD_DIR/build" && make uninstall

@@ -29,7 +29,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
     if ( ! configureRobot(config) )
         return false;
 
-    int sensorIndex = config.check("sensorIndex",yarp::os::Value(NOT_SET),"sensor index").asInt();
+    int sensorIndex = config.check("sensorIndex",yarp::os::Value(NOT_SET),"sensor index").asInt32();
 
     if (sensorIndex == NOT_SET)
     {

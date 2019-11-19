@@ -10,12 +10,12 @@ yarp_prepare_plugin(YarpOpenraveRobotManager
                     TYPE roboticslab::YarpOpenraveRobotManager
                     INCLUDE YarpOpenraveRobotManager.hpp
                     DEFAULT ON
-                    DEPENDS "ENABLE_YarpOpenraveBase;ASROB_YARP_DEVICES_FOUND")
+                    DEPENDS "ENABLE_YarpOpenraveBase;ASROB_YARP_DEVICES_FOUND"
+                    EXTRA_CONFIG WRAPPER=RobotServer)
 
 if(NOT SKIP_YarpOpenraveRobotManager)
 
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR} # yarp plugin builder needs this
-                        ${OpenRAVE_INCLUDE_DIRS})
+    set(CMAKE_INCLUDE_CURRENT_DIR TRUE) # yarp plugin builder needs this
 
     link_directories(${OpenRAVE_LIBRARY_DIRS})
 
@@ -33,15 +33,21 @@ if(NOT SKIP_YarpOpenraveRobotManager)
                                                    ROBOTICSLAB::ColorDebug
                                                    YarpOpenraveBaseInterface)
 
-    yarp_install(TARGETS YarpOpenraveRobotManager
-                 EXPORT YARP
-                 COMPONENT runtime
-                 LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
-                 ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR})
+    target_include_directories(YarpOpenraveRobotManager PRIVATE ${OpenRAVE_INCLUDE_DIRS})
 
-    yarp_install(FILES YarpOpenraveRobotManager.ini
-                 COMPONENT runtime
-                 DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
+    if(NOT YARP_VERSION_SHORT VERSION_LESS 3.2)
+        yarp_install(TARGETS YarpOpenraveRobotManager
+                     LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
+                     ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR}
+                     YARP_INI DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
+    else()
+        yarp_install(TARGETS YarpOpenraveRobotManager
+                     LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
+                     ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR})
+
+        yarp_install(FILES YarpOpenraveRobotManager.ini
+                     DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
+    endif()
 
 else()
 

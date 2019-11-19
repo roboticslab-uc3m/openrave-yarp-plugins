@@ -27,7 +27,9 @@ namespace roboticslab
  * @brief Implements the YARP_dev IRGBDSensor, etc.
  * interface class member functions.
  */
-class YarpOpenraveRGBDSensor : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IRGBDSensor
+class YarpOpenraveRGBDSensor : YarpOpenraveBase,
+                               public yarp::dev::DeviceDriver,
+                               public yarp::dev::IRGBDSensor
 {
 public:
 
@@ -104,7 +106,7 @@ public:
      * Error message will be reset after any succesful command
      * @return A string explaining the last error occurred.
      */
-    virtual yarp::os::ConstString getLastErrorMsg(yarp::os::Stamp *timeStamp = NULL)  {}
+    virtual std::string getLastErrorMsg(yarp::os::Stamp *timeStamp = NULL)  {}
 
     /**
      * Get the rgb frame from the device.

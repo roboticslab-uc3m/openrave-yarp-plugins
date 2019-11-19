@@ -18,7 +18,7 @@ bool roboticslab::YarpOpenraveControlboard::getControlMode(int j, int *mode) {
 
 
 bool roboticslab::YarpOpenraveControlboard::getControlModes(int *modes) {
-    CD_DEBUG("\n");
+    //CD_DEBUG("\n");  //-- Way too verbose.
     bool ok = true;
     for(unsigned int i=0; i < axes; i++)
         ok &= getControlMode(i,&(modes[i]));
