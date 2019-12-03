@@ -6,7 +6,7 @@ yarp server
 ```
 
 ## Command Line (CLI) Invocation
-Note that `OpenraveYarpPluginLoader` uses OpenRAVE plugins `main()`, affected by [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60). This affects these CLI/`bash` (non-Python) examples.
+Note that the string with parameters passed from the CLI to `OpenraveYarpPluginLoader` are parsed within its [`int main(const std::string& cmd)`](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/examples-improve/libraries/OpenravePlugins/OpenraveYarpPluginLoader/OpenraveYarpPluginLoader.cpp#L57-L96) function. This function are a part of  uses OpenRAVE plugins, which are affected by several issues, namely [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60).
    
 ### Example 1
 To use `OpenraveYarpPluginLoader` with `--robotIndex 0` and `--allManipulators` that takes care of names:
