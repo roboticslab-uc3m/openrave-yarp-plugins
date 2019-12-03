@@ -6,7 +6,7 @@ yarp server
 ```
 
 ## Command Line (CLI) Invocation
-Note that `OpenraveYarpPluginLoader` uses OpenRAVE plugins `main()`, affected by [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60). This affects the CLI/`bash` (non-Python) examples.
+Note that `OpenraveYarpPluginLoader` uses OpenRAVE plugins `main()`, affected by [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60). This affects these CLI/`bash` (non-Python) examples.
    
 ### Example 1
 To open an environment similar to `teoSim` via CLI, use `OpenraveYarpPluginLoader` with `--robotIndex 0` and `--allManipulators` that takes care of names:
