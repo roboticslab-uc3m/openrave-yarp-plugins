@@ -9,15 +9,14 @@ yarp server
 Note that `OpenraveYarpPluginLoader` uses OpenRAVE plugins `main()`, affected by [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60). This affects these CLI/`bash` (non-Python) examples.
    
 ### Example 1
-To open an environment similar to `teoSim` via CLI, use `OpenraveYarpPluginLoader` with `--robotIndex 0` and `--allManipulators` that takes care of names:
+To use `OpenraveYarpPluginLoader` with `--robotIndex 0` and `--allManipulators` that takes care of names:
 ```bash
-# requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)): 
-openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators"
+openrave data/lab1.env.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators"
 ```
 
 Then communicate via:
 ```bash
-yarp rpc /teoSim/[kinematic chain name]/rpc:i
+yarp rpc /BarrettWAM/arm/rpc:i
 ```
 
 ### Example 2
