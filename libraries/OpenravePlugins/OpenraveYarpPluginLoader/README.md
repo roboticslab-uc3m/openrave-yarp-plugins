@@ -19,6 +19,12 @@ Then communicate via:
 yarp rpc /BarrettWAM/arm/rpc:i
 ```
 
+For instance:
+```bash
+set pos 1 45
+```
+
+
 ### Example 2
 We can do funky commands like the following, where `open` acts as a delimiter:
 ```bash
