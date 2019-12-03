@@ -59,28 +59,42 @@ public:
         CD_DEBUG("[%s]\n", cmd.c_str());
         std::stringstream ss(cmd);
 
-        //-- Fill openStrings
+        //-- Fill openStrings and loadString
         std::vector<std::string> openStrings;
+        std::string loadString("");
+
+        enum mode { none, open, load };
+        int currentMode = mode::none;
         while( ! ss.eof() )
         {
             std::string tmp;
             ss >> tmp;
+
             if(tmp == "open")
             {
                 std::string openString("open");
                 openStrings.push_back(openString);
+                currentMode = mode::open;
+            }
+            else if(tmp == "load")
+            {
+                currentMode = mode::load;
             }
             else
             {
-                if(openStrings.size() == 0)
+                if(currentMode == mode::open)
                 {
-                    CD_ERROR("args must start with open, sorry! Bye!\n");
-                    return 1;
+                    openStrings[openStrings.size()-1].append(" ");
+                    openStrings[openStrings.size()-1].append(tmp);
                 }
-                openStrings[openStrings.size()-1].append(" ");
-                openStrings[openStrings.size()-1].append(tmp);
+                else if(currentMode == mode::load)
+                {
+                    loadString = tmp;
+                }
             }
         }
+
+        CD_DEBUG("load: [%s]\n",loadString.c_str());
 
         //-- Open each openString
         for(int i=0;i<openStrings.size();i++)
