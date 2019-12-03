@@ -31,7 +31,7 @@
 # Backups
 *.user
 *.swp
-*.backup
+*.md.backup
 
 # Folders
 **/build*/
