@@ -9,7 +9,7 @@ yarp server
 Note that `OpenraveYarpPluginLoader` uses OpenRAVE plugins `main()`, affected by [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60). This affects the CLI/`bash` (non-Python) examples.
    
 ### Example 1
-Open `teoSim` environment via OpenRAVE, call with OpenraveYarpPluginLoader with robot index `0` and `--allManipulators` that takes care of names:
+To open an environment similar to `teoSim` via CLI, use `OpenraveYarpPluginLoader` with `--robotIndex 0` and `--allManipulators` that takes care of names:
 ```bash
 # requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)): 
 openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators"
@@ -28,8 +28,8 @@ openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xm
 ```
 
 ## Python Invocation
-The Python script equivalent to `teoSim` such that it is not affected by the above issues is contained in the `example` directory:
+The Python script equivalent to `teoSim` such that it is not affected by the above mentioned CLI issues is contained in the [examples/python/](../../../examples/python/) directory:
 ```bash
 # Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
-python ~/repos/openrave-yarp-plugins/examples/python/openraveYarpPluginLoader-controlboard-allManipulators.py
+python ../../../examples/python/openraveYarpPluginLoader-controlboard-allManipulators.py
 ```
