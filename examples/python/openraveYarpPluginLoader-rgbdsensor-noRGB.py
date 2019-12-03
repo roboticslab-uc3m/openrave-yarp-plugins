@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 
+# Authors: see AUTHORS.md at project root.
+# CopyPolicy: released under the terms of the LGPLv2.1, see LICENSE at project root.
+# URL: https://github.com/roboticslab-uc3m/openrave-yarp-plugins
+
+# Dependencies:
+# - https://github.com/asrob-uc3m/robotDevastation-openrave-models (provides `mapping_room.env.xml`
+
 import openravepy
 from openravepy import *
 
@@ -11,10 +18,20 @@ try:
 
     env=Environment()
     env.SetViewer('qtcoin')
-    env.Load('/usr/local/share/2018-ptmr/contexts/openrave/ecro/mapping_room.env.xml')
+
+    example = "default"  # "default" or "ecro"
+
+    if example == "ecro":
+        env.Load('/usr/local/share/robotDevastation-openrave-models/contexts/openrave/ecro/mapping_room.env.xml')
+    else:
+        env.Load('data/testwamcamera.env.xml')
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
-    print OpenraveYarpPluginLoader.SendCommand('open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --depthSensorIndex 0')  # here not using --cameraSensorIndex 0
+
+    if example == "ecro":
+        print OpenraveYarpPluginLoader.SendCommand('open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --depthSensorIndex 0') # here not using --rgbSensorIndex 0
+    else:
+        print OpenraveYarpPluginLoader.SendCommand('open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --depthSensorIndex 1') # here not using --rgbSensorIndex 0
 
     while 1:
         pass

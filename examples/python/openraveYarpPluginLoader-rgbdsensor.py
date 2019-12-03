@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 
+# Authors: see AUTHORS.md at project root.
+# CopyPolicy: released under the terms of the LGPLv2.1, see LICENSE at project root.
+# URL: https://github.com/roboticslab-uc3m/openrave-yarp-plugins
+
+# Dependencies:
+# - https://github.com/asrob-uc3m/robotDevastation-openrave-models (provides `mapping_room.env.xml`
+
 import openravepy
 from openravepy import *
 
@@ -31,4 +38,3 @@ try:
 
 finally:
     RaveDestroy()
-
