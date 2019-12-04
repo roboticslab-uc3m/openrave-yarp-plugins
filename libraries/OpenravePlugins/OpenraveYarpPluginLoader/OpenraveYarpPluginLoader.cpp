@@ -14,6 +14,7 @@
 #include <yarp/os/Network.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/Value.h>
+#include <yarp/os/ResourceFinder.h>
 
 #include <yarp/dev/PolyDriver.h>
 
@@ -94,15 +95,29 @@ public:
             }
         }
 
-        CD_DEBUG("env: [%s]\n",envString.c_str());
+        CD_DEBUG("env: '%s'\n",envString.c_str());
 
-        if ( envString!="" && !GetEnv()->Load(envString.c_str()) )
+        if(envString!="")
         {
-            CD_ERROR("Could not load '%s' environment.\n",envString.c_str());
-            return false;
-        }
-        CD_SUCCESS("Loaded '%s' environment.\n",envString.c_str());
+            if ( !!GetEnv()->Load(envString.c_str()) )
+            {
+                CD_SUCCESS("Loaded '%s' environment.\n",envString.c_str());
+            }
+            else
+            {
+                CD_DEBUG("Could not load '%s' environment, attempting via yarp::os::ResourceFinder.\n",envString.c_str());
 
+                yarp::os::ResourceFinder rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
+                std::string fullEnvString = rf.findFileByName(envString);
+
+                if ( !GetEnv()->Load(fullEnvString.c_str()) )
+                {
+                    CD_ERROR("Could not load '%s' environment.\n",envString.c_str());
+                    return false;
+                }
+                CD_SUCCESS("Loaded '%s' environment.\n",envString.c_str());
+            }
+        }
 
         //-- Open each openString
         for(int i=0;i<openStrings.size();i++)
