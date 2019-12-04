@@ -61,9 +61,9 @@ public:
 
         //-- Fill openStrings and loadString
         std::vector<std::string> openStrings;
-        std::string loadString("");
+        std::string envString("");
 
-        enum mode { none, open, load };
+        enum mode { none, open, env };
         int currentMode = mode::none;
         while( ! ss.eof() )
         {
@@ -76,9 +76,9 @@ public:
                 openStrings.push_back(openString);
                 currentMode = mode::open;
             }
-            else if(tmp == "load")
+            else if(tmp == "env")
             {
-                currentMode = mode::load;
+                currentMode = mode::env;
             }
             else
             {
@@ -87,21 +87,21 @@ public:
                     openStrings[openStrings.size()-1].append(" ");
                     openStrings[openStrings.size()-1].append(tmp);
                 }
-                else if(currentMode == mode::load)
+                else if(currentMode == mode::env)
                 {
-                    loadString = tmp;
+                    envString = tmp;
                 }
             }
         }
 
-        CD_DEBUG("load: [%s]\n",loadString.c_str());
+        CD_DEBUG("env: [%s]\n",envString.c_str());
 
-        if ( loadString!="" && !GetEnv()->Load(loadString.c_str()) )
+        if ( envString!="" && !GetEnv()->Load(envString.c_str()) )
         {
-            CD_ERROR("Could not load '%s'.\n",loadString.c_str());
+            CD_ERROR("Could not load '%s' environment.\n",envString.c_str());
             return false;
         }
-        CD_SUCCESS("Loaded '%s'.\n",loadString.c_str());
+        CD_SUCCESS("Loaded '%s' environment.\n",envString.c_str());
 
 
         //-- Open each openString
