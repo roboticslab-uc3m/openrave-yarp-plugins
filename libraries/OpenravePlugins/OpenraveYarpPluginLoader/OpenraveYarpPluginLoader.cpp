@@ -96,6 +96,14 @@ public:
 
         CD_DEBUG("load: [%s]\n",loadString.c_str());
 
+        if ( loadString!="" && !GetEnv()->Load(loadString.c_str()) )
+        {
+            CD_ERROR("Could not load '%s'.\n",loadString.c_str());
+            return false;
+        }
+        CD_SUCCESS("Loaded '%s'.\n",loadString.c_str());
+
+
         //-- Open each openString
         for(int i=0;i<openStrings.size();i++)
         {
