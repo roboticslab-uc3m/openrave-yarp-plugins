@@ -26,10 +26,10 @@ set pos 1 45
 
 
 ### Example 2
-We can do funky commands like the following, where `open` acts as a delimiter:
+We can do funky commands like the following, with concatenated `env` and `open` commands:
 ```bash
 # Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
-openrave /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
+openrave --module OpenraveYarpPluginLoader "load env openrave/teo/teo.robot.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
 ```
 
 ## Python Invocation
