@@ -60,7 +60,7 @@ public:
         CD_DEBUG("[%s]\n", cmd.c_str());
         std::stringstream ss(cmd);
 
-        //-- Fill openStrings and loadString
+        //-- Fill openStrings and envString
         std::vector<std::string> openStrings;
         std::string envString("");
 
@@ -113,7 +113,7 @@ public:
                 if ( !GetEnv()->Load(fullEnvString.c_str()) )
                 {
                     CD_ERROR("Could not load '%s' environment.\n",fullEnvString.c_str());
-                    return false;
+                    return 1;
                 }
                 CD_SUCCESS("Loaded '%s' environment.\n",fullEnvString.c_str());
             }
