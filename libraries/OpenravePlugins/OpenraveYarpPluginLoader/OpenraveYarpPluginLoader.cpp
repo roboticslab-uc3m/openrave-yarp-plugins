@@ -112,10 +112,10 @@ public:
 
                 if ( !GetEnv()->Load(fullEnvString.c_str()) )
                 {
-                    CD_ERROR("Could not load '%s' environment.\n",envString.c_str());
+                    CD_ERROR("Could not load '%s' environment.\n",fullEnvString.c_str());
                     return false;
                 }
-                CD_SUCCESS("Loaded '%s' environment.\n",envString.c_str());
+                CD_SUCCESS("Loaded '%s' environment.\n",fullEnvString.c_str());
             }
         }
 
