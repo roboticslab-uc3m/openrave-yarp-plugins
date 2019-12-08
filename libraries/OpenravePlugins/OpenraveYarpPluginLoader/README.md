@@ -1,4 +1,4 @@
-# libraries/OpenravePlugins/OpenraveYarpPluginLoader
+# OpenraveYarpPluginLoader
 
 Enables loading one or several YARP plugins, typically from [libraries/YarpPlugins/](../../YarpPlugins/).
 
