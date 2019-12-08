@@ -33,7 +33,7 @@ Installation instructions for installing from source can be found [here](doc/ope
 
 ## Description
 
-The main approach is to develop OpenRAVE plugins (contained in the [OpenravePlugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/libraries/OpenravePlugins) folder), which internally load YARP plugins (contained in the [YarpPlugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/libraries/YarpPlugins) folder) that open ports thanks to their network wrappers. This can be seen in the following figure.
+The main approach is to develop OpenRAVE plugins (contained in the [libraries/OpenravePlugins/](libraries/OpenravePlugins/) folder), which internally load YARP plugins (contained in the [libraries/YarpPlugins/](libraries/YarpPlugins/) folder) that open ports thanks to their network wrappers. This can be seen in the following figure.
 
 ![Architecture Block Diagram](doc/fig/architecture.png)
 
@@ -51,10 +51,12 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 
 ```bash
 # new terminal to open the simulated robot
-python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-controlboard-allManipulators.py
+python examples/python/openraveYarpPluginLoader-controlboard-allManipulators.py
+
 # new terminal to open the collision avoidance simulator 
 # NOTE: Expect LONG wait to load the padding model
-python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-controlboard-collision-sim.py
+python examples/python/openraveYarpPluginLoader-controlboard-collision-sim.py
+
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teoSim/[kinematic chain name]/rpc:i
 ```
@@ -64,7 +66,8 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 
 ```bash
 # new terminal
-python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-controlboard-collision-real.py
+python examples/python/openraveYarpPluginLoader-controlboard-collision-real.py
+
 # wait for the system to load the padding model
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teo/[kinematic chain name]/rpc:i
