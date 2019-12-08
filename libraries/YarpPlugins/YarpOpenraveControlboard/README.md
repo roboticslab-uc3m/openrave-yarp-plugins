@@ -42,4 +42,4 @@ set pos 0 -45
 ```
 
 ### More Examples
-You can find more examples with `YarpOpenraveControlboard` at [OpenraveYarpPluginLoader](libraries/OpenravePlugins/OpenraveYarpPluginLoader).
+You can find more examples with `YarpOpenraveControlboard` at [libraries/OpenravePlugins/OpenraveYarpPluginLoader](../../OpenravePlugins/OpenraveYarpPluginLoader).
