@@ -38,5 +38,5 @@ yarp rpc /teoSim/rightArm/rpc:i
 
 For instance:
 ```bash
-set pos 1 45
+set pos 0 -45
 ```
