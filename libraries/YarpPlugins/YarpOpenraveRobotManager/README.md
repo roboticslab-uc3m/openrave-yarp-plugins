@@ -8,7 +8,7 @@ yarp server
 ## Example 1
 Open `YarpOpenraveRobotManager` device with `mapping_room.env.xml` environment with `ODE`, view, apply to robot index `0` call it `/robot`:
 ```bash
-# requires [robotDevastation-openrave-models](https://github.com/asrob-uc3m/robotDevastation-openrave-models)
+# requires [asrob-uc3m/robotDevastation-openrave-models](https://github.com/asrob-uc3m/robotDevastation-openrave-models)
 yarpdev --device YarpOpenraveRobotManager --env contexts/openrave/ecro/mapping_room.env.xml --physics ode --robotIndex 0 --view --name /robot
 ```
 
