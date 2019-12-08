@@ -33,7 +33,7 @@ Installation instructions for installing from source can be found [here](doc/ope
 
 ## Description
 
-The main approach is to develop OpenRAVE plugins (contained in the [libraries/OpenravePlugins/](libraries/OpenravePlugins/) folder), which enable YARP communications. Among these, [libraries/OpenravePlugins/OpenraveYarpPluginLoader](libraries/OpenravePlugins/OpenraveYarpPluginLoader) is a generic component that allows to internally load any of the YARP plugins contained in the [libraries/YarpPlugins/](libraries/YarpPlugins/) folder. These YARP plugins open ports thanks to their network wrappers. This can be seen in the following figure.
+The main approach is to develop OpenRAVE plugins (contained in the [libraries/OpenravePlugins/](libraries/OpenravePlugins/) folder), which enable YARP communications. Among these, [OpenraveYarpPluginLoader](libraries/OpenravePlugins/OpenraveYarpPluginLoader) is a generic component that allows to internally load any of the YARP plugins contained in the [libraries/YarpPlugins/](libraries/YarpPlugins/) folder. These YARP plugins open ports thanks to their network wrappers. This can be seen in the following figure.
 
 ![Architecture Block Diagram](doc/fig/architecture.png)
 
