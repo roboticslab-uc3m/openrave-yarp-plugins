@@ -27,11 +27,11 @@ For now best use:
 
 - Python example 2 (no RGB): [examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py](../../../examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py)
 
-   Open a viewer for depth (change `/BarrettWAM` to `/ecroSim` for alternative):
+   Open a viewer for depth:
    ```bash
    yarpview --name /yarpview/depth/img:i
    ```
-   Connect the viewer for depth:
+   Connect the viewer for depth (change `/BarrettWAM` to `/ecroSim` for alternative):
    ```bash
    yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i
    ```
