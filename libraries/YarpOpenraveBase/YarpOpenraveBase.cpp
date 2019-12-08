@@ -8,6 +8,7 @@
 #include <vector>
 
 #include <yarp/os/Bottle.h>
+#include <yarp/os/ResourceFinder.h>
 #include <yarp/os/Time.h>
 #include <yarp/os/Value.h>
 
@@ -70,13 +71,26 @@ bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
         }
 
         // Actually load the scene
-        std::string envFull = config.find("env").asString();
+        std::string envString = config.find("env").asString();
 
-        if (! penv->Load(envFull.c_str()) ) {
-            CD_ERROR("Could not load '%s' environment.\n",envFull.c_str());
-            return false;
+        if ( !!penv->Load(envString.c_str()) )
+        {
+            CD_SUCCESS("Loaded environment '%s'.\n",envString.c_str());
         }
-        CD_SUCCESS("Loaded environment '%s'.\n",envFull.c_str());
+        else
+        {
+            CD_DEBUG("Could not load '%s' environment, attempting via yarp::os::ResourceFinder.\n",envString.c_str());
+
+            yarp::os::ResourceFinder rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
+            std::string fullEnvString = rf.findFileByName(envString);
+
+            if ( !penv->Load(fullEnvString.c_str()) )
+            {
+                CD_ERROR("Could not load '%s' environment.\n",fullEnvString.c_str());
+                return false;
+            }
+            CD_SUCCESS("Loaded '%s' environment.\n",fullEnvString.c_str());
+        }
     }
     else if ( config.check("penv") )
     {
