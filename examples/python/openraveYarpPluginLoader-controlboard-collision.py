@@ -11,7 +11,7 @@ try:
 
     env=Environment()
     env.SetViewer('qtcoin')
-    env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml')
+    env.Load('/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml')
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
     print OpenraveYarpPluginLoader.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 --collision')
