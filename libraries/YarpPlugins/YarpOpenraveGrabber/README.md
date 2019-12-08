@@ -6,7 +6,7 @@ yarp server
 ```
 
 For now best use:
-- Python example 1: https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/develop/examples/python/openraveYarpPluginLoader-grabber.py
+- Python example 1: [examples/python/openraveYarpPluginLoader-grabber.py](../../../examples/python/openraveYarpPluginLoader-grabber.py)
 
    Then open a viewer:
    ```bash
