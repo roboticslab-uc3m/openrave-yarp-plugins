@@ -12,28 +12,28 @@ For now best use:
    ```bash
    yarpview --name /yarpview/rgb/img:i
    ```
-   Connect the viewer for RGB:
+   Connect the viewer for RGB (change `/BarrettWAM` to `/ecroSim` for alternative):
    ```bash
-   yarp connect /ecroSim/rgbImage:o /yarpview/rgb/img:i
+   yarp connect /BarrettWAM/rgbImage:o /yarpview/rgb/img:i
    ```
    Open another viewer for depth:
    ```bash
    yarpview --name /yarpview/depth/img:i
    ```
-   Connect the viewer for depth:
+   Connect the viewer for depth (change `/BarrettWAM` to `/ecroSim` for alternative):
    ```bash
-   yarp connect /ecroSim/depthImage:o /yarpview/depth/img:i
+   yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i
    ```
 
 - Python example 2 (no RGB): [examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py](../../../examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py)
 
-   Open a viewer for depth:
+   Open a viewer for depth (change `/BarrettWAM` to `/ecroSim` for alternative):
    ```bash
    yarpview --name /yarpview/depth/img:i
    ```
    Connect the viewer for depth:
    ```bash
-   yarp connect /ecroSim/depthImage:o /yarpview/depth/img:i
+   yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i
    ```
 
 Example invocation not working due to https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60 and beyond:
