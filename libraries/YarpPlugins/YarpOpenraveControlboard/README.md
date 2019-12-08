@@ -25,10 +25,10 @@ set pos 1 45
 ```
 
 ### Example 2
-We can do funky commands like the following, allowing `allManipulators`:
+We can also load environments with our favorite heroes, such as:
 ```bash
 # Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
-yarpdev --device YarpOpenraveControlboard --env /usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml --robotIndex 0 --allManipulators --name /teoSim/rightArm --view
+yarpdev --device YarpOpenraveControlboard --env /usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml --robotIndex 0 --manipulatorIndex 2 --name /teoSim/rightArm --view
 ```
 
 Then communicate via:

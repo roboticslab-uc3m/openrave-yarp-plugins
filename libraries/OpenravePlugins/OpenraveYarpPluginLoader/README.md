@@ -13,19 +13,14 @@ Note that the string with parameters passed from the CLI to `OpenraveYarpPluginL
 ### Example 1
 Use `OpenraveYarpPluginLoader` to replicate any example of [libraries/YarpPlugins/YarpOpenraveControlboard/](../../YarpPlugins/YarpOpenraveControlboard/).
 
-Instead of:
-```bash
-yarpdev --device YarpOpenraveControlboard --env data/lab1.env.xml --robotIndex 0 --manipulatorIndex 0 --view
-```
-
-Becomes (note that `view` is not required):
+The first example becomes (note that `view` and `robot` are no longer required):
 ```bash
 openrave --module OpenraveYarpPluginLoader "env data/lab1.env.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0"
 ```
 
-Or:
+Now you can even:
 ```bash
-openrave data/lab1.env.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators"
+openrave data/lab1.env.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --allRobots --allManipulators"
 ```
 
 ### Example 2
