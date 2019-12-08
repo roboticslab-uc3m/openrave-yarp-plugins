@@ -40,3 +40,6 @@ For instance:
 ```bash
 set pos 0 -45
 ```
+
+### More Examples
+You can find more examples with `YarpOpenraveControlboard` at [OpenraveYarpPluginLoader](libraries/OpenravePlugins/OpenraveYarpPluginLoader).
