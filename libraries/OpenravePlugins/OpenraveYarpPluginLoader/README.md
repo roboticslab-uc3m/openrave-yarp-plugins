@@ -27,7 +27,7 @@ openrave data/lab1.env.xml --module OpenraveYarpPluginLoader "open --device cont
 We can even do funky commands like the following, with concatenated `env` and several `open` commands:
 ```bash
 # Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
-openrave --module OpenraveYarpPluginLoader "load env openrave/teo/teo.robot.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
+openrave --module OpenraveYarpPluginLoader "env openrave/teo/teo.robot.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
 ```
 
 ## Python Invocation
