@@ -28,7 +28,7 @@ set pos 1 45
 We can do funky commands like the following, allowing `allManipulators`:
 ```bash
 # Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
-yarpdev --device YarpOpenraveControlboard --env /usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --robotIndex 0 --allManipulators --name /teoSim/rightArm --view
+yarpdev --device YarpOpenraveControlboard --env /usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml --robotIndex 0 --allManipulators --name /teoSim/rightArm --view
 ```
 
 Then communicate via:
