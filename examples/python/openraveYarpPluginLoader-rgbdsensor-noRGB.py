@@ -22,7 +22,7 @@ try:
     example = "default"  # "default" or "ecro"
 
     if example == "ecro":
-        env.Load('/usr/local/share/robotDevastation-openrave-models/contexts/openrave/ecro/mapping_room.env.xml')
+        env.Load('/usr/local/share/robotDevastation-openrave-models/openrave/mapping_room.env.xml')
     else:
         env.Load('data/testwamcamera.env.xml')
 
