@@ -19,7 +19,7 @@ try:
 
     env=Environment()
     env.SetViewer('qtcoin')
-    env.Load('/usr/local/share/robotDevastation-openrave-models/contexts/openrave/ecro/mapping_room.env.xml')
+    env.Load('/usr/local/share/robotDevastation-openrave-models/openrave/mapping_room.env.xml')
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
 
