@@ -18,14 +18,15 @@ The [first example](../../YarpPlugins/YarpOpenraveControlboard#example-1) become
 openrave --module OpenraveYarpPluginLoader "env data/lab1.env.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0"
 ```
 
-Now you can even:
+Now you can even use `allRobots` and/or `allManipulators` (example using the environment loaded by OpenRAVE):
 ```bash
 openrave data/lab1.env.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --allRobots --allManipulators"
 ```
 
 ### Example 2
-Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models): We can do funky commands like the following, with concatenated `env` and several `open` commands:
+We can even do funky commands like the following, with concatenated `env` and several `open` commands:
 ```bash
+# Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
 openrave --module OpenraveYarpPluginLoader "load env openrave/teo/teo.robot.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
 ```
 
