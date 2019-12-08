@@ -1,5 +1,7 @@
 # OpenraveYarpPluginLoader
 
+Enables loading one or several YARP plugins in OpenRAVE, typically from [libraries/YarpPlugins/](../../YarpPlugins/).
+
 First open a:
 ```bash
 yarp server
@@ -9,27 +11,23 @@ yarp server
 Note that the string with parameters passed from the CLI to `OpenraveYarpPluginLoader` are parsed within its [`int main(const std::string& cmd)`](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/examples-improve/libraries/OpenravePlugins/OpenraveYarpPluginLoader/OpenraveYarpPluginLoader.cpp#L57-L96) function. This `main()` function is a strange animal within OpenRAVE plugins as commented at [#30](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/30#issuecomment-306237545), which is affected by several issues, namely [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60).
    
 ### Example 1
-To use `OpenraveYarpPluginLoader` with `--robotIndex 0` and `--allManipulators` that takes care of names:
+Use `OpenraveYarpPluginLoader` to replicate any example of [libraries/YarpPlugins/YarpOpenraveControlboard/](../../YarpPlugins/YarpOpenraveControlboard/).
+
+The [first example](../../YarpPlugins/YarpOpenraveControlboard#example-1) becomes (note that `view` and `robot` are no longer required):
 ```bash
-openrave data/lab1.env.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators"
+openrave --module OpenraveYarpPluginLoader "env data/lab1.env.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0"
 ```
 
-Then communicate via:
+Now you can even use `allRobots` and/or `allManipulators` (example using the environment loaded by OpenRAVE):
 ```bash
-yarp rpc /BarrettWAM/arm/rpc:i
+openrave data/lab1.env.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --allRobots --allManipulators"
 ```
-
-For instance:
-```bash
-set pos 1 45
-```
-
 
 ### Example 2
-We can do funky commands like the following, with concatenated `env` and `open` commands:
+We can even do funky commands like the following, with concatenated `env` and several `open` commands:
 ```bash
 # Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
-openrave --module OpenraveYarpPluginLoader "load env openrave/teo/teo.robot.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
+openrave --module OpenraveYarpPluginLoader "env openrave/teo/teo.robot.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
 ```
 
 ## Python Invocation
