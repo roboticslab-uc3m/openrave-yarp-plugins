@@ -8,10 +8,10 @@ yarp server
 ## Command Line (CLI) Invocation
 
 ### Example 1
-Open `YarpOpenraveControlboard` device with `data/lab1.env.xml` environment, view, apply to robot index `0` and manipulator index `0`:
+Open `YarpOpenraveControlboard` device with `data/lab1.env.xml` environment, view, apply to robot index `0` and manipulator index `0` (`name` and `view` are required):
 
 ```bash
-yarpdev --device YarpOpenraveControlboard --env data/lab1.env.xml --view --robotIndex 0 --manipulatorIndex 0
+yarpdev --device YarpOpenraveControlboard --env data/lab1.env.xml --robotIndex 0 --manipulatorIndex 0 --name /BarrettWAM --view
 ```
 
 Then communicate via:
