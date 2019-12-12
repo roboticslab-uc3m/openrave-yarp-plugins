@@ -74,13 +74,13 @@ yarp rpc /safe/teo/[kinematic chain name]/rpc:i
 ```
 
 ### How to extract a .pp model from ConvexDecomposition
-The following commands explain how to use openrave to create a 3D model (.pp) of the collision space that openrave uses to calculate collisions. Whereas openarave uses it continuously, here we can save the 3D files to use them.
+The following commands explain how to use openrave to create a 3D model (`.pp`) of the collision space that OpenRAVE uses to calculate collisions. Whereas OpenRAVE uses it continuously, here we can save the 3D files to use them.
 
 ```bash
-# new terminal
-openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml #--padding=PADDING --maxHullVertices=MAXHULLVERTICES --mergeThresholdPercent=MERGETHRESHOLDPERCENT
+openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml # --padding=PADDING --maxHullVertices=MAXHULLVERTICES --mergeThresholdPercent=MERGETHRESHOLDPERCENT
 ```
-At the time to generate the .pp file different params can be set. In our case the most relevants are the **padding**, the **maxHullVertices** and the **mergeThresholdPercent**. **padding** represents the distance from the real plane to the one generated. The last two used to reduce the number of triangles generated in the model).
+
+At the time of generating the `.pp` file, different parameters can be set. In our case, the most relevant parameters are the **padding**, the **maxHullVertices** and the **mergeThresholdPercent**. **padding** represents the distance from the real plane to the one generated. The last two are used to reduce the number of triangles generated in the model.
   
 More options can be found [here](http://openrave.org/docs/0.8.0/openravepy/databases.convexdecomposition/).
 
