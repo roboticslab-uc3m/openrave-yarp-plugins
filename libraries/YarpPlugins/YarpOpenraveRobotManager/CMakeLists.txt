@@ -31,23 +31,14 @@ if(NOT SKIP_YarpOpenraveRobotManager)
                                                    ${OpenRAVE_LIBRARIES}
                                                    ASROB::RobotInterfaces
                                                    ROBOTICSLAB::ColorDebug
-                                                   YarpOpenraveBaseInterface)
+                                                   YarpOpenraveBase)
 
     target_include_directories(YarpOpenraveRobotManager PRIVATE ${OpenRAVE_INCLUDE_DIRS})
 
-    if(NOT YARP_VERSION_SHORT VERSION_LESS 3.2)
-        yarp_install(TARGETS YarpOpenraveRobotManager
-                     LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
-                     ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR}
-                     YARP_INI DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
-    else()
-        yarp_install(TARGETS YarpOpenraveRobotManager
-                     LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
-                     ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR})
-
-        yarp_install(FILES YarpOpenraveRobotManager.ini
-                     DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
-    endif()
+    yarp_install(TARGETS YarpOpenraveRobotManager
+                 LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
+                 ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR}
+                 YARP_INI DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
 
 else()
 
