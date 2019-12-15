@@ -13,7 +13,7 @@ yarp server
 Open `YarpOpenraveRGBDSensor` device with `data/testwamcamera.env.xml` environment, view, apply to robot index `0`, rgbSensor index `0` and depthSensorIndex `1` (`name` and `view` are required):
 
 ```bash
-yarpdev --device RGBDSensorWrapper --env data/testwamcamera.env.xml --view --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 1 --name /BarrettWAM/camera
+yarpdev --device YarpOpenraveRGBDSensor --env data/testwamcamera.env.xml --view --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 1 --name /BarrettWAM/camera
 ```
 
 Note: This invocation not working due to [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60) and beyond. Therefore, you can instead jump directly and use: [../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravegrabber](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravegrabber)
