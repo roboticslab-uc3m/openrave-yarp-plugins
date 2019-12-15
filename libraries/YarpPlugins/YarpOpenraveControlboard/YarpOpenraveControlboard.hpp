@@ -5,7 +5,6 @@
 
 #include <vector>
 #include <yarp/dev/ControlBoardInterfaces.h>
-#include <yarp/conf/version.h>
 
 #include <openrave/openrave.h>
 
