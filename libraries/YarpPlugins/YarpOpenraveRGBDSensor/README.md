@@ -40,18 +40,19 @@ yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i
 
 ## Example 2 (no RGB)
 
+Example invocation not working due to https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60 and beyond:
+```bash
+yarpdev --device YarpOpenraveRGBDSensor --env openrave/mapping_room.env.xml --robotIndex 0 --depthSensorIndex 0 --rgbSensorIndex 1 --view --name /robot
+```
+
 [examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py](../../../examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py)
 
 Open a viewer for depth:
 ```bash
-   yarpview --name /yarpview/depth/img:i
-   ```
-   Connect the viewer for depth (change `/BarrettWAM` to `/ecroSim` for alternative):
-   ```bash
-   yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i
-   ```
+yarpview --name /yarpview/depth/img:i
+```
 
-Example invocation not working due to https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60 and beyond:
+Connect the viewer for depth (change `/BarrettWAM` to `/ecroSim` for alternative):
 ```bash
-yarpdev --device YarpOpenraveRGBDSensor --env openrave/mapping_room.env.xml --robotIndex 0 --depthSensorIndex 0 --rgbSensorIndex 1 --view --name /robot
+yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i
 ```
