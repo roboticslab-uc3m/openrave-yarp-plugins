@@ -27,7 +27,7 @@ if(NOT SKIP_YarpOpenraveRGBDSensor)
                                                  ${OpenRAVE_LIBRARIES}
                                                  Boost::boost
                                                  ROBOTICSLAB::ColorDebug
-                                                 YarpOpenraveBaseInterface)
+                                                 YarpOpenraveBase)
 
     target_include_directories(YarpOpenraveRGBDSensor PRIVATE ${OpenRAVE_INCLUDE_DIRS})
 

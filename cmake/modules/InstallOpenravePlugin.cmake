@@ -1,6 +1,4 @@
-if(COMMAND install_openrave_plugin)
-    return()
-endif()
+include_guard(GLOBAL)
 
 macro(install_openrave_plugin target)
     find_package(OpenRAVE REQUIRED)

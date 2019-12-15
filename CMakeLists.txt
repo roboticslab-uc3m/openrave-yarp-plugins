@@ -2,7 +2,7 @@
 # Authors: Juan G. Victores and Raul Fernandez-Fernandez
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 project(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS LANGUAGES CXX)
 

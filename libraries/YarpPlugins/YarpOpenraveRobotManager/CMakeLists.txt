@@ -31,7 +31,7 @@ if(NOT SKIP_YarpOpenraveRobotManager)
                                                    ${OpenRAVE_LIBRARIES}
                                                    ASROB::RobotInterfaces
                                                    ROBOTICSLAB::ColorDebug
-                                                   YarpOpenraveBaseInterface)
+                                                   YarpOpenraveBase)
 
     target_include_directories(YarpOpenraveRobotManager PRIVATE ${OpenRAVE_INCLUDE_DIRS})
 
