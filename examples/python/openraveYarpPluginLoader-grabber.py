@@ -15,7 +15,7 @@ try:
     example = "default"  # "default" or "asibot" or "ecro"
 
     if example == "asibot":
-        env.Load('/usr/local/share/asibot/contexts/openrave/models/asibot_kitchen_cameras.env.xml')
+        env.Load('/usr/local/share/asibot/openrave/models/asibot_kitchen_cameras.env.xml')
     elif example == "ecro":
         env.Load('/usr/local/share/robotDevastation-openrave-models/openrave/mapping_room.env.xml')
     else:
