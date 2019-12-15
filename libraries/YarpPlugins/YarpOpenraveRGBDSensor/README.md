@@ -1,5 +1,7 @@
 # YarpOpenraveRGBDSensor
 
+Disclaimer: Please read about [Offscreen Rendering (OpenRAVE RGB Cameras)](http://robots.uc3m.es/gitbook-installation-guides/install-openrave.html#offscreen-rendering-openrave-rgb-cameras) first. Note that things are easier for pure Depth (no RGB).
+
 First open a:
 ```bash
 yarp server

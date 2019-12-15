@@ -1,5 +1,7 @@
 # YarpOpenraveGrabber
 
+Disclaimer: Please read about [Offscreen Rendering (OpenRAVE RGB Cameras)](http://robots.uc3m.es/gitbook-installation-guides/install-openrave.html#offscreen-rendering-openrave-rgb-cameras) first.
+
 First open a:
 ```bash
 yarp server
