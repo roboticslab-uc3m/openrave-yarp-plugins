@@ -12,12 +12,12 @@ These examples use the `yarpdev` executable to load `YarpOpenraveRobotManager` d
 Open `YarpOpenraveRobotManager` device with `mapping_room.env.xml` environment with `ODE`, view, apply to robot index `0` call it `/robot`:
 ```bash
 # requires [asrob-uc3m/robotDevastation-openrave-models](https://github.com/asrob-uc3m/robotDevastation-openrave-models)
-yarpdev --device YarpOpenraveRobotManager --env openrave/mapping_room.env.xml --physics ode --robotIndex 0 --view --name /robot
+yarpdev --device YarpOpenraveRobotManager --env openrave/mapping_room.env.xml --physics ode --robotIndex 0 --view --name /ecroSim
 ```
 
 Then communicate via:
 ```
-yarp rpc /robot/rpc:s
+yarp rpc /ecroSim/rpc:s
 ```
 
 For instance:
