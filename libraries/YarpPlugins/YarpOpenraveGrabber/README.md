@@ -1,11 +1,13 @@
 # YarpOpenraveGrabber
 
-Disclaimer: Please read about [Offscreen Rendering (OpenRAVE RGB Cameras)](http://robots.uc3m.es/gitbook-installation-guides/install-openrave.html#offscreen-rendering-openrave-rgb-cameras) first.
-
 First open a:
 ```bash
 yarp server
 ```
+
+# Notes on Invocation
+- Disclaimer: Please read about [Offscreen Rendering (OpenRAVE RGB Cameras)](http://robots.uc3m.es/gitbook-installation-guides/install-openrave.html#offscreen-rendering-openrave-rgb-cameras) first.
+- These examples use the `yarpdev` executable to load `YarpOpenraveGrabber` directly. However, you can find more interesting examples loading `YarpOpenraveGrabber` via `OpenraveYarpPluginLoader` at [../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravegrabber](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravegrabber).
 
 ## Example 1
 Open `YarpOpenraveGrabber` device with `data/testwamcamera.env.xml` environment, view, apply to robot index `0` and sensor index `0` (`name` and `view` are required):
@@ -14,7 +16,7 @@ Open `YarpOpenraveGrabber` device with `data/testwamcamera.env.xml` environment,
 yarpdev --device YarpOpenraveGrabber --env data/testwamcamera.env.xml --view --robotIndex 0 --sensorIndex 0 --name /BarrettWAM/camera
 ```
 
-Note: This invocation not working due to [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60) and beyond. Therefore, instead use: [../../../examples/python/openraveYarpPluginLoader-grabber.py](../../../examples/python/openraveYarpPluginLoader-grabber.py)
+Note: This invocation not working due to [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60) and beyond. This also affects the CLI invocation at [../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravegrabber](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravegrabber). Therefore, you can instead jump directly and use: [../../../examples/python/openraveYarpPluginLoader-grabber.py](../../../examples/python/openraveYarpPluginLoader-grabber.py)
 
 Then open a viewer:
 ```bash
