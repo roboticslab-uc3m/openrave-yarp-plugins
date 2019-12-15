@@ -5,6 +5,9 @@ First open a:
 yarp server
 ```
 
+## Note on Invocation
+These examples use the `yarpdev` executable to load `YarpOpenraveRobotManager` directly. However, you can find more interesting examples loading `YarpOpenraveRobotManager` via `OpenraveYarpPluginLoader` at [../../OpenravePlugins/OpenraveYarpPluginLoader#robotmanager](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraverobotmanager).
+
 ## Example 1
 Open `YarpOpenraveRobotManager` device with `mapping_room.env.xml` environment with `ODE`, view, apply to robot index `0` call it `/robot`:
 ```bash
