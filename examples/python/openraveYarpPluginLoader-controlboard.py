@@ -12,6 +12,7 @@ try:
     env=Environment()
     env.SetViewer('qtcoin')
 
+    # "teo" requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
     example = "default"  # "default" or "teo"
 
     if example == "teo":
