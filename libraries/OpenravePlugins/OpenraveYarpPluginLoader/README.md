@@ -7,8 +7,10 @@ First open a:
 yarp server
 ```
 
+
 ## Note on Command Line (CLI) Invocation
 Note that the string with parameters passed from the CLI to `OpenraveYarpPluginLoader` are parsed within its [`int main(const std::string& cmd)`](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/examples-improve/libraries/OpenravePlugins/OpenraveYarpPluginLoader/OpenraveYarpPluginLoader.cpp#L57-L96) function. This `main()` function is a strange animal within OpenRAVE plugins as commented at [#30](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/30#issuecomment-306237545), which is affected by several issues, namely [#59](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/59) and [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60).
+
 
 ## YarpOpenraveControlboard
 
@@ -36,3 +38,18 @@ We can also do funky commands like the following, with concatenated `env` and se
 # Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
 openrave --module OpenraveYarpPluginLoader "env openrave/teo/teo.robot.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
 ```
+
+
+## YarpOpenraveGrabber
+
+Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/YarpOpenraveGrabber](../../YarpPlugins/YarpOpenraveGrabber#yarpopenravegrabber).
+
+
+## YarpOpenraveRGBDSensor
+
+Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/YarpOpenraveRGBDSensor](../../YarpPlugins/YarpOpenraveRGBDSensor#yarpopenravergbdsensor).
+
+
+## YarpOpenraveRobotManager
+
+Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/YarpOpenraveRobotManager](../../YarpPlugins/YarpOpenraveRobotManager#yarpopenraverobotmanager).
