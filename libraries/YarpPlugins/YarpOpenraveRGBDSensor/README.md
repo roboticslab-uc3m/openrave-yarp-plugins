@@ -38,7 +38,7 @@ Connect the viewer for depth (change `/BarrettWAM` to `/ecroSim` for alternative
 yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i
 ```
 
-Example 2 (no RGB)
+## Example 2 (no RGB)
 
 [examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py](../../../examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py)
 
