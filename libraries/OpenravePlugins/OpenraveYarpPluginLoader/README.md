@@ -17,6 +17,7 @@ The [first example](../../YarpPlugins/YarpOpenraveControlboard#example-1) become
 ```bash
 openrave --module OpenraveYarpPluginLoader "env data/lab1.env.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0"
 ```
+The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-controlboard.py](../../../examples/python/openraveYarpPluginLoader-controlboard.py)
 
 Then follow the commands of the [first example](../../YarpPlugins/YarpOpenraveControlboard#example-1).
 
