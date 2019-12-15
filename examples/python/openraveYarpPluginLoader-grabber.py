@@ -24,11 +24,11 @@ try:
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
 
     if example == "asibot":
-        print OpenraveYarpPluginLoader.SendCommand('open --device grabber --subdevice YarpOpenraveGrabber --robotIndex 1 --sensorIndex 0')
+        print OpenraveYarpPluginLoader.SendCommand('open --device grabberDual --subdevice YarpOpenraveGrabber --robotIndex 1 --sensorIndex 0')
     elif example == "ecro":
-        print OpenraveYarpPluginLoader.SendCommand('open --device grabber --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 1')
+        print OpenraveYarpPluginLoader.SendCommand('open --device grabberDual --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 1')
     else:
-        print OpenraveYarpPluginLoader.SendCommand('open --device grabber --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 0')
+        print OpenraveYarpPluginLoader.SendCommand('open --device grabberDual --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 0')
 
     while 1:
         pass
