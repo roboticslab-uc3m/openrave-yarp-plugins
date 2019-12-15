@@ -47,7 +47,7 @@ Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/Ya
 ### Example 1
 The [first example](../../YarpPlugins/YarpOpenraveGrabber#example-1) becomes (note that `name` and `view` parameters are no longer required):
 ```bash
-openrave --module OpenraveYarpPluginLoader "env data/lab1.env.xml open --device grabberDual --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 0"
+openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device grabberDual --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 0"
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-grabber.py](../../../examples/python/openraveYarpPluginLoader-grabber.py)
 
