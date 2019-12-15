@@ -5,7 +5,7 @@
 # URL: https://github.com/roboticslab-uc3m/openrave-yarp-plugins
 
 # Dependencies:
-# - https://github.com/asrob-uc3m/robotDevastation-openrave-models (provides `mapping_room.env.xml`
+# - https://github.com/asrob-uc3m/robotDevastation-openrave-models (provides `mapping_room.env.xml`)
 
 import openravepy
 from openravepy import *
