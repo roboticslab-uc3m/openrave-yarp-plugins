@@ -45,9 +45,9 @@ openrave --module OpenraveYarpPluginLoader "env openrave/teo/teo.robot.xml open 
 Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/YarpOpenraveGrabber](../../YarpPlugins/YarpOpenraveGrabber#yarpopenravegrabber).
 
 ### Example 1
-The [first example](../../YarpPlugins/YarpOpenraveGrabber#example-1) becomes (note that `name` and `view` parameters are no longer required):
+The [first example](../../YarpPlugins/YarpOpenraveGrabber#example-1) becomes (note that `name` and `view` parameters are no longer required, but here `viewer` is forced):
 ```bash
-openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device grabberDual --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 0"
+openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device grabberDual --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 0" --viewer qtcoin
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-grabber.py](../../../examples/python/openraveYarpPluginLoader-grabber.py)
 
