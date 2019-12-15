@@ -12,7 +12,7 @@ Note that the string with parameters passed from the CLI to `OpenraveYarpPluginL
 
 ## YarpOpenraveControlboard
 
-Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/YarpOpenraveControlboard/](../../YarpPlugins/YarpOpenraveControlboard/).
+Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/YarpOpenraveControlboard](../../YarpPlugins/YarpOpenraveControlboard#yarpopenravecontrolboard).
 
 ### Example 1
 The [first example](../../YarpPlugins/YarpOpenraveControlboard#example-1) becomes (note that `name` and `view` parameters are no longer required):
