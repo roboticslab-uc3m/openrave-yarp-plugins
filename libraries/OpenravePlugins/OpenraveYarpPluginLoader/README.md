@@ -1,6 +1,6 @@
 # OpenraveYarpPluginLoader
 
-Enables loading one or several YARP plugins in OpenRAVE, typically from [libraries/YarpPlugins/](../../YarpPlugins/).
+Enables loading one or several YARP plugins in OpenRAVE, typically from [../../libraries/YarpPlugins/](../../YarpPlugins/).
 
 First open a:
 ```bash
