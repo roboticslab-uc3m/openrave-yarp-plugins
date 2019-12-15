@@ -12,6 +12,7 @@ try:
     env=Environment()
     env.SetViewer('qtcoin')
 
+    # "teo" requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
     example = "default"  # "default" or "teo"
 
     if example == "teo":
@@ -20,7 +21,7 @@ try:
         env.Load('data/lab1.env.xml')
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
-    print OpenraveYarpPluginLoader.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --allManipulators')
+    print OpenraveYarpPluginLoader.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --allRobots --allManipulators')
 
     while 1:
         pass

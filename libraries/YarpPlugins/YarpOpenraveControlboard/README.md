@@ -5,9 +5,10 @@ First open a:
 yarp server
 ```
 
-## Command Line (CLI) Invocation
+## Note on Invocation
+These examples use the `yarpdev` executable to load `YarpOpenraveControlboard` directly. However, you can find more interesting examples loading `YarpOpenraveControlboard` via `OpenraveYarpPluginLoader` at [../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravecontrolboard](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravecontrolboard).
 
-### Example 1
+## Example 1
 Open `YarpOpenraveControlboard` device with `data/lab1.env.xml` environment, view, apply to robot index `0` and manipulator index `0` (`name` and `view` are required):
 
 ```bash
@@ -24,7 +25,7 @@ For instance:
 set pos 1 45
 ```
 
-### Example 2
+## Example 2
 We can also load environments with our favorite heroes, such as:
 ```bash
 # Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
@@ -40,6 +41,3 @@ For instance:
 ```bash
 set pos 0 -45
 ```
-
-### More Examples
-You can find more examples with `YarpOpenraveControlboard` at [libraries/OpenravePlugins/OpenraveYarpPluginLoader](../../OpenravePlugins/OpenraveYarpPluginLoader).
