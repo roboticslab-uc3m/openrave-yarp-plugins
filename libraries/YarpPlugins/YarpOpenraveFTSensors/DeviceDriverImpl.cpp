@@ -68,10 +68,6 @@ bool YarpOpenraveFTSensors::open(yarp::os::Searchable& config)
     // Get pointer to sensed data
     sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
 
-    CD_INFO("Camera width: %d, height: %d.\n",geomDataPtr->width,geomDataPtr->height);
-    //_width = geomDataPtr->width;
-    //_height = geomDataPtr->height;
-
     return true;
 }
 
