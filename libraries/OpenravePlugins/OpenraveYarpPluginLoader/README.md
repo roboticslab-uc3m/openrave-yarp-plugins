@@ -83,3 +83,10 @@ openrave --module OpenraveYarpPluginLoader "env openrave/mapping_room.env.xml op
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-robotmanager.py](../../../examples/python/openraveYarpPluginLoader-robotmanager.py)
 
 Then follow the commands of the [first example](../../YarpPlugins/YarpOpenraveRobotManager#example-1).
+
+
+## YarpOpenraveControlboard + YarpOpenraveRGBDSensor
+Here's a nice one-liner that enables both the commands of [YarpOpenraveControlboard](../../YarpPlugins/YarpOpenraveControlboard#example-1) and [YarpOpenraveRGBDSensor](../../YarpPlugins/YarpOpenraveRGBDSensor#example-1):
+```bash
+openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --allRobots --allManipulators open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 3" --viewer qtcoin --collision ode
+```
