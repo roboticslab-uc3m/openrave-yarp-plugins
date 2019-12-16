@@ -13,75 +13,39 @@
 namespace roboticslab
 {
 
-// ------------------ IFrameFTSensorsImage Related ----------------------------------------
+// ------------------ ISixAxisForceTorqueSensors Related ----------------------------------------
 
-bool YarpOpenraveFTSensors::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& image)
+size_t YarpOpenraveFTSensors::getNrOfSixAxisForceTorqueSensors() const
 {
-    sensorBasePtr->GetSensorData(sensorDataPtr);
+    return 1;
+}
 
-    std::vector<uint8_t> currentFrame = sensorDataPtr->vimagedata;
-    //CD_DEBUG("Vector size: %d\n",currentFrame.size()); // i.e. 480 * 640 * 3 = 921600;
-    if(0 == currentFrame.size())
-    {
-        //CD_DEBUG("Waiting for camera...\n");
-        return false;
-    }
+// ----------------------------------------------------------------------------
 
-    //-- The following code works but provides a glitchy image on some machines, guess not thread safe.
-    // image.setExternal(currentFrame.data(),_width,_height);
+yarp::dev::MAS_status YarpOpenraveFTSensors::getSixAxisForceTorqueSensorStatus(size_t sens_index) const
+{
+    return yarp::dev::MAS_OK;
+}
 
-    //-- So the safe way seems to be using an intermediate image and making a copy.
-    yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
-    tmpImage.setExternal(currentFrame.data(),_width,_height);
-    image.copy(tmpImage);
+// ----------------------------------------------------------------------------
 
-    //-- Here's the old inefficient pixel-by-pixel copy in case efficient code ever stops working.
-    /*yarp::sig::PixelRgb p;
-    image.resize(_width,_height);
-    for (int i_x = 0; i_x < image.width(); ++i_x)
-    {
-        for (int i_y = 0; i_y < image.height(); ++i_y)
-        {
-            p.r = sensorDataPtr->vimagedata[3*(i_x+(i_y*image.width()))];
-            p.g = sensorDataPtr->vimagedata[1+3*(i_x+(i_y*image.width()))];
-            p.b = sensorDataPtr->vimagedata[2+3*(i_x+(i_y*image.width()))];
-            image.safePixel(i_x,i_y) = p;
-        }
-    }*/
-
+bool YarpOpenraveFTSensors::getSixAxisForceTorqueSensorName(size_t sens_index, std::string &name) const
+{
     return true;
 }
 
 // ----------------------------------------------------------------------------
 
-int YarpOpenraveFTSensors::height() const
+bool YarpOpenraveFTSensors::getSixAxisForceTorqueSensorFrameName(size_t sens_index, std::string &frameName) const
 {
-    CD_DEBUG("%d\n", _height);
-    return _height;
+    return true;
 }
 
 // ----------------------------------------------------------------------------
 
-int YarpOpenraveFTSensors::width() const
+bool YarpOpenraveFTSensors::getSixAxisForceTorqueSensorMeasure(size_t sens_index, yarp::sig::Vector& out, double& timestamp) const
 {
-    CD_DEBUG("%d\n", _width);
-    return _width;
-}
-
-// ----------------------------------------------------------------------------
-
-int YarpOpenraveFTSensors::getRgbHeight()
-{
-    CD_DEBUG("%d\n", _height);
-    return _height;
-}
-
-// ----------------------------------------------------------------------------
-
-int YarpOpenraveFTSensors::getRgbWidth()
-{
-    CD_DEBUG("%d\n", _width);
-    return _width;
+    return true;
 }
 
 // ----------------------------------------------------------------------------

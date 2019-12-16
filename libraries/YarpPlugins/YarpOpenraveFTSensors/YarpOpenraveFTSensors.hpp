@@ -57,7 +57,35 @@ public:
     virtual bool close();
 
     // ------- ISixAxisForceTorqueSensors declarations. Implementation in ISixAxisForceTorqueSensorsImpl.cpp -------
+    /**
+     * Get the number of six axis force torque sensors exposed by this device.
+     */
+    virtual size_t getNrOfSixAxisForceTorqueSensors() const;
 
+    /**
+     * Get the status of the specified sensor.
+     */
+    virtual yarp::dev::MAS_status getSixAxisForceTorqueSensorStatus(size_t sens_index) const;
+
+    /**
+     * Get the name of the specified sensor.
+     */
+    virtual bool getSixAxisForceTorqueSensorName(size_t sens_index, std::string &name) const;
+
+    /**
+     * Get the name of the frame of the specified sensor.
+     */
+    virtual bool getSixAxisForceTorqueSensorFrameName(size_t sens_index, std::string &frameName) const;
+
+    /**
+     * Get the last reading of the specified sensor.
+     *
+     * @param[in] sens_index The index of the specified sensor (should be between 0 and getNrOfSixAxisForceTorqueSensors()-1).
+     * @param[out] out The requested measure. The vector should be 6-dimensional.
+     *                 The measure is expressed in Newton for the first three elements, Newton Meters for the last three elements.
+     * @param[out] timestamp The timestamp of the requested measure, expressed in seconds.
+     */
+    virtual bool getSixAxisForceTorqueSensorMeasure(size_t sens_index, yarp::sig::Vector& out, double& timestamp) const;
 
 private:
 
