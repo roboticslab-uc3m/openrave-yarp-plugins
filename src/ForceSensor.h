@@ -59,7 +59,7 @@ public:
 	virtual bool Init(const string& args);
 	virtual void Reset(int options);
 	virtual bool SimulationStep(OpenRAVE::dReal fTimeElapsed);
-	virtual SensorGeometryPtr GetSensorGeometry(SensorType type);
+    virtual SensorGeometryConstPtr GetSensorGeometry(SensorType type);
 	virtual SensorDataPtr CreateSensorData(SensorType type);
 	virtual bool GetSensorData(SensorDataPtr psensordata);
 	virtual void SetTransform(const Transform& trans);
