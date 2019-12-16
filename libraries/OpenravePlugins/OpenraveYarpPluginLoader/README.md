@@ -63,7 +63,7 @@ Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/Ya
 ### Example 1
 The [first example](../../YarpPlugins/YarpOpenraveRGBDSensor#example-1) becomes (note that `name` and `view` parameters are no longer required, but here `viewer` and `collision` are forced due to [#48](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/48#issuecomment-564939923) and [#102](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/102) respectively):
 ```bash
-openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 1" --viewer qtcoin --collision ode
+openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 3" --viewer qtcoin --collision ode
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-rgbdsensor.py](../../../examples/python/openraveYarpPluginLoader-rgbdsensor.py)
 

@@ -31,7 +31,7 @@ try:
     if example == "ecro":
         print OpenraveYarpPluginLoader.SendCommand('open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --depthSensorIndex 0') # here not using --rgbSensorIndex 0
     else:
-        print OpenraveYarpPluginLoader.SendCommand('open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --depthSensorIndex 1') # here not using --rgbSensorIndex 0
+        print OpenraveYarpPluginLoader.SendCommand('open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --depthSensorIndex 3') # here not using --rgbSensorIndex 0
 
     while 1:
         pass
