@@ -2,12 +2,6 @@
 
 #include "YarpOpenraveFTSensors.hpp"
 
-#include <stdint.h> // uint8_t
-
-#include <vector>
-
-#include <yarp/sig/Image.h>
-
 #include <ColorDebug.h>
 
 namespace roboticslab

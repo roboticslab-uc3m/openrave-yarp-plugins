@@ -3,7 +3,6 @@
 #include "YarpOpenraveFTSensors.hpp"
 
 #include <string>
-#include <vector>
 
 #include <yarp/os/Value.h>
 
