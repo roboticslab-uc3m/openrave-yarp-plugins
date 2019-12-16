@@ -2,7 +2,7 @@
 # Authors: Juan G. Victores and Raul Fernandez-Fernandez
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 project(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS LANGUAGES CXX)
 
@@ -38,15 +38,14 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 # Pick up our cmake modules.
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake
-                              ${CMAKE_SOURCE_DIR}/cmake/modules)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 # Hard dependencies.
-find_package(YCM 0.10 REQUIRED)
+find_package(YCM 0.11 REQUIRED)
 find_package(COLOR_DEBUG REQUIRED)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost "${OpenRAVE_Boost_VERSION}" REQUIRED COMPONENTS thread)
-find_package(YARP 3.1 REQUIRED COMPONENTS OS dev sig)
+find_package(YARP 3.2 REQUIRED COMPONENTS OS dev sig)
 
 # Soft dependencies.
 find_package(ASROB_YARP_DEVICES QUIET)
@@ -80,67 +79,22 @@ endif()
 include(CMakeDependentOption)
 
 # Add main contents.
-add_subdirectory(cmake)
 add_subdirectory(libraries)
-#add_subdirectory(share)
 add_subdirectory(doc)
 
 # Store the package in the user registry.
-export(PACKAGE ROBOTICSLAB_OPENRAVE_YARP_PLUGINS)
-
-# Retrieve global properties.
-get_property(_exported_targets GLOBAL PROPERTY ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_TARGETS)
-
-# CMake installation path.
-if(WIN32)
-    set(_cmake_destination cmake)
-else()
-    set(_cmake_destination ${CMAKE_INSTALL_LIBDIR}/cmake/ROBOTICSLAB_OPENRAVE_YARP_PLUGINS)
-endif()
+set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
 
 # Create and install config files.
-include(CMakePackageConfigHelpers)
+include(InstallBasicPackageFiles)
 
-# Set exported variables (build tree).
-set(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR ${CMAKE_SOURCE_DIR}/cmake)
-
-# <pkg>Config.cmake (build tree).
-configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/templates/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake.in
-                              ${CMAKE_BINARY_DIR}/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake
-                              INSTALL_DESTINATION ${CMAKE_BINARY_DIR}
-                              INSTALL_PREFIX ${CMAKE_BINARY_DIR}
-                              PATH_VARS ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR
-                              NO_CHECK_REQUIRED_COMPONENTS_MACRO)
-
-# Set exported variables (build tree).
-set(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR ${CMAKE_INSTALL_DATADIR}/ROBOTICSLAB_OPENRAVE_YARP_PLUGINS/cmake)
-
-# <pkg>Config.cmake (install tree).
-configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/templates/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake.in
-                              ${CMAKE_BINARY_DIR}/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake.install
-                              INSTALL_DESTINATION ${_cmake_destination}
-                              PATH_VARS ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_MODULE_DIR
-                              NO_CHECK_REQUIRED_COMPONENTS_MACRO)
-
-# Install <pkg>Config.cmake.
-install(FILES ${CMAKE_BINARY_DIR}/ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake.install
-        RENAME ROBOTICSLAB_OPENRAVE_YARP_PLUGINSConfig.cmake
-        DESTINATION ${_cmake_destination})
-
-# Export library targets if enabled.
-# https://github.com/roboticslab-uc3m/project-generator/issues/19
-if(_exported_targets)
-    # <pkg>Targets.cmake (build tree).
-    export(EXPORT ROBOTICSLAB_OPENRAVE_YARP_PLUGINS
-           NAMESPACE ROBOTICSLAB::
-           FILE ROBOTICSLAB_OPENRAVE_YARP_PLUGINSTargets.cmake)
-
-    # <pkg>Targets.cmake (install tree).
-    install(EXPORT ROBOTICSLAB_OPENRAVE_YARP_PLUGINS
-            DESTINATION ${_cmake_destination}
-            NAMESPACE ROBOTICSLAB::
-            FILE ROBOTICSLAB_OPENRAVE_YARP_PLUGINSTargets.cmake)
-endif()
+install_basic_package_files(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS
+                            VERSION 0.1.0
+                            COMPATIBILITY AnyNewerVersion
+                            NO_SET_AND_CHECK_MACRO
+                            NO_CHECK_REQUIRED_COMPONENTS_MACRO
+                            NO_EXPORT
+                            NAMESPACE ROBOTICSLAB::)
 
 # Configure and create uninstall target.
 include(AddUninstallTarget)

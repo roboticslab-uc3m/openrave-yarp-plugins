@@ -5,11 +5,22 @@ First open a:
 yarp server
 ```
 
-- Example 1 (requires [robotDevastation-openrave-models](https://github.com/asrob-uc3m/robotDevastation-openrave-models)): Open `YarpOpenraveRobotManager` device with `mapping_room.env.xml` environment with `ODE`, view, apply to robot index `0` call it `/robot`:
-   ```bash
-   yarpdev --device YarpOpenraveRobotManager --env /usr/local/share/robotDevastation-openrave-models/contexts/openrave/ecro/mapping_room.env.xml --physics ode --view --robotIndex 0 --name /robot
-   ```
-   Then communicate via:
-   ```
-   yarp rpc /robot/rpc:s
-   ```
+## Note on Invocation
+These examples use the `yarpdev` executable to load `YarpOpenraveRobotManager` directly. However, you can find more interesting examples loading `YarpOpenraveRobotManager` via `OpenraveYarpPluginLoader` at [../../OpenravePlugins/OpenraveYarpPluginLoader#robotmanager](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraverobotmanager).
+
+## Example 1
+Open `YarpOpenraveRobotManager` device with `mapping_room.env.xml` environment with `ODE`, view, apply to robot index `0` call it `/robot`:
+```bash
+# requires [asrob-uc3m/robotDevastation-openrave-models](https://github.com/asrob-uc3m/robotDevastation-openrave-models)
+yarpdev --device YarpOpenraveRobotManager --env openrave/mapping_room.env.xml --physics ode --robotIndex 0 --view --name /ecroSim
+```
+
+Then communicate via:
+```
+yarp rpc /ecroSim/rpc:s
+```
+
+For instance:
+```bash
+movf 10.0
+```

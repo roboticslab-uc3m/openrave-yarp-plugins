@@ -33,7 +33,7 @@ Installation instructions for installing from source can be found [here](doc/ope
 
 ## Description
 
-The main approach is to develop OpenRAVE plugins (contained in the [OpenravePlugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/libraries/OpenravePlugins) folder), which internally load YARP plugins (contained in the [YarpPlugins](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/tree/develop/libraries/YarpPlugins) folder) that open ports thanks to their network wrappers. This can be seen in the following figure.
+The main approach is to develop OpenRAVE plugins (contained in the [libraries/OpenravePlugins/](libraries/OpenravePlugins/) folder), which enable YARP communications. Among these, [OpenraveYarpPluginLoader](libraries/OpenravePlugins/OpenraveYarpPluginLoader) is a generic component that allows to internally load any of the YARP plugins contained in the [libraries/YarpPlugins/](libraries/YarpPlugins/) folder. These YARP plugins open ports thanks to their network wrappers. This can be seen in the following figure.
 
 ![Architecture Block Diagram](doc/fig/architecture.png)
 
@@ -51,10 +51,12 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 
 ```bash
 # new terminal to open the simulated robot
-python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-controlboard-allManipulators.py
+python examples/python/openraveYarpPluginLoader-controlboard-allManipulators.py
+
 # new terminal to open the collision avoidance simulator 
 # NOTE: Expect LONG wait to load the padding model
-python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-controlboard-collision-sim.py
+python examples/python/openraveYarpPluginLoader-controlboard-collision-sim.py
+
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teoSim/[kinematic chain name]/rpc:i
 ```
@@ -64,20 +66,21 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 
 ```bash
 # new terminal
-python ~/repos/openrave-yarp-plugins/example/python/openraveYarpPluginLoader-controlboard-collision-real.py
+python examples/python/openraveYarpPluginLoader-controlboard-collision-real.py
+
 # wait for the system to load the padding model
 # Then the robot can be commanded via yarp with:
 yarp rpc /safe/teo/[kinematic chain name]/rpc:i
 ```
 
 ### How to extract a .pp model from ConvexDecomposition
-The following commands explain how to use openrave to create a 3D model (.pp) of the collision space that openrave uses to calculate collisions. Whereas openarave uses it continuously, here we can save the 3D files to use them.
+The following commands explain how to use openrave to create a 3D model (`.pp`) of the collision space that OpenRAVE uses to calculate collisions. Whereas OpenRAVE uses it continuously, here we can save the 3D files to use them.
 
 ```bash
-# new terminal
-openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml #--padding=PADDING --maxHullVertices=MAXHULLVERTICES --mergeThresholdPercent=MERGETHRESHOLDPERCENT
+openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml # --padding=PADDING --maxHullVertices=MAXHULLVERTICES --mergeThresholdPercent=MERGETHRESHOLDPERCENT
 ```
-At the time to generate the .pp file different params can be set. In our case the most relevants are the **padding**, the **maxHullVertices** and the **mergeThresholdPercent**. **padding** represents the distance from the real plane to the one generated. The last two used to reduce the number of triangles generated in the model).
+
+At the time of generating the `.pp` file, different parameters can be set. In our case, the most relevant parameters are the **padding**, the **maxHullVertices** and the **mergeThresholdPercent**. **padding** represents the distance from the real plane to the one generated. The last two are used to reduce the number of triangles generated in the model.
   
 More options can be found [here](http://openrave.org/docs/0.8.0/openravepy/databases.convexdecomposition/).
 
@@ -86,7 +89,7 @@ More options can be found [here](http://openrave.org/docs/0.8.0/openravepy/datab
 openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --show
 ```
 
-To change the file type, [this](https://github.com/roboticslab-uc3m/tools/tree/develop/programs/openraveppToSTL) can be used.
+To convert the generated `.pp` file into an `.stl` file that can be used by other programs, [openrave-pp-to-stl.py](https://github.com/roboticslab-uc3m/openrave-tools/blob/develop/openrave-pp-to-stl.py) ([perma](https://github.com/roboticslab-uc3m/openrave-tools/blob/bd078f6d64478ca3c1b911599df56b9dc6051797/openrave-pp-to-stl.py)) can be used.
 
 ## Similar and Related Projects
 - http://www.iearobotics.com/wiki/index.php?title=OpenRave_y_robots_modulares

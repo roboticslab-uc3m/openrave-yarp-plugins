@@ -17,6 +17,7 @@ if(NOT SKIP_YarpOpenraveControlboard)
 
     yarp_add_plugin(YarpOpenraveControlboard YarpOpenraveControlboard.hpp
                                              DeviceDriverImpl.cpp
+                                             IAxisInfoImpl.cpp
                                              IControlLimitsImpl.cpp
                                              IControlModeImpl.cpp
                                              IEncodersImpl.cpp
@@ -35,22 +36,13 @@ if(NOT SKIP_YarpOpenraveControlboard)
                                                    ${OpenRAVE_LIBRARIES}
                                                    Boost::boost
                                                    ROBOTICSLAB::ColorDebug
-                                                   YarpOpenraveBaseInterface)
+                                                   YarpOpenraveBase)
 
     target_include_directories(YarpOpenraveControlboard PRIVATE ${OpenRAVE_INCLUDE_DIRS})
 
-    if(NOT YARP_VERSION_SHORT VERSION_LESS 3.2)
-        yarp_install(TARGETS YarpOpenraveControlboard
-                     LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
-                     ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR}
-                     YARP_INI DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
-    else()
-        yarp_install(TARGETS YarpOpenraveControlboard
-                     LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
-                     ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR})
-
-        yarp_install(FILES YarpOpenraveControlboard.ini
-                     DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
-    endif()
+    yarp_install(TARGETS YarpOpenraveControlboard
+                 LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
+                 ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR}
+                 YARP_INI DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
 
 endif()

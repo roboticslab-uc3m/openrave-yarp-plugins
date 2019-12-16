@@ -12,10 +12,11 @@ try:
     env=Environment()
     env.SetViewer('qtcoin')
 
+    # "teo" requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
     example = "default"  # "default" or "teo"
 
     if example == "teo":
-        env.Load('/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml')
+        env.Load('/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml')
     else:
         env.Load('data/lab1.env.xml')
 

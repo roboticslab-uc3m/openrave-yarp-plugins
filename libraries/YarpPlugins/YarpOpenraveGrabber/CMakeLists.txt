@@ -7,7 +7,7 @@ yarp_prepare_plugin(YarpOpenraveGrabber
                     INCLUDE YarpOpenraveGrabber.hpp
                     DEFAULT ON
                     DEPENDS ENABLE_YarpOpenraveBase
-                    EXTRA_CONFIG WRAPPER=grabber)
+                    EXTRA_CONFIG WRAPPER=grabberDual)
 
 if(NOT SKIP_YarpOpenraveGrabber)
 
@@ -27,22 +27,13 @@ if(NOT SKIP_YarpOpenraveGrabber)
                                               ${OpenRAVE_LIBRARIES}
                                               Boost::boost
                                               ROBOTICSLAB::ColorDebug
-                                              YarpOpenraveBaseInterface)
+                                              YarpOpenraveBase)
 
     target_include_directories(YarpOpenraveGrabber PRIVATE ${OpenRAVE_INCLUDE_DIRS})
 
-    if(NOT YARP_VERSION_SHORT VERSION_LESS 3.2)
-        yarp_install(TARGETS YarpOpenraveGrabber
-                     LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
-                     ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR}
-                     YARP_INI DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
-    else()
-        yarp_install(TARGETS YarpOpenraveGrabber
-                     LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
-                     ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR})
-
-        yarp_install(FILES YarpOpenraveGrabber.ini
-                     DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
-    endif()
+    yarp_install(TARGETS YarpOpenraveGrabber
+                 LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
+                 ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR}
+                 YARP_INI DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_PLUGIN_MANIFESTS_INSTALL_DIR})
 
 endif()

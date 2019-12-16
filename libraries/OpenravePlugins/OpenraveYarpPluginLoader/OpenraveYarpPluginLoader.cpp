@@ -14,6 +14,7 @@
 #include <yarp/os/Network.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/Value.h>
+#include <yarp/os/ResourceFinder.h>
 
 #include <yarp/dev/PolyDriver.h>
 
@@ -59,26 +60,62 @@ public:
         CD_DEBUG("[%s]\n", cmd.c_str());
         std::stringstream ss(cmd);
 
-        //-- Fill openStrings
+        //-- Fill openStrings and envString
         std::vector<std::string> openStrings;
+        std::string envString("");
+
+        enum mode { none, open, env };
+        int currentMode = mode::none;
         while( ! ss.eof() )
         {
             std::string tmp;
             ss >> tmp;
+
             if(tmp == "open")
             {
                 std::string openString("open");
                 openStrings.push_back(openString);
+                currentMode = mode::open;
+            }
+            else if(tmp == "env")
+            {
+                currentMode = mode::env;
             }
             else
             {
-                if(openStrings.size() == 0)
+                if(currentMode == mode::open)
                 {
-                    CD_ERROR("args must start with open, sorry! Bye!\n");
+                    openStrings[openStrings.size()-1].append(" ");
+                    openStrings[openStrings.size()-1].append(tmp);
+                }
+                else if(currentMode == mode::env)
+                {
+                    envString = tmp;
+                }
+            }
+        }
+
+        CD_DEBUG("env: '%s'\n",envString.c_str());
+
+        if(envString!="")
+        {
+            if ( !!GetEnv()->Load(envString.c_str()) )
+            {
+                CD_SUCCESS("Loaded '%s' environment.\n",envString.c_str());
+            }
+            else
+            {
+                CD_DEBUG("Could not load '%s' environment, attempting via yarp::os::ResourceFinder.\n",envString.c_str());
+
+                yarp::os::ResourceFinder rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
+                std::string fullEnvString = rf.findFileByName(envString);
+
+                if ( !GetEnv()->Load(fullEnvString.c_str()) )
+                {
+                    CD_ERROR("Could not load '%s' environment.\n",fullEnvString.c_str());
                     return 1;
                 }
-                openStrings[openStrings.size()-1].append(" ");
-                openStrings[openStrings.size()-1].append(tmp);
+                CD_SUCCESS("Loaded '%s' environment.\n",fullEnvString.c_str());
             }
         }
 
