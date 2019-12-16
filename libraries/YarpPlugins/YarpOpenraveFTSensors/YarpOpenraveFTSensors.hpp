@@ -93,7 +93,7 @@ private:
 
     //OpenRAVE//
     OpenRAVE::SensorBasePtr sensorBasePtr;
-    boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> sensorDataPtr;
+    boost::shared_ptr<OpenRAVE::SensorBase::Force6DSensorData> sensorDataPtr;
 
     static const int NOT_SET;
 };

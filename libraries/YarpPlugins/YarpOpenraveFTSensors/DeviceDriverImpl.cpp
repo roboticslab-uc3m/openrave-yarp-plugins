@@ -66,7 +66,7 @@ bool YarpOpenraveFTSensors::open(yarp::os::Searchable& config)
     boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
 
     // Get pointer to sensed data
-    sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
+    sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::Force6DSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Force6D));
 
     return true;
 }
