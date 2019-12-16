@@ -7,7 +7,7 @@ yarp_prepare_plugin(YarpOpenraveFTSensors
                     INCLUDE YarpOpenraveFTSensors.hpp
                     DEFAULT ON
                     DEPENDS ENABLE_YarpOpenraveBase
-                    EXTRA_CONFIG WRAPPER=analogServer)
+                    EXTRA_CONFIG WRAPPER=multipleanalogsensorsserver)
 
 if(NOT SKIP_YarpOpenraveFTSensors)
 
