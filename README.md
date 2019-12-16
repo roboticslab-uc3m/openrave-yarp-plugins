@@ -86,7 +86,7 @@ More options can be found [here](http://openrave.org/docs/0.8.0/openravepy/datab
 
 ```bash
 # To check the results, execute the following command. It is worth noting that, the triangle count is not correct, this was contrasted using other tool.
-openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/contexts/openrave/teo/teo.robot.xml --show
+openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml --show
 ```
 
 To convert the generated `.pp` file into an `.stl` file that can be used by other programs, [openrave-pp-to-stl.py](https://github.com/roboticslab-uc3m/openrave-tools/blob/develop/openrave-pp-to-stl.py) ([perma](https://github.com/roboticslab-uc3m/openrave-tools/blob/bd078f6d64478ca3c1b911599df56b9dc6051797/openrave-pp-to-stl.py)) can be used.
