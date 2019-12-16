@@ -51,9 +51,9 @@ bool YarpOpenraveFTSensors::open(yarp::os::Searchable& config)
 
     // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
 
-    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
+    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Force6D) )
     {
-        CD_ERROR("Sensor %d does not support ST_Camera.\n", sensorIndex );
+        CD_ERROR("Sensor %d does not support ST_Force6D.\n", sensorIndex );
         return false;
     }
 
