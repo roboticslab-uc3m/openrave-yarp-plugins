@@ -25,6 +25,7 @@ yarp::dev::MAS_status YarpOpenraveFTSensors::getSixAxisForceTorqueSensorStatus(s
 
 bool YarpOpenraveFTSensors::getSixAxisForceTorqueSensorName(size_t sens_index, std::string &name) const
 {
+    name = sensorBasePtr->GetName();
     return true;
 }
 
