@@ -60,22 +60,22 @@ public:
     /**
      * Get the number of six axis force torque sensors exposed by this device.
      */
-    virtual size_t getNrOfSixAxisForceTorqueSensors() const;
+    virtual size_t getNrOfSixAxisForceTorqueSensors() const override;
 
     /**
      * Get the status of the specified sensor.
      */
-    virtual yarp::dev::MAS_status getSixAxisForceTorqueSensorStatus(size_t sens_index) const;
+    virtual yarp::dev::MAS_status getSixAxisForceTorqueSensorStatus(size_t sens_index) const override;
 
     /**
      * Get the name of the specified sensor.
      */
-    virtual bool getSixAxisForceTorqueSensorName(size_t sens_index, std::string &name) const;
+    virtual bool getSixAxisForceTorqueSensorName(size_t sens_index, std::string &name) const override;
 
     /**
      * Get the name of the frame of the specified sensor.
      */
-    virtual bool getSixAxisForceTorqueSensorFrameName(size_t sens_index, std::string &frameName) const;
+    virtual bool getSixAxisForceTorqueSensorFrameName(size_t sens_index, std::string &frameName) const override;
 
     /**
      * Get the last reading of the specified sensor.
@@ -85,7 +85,7 @@ public:
      *                 The measure is expressed in Newton for the first three elements, Newton Meters for the last three elements.
      * @param[out] timestamp The timestamp of the requested measure, expressed in seconds.
      */
-    virtual bool getSixAxisForceTorqueSensorMeasure(size_t sens_index, yarp::sig::Vector& out, double& timestamp) const;
+    virtual bool getSixAxisForceTorqueSensorMeasure(size_t sens_index, yarp::sig::Vector& out, double& timestamp) const override;
 
 private:
 
