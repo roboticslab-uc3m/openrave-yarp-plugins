@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveFTSensors.hpp"
+#include "YarpOpenraveAnalogSensors.hpp"
 
 #include <string>
 
@@ -11,11 +11,11 @@
 namespace roboticslab
 {
 
-const int YarpOpenraveFTSensors::NOT_SET = -1;
+const int YarpOpenraveAnalogSensors::NOT_SET = -1;
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool YarpOpenraveFTSensors::open(yarp::os::Searchable& config)
+bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
 {
     CD_DEBUG("config: %s\n",config.toString().c_str());
 
@@ -73,7 +73,7 @@ bool YarpOpenraveFTSensors::open(yarp::os::Searchable& config)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveFTSensors::close()
+bool YarpOpenraveAnalogSensors::close()
 {
     CD_INFO("\n");
     return true;

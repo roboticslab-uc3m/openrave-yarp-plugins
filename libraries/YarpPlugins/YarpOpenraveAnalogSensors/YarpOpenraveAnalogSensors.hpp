@@ -17,22 +17,22 @@ namespace roboticslab
 
 /**
  * @ingroup YarpPlugins
- * \defgroup YarpOpenraveFTSensors
+ * \defgroup YarpOpenraveAnalogSensors
  *
- * @brief Contains roboticslab::YarpOpenraveFTSensors.
+ * @brief Contains roboticslab::YarpOpenraveAnalogSensors.
  */
 
 /**
- * @ingroup YarpOpenraveFTSensors
+ * @ingroup YarpOpenraveAnalogSensors
  * @brief Implements the YARP_dev ISixAxisForceTorqueSensors, etc.
  * interface class member functions.
  */
-class YarpOpenraveFTSensors : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::ISixAxisForceTorqueSensors
+class YarpOpenraveAnalogSensors : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::ISixAxisForceTorqueSensors
 {
 public:
 
     // Set the Thread Rate in the class constructor
-    YarpOpenraveFTSensors() {}
+    YarpOpenraveAnalogSensors() {}
 
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImageImpl.cpp -------
     /**
