@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __YARP_OPENRAVE_FTSENSORS_HPP__
-#define __YARP_OPENRAVE_FTSENSORS_HPP__
+#ifndef __YARP_OPENRAVE_ANALOG_SENSORS_HPP__
+#define __YARP_OPENRAVE_ANALOG_SENSORS_HPP__
 
 #include <yarp/dev/DeviceDriver.h>
 #include <yarp/dev/MultipleAnalogSensorsInterfaces.h>
@@ -17,22 +17,22 @@ namespace roboticslab
 
 /**
  * @ingroup YarpPlugins
- * \defgroup YarpOpenraveFTSensors
+ * \defgroup YarpOpenraveAnalogSensors
  *
- * @brief Contains roboticslab::YarpOpenraveFTSensors.
+ * @brief Contains roboticslab::YarpOpenraveAnalogSensors.
  */
 
 /**
- * @ingroup YarpOpenraveFTSensors
+ * @ingroup YarpOpenraveAnalogSensors
  * @brief Implements the YARP_dev ISixAxisForceTorqueSensors, etc.
  * interface class member functions.
  */
-class YarpOpenraveFTSensors : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::ISixAxisForceTorqueSensors
+class YarpOpenraveAnalogSensors : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::ISixAxisForceTorqueSensors
 {
 public:
 
     // Set the Thread Rate in the class constructor
-    YarpOpenraveFTSensors() {}
+    YarpOpenraveAnalogSensors() {}
 
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImageImpl.cpp -------
     /**
@@ -89,7 +89,7 @@ public:
 
 private:
 
-    // General FTSensors parameters //
+    // General Analog Sensors parameters //
 
     //OpenRAVE//
     OpenRAVE::SensorBasePtr sensorBasePtr;
@@ -100,4 +100,4 @@ private:
 
 }  // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_FTSENSORS_HPP__
+#endif  // __YARP_OPENRAVE_ANALOG_SENSORS_HPP__

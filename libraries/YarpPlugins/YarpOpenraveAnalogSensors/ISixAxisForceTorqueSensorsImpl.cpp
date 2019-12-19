@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveFTSensors.hpp"
+#include "YarpOpenraveAnalogSensors.hpp"
 
 #include <ColorDebug.h>
 
@@ -9,21 +9,21 @@ namespace roboticslab
 
 // ------------------ ISixAxisForceTorqueSensors Related ----------------------------------------
 
-size_t YarpOpenraveFTSensors::getNrOfSixAxisForceTorqueSensors() const
+size_t YarpOpenraveAnalogSensors::getNrOfSixAxisForceTorqueSensors() const
 {
     return 1;
 }
 
 // ----------------------------------------------------------------------------
 
-yarp::dev::MAS_status YarpOpenraveFTSensors::getSixAxisForceTorqueSensorStatus(size_t sens_index) const
+yarp::dev::MAS_status YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorStatus(size_t sens_index) const
 {
     return yarp::dev::MAS_OK;
 }
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveFTSensors::getSixAxisForceTorqueSensorName(size_t sens_index, std::string &name) const
+bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorName(size_t sens_index, std::string &name) const
 {
     name = sensorBasePtr->GetName();
     return true;
@@ -31,14 +31,14 @@ bool YarpOpenraveFTSensors::getSixAxisForceTorqueSensorName(size_t sens_index, s
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveFTSensors::getSixAxisForceTorqueSensorFrameName(size_t sens_index, std::string &frameName) const
+bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorFrameName(size_t sens_index, std::string &frameName) const
 {
     return true;
 }
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveFTSensors::getSixAxisForceTorqueSensorMeasure(size_t sens_index, yarp::sig::Vector& out, double& timestamp) const
+bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorMeasure(size_t sens_index, yarp::sig::Vector& out, double& timestamp) const
 {
     out[0] = sensorDataPtr->force[0];
     out[1] = sensorDataPtr->force[1];
