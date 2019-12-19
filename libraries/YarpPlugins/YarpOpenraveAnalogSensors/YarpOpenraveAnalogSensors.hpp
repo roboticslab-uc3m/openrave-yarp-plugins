@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __YARP_OPENRAVE_FTSENSORS_HPP__
-#define __YARP_OPENRAVE_FTSENSORS_HPP__
+#ifndef __YARP_OPENRAVE_ANALOG_SENSORS_HPP__
+#define __YARP_OPENRAVE_ANALOG_SENSORS_HPP__
 
 #include <yarp/dev/DeviceDriver.h>
 #include <yarp/dev/MultipleAnalogSensorsInterfaces.h>
@@ -89,7 +89,7 @@ public:
 
 private:
 
-    // General FTSensors parameters //
+    // General Analog Sensors parameters //
 
     //OpenRAVE//
     OpenRAVE::SensorBasePtr sensorBasePtr;
@@ -100,4 +100,4 @@ private:
 
 }  // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_FTSENSORS_HPP__
+#endif  // __YARP_OPENRAVE_ANALOG_SENSORS_HPP__
