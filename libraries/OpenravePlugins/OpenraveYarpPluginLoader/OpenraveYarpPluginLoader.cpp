@@ -422,9 +422,12 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
 
     if ( request.get(0).asString() == "open" )
     {
+        std::string str = request.tail().toString();
+        str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
+
         std::stringstream sout;
-        std::stringstream sinput;
-        sinput << std::string("--device RobotServer --subdevice YarpOpenraveRobotManager --robotIndex 0");
+        std::stringstream sinput(str);
+
         openraveYarpPluginLoaderPtr->Open(sout, sinput);
 
         response.addVocab(VOCAB_OK);
