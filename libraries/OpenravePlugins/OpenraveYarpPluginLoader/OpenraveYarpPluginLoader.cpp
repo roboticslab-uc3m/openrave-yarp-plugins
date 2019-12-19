@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <string>
+#include <regex>
 #include <vector>
 
 #include <openrave/openrave.h>
@@ -13,12 +14,17 @@
 
 #include <yarp/os/Network.h>
 #include <yarp/os/Property.h>
-#include <yarp/os/Value.h>
 #include <yarp/os/ResourceFinder.h>
+#include <yarp/os/RpcServer.h>
+#include <yarp/os/Value.h>
+#include <yarp/os/Vocab.h>
 
 #include <yarp/dev/PolyDriver.h>
 
 #include <ColorDebug.h>
+
+#define VOCAB_OK yarp::os::createVocab('o','k')
+#define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
 
 /**
  * @ingroup OpenravePlugins
@@ -26,6 +32,17 @@
  *
  * @brief Contains roboticslab::OpenraveYarpPluginLoader.
  */
+
+class OpenraveYarpPluginLoader;
+
+class OpenPortReader: public yarp::os::PortReader
+{
+public:
+    void setOpenraveYarpPluginLoaderPtr(OpenraveYarpPluginLoader *value) { openraveYarpPluginLoaderPtr = value; }
+private:
+    OpenraveYarpPluginLoader* openraveYarpPluginLoaderPtr;
+    virtual bool read(yarp::os::ConnectionReader& in) override;
+};
 
 /**
  * @ingroup OpenraveYarpPluginLoader
@@ -38,6 +55,14 @@ public:
     {
         __description = "OpenraveYarpPluginLoader plugin.";
         OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens OpenraveYarpPluginLoader");
+
+        CD_INFO("Checking for yarp network...\n");
+        if ( ! yarp.checkNetwork() )
+            CD_ERROR("Found no yarp network (try running \"yarpserver &\")!\n");
+        CD_SUCCESS("Found yarp network.\n");
+        openPortReader.setOpenraveYarpPluginLoaderPtr(this);
+        openPortRpcServer.setReader(openPortReader);
+        openPortRpcServer.open("/OpenraveYarpPluginLoader/rpc:s");
     }
 
     virtual ~OpenraveYarpPluginLoader()
@@ -54,6 +79,8 @@ public:
     {
         RAVELOG_INFO("module unloaded from environment\n");
     }
+
+    std::vector<std::string> getOpenedStrings() const { return openedStrings; }
 
     int main(const std::string& cmd)
     {
@@ -142,6 +169,20 @@ public:
         }
         CD_SUCCESS("Found yarp network.\n");
 
+        std::string s(std::istreambuf_iterator<char>(sinput), {});
+        s = std::regex_replace(s, std::regex("^ +| +$|( ) +"), "$1");
+        // openedStrings.push_back(s); //-- only if return true;
+
+        for(size_t strIdx=0; strIdx<openedStrings.size(); strIdx++)
+            if( s == openedStrings[strIdx] )
+            {
+                CD_ERROR("Already in openedStrings. Not loading!\n");
+                return false;
+            }
+
+        sinput.clear();
+        sinput.seekg(0);
+
         //-- Given "std::istream& sinput", create equivalent to "int argc, char *argv[]"
         //-- Note that char* != const char* given by std::string::c_str();
         std::vector<char *> argv;
@@ -209,7 +250,7 @@ public:
             CD_SUCCESS("Valid yarp plugin.\n");
 
             yarpPlugins.push_back(yarpPlugin);
-
+            openedStrings.push_back(s);
             return true;
         }
 
@@ -378,13 +419,59 @@ public:
             argv[i] = 0;
         }
 
+        openedStrings.push_back(s);
         return true;
     }
 
 private:
     yarp::os::Network yarp;
     std::vector<yarp::dev::PolyDriver*> yarpPlugins;
+
+    std::vector<std::string> openedStrings;
+
+    OpenPortReader openPortReader;
+    yarp::os::RpcServer openPortRpcServer;
 };
+
+bool OpenPortReader::read(yarp::os::ConnectionReader& in)
+{
+    yarp::os::Bottle request, response;
+    if (!request.read(in)) return false;
+    CD_DEBUG("Request: %s\n", request.toString().c_str());
+    yarp::os::ConnectionWriter *out = in.getWriter();
+    if (out==NULL) return true;
+
+    if ( request.get(0).asString() == "open" )
+    {
+        std::string str = request.tail().toString();
+        str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
+
+        std::stringstream sout;
+        std::stringstream sinput(str);
+
+        if(!openraveYarpPluginLoaderPtr->Open(sout, sinput))
+        {
+            response.addVocab(VOCAB_FAILED);
+            response.addString("already in openedStrings");
+            return response.write(*out);
+        }
+        response.addVocab(VOCAB_OK);
+        return response.write(*out);
+    }
+    else if ( request.get(0).asString() == "list" )
+    {
+        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
+        {
+            response.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
+        }
+        //response.addVocab(VOCAB_OK);
+        return response.write(*out);
+    }
+
+    response.addVocab(VOCAB_FAILED);
+    response.addString("unknown command");
+    return response.write(*out);
+}
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
 {
