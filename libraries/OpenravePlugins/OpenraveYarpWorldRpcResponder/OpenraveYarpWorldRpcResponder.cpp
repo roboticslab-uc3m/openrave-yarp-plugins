@@ -587,6 +587,7 @@ public:
 
     virtual ~OpenraveYarpWorldRpcResponder()
     {
+        worldRpcServer.interrupt();
         worldRpcServer.close();
     }
 
