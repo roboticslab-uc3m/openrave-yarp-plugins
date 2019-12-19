@@ -24,6 +24,7 @@
 #include <ColorDebug.h>
 
 #define VOCAB_OK yarp::os::createVocab('o','k')
+#define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
 
 /**
  * @ingroup OpenravePlugins
@@ -171,6 +172,14 @@ public:
         std::string s(std::istreambuf_iterator<char>(sinput), {});
         s = std::regex_replace(s, std::regex("^ +| +$|( ) +"), "$1");
         // openedStrings.push_back(s); //-- only if return true;
+
+        for(size_t strIdx=0; strIdx<openedStrings.size(); strIdx++)
+            if( s == openedStrings[strIdx] )
+            {
+                CD_ERROR("Already in openedStrings. Not loading!\n");
+                return false;
+            }
+
         sinput.clear();
         sinput.seekg(0);
 
@@ -440,8 +449,12 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
         std::stringstream sout;
         std::stringstream sinput(str);
 
-        openraveYarpPluginLoaderPtr->Open(sout, sinput);
-
+        if(!openraveYarpPluginLoaderPtr->Open(sout, sinput))
+        {
+            response.addVocab(VOCAB_FAILED);
+            response.addString("already in openedStrings");
+            return response.write(*out);
+        }
         response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
@@ -455,6 +468,7 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
         return response.write(*out);
     }
 
+    response.addVocab(VOCAB_FAILED);
     response.addString("unknown command");
     return response.write(*out);
 }
