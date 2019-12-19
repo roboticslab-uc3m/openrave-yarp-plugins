@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <string>
+#include <regex>
 #include <vector>
 
 #include <openrave/openrave.h>
@@ -77,6 +78,8 @@ public:
     {
         RAVELOG_INFO("module unloaded from environment\n");
     }
+
+    std::vector<std::string> getOpenedStrings() const { return openedStrings; }
 
     int main(const std::string& cmd)
     {
@@ -165,6 +168,12 @@ public:
         }
         CD_SUCCESS("Found yarp network.\n");
 
+        std::string s(std::istreambuf_iterator<char>(sinput), {});
+        s = std::regex_replace(s, std::regex("^ +| +$|( ) +"), "$1");
+        // openedStrings.push_back(s); //-- only if return true;
+        sinput.clear();
+        sinput.seekg(0);
+
         //-- Given "std::istream& sinput", create equivalent to "int argc, char *argv[]"
         //-- Note that char* != const char* given by std::string::c_str();
         std::vector<char *> argv;
@@ -232,7 +241,7 @@ public:
             CD_SUCCESS("Valid yarp plugin.\n");
 
             yarpPlugins.push_back(yarpPlugin);
-
+            openedStrings.push_back(s);
             return true;
         }
 
@@ -401,12 +410,15 @@ public:
             argv[i] = 0;
         }
 
+        openedStrings.push_back(s);
         return true;
     }
 
 private:
     yarp::os::Network yarp;
     std::vector<yarp::dev::PolyDriver*> yarpPlugins;
+
+    std::vector<std::string> openedStrings;
 
     OpenPortReader openPortReader;
     yarp::os::RpcServer openPortRpcServer;
@@ -431,6 +443,15 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
         openraveYarpPluginLoaderPtr->Open(sout, sinput);
 
         response.addVocab(VOCAB_OK);
+        return response.write(*out);
+    }
+    else if ( request.get(0).asString() == "list" )
+    {
+        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
+        {
+            response.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
+        }
+        //response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
 
