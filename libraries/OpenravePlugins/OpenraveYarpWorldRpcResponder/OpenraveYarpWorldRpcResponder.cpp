@@ -615,7 +615,7 @@ public:
             funcionArgs.push_back(funcionArg);
         }
 
-        std::string portName("/openraveYarpWorldRpcResponder/rpc:s");
+        std::string portName("/OpenraveYarpWorldRpcResponder/rpc:s");
 
         if (funcionArgs.size() > 0)
         {
