@@ -43,7 +43,7 @@
 
 #define DEFAULT_PREFIX "/robotDraw"
 #define DEFAULT_CARTESIAN_REMOTE "/asibotSim/CartesianControl"
-#define DEFAULT_WORLD_RESPONDER "/openraveYarpWorldRpcResponder"
+#define DEFAULT_WORLD_RESPONDER "/OpenraveYarpWorldRpcResponder"
 #define DEFAULT_HEIGHT 0.4;
 
 #define VOCAB_OK yarp::os::createVocab('o','k')

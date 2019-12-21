@@ -73,6 +73,9 @@ public:
             delete yarpPlugins[i];
             yarpPlugins[i] = 0;
         }
+
+        openPortRpcServer.interrupt();
+        openPortRpcServer.close();
     }
 
     virtual void Destroy()
