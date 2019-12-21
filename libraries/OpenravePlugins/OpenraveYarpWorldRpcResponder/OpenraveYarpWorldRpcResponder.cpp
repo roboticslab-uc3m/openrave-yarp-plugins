@@ -25,38 +25,18 @@
 
 class DataProcessor : public yarp::os::PortReader
 {
-
 public:
 
-    int robotDraw;
-    double drawRadius, drawR, drawG, drawB;
+    void setEnvironment(OpenRAVE::EnvironmentBasePtr _pEnv) { pEnv = _pEnv; }
 
-    // Register an OpenRAVE environment.
+    void setRobot(OpenRAVE::RobotBasePtr _pRobot) { pRobot = _pRobot; }
 
-    void setEnvironment(OpenRAVE::EnvironmentBasePtr _pEnv)
-    {
-        pEnv = _pEnv;
-    }
-
-    // ---------------------------------------------
-
-    void setRobot(OpenRAVE::RobotBasePtr _pRobot)
-    {
-        pRobot = _pRobot;
-    }
-
-    // ----------------------------------------------
-
-    void setRobotManip(OpenRAVE::RobotBase::ManipulatorPtr _pRobotManip)
-    {
-        pRobotManip = _pRobotManip;
-    }
+    void setRobotManip(OpenRAVE::RobotBase::ManipulatorPtr _pRobotManip) { pRobotManip = _pRobotManip; }
 
 private:
-
     // -- variables
-    std::vector<int>* psqPainted;
-    yarp::os::Semaphore* psqPaintedSemaphore;
+    int robotDraw;
+    double drawRadius, drawR, drawG, drawB;
 
     // box/sbox/cyl/scyl/sph/ssph
     std::vector<OpenRAVE::KinBodyPtr> boxKinBodyPtrs;
@@ -72,12 +52,9 @@ private:
     OpenRAVE::RobotBasePtr pRobot;  // set in setRobot
     OpenRAVE::RobotBase::ManipulatorPtr pRobotManip;  // set in setRobot
 
-
     // Implement the actual responder (callback on RPC).
-
     virtual bool read(yarp::os::ConnectionReader& connection)
     {
-
         yarp::os::Bottle in, out;
         in.read(connection);
         std::printf("[WorldRpcResponder] Got %s\n", in.toString().c_str());
@@ -85,15 +62,14 @@ private:
         if (returnToSender==NULL) return false;
         std::string choice = in.get(0).asString();
         if (in.get(0).getCode() != BOTTLE_TAG_STRING) choice="";
-        if (choice=="help")    ///////////////////////////////// help /////////////////////////////////
+        if (choice=="help") //-- help
         {
             out.addString("Available commands: help, info (robots and environment information), world del all, world mk box/sbox (three params for size) (three params for pos), world mk ssph (radius) (three params for pos), world mk scyl (radius height) (three params for pos), world mk mesh (no params yet), world mk obj (absolute path), world mv (name) (three params for pos), world grab (manipulator) (obj) (num) 0/1, world whereis obj (name), world whereis tcp (manipulator),  world draw 0/1 (radius r g b).");
             out.write(*returnToSender);
             return true;
         }
-        else if (choice == "info")
+        else if (choice == "info") //-- info
         {
-
             //-- Variable to save info
             std::stringstream info;
 
@@ -117,7 +93,7 @@ private:
                 }
             }
 
-            info << "// "; // -- to separate information!!
+            info << " // "; // -- to separate information!!
 
             // -- Get bodies
             std::vector<OpenRAVE::KinBodyPtr> vectorOfBodiesPtr;
@@ -134,10 +110,8 @@ private:
             out.addString(info.str());
             out.write(*returnToSender);
             return true;
-
         }
-
-        else if (choice=="world")
+        else if (choice=="world") //-- world
         {
             if (in.get(1).asString() == "mk")
             {
@@ -306,7 +280,6 @@ private:
                 T.trans.z = in.get(5).asFloat64();  // [m]
                 objPtr->SetTransform(T);
                 out.addVocab(VOCAB_OK);
-
             }
             else if ((in.get(1).asString()=="del")&&(in.get(2).asString()=="all"))
             {
@@ -344,7 +317,6 @@ private:
             }
             else if (in.get(1).asString()=="grab")
             {
-
                 // -- rpc command to write: world + grab + "part of robot" + name object + index + 0
                 // --                         0       1           2              3           4     5
 
@@ -462,16 +434,13 @@ private:
                         }
                         else out.addVocab(VOCAB_FAILED);
                     }
-                    else      // null pointer
+                    else // null pointer
                     {
                         std::printf("[WorldRpcResponder] warning: object %s does not exist.\n", in.get(3).asString().c_str());
                         out.addVocab(VOCAB_FAILED);
                     }
                 }
                 else out.addVocab(VOCAB_FAILED);
-
-                // -- grab
-
             }
             else if (in.get(1).asString()=="whereis")
             {
@@ -491,7 +460,7 @@ private:
                         out.addList() = trans;
                         out.addVocab(VOCAB_OK);
                     }
-                    else      // null pointer
+                    else // null pointer
                     {
                         std::printf("[WorldRpcResponder] warning: object %s does not exist.\n", in.get(3).asString().c_str());
                         out.addVocab(VOCAB_FAILED);
@@ -555,12 +524,8 @@ private:
         }
         out.addVocab(VOCAB_FAILED);
         out.write(*returnToSender);
-        return false;
-
-
+        return true;
     }
-
-
 };
 
 
@@ -597,10 +562,16 @@ public:
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
-    /*int main(const string& cmd) {
-        RAVELOG_INFO("module initialized cmd; %s\n", cmd.c_str());
+    int main(const std::string& cmd)
+    {
+        RAVELOG_INFO("module initialized with \"%s\"\n", cmd.c_str());
+        // hard-coding "open", note that actual Open enabled portName selection
+        std::istringstream sinput("open");
+        std::ostringstream sout;
+        if( ! OpenRAVE::InterfaceBase::SendCommand(sout,sinput) )
+            return 1;
         return 0;
-    }*/
+    }
 
 
     bool Open(std::ostream& sout, std::istream& sinput)
@@ -614,7 +585,7 @@ public:
             funcionArgs.push_back(funcionArg);
         }
 
-        std::string portName("/openraveYarpWorldRpcResponder/rpc:s");
+        std::string portName("/OpenraveYarpWorldRpcResponder/rpc:s");
 
         if (funcionArgs.size() > 0)
         {
