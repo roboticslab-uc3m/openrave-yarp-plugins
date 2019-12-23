@@ -34,7 +34,7 @@ class YarpOpenraveRGBDSensor : YarpOpenraveBase,
 public:
 
     // Set the Thread Rate in the class constructor
-    YarpOpenraveRGBDSensor() : rgb(true) {}
+    YarpOpenraveRGBDSensor() : rgb(true), rgbReady(false), depthReady(false) {}
 
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImageImpl.cpp -------
     /**
@@ -162,6 +162,8 @@ private:
     // General Grabber parameters //
     int rgbHeight, rgbWidth, depthHeight, depthWidth;
     bool rgb;
+    bool rgbReady;
+    bool depthReady;
 
     //OpenRAVE//
     OpenRAVE::SensorBasePtr depthSensorBasePtr;
