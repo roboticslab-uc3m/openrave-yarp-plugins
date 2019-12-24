@@ -510,7 +510,11 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
             return response.write(*out);
         }
         response.addVocab(VOCAB_OK);
-        //response.addInt32(position);
+        int value;
+        while(sout >> value)
+        {
+           response.addInt32(value);
+        }
         return response.write(*out);
     }
 
