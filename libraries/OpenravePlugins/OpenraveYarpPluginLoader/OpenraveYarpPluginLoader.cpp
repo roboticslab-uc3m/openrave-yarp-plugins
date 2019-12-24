@@ -446,9 +446,18 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
 
     if ( request.get(0).asString() == "help" ) //-- help
     {
-        response.addString("Available commands: help, open [--device ...], list");
+        response.addString("Available commands: help, list, open [--device ...]");
         response.write(*out);
         return true;
+    }
+    else if ( request.get(0).asString() == "list" ) //-- list
+    {
+        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
+        {
+            response.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
+        }
+        //response.addVocab(VOCAB_OK);
+        return response.write(*out);
     }
     else if ( request.get(0).asString() == "open" ) //-- open
     {
@@ -465,15 +474,6 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
             return response.write(*out);
         }
         response.addVocab(VOCAB_OK);
-        return response.write(*out);
-    }
-    else if ( request.get(0).asString() == "list" ) //-- list
-    {
-        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
-        {
-            response.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
-        }
-        //response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
 
