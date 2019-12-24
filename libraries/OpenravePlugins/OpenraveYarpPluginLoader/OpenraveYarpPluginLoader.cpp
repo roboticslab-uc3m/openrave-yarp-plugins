@@ -444,7 +444,13 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
     yarp::os::ConnectionWriter *out = in.getWriter();
     if (out==NULL) return true;
 
-    if ( request.get(0).asString() == "open" )
+    if ( request.get(0).asString() == "help" ) //-- help
+    {
+        response.addString("Available commands: help, open [--device ...], list");
+        response.write(*out);
+        return true;
+    }
+    else if ( request.get(0).asString() == "open" ) //-- open
     {
         std::string str = request.tail().toString();
         str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
@@ -461,7 +467,7 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
         response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
-    else if ( request.get(0).asString() == "list" )
+    else if ( request.get(0).asString() == "list" ) //-- list
     {
         for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
         {
