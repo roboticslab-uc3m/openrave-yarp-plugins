@@ -444,7 +444,24 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
     yarp::os::ConnectionWriter *out = in.getWriter();
     if (out==NULL) return true;
 
-    if ( request.get(0).asString() == "open" )
+    if ( request.get(0).asString() == "help" ) //-- help
+    {
+        response.addString("Available commands: help, list, open [--device ...]");
+        response.write(*out);
+        return true;
+    }
+    else if ( request.get(0).asString() == "list" ) //-- list
+    {
+        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
+        {
+            yarp::os::Bottle& b = response.addList();
+            b.addInt32(i);
+            b.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
+        }
+        //response.addVocab(VOCAB_OK);
+        return response.write(*out);
+    }
+    else if ( request.get(0).asString() == "open" ) //-- open
     {
         std::string str = request.tail().toString();
         str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
@@ -459,15 +476,6 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
             return response.write(*out);
         }
         response.addVocab(VOCAB_OK);
-        return response.write(*out);
-    }
-    else if ( request.get(0).asString() == "list" )
-    {
-        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
-        {
-            response.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
-        }
-        //response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
 
