@@ -1,7 +1,5 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include <cstring>
-
 #include <sstream>
 #include <string>
 #include <regex>
@@ -476,7 +474,7 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
 
     if ( request.get(0).asString() == "help" ) //-- help
     {
-        response.addString("Available commands: help, list, open [--device ...]");
+        response.addString("Available commands: help, list, open (device ...) ...");
         response.write(*out);
         return true;
     }
@@ -493,11 +491,25 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
     }
     else if ( request.get(0).asString() == "open" ) //-- open
     {
-        std::string str = request.tail().toString();
-        str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
+        std::string cmdStr;
+        for(size_t i=1; i<request.size(); i++)
+        {
+            if(!request.get(i).isList())
+            {
+                CD_ERROR("Expected list at %d.\n",i);
+                response.addVocab(VOCAB_FAILED);
+                response.addString("Expected list");
+                return response.write(*out);
+            }
+            yarp::os::Bottle* elem = request.get(i).asList();
+            cmdStr.append("--");
+            cmdStr.append(elem->toString());
+            cmdStr.append(" ");
+        }
+        CD_DEBUG("** %s\n", cmdStr.c_str());
 
         std::stringstream sout;
-        std::stringstream sinput(str);
+        std::stringstream sinput(cmdStr);
 
         size_t position = openraveYarpPluginLoaderPtr->getOpenedStrings().size();
 
