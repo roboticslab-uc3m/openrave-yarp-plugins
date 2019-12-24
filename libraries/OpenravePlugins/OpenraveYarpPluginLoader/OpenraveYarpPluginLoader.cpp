@@ -474,7 +474,7 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
 
     if ( request.get(0).asString() == "help" ) //-- help
     {
-        response.addString("Available commands: help, list, open (device ...) ...]");
+        response.addString("Available commands: help, list, open (device ...) ...");
         response.write(*out);
         return true;
     }
