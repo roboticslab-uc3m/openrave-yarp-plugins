@@ -213,8 +213,6 @@ public:
         //-- Given "std::istream& sinput", create equivalent to "int argc, char *argv[]"
         //-- Note that char* != const char* given by std::string::c_str();
         std::vector<char *> argv;
-        char* dummyProgramName = "dummyProgramName";
-        argv.push_back(dummyProgramName);
 
         while(sinput)
         {
