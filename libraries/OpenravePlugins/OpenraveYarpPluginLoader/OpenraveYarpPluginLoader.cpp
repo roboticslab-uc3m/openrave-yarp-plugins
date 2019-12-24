@@ -454,7 +454,9 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
     {
         for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
         {
-            response.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
+            yarp::os::Bottle& b = response.addList();
+            b.addInt32(i);
+            b.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
         }
         //response.addVocab(VOCAB_OK);
         return response.write(*out);
