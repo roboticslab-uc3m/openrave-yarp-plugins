@@ -13,6 +13,7 @@
 #include <boost/bind/bind.hpp>
 
 #include <yarp/os/Network.h>
+#include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/ResourceFinder.h>
 #include <yarp/os/RpcServer.h>
@@ -33,7 +34,11 @@
  * @brief Contains roboticslab::OpenraveYarpPluginLoader.
  */
 
+// -----------------------------------------------------------------------------
+
 class OpenraveYarpPluginLoader;
+
+// -----------------------------------------------------------------------------
 
 class OpenPortReader: public yarp::os::PortReader
 {
@@ -43,6 +48,20 @@ private:
     OpenraveYarpPluginLoader* openraveYarpPluginLoaderPtr;
     virtual bool read(yarp::os::ConnectionReader& in) override;
 };
+
+// -----------------------------------------------------------------------------
+
+class OpenPortPeriodicWrite : yarp::os::PeriodicThread, public yarp::os::Port
+{
+public:
+    OpenPortPeriodicWrite();
+    void setOpenraveYarpPluginLoaderPtr(OpenraveYarpPluginLoader *value) { openraveYarpPluginLoaderPtr = value; }
+private:
+    OpenraveYarpPluginLoader* openraveYarpPluginLoaderPtr;
+    virtual void run() override;
+};
+
+// -----------------------------------------------------------------------------
 
 /**
  * @ingroup OpenraveYarpPluginLoader
@@ -60,9 +79,13 @@ public:
         if ( ! yarp.checkNetwork() )
             CD_ERROR("Found no yarp network (try running \"yarpserver &\")!\n");
         CD_SUCCESS("Found yarp network.\n");
+
         openPortReader.setOpenraveYarpPluginLoaderPtr(this);
         openPortRpcServer.setReader(openPortReader);
         openPortRpcServer.open("/OpenraveYarpPluginLoader/rpc:s");
+
+        openPortPeriodicWrite.setOpenraveYarpPluginLoaderPtr(this);
+        openPortPeriodicWrite.open("/OpenraveYarpPluginLoader/state:o");
     }
 
     virtual ~OpenraveYarpPluginLoader()
@@ -75,7 +98,10 @@ public:
         }
 
         openPortRpcServer.interrupt();
+        openPortPeriodicWrite.interrupt();
+
         openPortRpcServer.close();
+        openPortPeriodicWrite.close();
     }
 
     virtual void Destroy()
@@ -434,7 +460,11 @@ private:
 
     OpenPortReader openPortReader;
     yarp::os::RpcServer openPortRpcServer;
+
+    OpenPortPeriodicWrite openPortPeriodicWrite;
 };
+
+// -----------------------------------------------------------------------------
 
 bool OpenPortReader::read(yarp::os::ConnectionReader& in)
 {
@@ -444,7 +474,24 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
     yarp::os::ConnectionWriter *out = in.getWriter();
     if (out==NULL) return true;
 
-    if ( request.get(0).asString() == "open" )
+    if ( request.get(0).asString() == "help" ) //-- help
+    {
+        response.addString("Available commands: help, list, open [--device ...]");
+        response.write(*out);
+        return true;
+    }
+    else if ( request.get(0).asString() == "list" ) //-- list
+    {
+        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
+        {
+            yarp::os::Bottle& b = response.addList();
+            b.addInt32(i);
+            b.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
+        }
+        //response.addVocab(VOCAB_OK);
+        return response.write(*out);
+    }
+    else if ( request.get(0).asString() == "open" ) //-- open
     {
         std::string str = request.tail().toString();
         str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
@@ -452,22 +499,16 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
         std::stringstream sout;
         std::stringstream sinput(str);
 
+        size_t position = openraveYarpPluginLoaderPtr->getOpenedStrings().size();
+
         if(!openraveYarpPluginLoaderPtr->Open(sout, sinput))
         {
             response.addVocab(VOCAB_FAILED);
-            response.addString("already in openedStrings");
+            response.addString("Open failed");
             return response.write(*out);
         }
         response.addVocab(VOCAB_OK);
-        return response.write(*out);
-    }
-    else if ( request.get(0).asString() == "list" )
-    {
-        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
-        {
-            response.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
-        }
-        //response.addVocab(VOCAB_OK);
+        response.addInt32(position);
         return response.write(*out);
     }
 
@@ -475,6 +516,35 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
     response.addString("unknown command");
     return response.write(*out);
 }
+
+// -----------------------------------------------------------------------------
+
+OpenPortPeriodicWrite::OpenPortPeriodicWrite() : yarp::os::PeriodicThread(1.0)
+{
+    PeriodicThread::start();
+}
+
+// -----------------------------------------------------------------------------
+
+void OpenPortPeriodicWrite::run()
+{
+    if(!Port::isOpen())
+        return;
+
+    if(0 == openraveYarpPluginLoaderPtr->getOpenedStrings().size())
+        return;
+
+    yarp::os::Bottle info;
+    for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
+    {
+        yarp::os::Bottle& b = info.addList();
+        b.addInt32(i);
+        b.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
+    }
+    Port::write(info);
+}
+
+// -----------------------------------------------------------------------------
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
 {
@@ -485,12 +555,18 @@ OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type
     return OpenRAVE::InterfaceBasePtr();
 }
 
+// -----------------------------------------------------------------------------
+
 void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
 {
     info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpPluginLoader");
 }
 
+// -----------------------------------------------------------------------------
+
 OPENRAVE_PLUGIN_API void DestroyPlugin()
 {
     RAVELOG_INFO("destroying plugin\n");
 }
+
+// -----------------------------------------------------------------------------
