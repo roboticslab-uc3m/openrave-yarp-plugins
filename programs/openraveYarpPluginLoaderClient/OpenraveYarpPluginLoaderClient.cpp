@@ -35,7 +35,6 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
         return false;
     }
 
-
     yarp::os::Property openOptions;
     openOptions.fromString(rf.toString());
     openOptions.unput("from");
