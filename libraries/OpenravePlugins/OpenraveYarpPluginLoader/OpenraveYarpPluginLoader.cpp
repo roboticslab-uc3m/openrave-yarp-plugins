@@ -498,7 +498,7 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
             cmdStr.append(elem->toString());
             cmdStr.append(" ");
         }
-        CD_DEBUG("** %s\n", cmdStr.c_str());
+        CD_DEBUG("%s\n", cmdStr.c_str());
 
         std::stringstream sout;
         std::stringstream sinput(cmdStr);
