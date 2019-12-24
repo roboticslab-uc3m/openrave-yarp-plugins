@@ -207,29 +207,8 @@ public:
                 return false;
             }
 
-        sinput.clear();
-        sinput.seekg(0);
-
-        //-- Given "std::istream& sinput", create equivalent to "int argc, char *argv[]"
-        //-- Note that char* != const char* given by std::string::c_str();
-        std::vector<char *> argv;
-
-        while(sinput)
-        {
-            std::string str;
-            sinput >> str;
-            if(str.length() == 0)  //-- Omits empty string that is usually at end via openrave.
-                continue;
-            char *cstr = new char[str.length() + 1];  // pushed to member argv to be deleted in ~.
-            std::strcpy(cstr, str.c_str());
-            argv.push_back(cstr);
-        }
-
-        for(size_t i=0;i<argv.size();i++)
-            CD_DEBUG("argv[%d] is [%s]\n",i,argv[i]);
-
         yarp::os::Property options;
-        options.fromCommand(argv.size(),argv.data());
+        options.fromArguments(s.c_str());
 
         CD_DEBUG("config: %s\n", options.toString().c_str());
 
@@ -434,14 +413,6 @@ public:
 
                 yarpPlugins.push_back(yarpPlugin);
             }
-        }
-
-        //-- Note that we start on element 1, first elem was not via new!!
-        for(size_t i=1;i<argv.size();i++)
-        {
-            //CD_DEBUG("Deleting [%s]\n",argv[i]);
-            delete argv[i];
-            argv[i] = 0;
         }
 
         openedStrings.push_back(s);
