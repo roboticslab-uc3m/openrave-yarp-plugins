@@ -469,13 +469,16 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
         std::stringstream sout;
         std::stringstream sinput(str);
 
+        size_t position = openraveYarpPluginLoaderPtr->getOpenedStrings().size();
+
         if(!openraveYarpPluginLoaderPtr->Open(sout, sinput))
         {
             response.addVocab(VOCAB_FAILED);
-            response.addString("already in openedStrings");
+            response.addString("Open failed");
             return response.write(*out);
         }
         response.addVocab(VOCAB_OK);
+        response.addInt32(position);
         return response.write(*out);
     }
 
