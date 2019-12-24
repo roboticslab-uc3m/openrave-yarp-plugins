@@ -33,7 +33,7 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
 
     if(!rf.check("device"))
     {
-        CD_ERROR("Parameter \"--device\" not found, bye!\n");
+        CD_ERROR("Parameter \"device\" not found, bye!\n");
         return false;
     }
 
