@@ -3,6 +3,8 @@
 #ifndef __OPENRAVE_YARP_PLUGIN_LOADER_CLIENT__
 #define __OPENRAVE_YARP_PLUGIN_LOADER_CLIENT__
 
+#include <vector>
+
 #include <yarp/os/ResourceFinder.h>
 #include <yarp/os/RFModule.h>
 #include <yarp/os/RpcClient.h>
@@ -24,6 +26,7 @@ public:
 
 private:
     yarp::os::RpcClient rpcClient;
+    std::vector<int> openedIds;
 
     virtual double getPeriod() override
     {

@@ -56,6 +56,9 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
     }
     CD_SUCCESS("%s\n", res.toString().c_str());
 
+    for(size_t i=1; i<res.size(); i++)
+        openedIds.push_back(res.get(i).asInt32());
+
     return true;
 }
 
