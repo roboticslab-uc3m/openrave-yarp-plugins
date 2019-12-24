@@ -49,13 +49,13 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
     cmd.append(openOptionsBottle);
     CD_DEBUG("cmd: %s\n",cmd.toString().c_str());
     rpcClient.write(cmd, res);
-    CD_DEBUG("res: %s\n",res.toString().c_str());
 
     if(VOCAB_FAILED == res.get(0).asVocab())
     {
-        CD_ERROR("%s\n", res.get(1).asString().c_str());
+        CD_ERROR("%s\n", res.toString().c_str());
         return false;
     }
+    CD_SUCCESS("%s\n", res.toString().c_str());
 
     return true;
 }
