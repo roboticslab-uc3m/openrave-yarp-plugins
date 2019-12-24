@@ -2,7 +2,6 @@
 
 #include <sstream>
 #include <string>
-#include <regex>
 #include <vector>
 
 #include <openrave/openrave.h>
