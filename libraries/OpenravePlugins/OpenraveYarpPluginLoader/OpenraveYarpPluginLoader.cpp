@@ -2,7 +2,6 @@
 
 #include <sstream>
 #include <string>
-#include <regex>
 #include <vector>
 
 #include <openrave/openrave.h>
@@ -107,7 +106,7 @@ public:
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
-    std::vector<std::string> getOpenedStrings() const { return openedStrings; }
+    std::vector<yarp::os::Property> getYarpPluginsProperties() const { return yarpPluginsProperties; }
 
     int main(const std::string& cmd)
     {
@@ -181,7 +180,11 @@ public:
             std::istringstream sinput( openStrings[i] );
             std::ostringstream sout;
             if( ! OpenRAVE::InterfaceBase::SendCommand(sout,sinput) )
+            {
+                CD_ERROR("%s\n",sout.str().c_str());
                 return 1;
+            }
+            CD_SUCCESS("Open ids: %s\n",sout.str().c_str());
         }
         return 0;
     }
@@ -192,46 +195,15 @@ public:
         if ( ! yarp.checkNetwork() )
         {
             CD_ERROR("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+            sout << "-1 ";
             return false;
         }
         CD_SUCCESS("Found yarp network.\n");
 
         std::string s(std::istreambuf_iterator<char>(sinput), {});
-        s = std::regex_replace(s, std::regex("^ +| +$|( ) +"), "$1");
-        // openedStrings.push_back(s); //-- only if return true;
-
-        for(size_t strIdx=0; strIdx<openedStrings.size(); strIdx++)
-            if( s == openedStrings[strIdx] )
-            {
-                CD_ERROR("Already in openedStrings. Not loading!\n");
-                return false;
-            }
-
-        sinput.clear();
-        sinput.seekg(0);
-
-        //-- Given "std::istream& sinput", create equivalent to "int argc, char *argv[]"
-        //-- Note that char* != const char* given by std::string::c_str();
-        std::vector<char *> argv;
-        char* dummyProgramName = "dummyProgramName";
-        argv.push_back(dummyProgramName);
-
-        while(sinput)
-        {
-            std::string str;
-            sinput >> str;
-            if(str.length() == 0)  //-- Omits empty string that is usually at end via openrave.
-                continue;
-            char *cstr = new char[str.length() + 1];  // pushed to member argv to be deleted in ~.
-            std::strcpy(cstr, str.c_str());
-            argv.push_back(cstr);
-        }
-
-        for(size_t i=0;i<argv.size();i++)
-            CD_DEBUG("argv[%d] is [%s]\n",i,argv[i]);
 
         yarp::os::Property options;
-        options.fromCommand(argv.size(),argv.data());
+        options.fromArguments(s.c_str());
 
         CD_DEBUG("config: %s\n", options.toString().c_str());
 
@@ -255,6 +227,7 @@ public:
         else if( options.check("robotIndices") )
         {
             CD_ERROR("robotIndices not implemented yet. Bye!\n");
+            sout << "-1 ";
             return false;
         }
         else if( options.check("allRobots") )
@@ -272,12 +245,15 @@ public:
             if( ! yarpPlugin->isValid() )
             {
                 CD_ERROR("yarp plugin not valid.\n");
+                sout << "-1 ";
                 return false;
             }
-            CD_SUCCESS("Valid yarp plugin.\n");
+            CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
 
             yarpPlugins.push_back(yarpPlugin);
-            openedStrings.push_back(s);
+            yarpPluginsProperties.push_back(options);
+            sout << yarpPluginsProperties.size()-1;
+            sout << " ";
             return true;
         }
 
@@ -288,11 +264,13 @@ public:
             if( robotIndex >= vectorOfRobotPtr.size())
             {
                 CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarp plugin. Bye!\n",robotIndex,vectorOfRobotPtr.size());
+                sout << "-1 ";
                 return false;
             }
             else if (robotIndex < 0)
             {
                 CD_ERROR("robotIndex %d < 0, not loading yarp plugin. Bye!\n",robotIndex);
+                sout << "-1 ";
                 return false;
             }
             options.put("robotIndex",robotIndex);
@@ -316,6 +294,7 @@ public:
             else if( options.check("manipulatorIndices") )
             {
                 CD_ERROR("manipulatorIndices not implemented yet. Bye!\n");
+                sout << "-1 ";
                 return false;
             }
             else if( options.check("allManipulators") )
@@ -331,6 +310,7 @@ public:
             else if( options.check("sensorIndices") )
             {
                 CD_ERROR("sensorIndices not implemented yet. Bye!\n");
+                sout << "-1 ";
                 return false;
             }
             else if( options.check("allSensors") )
@@ -354,11 +334,15 @@ public:
                 if( ! yarpPlugin->isValid() )
                 {
                     CD_ERROR("yarp plugin not valid.\n");
+                    sout << "-1 ";
                     return false;
                 }
-                CD_SUCCESS("Valid yarp plugin.\n");
+                CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
 
                 yarpPlugins.push_back(yarpPlugin);
+                yarpPluginsProperties.push_back(options);
+                sout << yarpPluginsProperties.size()-1;
+                sout << " ";
             }
 
             //-- Iterate through manipulators
@@ -368,11 +352,13 @@ public:
                 if(manipulatorIndex >= vectorOfManipulatorPtr.size())
                 {
                     CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarp plugin. Bye!\n",manipulatorIndex,vectorOfManipulatorPtr.size());
+                    sout << "-1 ";
                     return false;
                 }
                 else if (manipulatorIndex < 0)
                 {
                     CD_ERROR("manipulatorIndex %d < 0, not loading yarp plugin.\n",manipulatorIndex);
+                    sout << "-1 ";
                     return false;
                 }
                 options.put("manipulatorIndex",manipulatorIndex);
@@ -392,11 +378,15 @@ public:
                 if( ! yarpPlugin->isValid() )
                 {
                     CD_ERROR("yarp plugin not valid.\n");
+                    sout << "-1 ";
                     return false;
                 }
-                CD_SUCCESS("Valid yarp plugin.\n");
+                CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
 
                 yarpPlugins.push_back(yarpPlugin);
+                yarpPluginsProperties.push_back(options);
+                sout << yarpPluginsProperties.size()-1;
+                sout << " ";
             }
 
             //-- Iterate through sensors
@@ -406,11 +396,13 @@ public:
                 if(sensorIndex >= vectorOfSensorPtr.size())
                 {
                     CD_ERROR("sensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarp plugin. Bye!\n",sensorIndex,vectorOfSensorPtr.size());
+                    sout << "-1 ";
                     return false;
                 }
                 else if (sensorIndex < 0)
                 {
                     CD_ERROR("sensorIndex %d < 0, not loading yarp plugin.\n",sensorIndex);
+                    sout << "-1 ";
                     return false;
                 }
                 options.put("sensorIndex",sensorIndex);
@@ -430,31 +422,25 @@ public:
                 if( ! yarpPlugin->isValid() )
                 {
                     CD_ERROR("yarp plugin not valid.\n");
+                    sout << "-1 ";
                     return false;
                 }
-                CD_SUCCESS("Valid yarp plugin.\n");
+                CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
 
                 yarpPlugins.push_back(yarpPlugin);
+                yarpPluginsProperties.push_back(options);
+                sout << yarpPluginsProperties.size()-1;
+                sout << " ";
             }
         }
 
-        //-- Note that we start on element 1, first elem was not via new!!
-        for(size_t i=1;i<argv.size();i++)
-        {
-            //CD_DEBUG("Deleting [%s]\n",argv[i]);
-            delete argv[i];
-            argv[i] = 0;
-        }
-
-        openedStrings.push_back(s);
         return true;
     }
 
 private:
     yarp::os::Network yarp;
     std::vector<yarp::dev::PolyDriver*> yarpPlugins;
-
-    std::vector<std::string> openedStrings;
+    std::vector<yarp::os::Property> yarpPluginsProperties;
 
     OpenPortReader openPortReader;
     yarp::os::RpcServer openPortRpcServer;
@@ -480,11 +466,17 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
     }
     else if ( request.get(0).asString() == "list" ) //-- list
     {
-        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
+        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getYarpPluginsProperties().size();i++)
         {
             yarp::os::Bottle& b = response.addList();
             b.addInt32(i);
-            b.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
+            yarp::os::Property openOptions(openraveYarpPluginLoaderPtr->getYarpPluginsProperties()[i]);
+            openOptions.unput("penv");
+            openOptions.unput("allManipulators");
+            openOptions.unput("allSensors");
+            yarp::os::Bottle openOptionsBottle;
+            openOptionsBottle.fromString(openOptions.toString());
+            b.append(openOptionsBottle);
         }
         //response.addVocab(VOCAB_OK);
         return response.write(*out);
@@ -506,12 +498,10 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
             cmdStr.append(elem->toString());
             cmdStr.append(" ");
         }
-        CD_DEBUG("** %s\n", cmdStr.c_str());
+        CD_DEBUG("%s\n", cmdStr.c_str());
 
         std::stringstream sout;
         std::stringstream sinput(cmdStr);
-
-        size_t position = openraveYarpPluginLoaderPtr->getOpenedStrings().size();
 
         if(!openraveYarpPluginLoaderPtr->Open(sout, sinput))
         {
@@ -520,7 +510,11 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
             return response.write(*out);
         }
         response.addVocab(VOCAB_OK);
-        response.addInt32(position);
+        int value;
+        while(sout >> value)
+        {
+           response.addInt32(value);
+        }
         return response.write(*out);
     }
 
@@ -543,15 +537,21 @@ void OpenPortPeriodicWrite::run()
     if(!Port::isOpen())
         return;
 
-    if(0 == openraveYarpPluginLoaderPtr->getOpenedStrings().size())
+    if(0 == openraveYarpPluginLoaderPtr->getYarpPluginsProperties().size())
         return;
 
     yarp::os::Bottle info;
-    for (size_t i=0;i<openraveYarpPluginLoaderPtr->getOpenedStrings().size();i++)
+    for (size_t i=0;i<openraveYarpPluginLoaderPtr->getYarpPluginsProperties().size();i++)
     {
         yarp::os::Bottle& b = info.addList();
         b.addInt32(i);
-        b.addString(openraveYarpPluginLoaderPtr->getOpenedStrings()[i]);
+        yarp::os::Property openOptions(openraveYarpPluginLoaderPtr->getYarpPluginsProperties()[i]);
+        openOptions.unput("penv");
+        openOptions.unput("allManipulators");
+        openOptions.unput("allSensors");
+        yarp::os::Bottle openOptionsBottle;
+        openOptionsBottle.fromString(openOptions.toString());
+        b.append(openOptionsBottle);
     }
     Port::write(info);
 }
