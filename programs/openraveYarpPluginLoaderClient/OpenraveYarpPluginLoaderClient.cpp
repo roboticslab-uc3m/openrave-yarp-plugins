@@ -2,6 +2,7 @@
 
 #include "OpenraveYarpPluginLoaderClient.hpp"
 
+#include <yarp/os/Network.h>
 #include <yarp/os/Vocab.h>
 
 #include <ColorDebug.h>
@@ -34,6 +35,14 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
         CD_ERROR("RpcServer \"/OpenraveYarpPluginLoader/rpc:s\" not found, bye!\n");
         return false;
     }
+
+    callbackPort.open("/OpenraveYarpPluginLoader/state:i");
+    if(!yarp::os::Network::connect("/OpenraveYarpPluginLoader/state:o","/OpenraveYarpPluginLoader/state:i"))
+    {
+        CD_ERROR("bye!\n");
+        return false;
+    }
+    callbackPort.useCallback();
 
     yarp::os::Property openOptions;
     openOptions.fromString(rf.toString());
@@ -74,7 +83,22 @@ bool OpenraveYarpPluginLoaderClient::updateModule()
 
 bool OpenraveYarpPluginLoaderClient::close()
 {
+    callbackPort.disableCallback();
+
+    callbackPort.interrupt();
+    rpcClient.interrupt();
+
+    callbackPort.close();
+    rpcClient.close();
+
     return true;
+}
+
+/************************************************************************/
+
+void CallbackPort::onRead(yarp::os::Bottle& b)
+{
+    CD_DEBUG("Got: %s\n",b.toString().c_str());
 }
 
 /************************************************************************/
