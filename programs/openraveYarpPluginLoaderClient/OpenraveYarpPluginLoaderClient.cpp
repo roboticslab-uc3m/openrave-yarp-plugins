@@ -42,22 +42,29 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
         return false;
     }
 
-    if(!callbackPort.open("/OpenraveYarpPluginLoader/state:i"))
+    yarp::os::Property openOptions;
+    openOptions.fromString(rf.toString());
+    openOptions.unput("from");
+    CD_DEBUG("openOptions: %s\n",openOptions.toString().c_str());
+
+    std::string callbackPortName("/");
+    if(openOptions.check("device"))
+    {
+        callbackPortName.append(openOptions.find("device").asString());
+        callbackPortName.append("/");
+    }
+    callbackPortName.append("OpenraveYarpPluginLoader/state:i");
+    if(!callbackPort.open(callbackPortName))
     {
         CD_ERROR("!callbackPort.open, bye!\n");
         return false;
     }
-    if(!yarp::os::Network::connect("/OpenraveYarpPluginLoader/state:o","/OpenraveYarpPluginLoader/state:i"))
+    if(!yarp::os::Network::connect("/OpenraveYarpPluginLoader/state:o",callbackPortName))
     {
         CD_ERROR("bye!\n");
         return false;
     }
     callbackPort.useCallback();
-
-    yarp::os::Property openOptions;
-    openOptions.fromString(rf.toString());
-    openOptions.unput("from");
-    CD_DEBUG("openOptions: %s\n",openOptions.toString().c_str());
 
     yarp::os::Bottle openOptionsBottle;
     openOptionsBottle.fromString(openOptions.toString());
