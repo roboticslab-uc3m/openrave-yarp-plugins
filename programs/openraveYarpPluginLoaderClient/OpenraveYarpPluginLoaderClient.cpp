@@ -15,7 +15,13 @@ namespace roboticslab
 
 /************************************************************************/
 
-OpenraveYarpPluginLoaderClient::OpenraveYarpPluginLoaderClient() { }
+const int OpenraveYarpPluginLoaderClient::DEFAULT_PERIOD_S = 1.0;
+
+/************************************************************************/
+
+OpenraveYarpPluginLoaderClient::OpenraveYarpPluginLoaderClient() : detectedFirst(false)
+{
+}
 
 /************************************************************************/
 
@@ -36,7 +42,11 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
         return false;
     }
 
-    callbackPort.open("/OpenraveYarpPluginLoader/state:i");
+    if(!callbackPort.open("/OpenraveYarpPluginLoader/state:i"))
+    {
+        CD_ERROR("!callbackPort.open, bye!\n");
+        return false;
+    }
     if(!yarp::os::Network::connect("/OpenraveYarpPluginLoader/state:o","/OpenraveYarpPluginLoader/state:i"))
     {
         CD_ERROR("bye!\n");
@@ -73,9 +83,67 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
 
 /************************************************************************/
 
+bool OpenraveYarpPluginLoaderClient::openedInAvailable()
+{
+    callbackPort.availableIdsMutex.lock();
+    for(size_t openedIdx=0; openedIdx<openedIds.size(); openedIdx++)
+    {
+        //CD_DEBUG("Is open %d available?\n",openedIds[openedIdx]);
+        bool innerFound = false;
+        for(size_t i=0; i<callbackPort.availableIds.size(); i++)
+        {
+            if(openedIds[openedIdx] == callbackPort.availableIds[i])
+            {
+                //CD_DEBUG("Yes\n");
+                innerFound = true;
+                break;
+            }
+        }
+        if(!innerFound)
+        {
+            //CD_DEBUG("No\n");
+            callbackPort.availableIdsMutex.unlock();
+            CD_DEBUG("no\n");
+            return false;
+        }
+    }
+    callbackPort.availableIdsMutex.unlock();
+    CD_DEBUG("yes\n");
+    return true;
+}
+
+/************************************************************************/
+
 bool OpenraveYarpPluginLoaderClient::updateModule()
 {
-    CD_DEBUG("OpenraveYarpPluginLoaderClient alive...\n");
+    //CD_DEBUG("OpenraveYarpPluginLoaderClient alive...\n");
+
+    if(-1 == callbackPort.lastTime) //-- wait for first read
+        return true;
+
+    if(!detectedFirst)
+    {
+        if(openedInAvailable())
+        {
+            detectedFirst = true;
+        }
+        CD_DEBUG("Waiting for detectedFirst...\n");
+        return true;
+    }
+
+    if(!openedInAvailable())
+    {
+        CD_DEBUG("!openedInAvailable(), bye!\n");
+        return false;
+    }
+
+    double deltaTime = yarp::os::Time::now() - callbackPort.lastTime;
+    if(deltaTime > DEFAULT_PERIOD_S * 2.0)
+    {
+        CD_DEBUG("deltaTime > DEFAULT_PERIOD_S * 2.0, bye!\n");
+        return false;
+    }
+
     return true;
 }
 
@@ -96,9 +164,23 @@ bool OpenraveYarpPluginLoaderClient::close()
 
 /************************************************************************/
 
+CallbackPort::CallbackPort() : lastTime(-1)
+{
+}
+
+/************************************************************************/
+
 void CallbackPort::onRead(yarp::os::Bottle& b)
 {
-    CD_DEBUG("Got: %s\n",b.toString().c_str());
+    availableIdsMutex.lock();
+    availableIds.clear();
+    for(size_t i=0; i<b.size(); i++)
+    {
+        yarp::os::Bottle* elems = b.get(i).asList();
+        availableIds.push_back(elems->get(0).asInt32());
+    }
+    availableIdsMutex.unlock();
+    lastTime = yarp::os::Time::now();
 }
 
 /************************************************************************/

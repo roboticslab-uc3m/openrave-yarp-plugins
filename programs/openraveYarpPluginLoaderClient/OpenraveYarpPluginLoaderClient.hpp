@@ -15,8 +15,13 @@ namespace roboticslab
 
 class CallbackPort : public yarp::os::BufferedPort<yarp::os::Bottle>
 {
-    void onRead(yarp::os::Bottle& b) override;
+public:
+    CallbackPort();
     std::vector<int> availableIds;
+    std::mutex availableIdsMutex;
+    double lastTime;
+private:
+    void onRead(yarp::os::Bottle& b) override;
 };
 
 /**
@@ -34,15 +39,19 @@ public:
 private:
     yarp::os::RpcClient rpcClient;
     CallbackPort callbackPort;
-
     std::vector<int> openedIds;
+
+    bool openedInAvailable();
+    bool detectedFirst;
 
     virtual double getPeriod() override
     {
-        return 1.0;
+        return DEFAULT_PERIOD_S;
     }
     virtual bool updateModule() override;
     virtual bool close() override;
+
+    static const int DEFAULT_PERIOD_S;
 };
 
 }  // namespace roboticslab
