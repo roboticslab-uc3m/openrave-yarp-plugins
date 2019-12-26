@@ -539,6 +539,12 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
     }
     else if ( request.get(0).asString() == "close" ) //-- close
     {
+        if(request.size() < 2)
+        {
+            response.addVocab(VOCAB_FAILED);
+            response.addString("close requires at least 1 argument");
+            return response.write(*out);
+        }
         for(size_t i=1; i<request.size(); i++)
         {
             if(!openraveYarpPluginLoaderPtr->close(request.get(i).asInt32()))
