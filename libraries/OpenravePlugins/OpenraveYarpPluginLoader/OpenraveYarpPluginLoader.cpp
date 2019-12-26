@@ -436,6 +436,17 @@ public:
         return true;
     } //-- end Open
 
+    bool close(const int i)
+    {
+        if(!yarpPlugins[i]->close())
+        {
+            CD_ERROR("Could not close %d.\n",i);
+            return false;
+        }
+        yarpPluginsProperties[i].put("remotelyClosed",1);
+        return true;
+    }
+
 private:
     yarp::os::Network yarp;
     std::vector<yarp::dev::PolyDriver*> yarpPlugins;
@@ -453,6 +464,8 @@ bool OpenraveYarpPluginLoader::addYarpPluginsLists(yarp::os::Bottle& info)
 {
     for (size_t i=0;i<yarpPluginsProperties.size();i++)
     {
+        if(yarpPluginsProperties[i].check("remotelyClosed"))
+            continue;
         yarp::os::Bottle& b = info.addList();
         b.addInt32(i);
         yarp::os::Property openOptions(yarpPluginsProperties[i]);
@@ -522,6 +535,21 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
         {
            response.addInt32(value);
         }
+        return response.write(*out);
+    }
+    else if ( request.get(0).asString() == "close" ) //-- close
+    {
+        for(size_t i=1; i<request.size(); i++)
+        {
+            if(!openraveYarpPluginLoaderPtr->close(request.get(i).asInt32()))
+            {
+                response.addVocab(VOCAB_FAILED);
+                response.addString("close failed");
+                response.addInt32(request.get(i).asInt32());
+                return response.write(*out);
+            }
+        }
+        response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
 
