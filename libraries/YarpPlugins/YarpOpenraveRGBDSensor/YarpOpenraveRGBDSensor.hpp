@@ -120,7 +120,7 @@ public:
      * @param timeStamp time in which the image was acquired. Optional, ignored if nullptr.
      * @return True on success
      */
-    virtual bool getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::os::Stamp *timeStamp = NULL);
+    virtual bool getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::os::Stamp *timeStamp = NULL) override;
 
     /**
      * Get the depth frame from the device.
@@ -129,7 +129,7 @@ public:
      * @param timeStamp time in which the image was acquired. Optional, ignored if nullptr.
      * @return True on success
      */
-    virtual bool getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp = NULL);
+    virtual bool getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp = NULL) override;
 
     /**
     * Get the both the color and depth frame in a single call. Implementation should assure the best possible synchronization
@@ -142,7 +142,7 @@ public:
     * @param depthStamp pointer to memory to hold the Stamp of the depth frame
     * @return true if able to get both data.
     */
-    virtual bool getImages(yarp::sig::FlexImage &colorFrame, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthFrame, yarp::os::Stamp *colorStamp=NULL, yarp::os::Stamp *depthStamp=NULL);
+    virtual bool getImages(yarp::sig::FlexImage &colorFrame, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthFrame, yarp::os::Stamp *colorStamp=NULL, yarp::os::Stamp *depthStamp=NULL)  override;
 
     /**
      * Get the surrent status of the sensor, using enum type
@@ -150,11 +150,11 @@ public:
      * @return an enum representing the status of the robot or an error code
      * if any error is present
      */
-    virtual RGBDSensor_status getSensorStatus();
+    virtual RGBDSensor_status getSensorStatus() override;
 
 private:
 
-    // General Grabber parameters //
+    // General RGBDSensor parameters //
     int rgbHeight, rgbWidth, depthHeight, depthWidth;
     bool rgb;
     bool rgbReady;
