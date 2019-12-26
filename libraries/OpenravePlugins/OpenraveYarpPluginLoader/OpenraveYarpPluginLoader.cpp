@@ -444,6 +444,7 @@ public:
             return false;
         }
         yarpPluginsProperties[i].put("remotelyClosed",1);
+        CD_SUCCESS("Closed yarp plugin (id %d).\n",i);
         return true;
     }
 
