@@ -140,14 +140,14 @@ bool OpenraveYarpPluginLoaderClient::updateModule()
 
     if(!openedInAvailable())
     {
-        CD_DEBUG("!openedInAvailable(), bye!\n");
+        CD_INFO("!openedInAvailable(), bye!\n");
         return false;
     }
 
     double deltaTime = yarp::os::Time::now() - callbackPort.lastTime;
     if(deltaTime > DEFAULT_PERIOD_S * 2.0)
     {
-        CD_DEBUG("deltaTime > DEFAULT_PERIOD_S * 2.0, bye!\n");
+        CD_INFO("deltaTime > DEFAULT_PERIOD_S * 2.0, bye!\n");
         return false;
     }
 
@@ -158,6 +158,16 @@ bool OpenraveYarpPluginLoaderClient::updateModule()
 
 bool OpenraveYarpPluginLoaderClient::close()
 {
+    CD_INFO("\n");
+
+    yarp::os::Bottle cmd, res;
+    cmd.addString("close");
+    for(size_t i=0; i<openedIds.size(); i++)
+        cmd.addInt32(openedIds[i]);
+    rpcClient.write(cmd, res);
+
+    CD_INFO("%s\n", res.toString().c_str());
+
     callbackPort.disableCallback();
 
     callbackPort.interrupt();
