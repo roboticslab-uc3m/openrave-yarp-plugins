@@ -106,7 +106,7 @@ public:
         RAVELOG_INFO("module unloaded from environment\n");
     } //-- end Destroy
 
-    std::vector<yarp::os::Property> getYarpPluginsProperties() const { return yarpPluginsProperties; }
+    bool addYarpPluginsLists(yarp::os::Bottle& info);
 
     int main(const std::string& cmd)
     {
@@ -387,7 +387,7 @@ public:
                 yarpPluginsProperties.push_back(options);
                 sout << yarpPluginsProperties.size()-1;
                 sout << " ";
-            } //-- Iterate through manipulators
+            } //-- end Iterate through manipulators
 
             //-- Iterate through sensors
             for(int i=0;i<sensorIndices.size();i++)
@@ -431,8 +431,8 @@ public:
                 yarpPluginsProperties.push_back(options);
                 sout << yarpPluginsProperties.size()-1;
                 sout << " ";
-            } //-- Iterate through sensors
-        } //-- Iterate through robots
+            } //-- end Iterate through sensors
+        } //-- end Iterate through robots
         return true;
     } //-- end Open
 
@@ -446,6 +446,25 @@ private:
 
     OpenPortPeriodicWrite openPortPeriodicWrite;
 };
+
+// -----------------------------------------------------------------------------
+
+bool OpenraveYarpPluginLoader::addYarpPluginsLists(yarp::os::Bottle& info)
+{
+    for (size_t i=0;i<yarpPluginsProperties.size();i++)
+    {
+        yarp::os::Bottle& b = info.addList();
+        b.addInt32(i);
+        yarp::os::Property openOptions(yarpPluginsProperties[i]);
+        openOptions.unput("penv");
+        openOptions.unput("allManipulators");
+        openOptions.unput("allSensors");
+        yarp::os::Bottle openOptionsBottle;
+        openOptionsBottle.fromString(openOptions.toString());
+        b.append(openOptionsBottle);
+    }
+    return true;
+}
 
 // -----------------------------------------------------------------------------
 
@@ -465,18 +484,7 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
     }
     else if ( request.get(0).asString() == "list" ) //-- list
     {
-        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getYarpPluginsProperties().size();i++)
-        {
-            yarp::os::Bottle& b = response.addList();
-            b.addInt32(i);
-            yarp::os::Property openOptions(openraveYarpPluginLoaderPtr->getYarpPluginsProperties()[i]);
-            openOptions.unput("penv");
-            openOptions.unput("allManipulators");
-            openOptions.unput("allSensors");
-            yarp::os::Bottle openOptionsBottle;
-            openOptionsBottle.fromString(openOptions.toString());
-            b.append(openOptionsBottle);
-        }
+        openraveYarpPluginLoaderPtr->addYarpPluginsLists(response);
         //response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
@@ -536,22 +544,12 @@ void OpenPortPeriodicWrite::run()
     if(!Port::isOpen())
         return;
 
-    if(0 == openraveYarpPluginLoaderPtr->getYarpPluginsProperties().size())
+    yarp::os::Bottle info;
+    openraveYarpPluginLoaderPtr->addYarpPluginsLists(info);
+
+    if(0 == info.size())
         return;
 
-    yarp::os::Bottle info;
-    for (size_t i=0;i<openraveYarpPluginLoaderPtr->getYarpPluginsProperties().size();i++)
-    {
-        yarp::os::Bottle& b = info.addList();
-        b.addInt32(i);
-        yarp::os::Property openOptions(openraveYarpPluginLoaderPtr->getYarpPluginsProperties()[i]);
-        openOptions.unput("penv");
-        openOptions.unput("allManipulators");
-        openOptions.unput("allSensors");
-        yarp::os::Bottle openOptionsBottle;
-        openOptionsBottle.fromString(openOptions.toString());
-        b.append(openOptionsBottle);
-    }
     Port::write(info);
 }
 
