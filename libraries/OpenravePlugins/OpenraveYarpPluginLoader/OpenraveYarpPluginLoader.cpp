@@ -83,7 +83,7 @@ public:
 
         openPortPeriodicWrite.setOpenraveYarpPluginLoaderPtr(this);
         openPortPeriodicWrite.open("/OpenraveYarpPluginLoader/state:o");
-    }
+    } //-- end OpenraveYarpPluginLoader
 
     virtual ~OpenraveYarpPluginLoader()
     {
@@ -99,12 +99,12 @@ public:
 
         openPortRpcServer.close();
         openPortPeriodicWrite.close();
-    }
+    } //-- end ~OpenraveYarpPluginLoader
 
     virtual void Destroy()
     {
         RAVELOG_INFO("module unloaded from environment\n");
-    }
+    } //-- end Destroy
 
     std::vector<yarp::os::Property> getYarpPluginsProperties() const { return yarpPluginsProperties; }
 
@@ -187,7 +187,7 @@ public:
             CD_SUCCESS("Open ids: %s\n",sout.str().c_str());
         }
         return 0;
-    }
+    } //-- end main
 
     bool Open(std::ostream& sout, std::istream& sinput)
     {
@@ -434,7 +434,7 @@ public:
             } //-- Iterate through sensors
         } //-- Iterate through robots
         return true;
-    }
+    } //-- end Open
 
 private:
     yarp::os::Network yarp;
