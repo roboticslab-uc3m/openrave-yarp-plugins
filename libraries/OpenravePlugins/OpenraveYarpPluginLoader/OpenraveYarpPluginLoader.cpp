@@ -387,7 +387,7 @@ public:
                 yarpPluginsProperties.push_back(options);
                 sout << yarpPluginsProperties.size()-1;
                 sout << " ";
-            }
+            } //-- Iterate through manipulators
 
             //-- Iterate through sensors
             for(int i=0;i<sensorIndices.size();i++)
@@ -431,9 +431,8 @@ public:
                 yarpPluginsProperties.push_back(options);
                 sout << yarpPluginsProperties.size()-1;
                 sout << " ";
-            }
-        }
-
+            } //-- Iterate through sensors
+        } //-- Iterate through robots
         return true;
     }
 
