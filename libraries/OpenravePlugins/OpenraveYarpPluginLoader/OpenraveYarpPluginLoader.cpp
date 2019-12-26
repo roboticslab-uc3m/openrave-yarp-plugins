@@ -83,7 +83,7 @@ public:
 
         openPortPeriodicWrite.setOpenraveYarpPluginLoaderPtr(this);
         openPortPeriodicWrite.open("/OpenraveYarpPluginLoader/state:o");
-    }
+    } //-- end OpenraveYarpPluginLoader
 
     virtual ~OpenraveYarpPluginLoader()
     {
@@ -99,14 +99,14 @@ public:
 
         openPortRpcServer.close();
         openPortPeriodicWrite.close();
-    }
+    } //-- end ~OpenraveYarpPluginLoader
 
     virtual void Destroy()
     {
         RAVELOG_INFO("module unloaded from environment\n");
-    }
+    } //-- end Destroy
 
-    std::vector<yarp::os::Property> getYarpPluginsProperties() const { return yarpPluginsProperties; }
+    bool addYarpPluginsLists(yarp::os::Bottle& info);
 
     int main(const std::string& cmd)
     {
@@ -187,7 +187,7 @@ public:
             CD_SUCCESS("Open ids: %s\n",sout.str().c_str());
         }
         return 0;
-    }
+    } //-- end main
 
     bool Open(std::ostream& sout, std::istream& sinput)
     {
@@ -387,7 +387,7 @@ public:
                 yarpPluginsProperties.push_back(options);
                 sout << yarpPluginsProperties.size()-1;
                 sout << " ";
-            }
+            } //-- end Iterate through manipulators
 
             //-- Iterate through sensors
             for(int i=0;i<sensorIndices.size();i++)
@@ -431,9 +431,19 @@ public:
                 yarpPluginsProperties.push_back(options);
                 sout << yarpPluginsProperties.size()-1;
                 sout << " ";
-            }
-        }
+            } //-- end Iterate through sensors
+        } //-- end Iterate through robots
+        return true;
+    } //-- end Open
 
+    bool close(const int i)
+    {
+        if(!yarpPlugins[i]->close())
+        {
+            CD_ERROR("Could not close %d.\n",i);
+            return false;
+        }
+        yarpPluginsProperties[i].put("remotelyClosed",1);
         return true;
     }
 
@@ -447,6 +457,27 @@ private:
 
     OpenPortPeriodicWrite openPortPeriodicWrite;
 };
+
+// -----------------------------------------------------------------------------
+
+bool OpenraveYarpPluginLoader::addYarpPluginsLists(yarp::os::Bottle& info)
+{
+    for (size_t i=0;i<yarpPluginsProperties.size();i++)
+    {
+        if(yarpPluginsProperties[i].check("remotelyClosed"))
+            continue;
+        yarp::os::Bottle& b = info.addList();
+        b.addInt32(i);
+        yarp::os::Property openOptions(yarpPluginsProperties[i]);
+        openOptions.unput("penv");
+        openOptions.unput("allManipulators");
+        openOptions.unput("allSensors");
+        yarp::os::Bottle openOptionsBottle;
+        openOptionsBottle.fromString(openOptions.toString());
+        b.append(openOptionsBottle);
+    }
+    return true;
+}
 
 // -----------------------------------------------------------------------------
 
@@ -466,18 +497,7 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
     }
     else if ( request.get(0).asString() == "list" ) //-- list
     {
-        for (size_t i=0;i<openraveYarpPluginLoaderPtr->getYarpPluginsProperties().size();i++)
-        {
-            yarp::os::Bottle& b = response.addList();
-            b.addInt32(i);
-            yarp::os::Property openOptions(openraveYarpPluginLoaderPtr->getYarpPluginsProperties()[i]);
-            openOptions.unput("penv");
-            openOptions.unput("allManipulators");
-            openOptions.unput("allSensors");
-            yarp::os::Bottle openOptionsBottle;
-            openOptionsBottle.fromString(openOptions.toString());
-            b.append(openOptionsBottle);
-        }
+        openraveYarpPluginLoaderPtr->addYarpPluginsLists(response);
         //response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
@@ -517,6 +537,27 @@ bool OpenPortReader::read(yarp::os::ConnectionReader& in)
         }
         return response.write(*out);
     }
+    else if ( request.get(0).asString() == "close" ) //-- close
+    {
+        if(request.size() < 2)
+        {
+            response.addVocab(VOCAB_FAILED);
+            response.addString("close requires at least 1 argument");
+            return response.write(*out);
+        }
+        for(size_t i=1; i<request.size(); i++)
+        {
+            if(!openraveYarpPluginLoaderPtr->close(request.get(i).asInt32()))
+            {
+                response.addVocab(VOCAB_FAILED);
+                response.addString("close failed");
+                response.addInt32(request.get(i).asInt32());
+                return response.write(*out);
+            }
+        }
+        response.addVocab(VOCAB_OK);
+        return response.write(*out);
+    }
 
     response.addVocab(VOCAB_FAILED);
     response.addString("unknown command");
@@ -537,22 +578,12 @@ void OpenPortPeriodicWrite::run()
     if(!Port::isOpen())
         return;
 
-    if(0 == openraveYarpPluginLoaderPtr->getYarpPluginsProperties().size())
+    yarp::os::Bottle info;
+    openraveYarpPluginLoaderPtr->addYarpPluginsLists(info);
+
+    if(0 == info.size())
         return;
 
-    yarp::os::Bottle info;
-    for (size_t i=0;i<openraveYarpPluginLoaderPtr->getYarpPluginsProperties().size();i++)
-    {
-        yarp::os::Bottle& b = info.addList();
-        b.addInt32(i);
-        yarp::os::Property openOptions(openraveYarpPluginLoaderPtr->getYarpPluginsProperties()[i]);
-        openOptions.unput("penv");
-        openOptions.unput("allManipulators");
-        openOptions.unput("allSensors");
-        yarp::os::Bottle openOptionsBottle;
-        openOptionsBottle.fromString(openOptions.toString());
-        b.append(openOptionsBottle);
-    }
     Port::write(info);
 }
 
