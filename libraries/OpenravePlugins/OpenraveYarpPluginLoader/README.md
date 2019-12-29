@@ -15,6 +15,10 @@ There are 2 ways to invoke `OpenraveYarpPluginLoader`:
 
 
 ## YarpOpenraveAnalogSensors
+
+Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/YarpOpenraveAnalogSensors](../../YarpPlugins/YarpOpenraveControlboard#yarpopenraveanalogsensors).
+
+The [first example](../../YarpPlugins/YarpOpenraveAnalogSensors#example-1) becomes (note that `name` and `view` parameters are no longer required):
 ```bash
 openrave forceSensor/examples/physicsRobot.env.xml --module OpenraveYarpPluginLoader "open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --sensorIndex 0 --period 50"
 ```
