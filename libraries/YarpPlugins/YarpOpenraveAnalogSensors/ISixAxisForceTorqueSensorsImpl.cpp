@@ -40,6 +40,7 @@ bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorFrameName(size_t sens
 
 bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorMeasure(size_t sens_index, yarp::sig::Vector& out, double& timestamp) const
 {
+    out.resize(6);
     out[0] = sensorDataPtr->force[0];
     out[1] = sensorDataPtr->force[1];
     out[2] = sensorDataPtr->force[2];
