@@ -16,7 +16,7 @@ There are 2 ways to invoke `OpenraveYarpPluginLoader`:
 
 ## YarpOpenraveAnalogSensors
 ```bash
-openrave physicsRobot.env.xml --module OpenraveYarpPluginLoader "open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --sensorIndex 0 --period 50"
+openrave forceSensor/examples/physicsRobot.env.xml --module OpenraveYarpPluginLoader "open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --sensorIndex 0 --period 50"
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-analogsensors.py](../../../examples/python/openraveYarpPluginLoader-analogsensors.py)
 
