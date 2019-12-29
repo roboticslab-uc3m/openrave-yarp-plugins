@@ -15,7 +15,7 @@ Open `YarpOpenraveAnalogSensors` device with `forceSensorexamples/physicsRobot.e
 yarpdev --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --sensorIndex 0 --period 50 --env forceSensor/examples/physicsRobot.env.xml --name /analogsensors --view
 ```
 
-Note: This invocation not working due to [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60) and beyond. Therefore, you can instead jump directly and use: [../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraveftsensor](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraveftsensor)
+Note: This invocation not working due to [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60) and beyond. Therefore, you can instead jump directly and use: [../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraveanalogsensors](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraveanalogsensors)
 
 Read from port:
 ```bash
