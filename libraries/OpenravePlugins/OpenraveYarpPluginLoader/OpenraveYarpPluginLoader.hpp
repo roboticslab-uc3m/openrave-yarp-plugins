@@ -48,4 +48,4 @@ private:
     OpenPortPeriodicWrite openPortPeriodicWrite;
 };
 
-#endif __OPENRAVE_YARP_PLUGIN_LOADER_HPP__
+#endif // __OPENRAVE_YARP_PLUGIN_LOADER_HPP__
