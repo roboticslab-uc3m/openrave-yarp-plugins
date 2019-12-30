@@ -9,58 +9,17 @@
 
 #include <boost/bind/bind.hpp>
 
-#include <yarp/os/Network.h>
 #include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/ResourceFinder.h>
-#include <yarp/os/RpcServer.h>
 #include <yarp/os/Value.h>
 #include <yarp/os/Vocab.h>
-
-#include <yarp/dev/PolyDriver.h>
 
 #include <ColorDebug.h>
 
 #include "OpenPortReader.hpp"
 #include "OpenPortPeriodicWrite.hpp"
-
-#define VOCAB_OK yarp::os::createVocab('o','k')
-#define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
-
-/**
- * @ingroup OpenravePlugins
- * \defgroup OpenraveYarpPluginLoader
- *
- * @brief Contains roboticslab::OpenraveYarpPluginLoader.
- */
-
-/**
- * @ingroup OpenraveYarpPluginLoader
- * @brief Loads one or several YARP Plugin, passing environment pointer.
- */
-class OpenraveYarpPluginLoader : public OpenRAVE::ModuleBase
-{
-public:
-    OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr penv);
-    virtual ~OpenraveYarpPluginLoader();
-    virtual void Destroy();
-
-    bool addYarpPluginsLists(yarp::os::Bottle& info);
-    int main(const std::string& cmd);
-
-    bool Open(std::ostream& sout, std::istream& sinput);
-    bool close(const int i);
-
-private:
-    yarp::os::Network yarp;
-    std::vector<yarp::dev::PolyDriver*> yarpPlugins;
-    std::vector<yarp::os::Property> yarpPluginsProperties;
-
-    OpenPortReader openPortReader;
-    yarp::os::RpcServer openPortRpcServer;
-
-    OpenPortPeriodicWrite openPortPeriodicWrite;
-};
+#include "OpenraveYarpPluginLoader.hpp"
 
 // -----------------------------------------------------------------------------
 

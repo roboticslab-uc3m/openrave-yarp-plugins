@@ -12,6 +12,7 @@ link_directories(${OpenRAVE_LIBRARY_DIRS})
 add_library(OpenraveYarpPluginLoader MODULE OpenraveYarpPluginLoader.cpp
                                             OpenPortPeriodicWrite.cpp
                                             OpenPortReader.cpp
+                                            OpenraveYarpPluginLoader.hpp
                                             OpenPortPeriodicWrite.hpp
                                             OpenPortReader.hpp)
 

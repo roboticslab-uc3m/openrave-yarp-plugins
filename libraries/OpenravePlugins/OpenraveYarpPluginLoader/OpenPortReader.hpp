@@ -3,6 +3,8 @@
 #ifndef __OPEN_PORT_READER_HPP__
 #define __OPEN_PORT_READER_HPP__
 
+#include <yarp/os/PortReader.h>
+
 class OpenraveYarpPluginLoader;
 
 class OpenPortReader: public yarp::os::PortReader

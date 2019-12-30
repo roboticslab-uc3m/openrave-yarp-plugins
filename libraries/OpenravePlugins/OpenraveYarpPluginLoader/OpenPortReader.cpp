@@ -1,6 +1,15 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
+#include <yarp/os/Vocab.h>
+
+#include <ColorDebug.h>
+
 #include "OpenPortReader.hpp"
+
+#include "OpenraveYarpPluginLoader.hpp"
+
+#define VOCAB_OK yarp::os::createVocab('o','k')
+#define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
 
 // -----------------------------------------------------------------------------
 

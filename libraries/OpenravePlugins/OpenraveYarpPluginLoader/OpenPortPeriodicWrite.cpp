@@ -3,6 +3,7 @@
 #include <yarp/os/Bottle.h>
 
 #include "OpenPortPeriodicWrite.hpp"
+#include "OpenraveYarpPluginLoader.hpp"
 
 // -----------------------------------------------------------------------------
 
