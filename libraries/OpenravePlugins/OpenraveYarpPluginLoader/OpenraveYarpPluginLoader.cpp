@@ -1,463 +1,61 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include <sstream>
-#include <string>
-#include <vector>
-
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
 
 #include <boost/bind/bind.hpp>
 
-#include <yarp/os/Network.h>
-#include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/ResourceFinder.h>
-#include <yarp/os/RpcServer.h>
-#include <yarp/os/Value.h>
-#include <yarp/os/Vocab.h>
-
-#include <yarp/dev/PolyDriver.h>
 
 #include <ColorDebug.h>
 
-#define VOCAB_OK yarp::os::createVocab('o','k')
-#define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
-
-/**
- * @ingroup OpenravePlugins
- * \defgroup OpenraveYarpPluginLoader
- *
- * @brief Contains roboticslab::OpenraveYarpPluginLoader.
- */
+#include "OpenraveYarpPluginLoader.hpp"
 
 // -----------------------------------------------------------------------------
 
-class OpenraveYarpPluginLoader;
-
-// -----------------------------------------------------------------------------
-
-class OpenPortReader: public yarp::os::PortReader
+OpenraveYarpPluginLoader::OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
 {
-public:
-    void setOpenraveYarpPluginLoaderPtr(OpenraveYarpPluginLoader *value) { openraveYarpPluginLoaderPtr = value; }
-private:
-    OpenraveYarpPluginLoader* openraveYarpPluginLoaderPtr;
-    virtual bool read(yarp::os::ConnectionReader& in) override;
-};
+    __description = "OpenraveYarpPluginLoader plugin.";
+    OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens OpenraveYarpPluginLoader");
+
+    CD_INFO("Checking for yarp network...\n");
+    if ( ! yarp.checkNetwork() )
+        CD_ERROR("Found no yarp network (try running \"yarpserver &\")!\n");
+    CD_SUCCESS("Found yarp network.\n");
+
+    openPortReader.setOpenraveYarpPluginLoaderPtr(this);
+    openPortRpcServer.setReader(openPortReader);
+    openPortRpcServer.open("/OpenraveYarpPluginLoader/rpc:s");
+
+    openPortPeriodicWrite.setOpenraveYarpPluginLoaderPtr(this);
+    openPortPeriodicWrite.open("/OpenraveYarpPluginLoader/state:o");
+}
 
 // -----------------------------------------------------------------------------
 
-class OpenPortPeriodicWrite : yarp::os::PeriodicThread, public yarp::os::Port
+OpenraveYarpPluginLoader::~OpenraveYarpPluginLoader()
 {
-public:
-    OpenPortPeriodicWrite();
-    void setOpenraveYarpPluginLoaderPtr(OpenraveYarpPluginLoader *value) { openraveYarpPluginLoaderPtr = value; }
-private:
-    OpenraveYarpPluginLoader* openraveYarpPluginLoaderPtr;
-    virtual void run() override;
-};
-
-// -----------------------------------------------------------------------------
-
-/**
- * @ingroup OpenraveYarpPluginLoader
- * @brief Loads one or several YARP Plugin, passing environment pointer.
- */
-class OpenraveYarpPluginLoader : public OpenRAVE::ModuleBase
-{
-public:
-    OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
+    for(int i=0;i<yarpPlugins.size();i++)
     {
-        __description = "OpenraveYarpPluginLoader plugin.";
-        OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens OpenraveYarpPluginLoader");
-
-        CD_INFO("Checking for yarp network...\n");
-        if ( ! yarp.checkNetwork() )
-            CD_ERROR("Found no yarp network (try running \"yarpserver &\")!\n");
-        CD_SUCCESS("Found yarp network.\n");
-
-        openPortReader.setOpenraveYarpPluginLoaderPtr(this);
-        openPortRpcServer.setReader(openPortReader);
-        openPortRpcServer.open("/OpenraveYarpPluginLoader/rpc:s");
-
-        openPortPeriodicWrite.setOpenraveYarpPluginLoaderPtr(this);
-        openPortPeriodicWrite.open("/OpenraveYarpPluginLoader/state:o");
-    } //-- end OpenraveYarpPluginLoader
-
-    virtual ~OpenraveYarpPluginLoader()
-    {
-        for(int i=0;i<yarpPlugins.size();i++)
-        {
-            yarpPlugins[i]->close();
-            delete yarpPlugins[i];
-            yarpPlugins[i] = 0;
-        }
-
-        openPortRpcServer.interrupt();
-        openPortPeriodicWrite.interrupt();
-
-        openPortRpcServer.close();
-        openPortPeriodicWrite.close();
-    } //-- end ~OpenraveYarpPluginLoader
-
-    virtual void Destroy()
-    {
-        RAVELOG_INFO("module unloaded from environment\n");
-    } //-- end Destroy
-
-    bool addYarpPluginsLists(yarp::os::Bottle& info);
-
-    int main(const std::string& cmd)
-    {
-        CD_DEBUG("[%s]\n", cmd.c_str());
-        std::stringstream ss(cmd);
-
-        //-- Fill openStrings and envString
-        std::vector<std::string> openStrings;
-        std::string envString("");
-
-        enum mode { none, open, env };
-        int currentMode = mode::none;
-        while( ! ss.eof() )
-        {
-            std::string tmp;
-            ss >> tmp;
-
-            if(tmp == "open")
-            {
-                std::string openString("open");
-                openStrings.push_back(openString);
-                currentMode = mode::open;
-            }
-            else if(tmp == "env")
-            {
-                currentMode = mode::env;
-            }
-            else
-            {
-                if(currentMode == mode::open)
-                {
-                    openStrings[openStrings.size()-1].append(" ");
-                    openStrings[openStrings.size()-1].append(tmp);
-                }
-                else if(currentMode == mode::env)
-                {
-                    envString = tmp;
-                }
-            }
-        }
-
-        CD_DEBUG("env: '%s'\n",envString.c_str());
-
-        if(envString!="")
-        {
-            if ( !!GetEnv()->Load(envString.c_str()) )
-            {
-                CD_SUCCESS("Loaded '%s' environment.\n",envString.c_str());
-            }
-            else
-            {
-                CD_DEBUG("Could not load '%s' environment, attempting via yarp::os::ResourceFinder.\n",envString.c_str());
-
-                yarp::os::ResourceFinder rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
-                std::string fullEnvString = rf.findFileByName(envString);
-
-                if ( !GetEnv()->Load(fullEnvString.c_str()) )
-                {
-                    CD_ERROR("Could not load '%s' environment.\n",fullEnvString.c_str());
-                    return 1;
-                }
-                CD_SUCCESS("Loaded '%s' environment.\n",fullEnvString.c_str());
-            }
-        }
-
-        //-- Open each openString
-        for(int i=0;i<openStrings.size();i++)
-        {
-            CD_DEBUG("open[%d]: [%s]\n",i,openStrings[i].c_str());
-
-            std::istringstream sinput( openStrings[i] );
-            std::ostringstream sout;
-            if( ! OpenRAVE::InterfaceBase::SendCommand(sout,sinput) )
-            {
-                CD_ERROR("%s\n",sout.str().c_str());
-                return 1;
-            }
-            CD_SUCCESS("Open ids: %s\n",sout.str().c_str());
-        }
-        return 0;
-    } //-- end main
-
-    bool Open(std::ostream& sout, std::istream& sinput)
-    {
-        CD_INFO("Checking for yarp network...\n");
-        if ( ! yarp.checkNetwork() )
-        {
-            CD_ERROR("Found no yarp network (try running \"yarpserver &\"), bye!\n");
-            sout << "-1 ";
-            return false;
-        }
-        CD_SUCCESS("Found yarp network.\n");
-
-        std::string s(std::istreambuf_iterator<char>(sinput), {});
-
-        yarp::os::Property options;
-        options.fromArguments(s.c_str());
-
-        CD_DEBUG("config: %s\n", options.toString().c_str());
-
-        //-- Get and put pointer to environment
-        CD_INFO("penv: %p\n",GetEnv().get());
-        OpenRAVE::EnvironmentBasePtr penv = GetEnv();
-        yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
-        options.put("penv",v);
-
-        //-- Fill robotIndices from: robotIndex/robotIndices/allRobots
-        std::vector<int> robotIndices;
-
-        std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-        penv->GetRobots(vectorOfRobotPtr);
-
-        if( options.check("robotIndex") )
-        {
-            int robotIndex = options.find("robotIndex").asInt32();
-            robotIndices.push_back(robotIndex);
-        }
-        else if( options.check("robotIndices") )
-        {
-            CD_ERROR("robotIndices not implemented yet. Bye!\n");
-            sout << "-1 ";
-            return false;
-        }
-        else if( options.check("allRobots") )
-        {
-            for(int i=0;i<vectorOfRobotPtr.size();i++)
-                robotIndices.push_back(i);
-        }
-        else
-        {
-            CD_INFO("Not using --robotIndex or --robotIndices or --allRobots parameter.\n");
-
-            yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
-            yarpPlugin->open(options);
-
-            if( ! yarpPlugin->isValid() )
-            {
-                CD_ERROR("yarp plugin not valid.\n");
-                sout << "-1 ";
-                return false;
-            }
-            CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
-
-            yarpPlugins.push_back(yarpPlugin);
-            yarpPluginsProperties.push_back(options);
-            sout << yarpPluginsProperties.size()-1;
-            sout << " ";
-            return true;
-        }
-
-        //-- Iterate through robots
-        for(int i=0;i<robotIndices.size();i++)
-        {
-            int robotIndex = robotIndices[i];
-            if( robotIndex >= vectorOfRobotPtr.size())
-            {
-                CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarp plugin. Bye!\n",robotIndex,vectorOfRobotPtr.size());
-                sout << "-1 ";
-                return false;
-            }
-            else if (robotIndex < 0)
-            {
-                CD_ERROR("robotIndex %d < 0, not loading yarp plugin. Bye!\n",robotIndex);
-                sout << "-1 ";
-                return false;
-            }
-            options.put("robotIndex",robotIndex);
-
-            std::string robotName("/");
-            robotName += vectorOfRobotPtr[ robotIndex ]->GetName();
-
-            //-- Fill manipulatorIndices from: manipulatorIndex/manipulatorIndices/allManipulators
-            //-- Fill sensorIndices from: sensorIndex/sensorIndices/allSensors
-            std::vector<int> manipulatorIndices;
-            std::vector<int> sensorIndices;
-
-            std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ robotIndex ]->GetManipulators();
-            std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = vectorOfRobotPtr[ robotIndex ]->GetAttachedSensors();
-
-            if( options.check("manipulatorIndex") )
-            {
-                int manipulatorIndex = options.find("manipulatorIndex").asInt32();
-                manipulatorIndices.push_back(manipulatorIndex);
-            }
-            else if( options.check("manipulatorIndices") )
-            {
-                CD_ERROR("manipulatorIndices not implemented yet. Bye!\n");
-                sout << "-1 ";
-                return false;
-            }
-            else if( options.check("allManipulators") )
-            {
-                for(int i=0;i<vectorOfManipulatorPtr.size();i++)
-                    manipulatorIndices.push_back(i);
-            }
-            else if( options.check("sensorIndex") )
-            {
-                int sensorIndex = options.find("sensorIndex").asInt32();
-                sensorIndices.push_back(sensorIndex);
-            }
-            else if( options.check("sensorIndices") )
-            {
-                CD_ERROR("sensorIndices not implemented yet. Bye!\n");
-                sout << "-1 ";
-                return false;
-            }
-            else if( options.check("allSensors") )
-            {
-                for(int i=0;i<vectorOfSensorPtr.size();i++)
-                    sensorIndices.push_back(i);
-            }
-            else
-            {
-                CD_INFO("Not using --manipulatorIndex or --manipulatorIndices or --allManipulators parameter.\n");
-                CD_INFO("Not using --sensorIndex or --sensorIndices or --allSensors parameter.\n");
-
-                if( ! options.check("forceName") )
-                {
-                    options.put("name",robotName);
-                }
-
-                yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
-                yarpPlugin->open(options);
-
-                if( ! yarpPlugin->isValid() )
-                {
-                    CD_ERROR("yarp plugin not valid.\n");
-                    sout << "-1 ";
-                    return false;
-                }
-                CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
-
-                yarpPlugins.push_back(yarpPlugin);
-                yarpPluginsProperties.push_back(options);
-                sout << yarpPluginsProperties.size()-1;
-                sout << " ";
-            }
-
-            //-- Iterate through manipulators
-            for(int i=0;i<manipulatorIndices.size();i++)
-            {
-                int manipulatorIndex = manipulatorIndices[i];
-                if(manipulatorIndex >= vectorOfManipulatorPtr.size())
-                {
-                    CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarp plugin. Bye!\n",manipulatorIndex,vectorOfManipulatorPtr.size());
-                    sout << "-1 ";
-                    return false;
-                }
-                else if (manipulatorIndex < 0)
-                {
-                    CD_ERROR("manipulatorIndex %d < 0, not loading yarp plugin.\n",manipulatorIndex);
-                    sout << "-1 ";
-                    return false;
-                }
-                options.put("manipulatorIndex",manipulatorIndex);
-
-                std::string manipulatorName(robotName);
-                manipulatorName += "/";
-                manipulatorName += vectorOfManipulatorPtr[ manipulatorIndex ]->GetName();
-
-                if( ! options.check("forceName") )
-                {
-                    options.put("name",manipulatorName);
-                }
-
-                yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
-                yarpPlugin->open(options);
-
-                if( ! yarpPlugin->isValid() )
-                {
-                    CD_ERROR("yarp plugin not valid.\n");
-                    sout << "-1 ";
-                    return false;
-                }
-                CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
-
-                yarpPlugins.push_back(yarpPlugin);
-                yarpPluginsProperties.push_back(options);
-                sout << yarpPluginsProperties.size()-1;
-                sout << " ";
-            } //-- end Iterate through manipulators
-
-            //-- Iterate through sensors
-            for(int i=0;i<sensorIndices.size();i++)
-            {
-                int sensorIndex = sensorIndices[i];
-                if(sensorIndex >= vectorOfSensorPtr.size())
-                {
-                    CD_ERROR("sensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarp plugin. Bye!\n",sensorIndex,vectorOfSensorPtr.size());
-                    sout << "-1 ";
-                    return false;
-                }
-                else if (sensorIndex < 0)
-                {
-                    CD_ERROR("sensorIndex %d < 0, not loading yarp plugin.\n",sensorIndex);
-                    sout << "-1 ";
-                    return false;
-                }
-                options.put("sensorIndex",sensorIndex);
-
-                std::string sensorName(robotName);
-                sensorName += "/";
-                sensorName += vectorOfSensorPtr[ sensorIndex ]->GetName();
-
-                if( ! options.check("forceName") )
-                {
-                    options.put("name",sensorName);
-                }
-
-                yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
-                yarpPlugin->open(options);
-
-                if( ! yarpPlugin->isValid() )
-                {
-                    CD_ERROR("yarp plugin not valid.\n");
-                    sout << "-1 ";
-                    return false;
-                }
-                CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
-
-                yarpPlugins.push_back(yarpPlugin);
-                yarpPluginsProperties.push_back(options);
-                sout << yarpPluginsProperties.size()-1;
-                sout << " ";
-            } //-- end Iterate through sensors
-        } //-- end Iterate through robots
-        return true;
-    } //-- end Open
-
-    bool close(const int i)
-    {
-        if(!yarpPlugins[i]->close())
-        {
-            CD_ERROR("Could not close %d.\n",i);
-            return false;
-        }
-        yarpPluginsProperties[i].put("remotelyClosed",1);
-        CD_SUCCESS("Closed yarp plugin (id %d).\n",i);
-        return true;
+        yarpPlugins[i]->close();
+        delete yarpPlugins[i];
+        yarpPlugins[i] = 0;
     }
 
-private:
-    yarp::os::Network yarp;
-    std::vector<yarp::dev::PolyDriver*> yarpPlugins;
-    std::vector<yarp::os::Property> yarpPluginsProperties;
+    openPortRpcServer.interrupt();
+    openPortPeriodicWrite.interrupt();
 
-    OpenPortReader openPortReader;
-    yarp::os::RpcServer openPortRpcServer;
+    openPortRpcServer.close();
+    openPortPeriodicWrite.close();
+}
 
-    OpenPortPeriodicWrite openPortPeriodicWrite;
-};
+// -----------------------------------------------------------------------------
+
+void OpenraveYarpPluginLoader::Destroy()
+{
+    RAVELOG_INFO("module unloaded from environment\n");
+}
 
 // -----------------------------------------------------------------------------
 
@@ -482,113 +80,352 @@ bool OpenraveYarpPluginLoader::addYarpPluginsLists(yarp::os::Bottle& info)
 
 // -----------------------------------------------------------------------------
 
-bool OpenPortReader::read(yarp::os::ConnectionReader& in)
+int OpenraveYarpPluginLoader::main(const std::string& cmd)
 {
-    yarp::os::Bottle request, response;
-    if (!request.read(in)) return false;
-    CD_DEBUG("Request: %s\n", request.toString().c_str());
-    yarp::os::ConnectionWriter *out = in.getWriter();
-    if (out==NULL) return true;
+    CD_DEBUG("[%s]\n", cmd.c_str());
+    std::stringstream ss(cmd);
 
-    if ( request.get(0).asString() == "help" ) //-- help
+    //-- Fill openStrings and envString
+    std::vector<std::string> openStrings;
+    std::string envString("");
+
+    enum mode { none, open, env };
+    int currentMode = mode::none;
+    while( ! ss.eof() )
     {
-        response.addString("Available commands: help, list, open (device ...) ...");
-        response.write(*out);
+        std::string tmp;
+        ss >> tmp;
+
+        if(tmp == "open")
+        {
+            std::string openString("open");
+            openStrings.push_back(openString);
+            currentMode = mode::open;
+        }
+        else if(tmp == "env")
+        {
+            currentMode = mode::env;
+        }
+        else
+        {
+            if(currentMode == mode::open)
+            {
+                openStrings[openStrings.size()-1].append(" ");
+                openStrings[openStrings.size()-1].append(tmp);
+            }
+            else if(currentMode == mode::env)
+            {
+                envString = tmp;
+            }
+        }
+    }
+
+    CD_DEBUG("env: '%s'\n",envString.c_str());
+
+    if(envString!="")
+    {
+        if ( !!GetEnv()->Load(envString.c_str()) )
+        {
+            CD_SUCCESS("Loaded '%s' environment.\n",envString.c_str());
+        }
+        else
+        {
+            CD_DEBUG("Could not load '%s' environment, attempting via yarp::os::ResourceFinder.\n",envString.c_str());
+
+            yarp::os::ResourceFinder rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
+            std::string fullEnvString = rf.findFileByName(envString);
+
+            if ( !GetEnv()->Load(fullEnvString.c_str()) )
+            {
+                CD_ERROR("Could not load '%s' environment.\n",fullEnvString.c_str());
+                return 1;
+            }
+            CD_SUCCESS("Loaded '%s' environment.\n",fullEnvString.c_str());
+        }
+    }
+
+    //-- Open each openString
+    for(int i=0;i<openStrings.size();i++)
+    {
+        CD_DEBUG("open[%d]: [%s]\n",i,openStrings[i].c_str());
+
+        std::istringstream sinput( openStrings[i] );
+        std::ostringstream sout;
+        if( ! OpenRAVE::InterfaceBase::SendCommand(sout,sinput) )
+        {
+            CD_ERROR("%s\n",sout.str().c_str());
+            return 1;
+        }
+        CD_SUCCESS("Open ids: %s\n",sout.str().c_str());
+    }
+    return 0;
+}
+
+// -----------------------------------------------------------------------------
+
+bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
+{
+    CD_INFO("Checking for yarp network...\n");
+    if ( ! yarp.checkNetwork() )
+    {
+        CD_ERROR("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+        sout << "-1 ";
+        return false;
+    }
+    CD_SUCCESS("Found yarp network.\n");
+
+    std::string s(std::istreambuf_iterator<char>(sinput), {});
+
+    yarp::os::Property options;
+    options.fromArguments(s.c_str());
+
+    CD_DEBUG("config: %s\n", options.toString().c_str());
+
+    //-- Get and put pointer to environment
+    CD_INFO("penv: %p\n",GetEnv().get());
+    OpenRAVE::EnvironmentBasePtr penv = GetEnv();
+    yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
+    options.put("penv",v);
+
+    //-- Fill robotIndices from: robotIndex/robotIndices/allRobots
+    std::vector<int> robotIndices;
+
+    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
+    penv->GetRobots(vectorOfRobotPtr);
+
+    if( options.check("robotIndex") )
+    {
+        int robotIndex = options.find("robotIndex").asInt32();
+        robotIndices.push_back(robotIndex);
+    }
+    else if( options.check("robotIndices") )
+    {
+        CD_ERROR("robotIndices not implemented yet. Bye!\n");
+        sout << "-1 ";
+        return false;
+    }
+    else if( options.check("allRobots") )
+    {
+        for(int i=0;i<vectorOfRobotPtr.size();i++)
+            robotIndices.push_back(i);
+    }
+    else
+    {
+        CD_INFO("Not using --robotIndex or --robotIndices or --allRobots parameter.\n");
+
+        yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+        yarpPlugin->open(options);
+
+        if( ! yarpPlugin->isValid() )
+        {
+            CD_ERROR("yarp plugin not valid.\n");
+            sout << "-1 ";
+            return false;
+        }
+        CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
+
+        yarpPlugins.push_back(yarpPlugin);
+        yarpPluginsProperties.push_back(options);
+        sout << yarpPluginsProperties.size()-1;
+        sout << " ";
         return true;
     }
-    else if ( request.get(0).asString() == "list" ) //-- list
+
+    //-- Iterate through robots
+    for(int i=0;i<robotIndices.size();i++)
     {
-        openraveYarpPluginLoaderPtr->addYarpPluginsLists(response);
-        //response.addVocab(VOCAB_OK);
-        return response.write(*out);
-    }
-    else if ( request.get(0).asString() == "open" ) //-- open
-    {
-        std::string cmdStr;
-        for(size_t i=1; i<request.size(); i++)
+        int robotIndex = robotIndices[i];
+        if( robotIndex >= vectorOfRobotPtr.size())
         {
-            if(!request.get(i).isList())
+            CD_ERROR("robotIndex %d >= vectorOfRobotPtr.size() %d, not loading yarp plugin. Bye!\n",robotIndex,vectorOfRobotPtr.size());
+            sout << "-1 ";
+            return false;
+        }
+        else if (robotIndex < 0)
+        {
+            CD_ERROR("robotIndex %d < 0, not loading yarp plugin. Bye!\n",robotIndex);
+            sout << "-1 ";
+            return false;
+        }
+        options.put("robotIndex",robotIndex);
+
+        std::string robotName("/");
+        robotName += vectorOfRobotPtr[ robotIndex ]->GetName();
+
+        //-- Fill manipulatorIndices from: manipulatorIndex/manipulatorIndices/allManipulators
+        //-- Fill sensorIndices from: sensorIndex/sensorIndices/allSensors
+        std::vector<int> manipulatorIndices;
+        std::vector<int> sensorIndices;
+
+        std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[ robotIndex ]->GetManipulators();
+        std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = vectorOfRobotPtr[ robotIndex ]->GetAttachedSensors();
+
+        if( options.check("manipulatorIndex") )
+        {
+            int manipulatorIndex = options.find("manipulatorIndex").asInt32();
+            manipulatorIndices.push_back(manipulatorIndex);
+        }
+        else if( options.check("manipulatorIndices") )
+        {
+            CD_ERROR("manipulatorIndices not implemented yet. Bye!\n");
+            sout << "-1 ";
+            return false;
+        }
+        else if( options.check("allManipulators") )
+        {
+            for(int i=0;i<vectorOfManipulatorPtr.size();i++)
+                manipulatorIndices.push_back(i);
+        }
+        else if( options.check("sensorIndex") )
+        {
+            int sensorIndex = options.find("sensorIndex").asInt32();
+            sensorIndices.push_back(sensorIndex);
+        }
+        else if( options.check("sensorIndices") )
+        {
+            CD_ERROR("sensorIndices not implemented yet. Bye!\n");
+            sout << "-1 ";
+            return false;
+        }
+        else if( options.check("allSensors") )
+        {
+            for(int i=0;i<vectorOfSensorPtr.size();i++)
+                sensorIndices.push_back(i);
+        }
+        else
+        {
+            CD_INFO("Not using --manipulatorIndex or --manipulatorIndices or --allManipulators parameter.\n");
+            CD_INFO("Not using --sensorIndex or --sensorIndices or --allSensors parameter.\n");
+
+            if( ! options.check("forceName") )
             {
-                CD_ERROR("Expected list at %d.\n",i);
-                response.addVocab(VOCAB_FAILED);
-                response.addString("Expected list");
-                return response.write(*out);
+                options.put("name",robotName);
             }
-            yarp::os::Bottle* elem = request.get(i).asList();
-            cmdStr.append("--");
-            cmdStr.append(elem->toString());
-            cmdStr.append(" ");
-        }
-        CD_DEBUG("%s\n", cmdStr.c_str());
 
-        std::stringstream sout;
-        std::stringstream sinput(cmdStr);
+            yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+            yarpPlugin->open(options);
 
-        if(!openraveYarpPluginLoaderPtr->Open(sout, sinput))
-        {
-            response.addVocab(VOCAB_FAILED);
-            response.addString("Open failed");
-            return response.write(*out);
-        }
-        response.addVocab(VOCAB_OK);
-        int value;
-        while(sout >> value)
-        {
-           response.addInt32(value);
-        }
-        return response.write(*out);
-    }
-    else if ( request.get(0).asString() == "close" ) //-- close
-    {
-        if(request.size() < 2)
-        {
-            response.addVocab(VOCAB_FAILED);
-            response.addString("close requires at least 1 argument");
-            return response.write(*out);
-        }
-        for(size_t i=1; i<request.size(); i++)
-        {
-            if(!openraveYarpPluginLoaderPtr->close(request.get(i).asInt32()))
+            if( ! yarpPlugin->isValid() )
             {
-                response.addVocab(VOCAB_FAILED);
-                response.addString("close failed");
-                response.addInt32(request.get(i).asInt32());
-                return response.write(*out);
+                CD_ERROR("yarp plugin not valid.\n");
+                sout << "-1 ";
+                return false;
             }
+            CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
+
+            yarpPlugins.push_back(yarpPlugin);
+            yarpPluginsProperties.push_back(options);
+            sout << yarpPluginsProperties.size()-1;
+            sout << " ";
         }
-        response.addVocab(VOCAB_OK);
-        return response.write(*out);
+
+        //-- Iterate through manipulators
+        for(int i=0;i<manipulatorIndices.size();i++)
+        {
+            int manipulatorIndex = manipulatorIndices[i];
+            if(manipulatorIndex >= vectorOfManipulatorPtr.size())
+            {
+                CD_ERROR("manipulatorIndex %d >= vectorOfManipulatorPtr.size() %d, not loading yarp plugin. Bye!\n",manipulatorIndex,vectorOfManipulatorPtr.size());
+                sout << "-1 ";
+                return false;
+            }
+            else if (manipulatorIndex < 0)
+            {
+                CD_ERROR("manipulatorIndex %d < 0, not loading yarp plugin.\n",manipulatorIndex);
+                sout << "-1 ";
+                return false;
+            }
+            options.put("manipulatorIndex",manipulatorIndex);
+
+            std::string manipulatorName(robotName);
+            manipulatorName += "/";
+            manipulatorName += vectorOfManipulatorPtr[ manipulatorIndex ]->GetName();
+
+            if( ! options.check("forceName") )
+            {
+                options.put("name",manipulatorName);
+            }
+
+            yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+            yarpPlugin->open(options);
+
+            if( ! yarpPlugin->isValid() )
+            {
+                CD_ERROR("yarp plugin not valid.\n");
+                sout << "-1 ";
+                return false;
+            }
+            CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
+
+            yarpPlugins.push_back(yarpPlugin);
+            yarpPluginsProperties.push_back(options);
+            sout << yarpPluginsProperties.size()-1;
+            sout << " ";
+        } //-- end Iterate through manipulators
+
+        //-- Iterate through sensors
+        for(int i=0;i<sensorIndices.size();i++)
+        {
+            int sensorIndex = sensorIndices[i];
+            if(sensorIndex >= vectorOfSensorPtr.size())
+            {
+                CD_ERROR("sensorIndex %d >= vectorOfSensorPtr.size() %d, not loading yarp plugin. Bye!\n",sensorIndex,vectorOfSensorPtr.size());
+                sout << "-1 ";
+                return false;
+            }
+            else if (sensorIndex < 0)
+            {
+                CD_ERROR("sensorIndex %d < 0, not loading yarp plugin.\n",sensorIndex);
+                sout << "-1 ";
+                return false;
+            }
+            options.put("sensorIndex",sensorIndex);
+
+            std::string sensorName(robotName);
+            sensorName += "/";
+            sensorName += vectorOfSensorPtr[ sensorIndex ]->GetName();
+
+            if( ! options.check("forceName") )
+            {
+                options.put("name",sensorName);
+            }
+
+            yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
+            yarpPlugin->open(options);
+
+            if( ! yarpPlugin->isValid() )
+            {
+                CD_ERROR("yarp plugin not valid.\n");
+                sout << "-1 ";
+                return false;
+            }
+            CD_SUCCESS("Valid yarp plugin (id %d).\n",yarpPluginsProperties.size());
+
+            yarpPlugins.push_back(yarpPlugin);
+            yarpPluginsProperties.push_back(options);
+            sout << yarpPluginsProperties.size()-1;
+            sout << " ";
+        } //-- end Iterate through sensors
+    } //-- end Iterate through robots
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool OpenraveYarpPluginLoader::close(const int i)
+{
+    if(!yarpPlugins[i]->close())
+    {
+        CD_ERROR("Could not close %d.\n",i);
+        return false;
     }
-
-    response.addVocab(VOCAB_FAILED);
-    response.addString("unknown command");
-    return response.write(*out);
+    yarpPluginsProperties[i].put("remotelyClosed",1);
+    CD_SUCCESS("Closed yarp plugin (id %d).\n",i);
+    return true;
 }
 
 // -----------------------------------------------------------------------------
 
-OpenPortPeriodicWrite::OpenPortPeriodicWrite() : yarp::os::PeriodicThread(1.0)
-{
-    PeriodicThread::start();
-}
-
-// -----------------------------------------------------------------------------
-
-void OpenPortPeriodicWrite::run()
-{
-    if(!Port::isOpen())
-        return;
-
-    yarp::os::Bottle info;
-    openraveYarpPluginLoaderPtr->addYarpPluginsLists(info);
-
-    if(0 == info.size())
-        return;
-
-    Port::write(info);
-}
-
-// -----------------------------------------------------------------------------
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
 {

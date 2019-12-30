@@ -3,6 +3,7 @@
 #ifndef __OPENRAVE_YARP_PLUGIN_LOADER_CLIENT__
 #define __OPENRAVE_YARP_PLUGIN_LOADER_CLIENT__
 
+#include <mutex>
 #include <vector>
 
 #include <yarp/os/BufferedPort.h>
@@ -21,7 +22,7 @@ public:
     std::mutex availableIdsMutex;
     double lastTime;
 private:
-    void onRead(yarp::os::Bottle& b) override;
+    virtual void onRead(yarp::os::Bottle& b) override;
 };
 
 /**
