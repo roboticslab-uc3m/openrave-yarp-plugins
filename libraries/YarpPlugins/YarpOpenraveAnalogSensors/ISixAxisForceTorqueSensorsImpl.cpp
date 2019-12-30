@@ -25,7 +25,7 @@ yarp::dev::MAS_status YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorStat
 
 bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorName(size_t sens_index, std::string &name) const
 {
-    name = sensorBasePtr->GetName();
+    name = vectorOfSensorPtrForForce6Ds[sens_index]->GetName();
     return true;
 }
 
@@ -40,19 +40,19 @@ bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorFrameName(size_t sens
 
 bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorMeasure(size_t sens_index, yarp::sig::Vector& out, double& timestamp) const
 {
-    if(!sensorBasePtr->GetSensorData(sensorDataPtr))
+    if(!vectorOfSensorPtrForForce6Ds[sens_index]->GetSensorData(vectorOfForce6DSensorDataPtr[sens_index]))
     {
         CD_DEBUG("GetSensorData fail...\n");
         return false;
     }
 
     out.resize(6);
-    out[0] = sensorDataPtr->force[0];
-    out[1] = sensorDataPtr->force[1];
-    out[2] = sensorDataPtr->force[2];
-    out[3] = sensorDataPtr->torque[0];
-    out[4] = sensorDataPtr->torque[1];
-    out[5] = sensorDataPtr->torque[2];
+    out[0] = vectorOfForce6DSensorDataPtr[sens_index]->force[0];
+    out[1] = vectorOfForce6DSensorDataPtr[sens_index]->force[1];
+    out[2] = vectorOfForce6DSensorDataPtr[sens_index]->force[2];
+    out[3] = vectorOfForce6DSensorDataPtr[sens_index]->torque[0];
+    out[4] = vectorOfForce6DSensorDataPtr[sens_index]->torque[1];
+    out[5] = vectorOfForce6DSensorDataPtr[sens_index]->torque[2];
     return true;
 }
 

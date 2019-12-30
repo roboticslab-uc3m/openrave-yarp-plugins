@@ -42,31 +42,28 @@ bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
         return false;
     }
 
-    sensorBasePtr = vectorOfSensorPtr.at(sensorIndex)->GetSensor();
+    vectorOfSensorPtrForForce6Ds.resize(1);
+    vectorOfForce6DSensorDataPtr.resize(1);
 
-    std::string tipo = sensorBasePtr->GetName();
+    vectorOfSensorPtrForForce6Ds[0] = vectorOfSensorPtr.at(sensorIndex)->GetSensor();
+
+    std::string tipo = vectorOfSensorPtrForForce6Ds[0]->GetName();
 
     printf("Sensor %d name: %s\n",sensorIndex,tipo.c_str());
 
     // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
 
-    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Force6D) )
+    if ( ! vectorOfSensorPtrForForce6Ds[0]->Supports(OpenRAVE::SensorBase::ST_Force6D) )
     {
         CD_ERROR("Sensor %d does not support ST_Force6D.\n", sensorIndex );
         return false;
     }
 
     // Activate the sensor
-    sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
-
-    // Show the sensor image in a separate window
-    //sensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);
-
-    // Get pointer to geom properties of sensor
-    boost::shared_ptr<OpenRAVE::SensorBase::Force6DGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::Force6DGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Force6D));
+    vectorOfSensorPtrForForce6Ds[0]->Configure(OpenRAVE::SensorBase::CC_PowerOn);
 
     // Get pointer to sensed data
-    sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::Force6DSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Force6D));
+    vectorOfForce6DSensorDataPtr[0] = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::Force6DSensorData>(vectorOfSensorPtrForForce6Ds[0]->CreateSensorData(OpenRAVE::SensorBase::ST_Force6D));
 
     return true;
 }
