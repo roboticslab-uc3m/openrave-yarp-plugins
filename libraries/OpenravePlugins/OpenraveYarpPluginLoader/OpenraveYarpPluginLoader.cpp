@@ -21,6 +21,9 @@
 
 #include <ColorDebug.h>
 
+#include "OpenPortReader.hpp"
+#include "OpenPortPeriodicWrite.hpp"
+
 #define VOCAB_OK yarp::os::createVocab('o','k')
 #define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
 
@@ -33,30 +36,8 @@
 
 // -----------------------------------------------------------------------------
 
-class OpenraveYarpPluginLoader;
-
 // -----------------------------------------------------------------------------
 
-class OpenPortReader: public yarp::os::PortReader
-{
-public:
-    void setOpenraveYarpPluginLoaderPtr(OpenraveYarpPluginLoader *value) { openraveYarpPluginLoaderPtr = value; }
-private:
-    OpenraveYarpPluginLoader* openraveYarpPluginLoaderPtr;
-    virtual bool read(yarp::os::ConnectionReader& in) override;
-};
-
-// -----------------------------------------------------------------------------
-
-class OpenPortPeriodicWrite : yarp::os::PeriodicThread, public yarp::os::Port
-{
-public:
-    OpenPortPeriodicWrite();
-    void setOpenraveYarpPluginLoaderPtr(OpenraveYarpPluginLoader *value) { openraveYarpPluginLoaderPtr = value; }
-private:
-    OpenraveYarpPluginLoader* openraveYarpPluginLoaderPtr;
-    virtual void run() override;
-};
 
 // -----------------------------------------------------------------------------
 

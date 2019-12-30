@@ -9,7 +9,11 @@ include_directories(${OpenRAVE_INCLUDE_DIRS})
 
 link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-add_library(OpenraveYarpPluginLoader MODULE OpenraveYarpPluginLoader.cpp)
+add_library(OpenraveYarpPluginLoader MODULE OpenraveYarpPluginLoader.cpp
+                                            OpenPortPeriodicWrite.cpp
+                                            OpenPortReader.cpp
+                                            OpenPortPeriodicWrite.hpp
+                                            OpenPortReader.hpp)
 
 set_target_properties(OpenraveYarpPluginLoader PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
