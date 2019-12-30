@@ -1,24 +1,15 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include <sstream>
-#include <string>
-#include <vector>
-
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
 
 #include <boost/bind/bind.hpp>
 
-#include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/ResourceFinder.h>
-#include <yarp/os/Value.h>
-#include <yarp/os/Vocab.h>
 
 #include <ColorDebug.h>
 
-#include "OpenPortReader.hpp"
-#include "OpenPortPeriodicWrite.hpp"
 #include "OpenraveYarpPluginLoader.hpp"
 
 // -----------------------------------------------------------------------------

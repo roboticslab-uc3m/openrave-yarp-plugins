@@ -4,9 +4,9 @@
 
 #include <ColorDebug.h>
 
-#include "OpenPortReader.hpp"
-
 #include "OpenraveYarpPluginLoader.hpp"
+
+#include "OpenPortReader.hpp"
 
 #define VOCAB_OK yarp::os::createVocab('o','k')
 #define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
