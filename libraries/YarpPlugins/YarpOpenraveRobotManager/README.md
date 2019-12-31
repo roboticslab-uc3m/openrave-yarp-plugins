@@ -5,6 +5,9 @@ First open a:
 yarp server
 ```
 
+## Note on Installation
+Depends on https://github.com/asrob-uc3m/yarp-devices
+
 ## Note on Invocation
 These examples use the `yarpdev` executable to load `YarpOpenraveRobotManager` directly. However, you can find more interesting examples loading `YarpOpenraveRobotManager` via `OpenraveYarpPluginLoader` at [../../OpenravePlugins/OpenraveYarpPluginLoader#robotmanager](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraverobotmanager).
 

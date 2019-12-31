@@ -31,3 +31,6 @@ export ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_DIR=$HOME/repos/openrave-yarp-plugins/b
 ```
 
 For additional options use `ccmake` instead of `cmake`.
+
+Libraries with known dependencies:
+- [../libraries/YarpPlugins/YarpOpenraveRobotManager](../libraries/YarpPlugins/YarpOpenraveRobotManager/README.md#note-on-installation)
