@@ -12,6 +12,10 @@ try:
     env=Environment()
     env.SetViewer('qtcoin')
 
+    # Force "ode" physics
+    physics = RaveCreatePhysicsEngine(env,'ode')
+    env.SetPhysicsEngine(physics)
+
     # "default" requires [roboticslab-uc3m/forceSensor](https://github.com/roboticslab-uc3m/forceSensor)
     # "teo" requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
     example = "default"  # "default" or "teo"
