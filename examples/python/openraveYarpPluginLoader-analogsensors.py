@@ -24,9 +24,9 @@ try:
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
 
     if example == "teo":
-        print OpenraveYarpPluginLoader.SendCommand('open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --sensorIndex 1 --period 50')
+        print OpenraveYarpPluginLoader.SendCommand('open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices (1 2) --period 50')
     else:
-        print OpenraveYarpPluginLoader.SendCommand('open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --sensorIndex 0 --period 50')
+        print OpenraveYarpPluginLoader.SendCommand('open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices (0) --period 50')
 
     while 1:
         pass

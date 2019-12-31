@@ -11,7 +11,7 @@ namespace roboticslab
 
 size_t YarpOpenraveAnalogSensors::getNrOfSixAxisForceTorqueSensors() const
 {
-    return 1;
+    return vectorOfSensorPtrForForce6Ds.size();
 }
 
 // ----------------------------------------------------------------------------
