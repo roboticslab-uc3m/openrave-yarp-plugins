@@ -94,8 +94,6 @@ private:
     //OpenRAVE//
     std::vector<OpenRAVE::SensorBasePtr> vectorOfSensorPtrForForce6Ds;
     std::vector<boost::shared_ptr<OpenRAVE::SensorBase::Force6DSensorData>> vectorOfForce6DSensorDataPtr;
-
-    static const int NOT_SET;
 };
 
 }  // namespace roboticslab

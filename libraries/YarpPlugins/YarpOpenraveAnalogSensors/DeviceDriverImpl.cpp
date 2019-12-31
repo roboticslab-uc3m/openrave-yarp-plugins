@@ -11,8 +11,6 @@
 namespace roboticslab
 {
 
-const int YarpOpenraveAnalogSensors::NOT_SET = -1;
-
 // ------------------- DeviceDriver Related ------------------------------------
 
 bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
