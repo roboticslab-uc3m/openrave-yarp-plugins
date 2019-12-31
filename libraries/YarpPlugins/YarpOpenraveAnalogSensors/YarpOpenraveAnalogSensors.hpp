@@ -92,8 +92,8 @@ private:
     // General Analog Sensors parameters //
 
     //OpenRAVE//
-    OpenRAVE::SensorBasePtr sensorBasePtr;
-    boost::shared_ptr<OpenRAVE::SensorBase::Force6DSensorData> sensorDataPtr;
+    std::vector<OpenRAVE::SensorBasePtr> vectorOfSensorPtrForForce6Ds;
+    std::vector<boost::shared_ptr<OpenRAVE::SensorBase::Force6DSensorData>> vectorOfForce6DSensorDataPtr;
 
     static const int NOT_SET;
 };

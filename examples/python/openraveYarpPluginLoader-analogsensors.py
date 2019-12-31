@@ -14,7 +14,7 @@ try:
 
     # "default" requires [roboticslab-uc3m/forceSensor](https://github.com/roboticslab-uc3m/forceSensor)
     # "teo" requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
-    example = "default"  # "default" or "ecro"
+    example = "default"  # "default" or "teo"
 
     if example == "teo":
         env.Load('/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml')
@@ -24,9 +24,9 @@ try:
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
 
     if example == "teo":
-        print OpenraveYarpPluginLoader.SendCommand('open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --sensorIndex 1 --period 50')
+        print OpenraveYarpPluginLoader.SendCommand('open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices 1 2 --period 50')
     else:
-        print OpenraveYarpPluginLoader.SendCommand('open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --sensorIndex 0 --period 50')
+        print OpenraveYarpPluginLoader.SendCommand('open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices 0 --period 50')
 
     while 1:
         pass
