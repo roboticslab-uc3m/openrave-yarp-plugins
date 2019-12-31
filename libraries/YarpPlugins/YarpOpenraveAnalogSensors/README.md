@@ -1,17 +1,24 @@
 # YarpOpenraveAnalogSensors
 
+
+## Requirements
+Depends on https://github.com/roboticslab-uc3m/forceSensor
+
+
+## Usage
 First open a:
 ```bash
 yarp server
 ```
 
-# Notes on Invocation
+### Notes on Invocation
 These examples use the `yarpdev` executable to load `YarpOpenraveAnalogSensors` directly. However, you can find more interesting examples loading `YarpOpenraveAnalogSensors` via `OpenraveYarpPluginLoader` at [../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraveanalogsensors](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraveanalogsensors).
 
-## Example 1
+### Example 1
 Open `YarpOpenraveAnalogSensors` device with `forceSensor/examples/physicsRobot.env.xml` environment, view, apply to robot index `0` and sensor index `0` (`name` and `view` are required):
 
 ```bash
+# requires [roboticslab-uc3m/forceSensor](https://github.com/roboticslab-uc3m/forceSensor)
 yarpdev --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices 0 --period 50 --env forceSensor/examples/physicsRobot.env.xml --name /Physicsbot --view
 ```
 
