@@ -2,8 +2,9 @@
 
 
 ## Requirements
-Depends on https://github.com/roboticslab-uc3m/forceSensor
-
+Depends on:
+- https://github.com/roboticslab-uc3m/forceSensor
+- [YARP 3.3+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-yarp.md/)
 
 ## Usage
 First open a:
