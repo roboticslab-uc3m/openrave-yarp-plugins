@@ -14,6 +14,20 @@ There are 2 ways to invoke `OpenraveYarpPluginLoader`:
 - Python: Requires Python `openravepy` module.
 
 
+## YarpOpenraveAnalogSensors
+
+Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/YarpOpenraveAnalogSensors](../../YarpPlugins/YarpOpenraveAnalogSensors#yarpopenraveanalogsensors).
+
+### Example 1
+The [first example](../../YarpPlugins/YarpOpenraveAnalogSensors#example-1) becomes (note that `name` and `view` parameters are no longer required):
+```bash
+openrave forceSensor/examples/physicsRobot.env.xml --module OpenraveYarpPluginLoader "open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices 0 --period 50"
+```
+The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-analogsensors.py](../../../examples/python/openraveYarpPluginLoader-analogsensors.py)
+
+Then follow the commands of the [first example](../../YarpPlugins/YarpOpenraveAnalogSensors#example-1).
+
+
 ## YarpOpenraveControlboard
 
 Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/YarpOpenraveControlboard](../../YarpPlugins/YarpOpenraveControlboard#yarpopenravecontrolboard).

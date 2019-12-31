@@ -3,6 +3,7 @@
 # CopyPolicy: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
 
 # YARP devices.
+add_subdirectory(YarpOpenraveAnalogSensors)
 add_subdirectory(YarpOpenraveControlboard)
 add_subdirectory(YarpOpenraveGrabber)
 add_subdirectory(YarpOpenraveRGBDSensor)
