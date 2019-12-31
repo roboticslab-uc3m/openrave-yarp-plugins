@@ -12,7 +12,7 @@ These examples use the `yarpdev` executable to load `YarpOpenraveAnalogSensors` 
 Open `YarpOpenraveAnalogSensors` device with `forceSensor/examples/physicsRobot.env.xml` environment, view, apply to robot index `0` and sensor index `0` (`name` and `view` are required):
 
 ```bash
-yarpdev --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices (0) --period 50 --env forceSensor/examples/physicsRobot.env.xml --name /Physicsbot/forceSensor --view
+yarpdev --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices (0) --period 50 --env forceSensor/examples/physicsRobot.env.xml --name /Physicsbot --view
 ```
 
 Note: This invocation not working due to [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60) and beyond. Therefore, you can instead jump directly and use: [../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraveanalogsensors](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraveanalogsensors)
