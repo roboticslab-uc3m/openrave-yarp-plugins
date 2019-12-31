@@ -3,7 +3,6 @@
 # CopyPolicy: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
 
 add_subdirectory(OpenraveDumpManipulatorJointLinks)
-add_subdirectory(OpenraveYarpCoupled)
 add_subdirectory(OpenraveYarpForceEstimator)
 add_subdirectory(OpenraveYarpPaintSquares)
 add_subdirectory(OpenraveYarpPluginLoader)
