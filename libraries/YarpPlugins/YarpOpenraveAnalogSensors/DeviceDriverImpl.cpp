@@ -34,20 +34,14 @@ bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
         return false;
     }
 
-    if( ! config.find("ftSensorIndices").isList())
-    {
-        CD_ERROR("Expected ftSensorIndices as List, not loading yarpPlugin.\n");
-        return false;
-    }
-
-    yarp::os::Bottle* ftSensorIndices = config.find("ftSensorIndices").asList();
-    vectorOfSensorPtrForForce6Ds.resize(ftSensorIndices->size());
-    vectorOfForce6DSensorDataPtr.resize(ftSensorIndices->size());
+    yarp::os::Bottle ftSensorIndices = config.findGroup("ftSensorIndices").tail();
+    vectorOfSensorPtrForForce6Ds.resize(ftSensorIndices.size());
+    vectorOfForce6DSensorDataPtr.resize(ftSensorIndices.size());
 
     std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
-    for(size_t i=0; i<ftSensorIndices->size(); i++)
+    for(size_t i=0; i<ftSensorIndices.size(); i++)
     {
-        size_t ftSensorIndex = ftSensorIndices->get(i).asInt32();
+        size_t ftSensorIndex = ftSensorIndices.get(i).asInt32();
         if( ftSensorIndex >= vectorOfSensorPtr.size() )
         {
             CD_ERROR("sensorIndex %d not within vectorOfSensorPtr of size() %d, not loading yarpPlugin.\n",i,vectorOfSensorPtr.size());
