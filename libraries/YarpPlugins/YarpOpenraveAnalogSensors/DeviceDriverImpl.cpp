@@ -26,7 +26,7 @@ bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
     if ( ! configureRobot(config) )
         return false;
 
-    if( ! config.check("ftSensorIndices","force6D sensor indices"))
+    if( ! config.check("ftSensorIndices", "force6D sensor indices"))
     {
         CD_ERROR("Missing ftSensorIndices, not loading yarpPlugin.\n");
         return false;
@@ -42,21 +42,21 @@ bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
         size_t ftSensorIndex = ftSensorIndices.get(i).asInt32();
         if( ftSensorIndex >= vectorOfSensorPtr.size() )
         {
-            CD_ERROR("sensorIndex %d not within vectorOfSensorPtr of size() %d, not loading yarpPlugin.\n",i,vectorOfSensorPtr.size());
+            CD_ERROR("Sensor with ftSensorIndex %d not within vectorOfSensorPtr of size() %d, not loading yarpPlugin.\n", ftSensorIndex, vectorOfSensorPtr.size());
             return false;
         }
 
-        vectorOfSensorPtrForForce6Ds[i] = vectorOfSensorPtr.at(ftSensorIndex)->GetSensor();
+        vectorOfSensorPtrForForce6Ds[i] = vectorOfSensorPtr[ftSensorIndex]->GetSensor();
 
-        std::string tipo = vectorOfSensorPtrForForce6Ds[i]->GetName();
+        std::string ftSensorName = vectorOfSensorPtrForForce6Ds[i]->GetName();
 
-        printf("Sensor %d name: %s\n",ftSensorIndex,tipo.c_str());
+        printf("Name of sensor with ftSensorIndex %d: '%s'\n", ftSensorIndex, ftSensorName.c_str());
 
         // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
 
         if ( ! vectorOfSensorPtrForForce6Ds[i]->Supports(OpenRAVE::SensorBase::ST_Force6D) )
         {
-            CD_ERROR("Sensor %d does not support ST_Force6D.\n", ftSensorIndex );
+            CD_ERROR("Sensor with ftSensorIndex %d does not support ST_Force6D.\n", ftSensorIndex);
             return false;
         }
 
