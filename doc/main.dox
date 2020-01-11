@@ -1,0 +1,28 @@
+/**
+  * \mainpage openrave-yarp-plugins Repository documentation
+
+Welcome to the openrave-yarp-plugins Repository documentation for the manipulation and locomotion PCs. <a class=el href="http://robots.uc3m.es">Click here to return to Wiki.</a> <a class=el href="https://github.com/roboticslab-uc3m/openrave-yarp-plugins">Click here to see openrave-yarp-plugins on repo.</a>
+
+ \li <a class=el href="https://github.com/roboticslab-uc3m/openrave-yarp-plugins/blob/develop/doc/openrave-yarp-plugins-install.md">openrave-yarp-plugins install</a>
+
+Other internal links of interest:
+ \li \ref openrave-yarp-plugins-programs
+ \li \ref openrave-yarp-plugins-libraries
+ \li \ref openrave-yarp-plugins-applications
+ \li \ref openrave-yarp-plugins-examples
+
+Even more internal links of interest:
+ \li <a class=el href="http://robots.uc3m.es/dox-kinematics-dynamics/index.html">kinematics-dynamics</a>
+ \li <a class=el href="http://robots.uc3m.es/dox-vision/index.html">vision</a>
+
+External links (related projects):
+ \li <a class=el href="http://eris.liralab.it/yarpdoc/index.html">YARP doc</a> / <a class=el href="https://github.com/robotology/yarp">YARP github</a>
+ \li <a class=el href="http://eris.liralab.it/iCub/main/dox/html/index.html">iCub Software Repository Documentation</a>
+ \li <a class=el href="http://roboticslab.sourceforge.net/asibot">ASIBOT</a>
+
+<hr>
+
+This page can be edited at openrave-yarp-plugins/doc/main.dox.
+
+*/
+
