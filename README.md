@@ -92,4 +92,4 @@ openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave
 To convert the generated `.pp` file into an `.stl` file that can be used by other programs, [openrave-pp-to-stl.py](https://github.com/roboticslab-uc3m/openrave-tools/blob/develop/openrave-pp-to-stl.py) ([perma](https://github.com/roboticslab-uc3m/openrave-tools/blob/bd078f6d64478ca3c1b911599df56b9dc6051797/openrave-pp-to-stl.py)) can be used.
 
 ## Similar and Related Projects
-- http://www.iearobotics.com/wiki/index.php?title=OpenRave_y_robots_modulares
+- http://robots.uc3m.es/gitbook-installation-guides/install-openrave.html#similar-and-related-projects ([perma](https://github.com/roboticslab-uc3m/installation-guides/blob/f73a1a67cc258e7a61e317c4e845c7055af18f86/install-openrave.md#similar-and-related-projects))
