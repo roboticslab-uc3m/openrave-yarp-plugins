@@ -16,14 +16,13 @@ try:
     physics = RaveCreatePhysicsEngine(env,'ode')
     env.SetPhysicsEngine(physics)
 
-    # "default" requires [roboticslab-uc3m/forceSensor](https://github.com/roboticslab-uc3m/forceSensor)
     # "teo" requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
     example = "default"  # "default" or "teo"
 
     if example == "teo":
         env.Load('/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml')
     else:
-        env.Load('forceSensor/examples/physicsRobot.env.xml')
+        env.Load('../../share/openrave/physicsRobot.env.xml')
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
 

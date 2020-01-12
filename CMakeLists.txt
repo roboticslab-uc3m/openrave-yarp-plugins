@@ -81,6 +81,7 @@ include(CMakeDependentOption)
 # Add main contents.
 add_subdirectory(libraries)
 add_subdirectory(programs)
+add_subdirectory(share)
 add_subdirectory(doc)
 
 # Store the package in the user registry.

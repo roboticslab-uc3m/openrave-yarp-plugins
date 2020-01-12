@@ -1,7 +1,2 @@
-# Copyright: UC3M 2016
-# Author: Juan G. Victores and Raul Fernandez-Fernandez
-# CopyPolicy: Released under the terms of the GNU GPL v2.0.
-
-### Go through single applications
-
-#add_subdirectory(example)
+yarp_install(DIRECTORY openrave
+             DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DATA_INSTALL_DIR})
