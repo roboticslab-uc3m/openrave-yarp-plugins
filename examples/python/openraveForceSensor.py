@@ -7,7 +7,7 @@ if __name__ == "__main__":
         
         env = Environment()
         env.SetViewer('qtcoin')
-        env.Load('physicsRobot.env.xml') 
+        env.Load('../../share/openrave/physicsRobot.env.xml')
         time.sleep(1)
         
         physics = RaveCreatePhysicsEngine(env,'ode')
