@@ -137,7 +137,7 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
         {
             OpenRAVE::Vector ranges = sensorRanges[i_y + (i_x * depthImage.height())];
             double distance = std::sqrt(ranges.lengthsqr3());
-            depthImage(i_x, i_y) = distance * 1000.0;  // give mm
+            depthImage(i_x, i_y) = distance;  // [meters]
         }
     }
 
