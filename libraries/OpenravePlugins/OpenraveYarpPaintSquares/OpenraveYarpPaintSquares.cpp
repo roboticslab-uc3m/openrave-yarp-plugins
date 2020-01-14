@@ -323,14 +323,14 @@ public:
                                       + std::pow(T_base_object_y-pos_square_y,2)
                                       + std::pow(T_base_object_z-pos_square_z,2) );
 
-            if (dist < 0.05 && brushColour == 1 ) //Paint cyan
+            if (dist < 0.01 && brushColour == 1 ) //Paint cyan
             {
                 sqPaintedSemaphore.wait();
                 sqPainted[i]=1;
                 sqPaintedSemaphore.post();
                 std::cout<<"He pintado AZUL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
             }
-            else if (dist < 0.05 && brushColour == 2 ) //Paint yellow
+            else if (dist < 0.01 && brushColour == 2 ) //Paint yellow
             {
                 sqPaintedSemaphore.wait();
                 sqPainted[i]=2;
@@ -338,7 +338,7 @@ public:
                 std::cout<<"He pintado VERDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
             }
 
-            else if (dist < 0.05 && brushColour == 3 ) //Paint magenta
+            else if (dist < 0.01 && brushColour == 3 ) //Paint magenta
             {
                 sqPaintedSemaphore.wait();
                 sqPainted[i]=3;
