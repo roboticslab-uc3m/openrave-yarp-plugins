@@ -336,14 +336,14 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Grab(ssphKinBodyPtrs[inIndex-1]);
-                        std::printf("The sphere is grabbed!!\n");
+                        CD_INFO("The sphere is grabbed!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else if (in.get(5).asInt32()==0)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Release(ssphKinBodyPtrs[inIndex-1]);
-                        std::printf("The sphere is released!!\n");
+                        CD_INFO("The sphere is released!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else out.addVocab(VOCAB_FAILED);
@@ -359,14 +359,14 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Grab(scylKinBodyPtrs[inIndex-1]);
-                        std::printf("The cylinder is grabbed!!\n");
+                        CD_INFO("The cylinder is grabbed!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else if (in.get(5).asInt32()==0)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Release(scylKinBodyPtrs[inIndex-1]);
-                        std::printf("The cylinder is released!!\n");
+                        CD_INFO("The cylinder is released!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else out.addVocab(VOCAB_FAILED);
@@ -382,14 +382,14 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     if (in.get(5).asInt32()==1)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
-                        std::printf("The cylinder is grabbed!!\n");
+                        CD_INFO("The cylinder is grabbed!!\n");
                         pRobot->Grab(objPtr);
                         out.addVocab(VOCAB_OK);
                     }
                     else if (in.get(5).asInt32()==0)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
-                        std::printf("The cylinder is released!!\n");
+                        CD_INFO("The cylinder is released!!\n");
                         pRobot->Release(objPtr);
                         out.addVocab(VOCAB_OK);
                     }
@@ -408,7 +408,7 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
             if (in.get(2).asString()=="obj")
             {
                 OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(in.get(3).asString().c_str());
-                std::printf("We want to know where is ->> %s\n", objPtr->GetName().c_str());
+                CD_INFO("We want to know where is ->> %s\n", objPtr->GetName().c_str());
                 if(objPtr)
                 {
                     //Transform t = objPtr->GetTransform();
