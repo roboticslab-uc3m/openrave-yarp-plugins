@@ -5,9 +5,6 @@
 
 #include <boost/bind/bind.hpp>
 
-#include <yarp/os/Network.h>
-#include <yarp/os/RpcServer.h>
-
 #include "OywrrPortReader.hpp"
 
 #include "OpenraveYarpWorldRpcResponder.hpp"
@@ -98,7 +95,6 @@ bool OpenraveYarpWorldRpcResponder::Open(std::ostream& sout, std::istream& sinpu
     worldRpcServer.setReader(processor);
 
     return true;
-
 }
 
 // -----------------------------------------------------------------------------

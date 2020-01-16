@@ -1,7 +1,5 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include <openrave/openrave.h>
-
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionReader.h>
 

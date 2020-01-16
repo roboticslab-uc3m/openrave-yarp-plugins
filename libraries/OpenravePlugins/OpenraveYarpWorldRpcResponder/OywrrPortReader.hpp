@@ -6,6 +6,8 @@
 #include <yarp/os/PortReader.h>
 #include <yarp/os/Vocab.h>
 
+#include <openrave/openrave.h>
+
 /**
  * @ingroup OpenraveYarpWorldRpcResponder
  * @brief Processes RPC requests.
