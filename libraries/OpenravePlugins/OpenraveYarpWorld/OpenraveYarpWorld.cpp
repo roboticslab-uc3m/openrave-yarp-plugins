@@ -48,8 +48,17 @@ bool OpenraveYarpWorld::addWorldInfo(yarp::os::Bottle& info)
 
     for(size_t robotPtrIdx=0; robotPtrIdx<vectorOfRobotPtr.size(); robotPtrIdx++)
     {
-        yarp::os::Bottle& b = info.addList();
-        b.addString(vectorOfRobotPtr[robotPtrIdx]->GetName());
+        yarp::os::Bottle& robotList = info.addList();
+        robotList.addString("robot");
+        robotList.addString(vectorOfRobotPtr[robotPtrIdx]->GetName());
+
+        std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[robotPtrIdx]->GetManipulators();
+        for(size_t manipulatorPtrIdx=0; manipulatorPtrIdx<vectorOfManipulatorPtr.size(); manipulatorPtrIdx++)
+        {
+            yarp::os::Bottle& manipulatorList = robotList.addList();
+            manipulatorList.addString("manipulator");
+            manipulatorList.addString(vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName());
+        }
     }
     /*
 
