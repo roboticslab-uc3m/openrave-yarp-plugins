@@ -267,7 +267,16 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
         }
         else if (request.get(1).asString()=="mv")
         {
+            if (!checkIfString(request, 2, response))
+                return response.write(*out);
             OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString().c_str());
+            if(!objPtr)
+            {
+                CD_ERROR("object %s does not exist.\n", request.get(3).asString().c_str());
+                response.addVocab(VOCAB_FAILED);
+                response.addString("object does not exist");
+                return response.write(*out);
+            }
             OpenRAVE::Transform T = objPtr->GetTransform();
             T.trans.x = request.get(3).asFloat64();  // [m]
             T.trans.y = request.get(4).asFloat64();  // [m]
@@ -415,7 +424,16 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                     CD_SUCCESS("object %s exists.\n", request.get(4).asString().c_str());
                     if (request.get(5).asInt32()==1)
                     {
-                        pRobot->SetActiveManipulator(request.get(2).asString());
+                        try
+                        {
+                            pRobot->SetActiveManipulator(request.get(2).asString());
+                        }
+                        catch (const std::exception& ex)
+                        {
+                            CD_ERROR("Caught openrave_exception: %s\n", ex.what());
+                            response.addVocab(VOCAB_FAILED);
+                            return response.write(*out);
+                        }
                         CD_INFO("The cylinder is grabbed!!\n");
                         pRobot->Grab(objPtr);
                         response.addVocab(VOCAB_OK);
@@ -446,12 +464,11 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                 if (!checkIfString(request, 3, response))
                     return response.write(*out);
                 OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString().c_str());
-                CD_INFO("We want to know where is ->> %s\n", objPtr->GetName().c_str());
                 if(objPtr)
                 {
                     //Transform t = objPtr->GetTransform();
                     OpenRAVE::Vector tr = objPtr->GetTransform().trans;
-                    CD_SUCCESS("object %s at %f, %f, %f.\n", request.get(3).asString().c_str(), tr.x,tr.y,tr.z);
+                    CD_SUCCESS("object %s at %f, %f, %f.\n", objPtr->GetName().c_str(), tr.x,tr.y,tr.z);
                     yarp::os::Bottle trans;
                     trans.addFloat64(tr.x);
                     trans.addFloat64(tr.y);
@@ -461,8 +478,9 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                 }
                 else // null pointer
                 {
-                    CD_WARNING("object %s does not exist.\n", request.get(3).asString().c_str());
+                    CD_ERROR("object %s does not exist.\n", request.get(3).asString().c_str());
                     response.addVocab(VOCAB_FAILED);
+                    response.addString("object does not exist");
                 }
             }
             else if (request.get(2).asString()=="tcp")
