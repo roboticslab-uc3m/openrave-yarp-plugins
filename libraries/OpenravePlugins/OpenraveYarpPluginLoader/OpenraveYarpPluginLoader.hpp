@@ -10,8 +10,8 @@
 
 #include <openrave/openrave.h>
 
-#include "OpenPortReader.hpp"
-#include "OpenPortPeriodicWrite.hpp"
+#include "OyplPortReader.hpp"
+#include "OyplPeriodicWrite.hpp"
 
 /**
  * @ingroup OpenravePlugins
@@ -42,10 +42,10 @@ private:
     std::vector<yarp::dev::PolyDriver*> yarpPlugins;
     std::vector<yarp::os::Property> yarpPluginsProperties;
 
-    OpenPortReader openPortReader;
+    OyplPortReader openPortReader;
     yarp::os::RpcServer openPortRpcServer;
 
-    OpenPortPeriodicWrite openPortPeriodicWrite;
+    OyplPeriodicWrite openPortPeriodicWrite;
 };
 
 #endif // __OPENRAVE_YARP_PLUGIN_LOADER_HPP__

@@ -12,7 +12,7 @@ class OpenraveYarpPluginLoader;
  * @ingroup OpenraveYarpPluginLoader
  * @brief Processes RPC requests.
  */
-class OpenPortReader: public yarp::os::PortReader
+class OyplPortReader: public yarp::os::PortReader
 {
 public:
     void setOpenraveYarpPluginLoaderPtr(OpenraveYarpPluginLoader *value) { openraveYarpPluginLoaderPtr = value; }

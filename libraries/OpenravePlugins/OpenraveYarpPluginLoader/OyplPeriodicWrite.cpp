@@ -4,18 +4,18 @@
 
 #include "OpenraveYarpPluginLoader.hpp"
 
-#include "OpenPortPeriodicWrite.hpp"
+#include "OyplPeriodicWrite.hpp"
 
 // -----------------------------------------------------------------------------
 
-OpenPortPeriodicWrite::OpenPortPeriodicWrite() : yarp::os::PeriodicThread(1.0)
+OyplPeriodicWrite::OyplPeriodicWrite() : yarp::os::PeriodicThread(1.0)
 {
     PeriodicThread::start();
 }
 
 // -----------------------------------------------------------------------------
 
-void OpenPortPeriodicWrite::run()
+void OyplPeriodicWrite::run()
 {
     if(!Port::isOpen())
         return;

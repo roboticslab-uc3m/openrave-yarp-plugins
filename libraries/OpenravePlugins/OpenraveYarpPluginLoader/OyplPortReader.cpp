@@ -4,16 +4,16 @@
 
 #include "OpenraveYarpPluginLoader.hpp"
 
-#include "OpenPortReader.hpp"
+#include "OyplPortReader.hpp"
 
 // -----------------------------------------------------------------------------
 
-const yarp::conf::vocab32_t OpenPortReader::VOCAB_OK = yarp::os::createVocab('o','k');
-const yarp::conf::vocab32_t OpenPortReader::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
+const yarp::conf::vocab32_t OyplPortReader::VOCAB_OK = yarp::os::createVocab('o','k');
+const yarp::conf::vocab32_t OyplPortReader::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
 
 // -----------------------------------------------------------------------------
 
-bool OpenPortReader::read(yarp::os::ConnectionReader& in)
+bool OyplPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
     if (!request.read(in)) return false;
