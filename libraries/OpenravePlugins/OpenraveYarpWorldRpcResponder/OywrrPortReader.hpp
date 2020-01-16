@@ -40,7 +40,7 @@ private:
     OpenRAVE::RobotBase::ManipulatorPtr pRobotManip;  // set in setRobot
 
     // Implement the actual responder (callback on RPC).
-    virtual bool read(yarp::os::ConnectionReader& connection);
+    virtual bool read(yarp::os::ConnectionReader& in);
 
     static const yarp::conf::vocab32_t VOCAB_OK;
     static const yarp::conf::vocab32_t VOCAB_FAILED;

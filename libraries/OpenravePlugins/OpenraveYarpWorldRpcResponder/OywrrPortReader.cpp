@@ -14,19 +14,19 @@ const yarp::conf::vocab32_t OywrrPortReader::VOCAB_FAILED = yarp::os::createVoca
 
 // -----------------------------------------------------------------------------
 
-bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
+bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
 {
-    yarp::os::Bottle in, out;
-    in.read(connection);
-    CD_DEBUG("Request: %s\n", in.toString().c_str());
-    yarp::os::ConnectionWriter *returnToSender = connection.getWriter();
-    if (returnToSender==NULL) return false;
-    std::string choice = in.get(0).asString();
-    if (in.get(0).getCode() != BOTTLE_TAG_STRING) choice="";
+    yarp::os::Bottle request, response;
+    request.read(in);
+    CD_DEBUG("Request: %s\n", request.toString().c_str());
+    yarp::os::ConnectionWriter *out = in.getWriter();
+    if (out==NULL) return false;
+    std::string choice = request.get(0).asString();
+    if (request.get(0).getCode() != BOTTLE_TAG_STRING) choice="";
     if (choice=="help") //-- help
     {
-        out.addString("Available commands: help, info (robots and environment information), world del all, world mk box/sbox (three params for size) (three params for pos), world mk ssph (radius) (three params for pos), world mk scyl (radius height) (three params for pos), world mk mesh (no params yet), world mk obj (absolute path), world mv (name) (three params for pos), world grab (manipulator) (obj) (num) 0/1, world whereis obj (name), world whereis tcp (manipulator),  world draw 0/1 (radius r g b).");
-        out.write(*returnToSender);
+        response.addString("Available commands: help, info (robots and environment information), world del all, world mk box/sbox (three params for size) (three params for pos), world mk ssph (radius) (three params for pos), world mk scyl (radius height) (three params for pos), world mk mesh (no params yet), world mk obj (absolute path), world mv (name) (three params for pos), world grab (manipulator) (obj) (num) 0/1, world whereis obj (name), world whereis tcp (manipulator),  world draw 0/1 (radius r g b).");
+        response.write(*out);
         return true;
     }
     else if (choice == "info") //-- info
@@ -68,15 +68,15 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
             info << "("<< bodiesPtrIdx <<")"<<vectorOfBodiesPtr[bodiesPtrIdx]->GetName().c_str()<<" ";
         }
 
-        out.addString(info.str());
-        out.write(*returnToSender);
+        response.addString(info.str());
+        response.write(*out);
         return true;
     }
     else if (choice=="world") //-- world
     {
-        if (in.get(1).asString() == "mk")
+        if (request.get(1).asString() == "mk")
         {
-            if (in.get(2).asString() == "box")
+            if (request.get(2).asString() == "box")
             {
                 {
                     // lock the environment!
@@ -89,8 +89,8 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     boxKinBodyPtr->SetName(boxName.c_str());
                     //
                     std::vector<OpenRAVE::AABB> boxes(1);
-                    boxes[0].extents = OpenRAVE::Vector(in.get(3).asFloat64(), in.get(4).asFloat64(), in.get(5).asFloat64());
-                    boxes[0].pos = OpenRAVE::Vector(in.get(6).asFloat64(), in.get(7).asFloat64(), in.get(8).asFloat64());
+                    boxes[0].extents = OpenRAVE::Vector(request.get(3).asFloat64(), request.get(4).asFloat64(), request.get(5).asFloat64());
+                    boxes[0].pos = OpenRAVE::Vector(request.get(6).asFloat64(), request.get(7).asFloat64(), request.get(8).asFloat64());
                     boxKinBodyPtr->InitFromBoxes(boxes,true);
                     boxKinBodyPtr->GetLinks()[0]->SetMass(1);
                     OpenRAVE::Vector inertia(1,1,1);
@@ -102,9 +102,9 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     boxKinBodyPtrs.push_back(boxKinBodyPtr);
                 }  // the environment is not locked anymore
                 boxKinBodyPtrs[boxKinBodyPtrs.size()-1]->GetLinks()[0]->SetStatic(false);
-                out.addVocab(VOCAB_OK);
+                response.addVocab(VOCAB_OK);
             }
-            else if (in.get(2).asString() == "sbox")
+            else if (request.get(2).asString() == "sbox")
             {
                 {
                     // lock the environment!
@@ -117,16 +117,16 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     sboxKinBodyPtr->SetName(sboxName.c_str());
                     //
                     std::vector<OpenRAVE::AABB> boxes(1);
-                    boxes[0].extents = OpenRAVE::Vector(in.get(3).asFloat64(), in.get(4).asFloat64(), in.get(5).asFloat64());
-                    boxes[0].pos = OpenRAVE::Vector(in.get(6).asFloat64(), in.get(7).asFloat64(), in.get(8).asFloat64());
+                    boxes[0].extents = OpenRAVE::Vector(request.get(3).asFloat64(), request.get(4).asFloat64(), request.get(5).asFloat64());
+                    boxes[0].pos = OpenRAVE::Vector(request.get(6).asFloat64(), request.get(7).asFloat64(), request.get(8).asFloat64());
                     sboxKinBodyPtr->InitFromBoxes(boxes,true);
                     //
                     pEnv->Add(sboxKinBodyPtr,true);
                     sboxKinBodyPtrs.push_back(sboxKinBodyPtr);
                 }  // the environment is not locked anymore
-                out.addVocab(VOCAB_OK);
+                response.addVocab(VOCAB_OK);
             }
-            else if (in.get(2).asString() == "ssph")
+            else if (request.get(2).asString() == "ssph")
             {
                 {
                     // lock the environment!
@@ -139,15 +139,15 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     ssphKinBodyPtr->SetName(ssphName.c_str());
                     //
                     std::vector<OpenRAVE::Vector> spheres(1);
-                    spheres.push_back( OpenRAVE::Vector(in.get(4).asFloat64(), in.get(5).asFloat64(), in.get(6).asFloat64(), in.get(3).asFloat64() ));
+                    spheres.push_back( OpenRAVE::Vector(request.get(4).asFloat64(), request.get(5).asFloat64(), request.get(6).asFloat64(), request.get(3).asFloat64() ));
                     ssphKinBodyPtr->InitFromSpheres(spheres,true);
                     //
                     pEnv->Add(ssphKinBodyPtr,true);
                     ssphKinBodyPtrs.push_back(ssphKinBodyPtr);
                 }  // the environment is not locked anymore
-                out.addVocab(VOCAB_OK);
+                response.addVocab(VOCAB_OK);
             }
-            else if (in.get(2).asString() == "scyl")
+            else if (request.get(2).asString() == "scyl")
             {
                 {
                     // lock the environment!
@@ -162,11 +162,11 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     std::list<OpenRAVE::KinBody::Link::GeometryInfo> scylInfoList;
                     OpenRAVE::KinBody::Link::GeometryInfo scylInfo;
                     scylInfo._type = OpenRAVE::KinBody::Link::GeomCylinder;
-                    OpenRAVE::Transform pose(OpenRAVE::Vector(1,0,0,0),OpenRAVE::Vector(in.get(5).asFloat64(),in.get(6).asFloat64(),in.get(7).asFloat64()));
+                    OpenRAVE::Transform pose(OpenRAVE::Vector(1,0,0,0),OpenRAVE::Vector(request.get(5).asFloat64(),request.get(6).asFloat64(),request.get(7).asFloat64()));
                     scylInfo._t = pose;
                     OpenRAVE::Vector volume;
-                    volume.x = in.get(3).asFloat64();
-                    volume.y = in.get(4).asFloat64();
+                    volume.x = request.get(3).asFloat64();
+                    volume.y = request.get(4).asFloat64();
                     scylInfo._vGeomData = volume;
                     scylInfo._bVisible = true;
                     //scylInfo._vDiffuseColor = [1,0,0];
@@ -176,10 +176,10 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     pEnv->Add(scylKinBodyPtr,true);
                     scylKinBodyPtrs.push_back(scylKinBodyPtr);
                 }  // the environment is not locked anymore
-                out.addVocab(VOCAB_OK);
+                response.addVocab(VOCAB_OK);
 
             }
-            else if (in.get(2).asString() == "mesh")
+            else if (request.get(2).asString() == "mesh")
             {
                 {
                     // lock the environment!
@@ -214,35 +214,35 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     pEnv->Add(meshKinBodyPtr,true);
                     meshKinBodyPtrs.push_back(meshKinBodyPtr);
                 }  // the environment is not locked anymore
-                out.addVocab(VOCAB_OK);
+                response.addVocab(VOCAB_OK);
 
             }
-            else if (in.get(2).asString() == "obj")
+            else if (request.get(2).asString() == "obj")
             {
                 {
                     // lock the environment!
                     OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                     OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(pEnv,"");
-                    pEnv->ReadKinBodyXMLFile(objKinBodyPtr, in.get(3).asString().c_str());
+                    pEnv->ReadKinBodyXMLFile(objKinBodyPtr, request.get(3).asString().c_str());
                     pEnv->Add(objKinBodyPtr,true);
                     objKinBodyPtrs.push_back(objKinBodyPtr);
                 }  // the environment is not locked anymore
-                out.addVocab(VOCAB_OK);
+                response.addVocab(VOCAB_OK);
             }
-            else out.addVocab(VOCAB_FAILED);
+            else response.addVocab(VOCAB_FAILED);
 
         }
-        else if (in.get(1).asString()=="mv")
+        else if (request.get(1).asString()=="mv")
         {
-            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(in.get(2).asString().c_str());
+            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString().c_str());
             OpenRAVE::Transform T = objPtr->GetTransform();
-            T.trans.x = in.get(3).asFloat64();  // [m]
-            T.trans.y = in.get(4).asFloat64();  // [m]
-            T.trans.z = in.get(5).asFloat64();  // [m]
+            T.trans.x = request.get(3).asFloat64();  // [m]
+            T.trans.y = request.get(4).asFloat64();  // [m]
+            T.trans.z = request.get(5).asFloat64();  // [m]
             objPtr->SetTransform(T);
-            out.addVocab(VOCAB_OK);
+            response.addVocab(VOCAB_OK);
         }
-        else if ((in.get(1).asString()=="del")&&(in.get(2).asString()=="all"))
+        else if ((request.get(1).asString()=="del")&&(request.get(2).asString()=="all"))
         {
             for (unsigned int i=0; i<boxKinBodyPtrs.size(); i++)
             {
@@ -274,165 +274,165 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                 pEnv->Remove(objKinBodyPtrs[i]);
             }
             objKinBodyPtrs.clear();
-            out.addVocab(VOCAB_OK);
+            response.addVocab(VOCAB_OK);
         }
-        else if (in.get(1).asString()=="grab")
+        else if (request.get(1).asString()=="grab")
         {
             // -- rpc command to write: world + grab + "part of robot" + name object + index + 0
             // --                         0       1           2              3           4     5
 
-            if(in.get(3).asString()=="box")
+            if(request.get(3).asString()=="box")
             {
-                int inIndex = (in.get(4).asInt32()); // -- index of the object
+                int inIndex = (request.get(4).asInt32()); // -- index of the object
                 if ( (inIndex>=1) && (inIndex<=(int)boxKinBodyPtrs.size()) )
                 {
-                    if (in.get(5).asInt32()==1)
+                    if (request.get(5).asInt32()==1)
                     {
-                        pRobot->SetActiveManipulator(in.get(2).asString()); // <in.get(2).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
+                        pRobot->SetActiveManipulator(request.get(2).asString()); // <in.get(2).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
                         pRobot->Grab(boxKinBodyPtrs[inIndex-1]);
                         CD_INFO("The box is grabbed!!\n");
-                        out.addVocab(VOCAB_OK);
+                        response.addVocab(VOCAB_OK);
                     }
-                    else if (in.get(5).asInt32()==0)
+                    else if (request.get(5).asInt32()==0)
                     {
-                        pRobot->SetActiveManipulator(in.get(2).asString());
+                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Release(boxKinBodyPtrs[inIndex-1]);
                         CD_INFO("The box is released!!\n");
-                        out.addVocab(VOCAB_OK);
+                        response.addVocab(VOCAB_OK);
                     }
-                    else out.addVocab(VOCAB_FAILED);
+                    else response.addVocab(VOCAB_FAILED);
                 }
-                else out.addVocab(VOCAB_FAILED);
+                else response.addVocab(VOCAB_FAILED);
             }
-            else if(in.get(3).asString()=="sbox")
+            else if(request.get(3).asString()=="sbox")
             {
-                int inIndex = (in.get(4).asInt32());
+                int inIndex = (request.get(4).asInt32());
                 if ( (inIndex>=1) && (inIndex<=(int)sboxKinBodyPtrs.size()) )
                 {
-                    if (in.get(5).asInt32()==1)
+                    if (request.get(5).asInt32()==1)
                     {
-                        pRobot->SetActiveManipulator(in.get(2).asString());
+                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Grab(sboxKinBodyPtrs[inIndex-1]);
                         CD_INFO("The sbox is grabbed!!\n");
-                        out.addVocab(VOCAB_OK);
+                        response.addVocab(VOCAB_OK);
                     }
-                    else if (in.get(5).asInt32()==0)
+                    else if (request.get(5).asInt32()==0)
                     {
-                        pRobot->SetActiveManipulator(in.get(2).asString());
+                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Release(sboxKinBodyPtrs[inIndex-1]);
                         CD_INFO("The sbox is released!!\n");
-                        out.addVocab(VOCAB_OK);
+                        response.addVocab(VOCAB_OK);
                     }
-                    else out.addVocab(VOCAB_FAILED);
+                    else response.addVocab(VOCAB_FAILED);
                 }
-                else out.addVocab(VOCAB_FAILED);
+                else response.addVocab(VOCAB_FAILED);
             }
-            else if(in.get(3).asString()=="ssph")
+            else if(request.get(3).asString()=="ssph")
             {
-                int inIndex = (in.get(4).asInt32());
+                int inIndex = (request.get(4).asInt32());
                 if ( (inIndex>=1) && (inIndex<=(int)ssphKinBodyPtrs.size()) )
                 {
-                    if (in.get(5).asInt32()==1)
+                    if (request.get(5).asInt32()==1)
                     {
-                        pRobot->SetActiveManipulator(in.get(2).asString());
+                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Grab(ssphKinBodyPtrs[inIndex-1]);
                         CD_INFO("The sphere is grabbed!!\n");
-                        out.addVocab(VOCAB_OK);
+                        response.addVocab(VOCAB_OK);
                     }
-                    else if (in.get(5).asInt32()==0)
+                    else if (request.get(5).asInt32()==0)
                     {
-                        pRobot->SetActiveManipulator(in.get(2).asString());
+                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Release(ssphKinBodyPtrs[inIndex-1]);
                         CD_INFO("The sphere is released!!\n");
-                        out.addVocab(VOCAB_OK);
+                        response.addVocab(VOCAB_OK);
                     }
-                    else out.addVocab(VOCAB_FAILED);
+                    else response.addVocab(VOCAB_FAILED);
                 }
-                else out.addVocab(VOCAB_FAILED);
+                else response.addVocab(VOCAB_FAILED);
             }
-            else if(in.get(3).asString()=="scyl")
+            else if(request.get(3).asString()=="scyl")
             {
-                int inIndex = (in.get(4).asInt32());
+                int inIndex = (request.get(4).asInt32());
                 if ( (inIndex>=1) && (inIndex<=(int)scylKinBodyPtrs.size()) )
                 {
-                    if (in.get(5).asInt32()==1)
+                    if (request.get(5).asInt32()==1)
                     {
-                        pRobot->SetActiveManipulator(in.get(2).asString());
+                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Grab(scylKinBodyPtrs[inIndex-1]);
                         CD_INFO("The cylinder is grabbed!!\n");
-                        out.addVocab(VOCAB_OK);
+                        response.addVocab(VOCAB_OK);
                     }
-                    else if (in.get(5).asInt32()==0)
+                    else if (request.get(5).asInt32()==0)
                     {
-                        pRobot->SetActiveManipulator(in.get(2).asString());
+                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Release(scylKinBodyPtrs[inIndex-1]);
                         CD_INFO("The cylinder is released!!\n");
-                        out.addVocab(VOCAB_OK);
+                        response.addVocab(VOCAB_OK);
                     }
-                    else out.addVocab(VOCAB_FAILED);
+                    else response.addVocab(VOCAB_FAILED);
                 }
-                else out.addVocab(VOCAB_FAILED);
+                else response.addVocab(VOCAB_FAILED);
             }
-            else if (in.get(3).asString()=="obj")
+            else if (request.get(3).asString()=="obj")
             {
-                OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(in.get(4).asString().c_str());
+                OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(4).asString().c_str());
                 if(objPtr)
                 {
-                    CD_SUCCESS("object %s exists.\n", in.get(4).asString().c_str());
-                    if (in.get(5).asInt32()==1)
+                    CD_SUCCESS("object %s exists.\n", request.get(4).asString().c_str());
+                    if (request.get(5).asInt32()==1)
                     {
-                        pRobot->SetActiveManipulator(in.get(2).asString());
+                        pRobot->SetActiveManipulator(request.get(2).asString());
                         CD_INFO("The cylinder is grabbed!!\n");
                         pRobot->Grab(objPtr);
-                        out.addVocab(VOCAB_OK);
+                        response.addVocab(VOCAB_OK);
                     }
-                    else if (in.get(5).asInt32()==0)
+                    else if (request.get(5).asInt32()==0)
                     {
-                        pRobot->SetActiveManipulator(in.get(2).asString());
+                        pRobot->SetActiveManipulator(request.get(2).asString());
                         CD_INFO("The cylinder is released!!\n");
                         pRobot->Release(objPtr);
-                        out.addVocab(VOCAB_OK);
+                        response.addVocab(VOCAB_OK);
                     }
-                    else out.addVocab(VOCAB_FAILED);
+                    else response.addVocab(VOCAB_FAILED);
                 }
                 else // null pointer
                 {
-                    CD_WARNING("object %s does not exist.\n", in.get(3).asString().c_str());
-                    out.addVocab(VOCAB_FAILED);
+                    CD_WARNING("object %s does not exist.\n", request.get(3).asString().c_str());
+                    response.addVocab(VOCAB_FAILED);
                 }
             }
-            else out.addVocab(VOCAB_FAILED);
+            else response.addVocab(VOCAB_FAILED);
         }
-        else if (in.get(1).asString()=="whereis")
+        else if (request.get(1).asString()=="whereis")
         {
-            if (in.get(2).asString()=="obj")
+            if (request.get(2).asString()=="obj")
             {
-                OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(in.get(3).asString().c_str());
+                OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString().c_str());
                 CD_INFO("We want to know where is ->> %s\n", objPtr->GetName().c_str());
                 if(objPtr)
                 {
                     //Transform t = objPtr->GetTransform();
                     OpenRAVE::Vector tr = objPtr->GetTransform().trans;
-                    CD_SUCCESS("object %s at %f, %f, %f.\n", in.get(3).asString().c_str(), tr.x,tr.y,tr.z);
+                    CD_SUCCESS("object %s at %f, %f, %f.\n", request.get(3).asString().c_str(), tr.x,tr.y,tr.z);
                     yarp::os::Bottle trans;
                     trans.addFloat64(tr.x);
                     trans.addFloat64(tr.y);
                     trans.addFloat64(tr.z);
-                    out.addList() = trans;
-                    out.addVocab(VOCAB_OK);
+                    response.addList() = trans;
+                    response.addVocab(VOCAB_OK);
                 }
                 else // null pointer
                 {
-                    CD_WARNING("object %s does not exist.\n", in.get(3).asString().c_str());
-                    out.addVocab(VOCAB_FAILED);
+                    CD_WARNING("object %s does not exist.\n", request.get(3).asString().c_str());
+                    response.addVocab(VOCAB_FAILED);
                 }
             }
-            else if (in.get(2).asString()=="tcp")
+            else if (request.get(2).asString()=="tcp")
             {
                 std::vector<OpenRAVE::RobotBasePtr> robots;
                 pEnv->GetRobots(robots);
                 OpenRAVE::RobotBasePtr robotPtr = robots.at(0);  //-- For now, we use only the first robot
-                pRobotManip = robotPtr->GetManipulator(in.get(3).asString()); //-- <in.get(3).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
+                pRobotManip = robotPtr->GetManipulator(request.get(3).asString()); //-- <in.get(3).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
                 OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
                 OpenRAVE::Transform tool;
                 //tool.trans = Vector(0.0,0.0,1.3);
@@ -445,46 +445,46 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                 trans.addFloat64(tcp.trans.x);
                 trans.addFloat64(tcp.trans.y);
                 trans.addFloat64(tcp.trans.z);
-                out.addList() = trans;
-                out.addVocab(VOCAB_OK);
+                response.addList() = trans;
+                response.addVocab(VOCAB_OK);
 
             }
             else
             {
                 CD_WARNING("where is what?\n");
-                out.addVocab(VOCAB_FAILED);
+                response.addVocab(VOCAB_FAILED);
             }
 
         }
-        else if (in.get(1).asString()=="draw")
+        else if (request.get(1).asString()=="draw")
         {
-            if (in.get(2).asInt32() == 0)
+            if (request.get(2).asInt32() == 0)
             {
                 CD_SUCCESS("Turning draw OFF.\n");
                 robotDraw = 0;
-                out.addVocab(VOCAB_OK);
+                response.addVocab(VOCAB_OK);
             }
             else
             {
                 CD_SUCCESS("Turning draw ON.\n");
-                robotDraw = in.get(2).asInt32();
-                if (in.size() >= 4) drawRadius = in.get(3).asFloat64();
-                if (in.size() >= 7)
+                robotDraw = request.get(2).asInt32();
+                if (request.size() >= 4) drawRadius = request.get(3).asFloat64();
+                if (request.size() >= 7)
                 {
-                    drawR = in.get(4).asFloat64();
-                    drawG = in.get(5).asFloat64();
-                    drawB = in.get(6).asFloat64();
+                    drawR = request.get(4).asFloat64();
+                    drawG = request.get(5).asFloat64();
+                    drawB = request.get(6).asFloat64();
                 }
-                out.addVocab(VOCAB_OK);
+                response.addVocab(VOCAB_OK);
             }
 
         }
-        else out.addVocab(VOCAB_FAILED);
-        out.write(*returnToSender);
+        else response.addVocab(VOCAB_FAILED);
+        response.write(*out);
         return true;
     }
-    out.addVocab(VOCAB_FAILED);
-    out.write(*returnToSender);
+    response.addVocab(VOCAB_FAILED);
+    response.write(*out);
     return true;
 }
 
