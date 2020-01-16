@@ -20,7 +20,7 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
     if (!request.read(in)) return false;
     CD_DEBUG("Request: %s\n", request.toString().c_str());
     yarp::os::ConnectionWriter *out = in.getWriter();
-    if (out==NULL) return false;
+    if (out==NULL) return true;
 
     std::string choice = request.get(0).asString();
     if (request.get(0).getCode() != BOTTLE_TAG_STRING) choice="";
