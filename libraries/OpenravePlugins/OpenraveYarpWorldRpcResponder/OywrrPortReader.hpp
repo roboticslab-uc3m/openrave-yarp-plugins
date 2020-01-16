@@ -3,6 +3,7 @@
 #ifndef __OYWRR_PORT_READER_HPP__
 #define __OYWRR_PORT_READER_HPP__
 
+#include <yarp/os/Bottle.h>
 #include <yarp/os/PortReader.h>
 #include <yarp/os/Vocab.h>
 
@@ -41,6 +42,8 @@ private:
 
     // Implement the actual responder (callback on RPC).
     virtual bool read(yarp::os::ConnectionReader& in);
+
+    bool checkIfString(yarp::os::Bottle& request, int index, yarp::os::Bottle& response);
 
     static const yarp::conf::vocab32_t VOCAB_OK;
     static const yarp::conf::vocab32_t VOCAB_FAILED;

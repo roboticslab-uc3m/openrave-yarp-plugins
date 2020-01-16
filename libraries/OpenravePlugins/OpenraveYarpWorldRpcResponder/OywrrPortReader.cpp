@@ -14,6 +14,22 @@ const yarp::conf::vocab32_t OywrrPortReader::VOCAB_FAILED = yarp::os::createVoca
 
 // -----------------------------------------------------------------------------
 
+bool OywrrPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os::Bottle& response)
+{
+    if (request.get(index).isString())
+        return true;
+    response.addVocab(VOCAB_FAILED);
+    std::stringstream ss;
+    ss << "expected type string but got wrong data type at ";
+    ss << index;
+    response.addString(ss.str());
+    ss << "\n";
+    CD_ERROR(ss.str().c_str(), index);
+    return false;
+}
+
+// -----------------------------------------------------------------------------
+
 bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
@@ -22,13 +38,8 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
     yarp::os::ConnectionWriter *out = in.getWriter();
     if (out==NULL) return true;
 
-    if (!request.get(0).isString())
-    {
-        CD_ERROR("expected type string at 0 but got wrong data type!\n");
-        response.addVocab(VOCAB_FAILED);
-        response.addString("expected type string at 0 but got wrong data type!");
+    if (!checkIfString(request, 0, response))
         return response.write(*out);
-    }
     std::string choice = request.get(0).asString();
 
     if (choice=="help") //-- help
@@ -80,6 +91,8 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
     }
     else if (choice=="world") //-- world
     {
+        if (!checkIfString(request, 1, response))
+            return response.write(*out);
         if (request.get(1).asString() == "mk")
         {
             if (request.get(2).asString() == "box")
