@@ -37,8 +37,11 @@ public:
 
 private:
     yarp::os::Network yarp;
+
     yarp::os::RpcServer worldRpcServer;
     OywPortReader processor;
+
+    OywPeriodicWrite oywPeriodicWrite;
 
     OpenRAVE::RobotBasePtr probot;
 };
