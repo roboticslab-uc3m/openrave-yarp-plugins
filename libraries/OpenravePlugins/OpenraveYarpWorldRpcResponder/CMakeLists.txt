@@ -11,6 +11,7 @@ link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 add_library(OpenraveYarpWorldRpcResponder MODULE OpenraveYarpWorldRpcResponder.cpp
                                                  OywrrPortReader.cpp
+                                                 OpenraveYarpWorldRpcResponder.hpp
                                                  OywrrPortReader.hpp)
 
 set_target_properties(OpenraveYarpWorldRpcResponder PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"

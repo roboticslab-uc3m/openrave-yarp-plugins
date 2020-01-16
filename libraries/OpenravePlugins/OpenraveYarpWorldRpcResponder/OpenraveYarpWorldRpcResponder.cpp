@@ -10,37 +10,7 @@
 
 #include "OywrrPortReader.hpp"
 
-/**
- * @ingroup OpenravePlugins
- * \defgroup OpenraveYarpWorldRpcResponder
- *
- * @brief Contains roboticslab::OpenraveYarpWorldRpcResponder.
- */
-
-/**
- * @ingroup OpenraveYarpWorldRpcResponder
- * @brief Opens YARP RpcPort, to control environment.
- */
-class OpenraveYarpWorldRpcResponder : public OpenRAVE::ModuleBase
-{
-public:
-
-    OpenraveYarpWorldRpcResponder(OpenRAVE::EnvironmentBasePtr penv);
-
-    virtual ~OpenraveYarpWorldRpcResponder();
-    virtual void Destroy();
-
-    int main(const std::string& cmd);
-
-    bool Open(std::ostream& sout, std::istream& sinput);
-
-private:
-    yarp::os::Network yarp;
-    yarp::os::RpcServer worldRpcServer;
-    OywrrPortReader processor;
-
-    OpenRAVE::RobotBasePtr probot;
-};
+#include "OpenraveYarpWorldRpcResponder.hpp"
 
 // -----------------------------------------------------------------------------
 
@@ -133,8 +103,6 @@ bool OpenraveYarpWorldRpcResponder::Open(std::ostream& sout, std::istream& sinpu
 
 // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
-
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
 {
     if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpworldrpcresponder" )
@@ -151,7 +119,11 @@ void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
     info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpWorldRpcResponder");
 }
 
+// -----------------------------------------------------------------------------
+
 OPENRAVE_PLUGIN_API void DestroyPlugin()
 {
     RAVELOG_INFO("destroying plugin\n");
 }
+
+// -----------------------------------------------------------------------------
