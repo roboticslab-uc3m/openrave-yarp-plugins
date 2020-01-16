@@ -20,7 +20,8 @@ set_target_properties(OpenraveYarpWorldRpcResponder PROPERTIES COMPILE_OPTIONS "
 target_link_libraries(OpenraveYarpWorldRpcResponder YARP::YARP_OS
                                                     YARP::YARP_init
                                                     ${OpenRAVE_LIBRARIES}
-                                                    Boost::boost)
+                                                    Boost::boost
+                                                    ROBOTICSLAB::ColorDebug)
 
 include(InstallOpenravePlugin)
 

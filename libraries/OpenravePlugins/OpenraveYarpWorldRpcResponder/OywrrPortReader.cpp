@@ -3,6 +3,8 @@
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionReader.h>
 
+#include <ColorDebug.h>
+
 #include "OywrrPortReader.hpp"
 
 // -----------------------------------------------------------------------------
@@ -16,7 +18,7 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
 {
     yarp::os::Bottle in, out;
     in.read(connection);
-    std::printf("[WorldRpcResponder] Got %s\n", in.toString().c_str());
+    CD_DEBUG("Request: %s\n", in.toString().c_str());
     yarp::os::ConnectionWriter *returnToSender = connection.getWriter();
     if (returnToSender==NULL) return false;
     std::string choice = in.get(0).asString();
@@ -288,14 +290,14 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString()); // <in.get(2).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
                         pRobot->Grab(boxKinBodyPtrs[inIndex-1]);
-                        std::printf("The box is grabbed!!\n");
+                        CD_INFO("The box is grabbed!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else if (in.get(5).asInt32()==0)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Release(boxKinBodyPtrs[inIndex-1]);
-                        std::printf("The box is released!!\n");
+                        CD_INFO("The box is released!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else out.addVocab(VOCAB_FAILED);
@@ -311,14 +313,14 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Grab(sboxKinBodyPtrs[inIndex-1]);
-                        std::printf("The sbox is grabbed!!\n");
+                        CD_INFO("The sbox is grabbed!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else if (in.get(5).asInt32()==0)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Release(sboxKinBodyPtrs[inIndex-1]);
-                        std::printf("The sbox is released!!\n");
+                        CD_INFO("The sbox is released!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else out.addVocab(VOCAB_FAILED);
