@@ -2,11 +2,8 @@
 
 #include <openrave/openrave.h>
 
-#include <yarp/os/ConnectionWriter.h>
-#include <yarp/os/Network.h>
-#include <yarp/os/PortReader.h>
-#include <yarp/os/RpcServer.h>
-#include <yarp/os/Vocab.h>
+#include <yarp/os/Bottle.h>
+#include <yarp/os/ConnectionReader.h>
 
 #include "OywrrPortReader.hpp"
 
