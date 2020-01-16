@@ -25,9 +25,9 @@ For instance, get help:
 help
 ```
 
-Get information on the environment existing elements:
+Get a list of information on the environment existing elements:
 ```bash
-info
+list
 ```
 
 A `world mk box/sbox (three params for size) (three params for pos)` example to create a dynamic box (an `sbox` would be static), which is interesting if you activate Physics Engine ODE and Set Gravity -Z!
