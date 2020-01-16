@@ -12,10 +12,10 @@ class OpenraveYarpPluginLoader;
  * @ingroup OpenraveYarpPluginLoader
  * @brief Publishes open YARP plugin list.
  */
-class OpenPortPeriodicWrite : yarp::os::PeriodicThread, public yarp::os::Port
+class OyplPeriodicWrite : yarp::os::PeriodicThread, public yarp::os::Port
 {
 public:
-    OpenPortPeriodicWrite();
+    OyplPeriodicWrite();
     void setOpenraveYarpPluginLoaderPtr(OpenraveYarpPluginLoader *value) { openraveYarpPluginLoaderPtr = value; }
 private:
     OpenraveYarpPluginLoader* openraveYarpPluginLoaderPtr;
