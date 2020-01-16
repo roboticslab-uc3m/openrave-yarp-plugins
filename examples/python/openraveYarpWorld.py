@@ -6,7 +6,7 @@ from openravepy import *
 try:
     RaveInitialize()
 
-    if not RaveLoadPlugin('OpenraveYarpWorldRpcResponder'):
+    if not RaveLoadPlugin('OpenraveYarpWorld'):
         raveLogError("Plugin not correctly loaded")
         
     env=Environment()
@@ -20,8 +20,8 @@ try:
     else:
         env.Load('data/lab1.env.xml')
 
-    OpenraveYarpWorldRpcResponder = RaveCreateModule(env,'OpenraveYarpWorldRpcResponder')
-    print OpenraveYarpWorldRpcResponder.SendCommand('open')
+    OpenraveYarpWorld = RaveCreateModule(env,'OpenraveYarpWorld')
+    print OpenraveYarpWorld.SendCommand('open')
 
     while 1:
         pass

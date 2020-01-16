@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __OYWRR_PORT_READER_HPP__
-#define __OYWRR_PORT_READER_HPP__
+#ifndef __OYW_PORT_READER_HPP__
+#define __OYW_PORT_READER_HPP__
 
 #include <yarp/os/Bottle.h>
 #include <yarp/os/PortReader.h>
@@ -10,10 +10,10 @@
 #include <openrave/openrave.h>
 
 /**
- * @ingroup OpenraveYarpWorldRpcResponder
+ * @ingroup OpenraveYarpWorld
  * @brief Processes RPC requests.
  */
-class OywrrPortReader : public yarp::os::PortReader
+class OywPortReader : public yarp::os::PortReader
 {
 public:
 
@@ -49,4 +49,4 @@ private:
     static const yarp::conf::vocab32_t VOCAB_FAILED;
 };
 
-#endif // __OYWRR_PORT_READER_HPP__
+#endif // __OYW_PORT_READER_HPP__

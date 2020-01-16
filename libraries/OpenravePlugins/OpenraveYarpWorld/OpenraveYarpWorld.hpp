@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __OPENRAVE_YARP_WORLD_RPC_RESPONDER_HPP__
-#define __OPENRAVE_YARP_WORLD_RPC_RESPONDER_HPP__
+#ifndef __OPENRAVE_YARP_WORLD_HPP__
+#define __OPENRAVE_YARP_WORLD_HPP__
 
 #include <yarp/os/Network.h>
 #include <yarp/os/RpcServer.h>
@@ -10,22 +10,22 @@
 
 /**
  * @ingroup OpenravePlugins
- * \defgroup OpenraveYarpWorldRpcResponder
+ * \defgroup OpenraveYarpWorld
  *
- * @brief Contains roboticslab::OpenraveYarpWorldRpcResponder.
+ * @brief Contains roboticslab::OpenraveYarpWorld.
  */
 
 /**
- * @ingroup OpenraveYarpWorldRpcResponder
+ * @ingroup OpenraveYarpWorld
  * @brief Opens YARP RpcPort, to control environment.
  */
-class OpenraveYarpWorldRpcResponder : public OpenRAVE::ModuleBase
+class OpenraveYarpWorld : public OpenRAVE::ModuleBase
 {
 public:
 
-    OpenraveYarpWorldRpcResponder(OpenRAVE::EnvironmentBasePtr penv);
+    OpenraveYarpWorld(OpenRAVE::EnvironmentBasePtr penv);
 
-    virtual ~OpenraveYarpWorldRpcResponder();
+    virtual ~OpenraveYarpWorld();
     virtual void Destroy();
 
     int main(const std::string& cmd);
@@ -35,9 +35,9 @@ public:
 private:
     yarp::os::Network yarp;
     yarp::os::RpcServer worldRpcServer;
-    OywrrPortReader processor;
+    OywPortReader processor;
 
     OpenRAVE::RobotBasePtr probot;
 };
 
-#endif // __OPENRAVE_YARP_WORLD_RPC_RESPONDER_HPP__
+#endif // __OPENRAVE_YARP_WORLD_HPP__
