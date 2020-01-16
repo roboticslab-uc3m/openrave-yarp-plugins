@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __OPENRAVE_YARP_WORLD_RPC_RESPONDER_HPP__
-#define __OPENRAVE_YARP_WORLD_RPC_RESPONDER_HPP__
+#ifndef __OPENRAVE_YARP_WORLD_HPP__
+#define __OPENRAVE_YARP_WORLD_HPP__
 
 #include <yarp/os/Network.h>
 #include <yarp/os/RpcServer.h>
@@ -40,4 +40,4 @@ private:
     OpenRAVE::RobotBasePtr probot;
 };
 
-#endif // __OPENRAVE_YARP_WORLD_RPC_RESPONDER_HPP__
+#endif // __OPENRAVE_YARP_WORLD_HPP__
