@@ -11,7 +11,14 @@ try:
         
     env=Environment()
     env.SetViewer('qtcoin')
-    env.Load('/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml')
+
+    # "teo" requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
+    example = "default"  # "default" or "teo"
+
+    if example == "teo":
+        env.Load('/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml')
+    else:
+        env.Load('data/lab1.env.xml')
 
     OpenraveYarpWorldRpcResponder = RaveCreateModule(env,'OpenraveYarpWorldRpcResponder')
     print OpenraveYarpWorldRpcResponder.SendCommand('open')
