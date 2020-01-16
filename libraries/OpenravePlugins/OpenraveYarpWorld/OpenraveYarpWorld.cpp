@@ -42,15 +42,17 @@ void OpenraveYarpWorld::Destroy()
 
 bool OpenraveYarpWorld::addWorldInfo(yarp::os::Bottle& info)
 {
-    /*
-    //-- Variable to save info
-    std::stringstream info;
-
-    //-- Get robots
+    //-- Robots
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-    pEnv->GetRobots(vectorOfRobotPtr);
+    GetEnv()->GetRobots(vectorOfRobotPtr);
 
-    //-- For each robot
+    for(size_t robotPtrIdx=0; robotPtrIdx<vectorOfRobotPtr.size(); robotPtrIdx++)
+    {
+        yarp::os::Bottle& b = info.addList();
+        b.addString(vectorOfRobotPtr[robotPtrIdx]->GetName());
+    }
+    /*
+
     for(size_t robotPtrIdx=0; robotPtrIdx<vectorOfRobotPtr.size(); robotPtrIdx++)
     {
         info << "Robot ["<< robotPtrIdx <<"]"<<" named ["<<vectorOfRobotPtr[robotPtrIdx]->GetName().c_str()<<"]";
