@@ -95,6 +95,8 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
             return response.write(*out);
         if (request.get(1).asString() == "mk")
         {
+            if (!checkIfString(request, 2, response))
+                return response.write(*out);
             if (request.get(2).asString() == "box")
             {
                 {
@@ -249,7 +251,6 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                 response.addVocab(VOCAB_OK);
             }
             else response.addVocab(VOCAB_FAILED);
-
         }
         else if (request.get(1).asString()=="mv")
         {
@@ -501,9 +502,12 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
         else response.addVocab(VOCAB_FAILED);
         return response.write(*out);
     }
-    CD_ERROR("Command not understood, try 'help'.\n");
-    response.addVocab(VOCAB_FAILED);
-    response.addString("Command not understood, try 'help'");
+    else
+    {
+        CD_ERROR("Command not understood, try 'help'.\n");
+        response.addVocab(VOCAB_FAILED);
+        response.addString("Command not understood, try 'help'");
+    }
     return response.write(*out);
 }
 
