@@ -48,7 +48,7 @@ bool OywPortReader::read(yarp::os::ConnectionReader& in)
     {
         response.addString("Available commands: \
 help, \
-info, \
+list, \
 world del all, \
 world mk box/sbox (three params for size) (three params for pos), \
 world mk cyl/scyl (radius height) (three params for pos), \
@@ -62,7 +62,7 @@ world whereis tcp (manipulator), \
 world draw 0/1 (radius r g b).");
         return response.write(*out);
     }
-    else if (choice == "info") //-- info
+    else if (choice == "list") //-- list
     {
         openraveYarpWorldPtr->addWorldInfo(response);
         return response.write(*out);
