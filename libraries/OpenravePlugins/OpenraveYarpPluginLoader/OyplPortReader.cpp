@@ -27,8 +27,7 @@ bool OyplPortReader::read(yarp::os::ConnectionReader& in)
     if ( request.get(0).asString() == "help" ) //-- help
     {
         response.addString("Available commands: help, list, open (device ...) ...");
-        response.write(*out);
-        return true;
+        return response.write(*out);
     }
     else if ( request.get(0).asString() == "list" ) //-- list
     {

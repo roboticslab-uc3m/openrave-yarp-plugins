@@ -35,7 +35,11 @@ Create a dynamic box (an `sbox` would be static), which is interesting if you ac
 world mk box 0.1 0.1 0.1 0 0 1.5
 ```
 
+A `world grab (manipulator) (obj) (num) 0/1` example (replace `arm` for `rightArm` if you are with `teoSim`):
+```bash
+world grab arm obj box_1 1
+```
+
 More examples:
-- `world grab (manipulator) (obj) (num) 0/1`
 - `world whereis tcp (manipulator)`
 - `world whereis obj (name)`

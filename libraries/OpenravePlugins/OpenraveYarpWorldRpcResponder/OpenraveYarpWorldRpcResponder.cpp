@@ -52,7 +52,6 @@ int OpenraveYarpWorldRpcResponder::main(const std::string& cmd)
 
 bool OpenraveYarpWorldRpcResponder::Open(std::ostream& sout, std::istream& sinput)
 {
-
     std::vector<std::string> funcionArgs;
     while(sinput)
     {

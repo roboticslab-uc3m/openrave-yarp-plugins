@@ -3,6 +3,7 @@
 #ifndef __OYWRR_PORT_READER_HPP__
 #define __OYWRR_PORT_READER_HPP__
 
+#include <yarp/os/Bottle.h>
 #include <yarp/os/PortReader.h>
 #include <yarp/os/Vocab.h>
 
@@ -16,9 +17,9 @@ class OywrrPortReader : public yarp::os::PortReader
 {
 public:
 
-    void setEnvironment(OpenRAVE::EnvironmentBasePtr pEnv) { pEnv = pEnv; }
-    void setRobot(OpenRAVE::RobotBasePtr pRobot) { pRobot = pRobot; }
-    void setRobotManip(OpenRAVE::RobotBase::ManipulatorPtr pRobotManip) { pRobotManip = pRobotManip; }
+    void setEnvironment(OpenRAVE::EnvironmentBasePtr value) { pEnv = value; }
+    void setRobot(OpenRAVE::RobotBasePtr value) { pRobot = value; }
+    void setRobotManip(OpenRAVE::RobotBase::ManipulatorPtr value) { pRobotManip = value; }
 
 private:
     // -- variables
@@ -40,7 +41,9 @@ private:
     OpenRAVE::RobotBase::ManipulatorPtr pRobotManip;  // set in setRobot
 
     // Implement the actual responder (callback on RPC).
-    virtual bool read(yarp::os::ConnectionReader& connection);
+    virtual bool read(yarp::os::ConnectionReader& in);
+
+    bool checkIfString(yarp::os::Bottle& request, int index, yarp::os::Bottle& response);
 
     static const yarp::conf::vocab32_t VOCAB_OK;
     static const yarp::conf::vocab32_t VOCAB_FAILED;
