@@ -7,8 +7,8 @@
 
 // -----------------------------------------------------------------------------
 
-#define VOCAB_OK yarp::os::createVocab('o','k')
-#define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
+const yarp::conf::vocab32_t OywrrPortReader::VOCAB_OK = yarp::os::createVocab('o','k');
+const yarp::conf::vocab32_t OywrrPortReader::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
 
 // -----------------------------------------------------------------------------
 

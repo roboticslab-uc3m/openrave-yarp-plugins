@@ -41,6 +41,9 @@ private:
 
     // Implement the actual responder (callback on RPC).
     virtual bool read(yarp::os::ConnectionReader& connection);
+
+    static const yarp::conf::vocab32_t VOCAB_OK;
+    static const yarp::conf::vocab32_t VOCAB_FAILED;
 };
 
 #endif // __OYWRR_PORT_READER_HPP__
