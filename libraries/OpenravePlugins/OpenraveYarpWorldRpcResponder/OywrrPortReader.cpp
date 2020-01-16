@@ -26,16 +26,14 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
     {
         CD_ERROR("expected type string at 0 but got wrong data type!\n");
         response.addVocab(VOCAB_FAILED);
-        response.write(*out);
-        return true;
+        return response.write(*out);
     }
     std::string choice = request.get(0).asString();
 
     if (choice=="help") //-- help
     {
         response.addString("Available commands: help, info (robots and environment information), world del all, world mk box/sbox (three params for size) (three params for pos), world mk ssph (radius) (three params for pos), world mk scyl (radius height) (three params for pos), world mk mesh (no params yet), world mk obj (absolute path), world mv (name) (three params for pos), world grab (manipulator) (obj) (num) 0/1, world whereis obj (name), world whereis tcp (manipulator),  world draw 0/1 (radius r g b).");
-        response.write(*out);
-        return true;
+        return response.write(*out);
     }
     else if (choice == "info") //-- info
     {
@@ -77,8 +75,7 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
         }
 
         response.addString(info.str());
-        response.write(*out);
-        return true;
+        return response.write(*out);
     }
     else if (choice=="world") //-- world
     {
@@ -488,12 +485,10 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
 
         }
         else response.addVocab(VOCAB_FAILED);
-        response.write(*out);
-        return true;
+        return response.write(*out);
     }
     response.addVocab(VOCAB_FAILED);
-    response.write(*out);
-    return true;
+    return response.write(*out);
 }
 
 // -----------------------------------------------------------------------------
