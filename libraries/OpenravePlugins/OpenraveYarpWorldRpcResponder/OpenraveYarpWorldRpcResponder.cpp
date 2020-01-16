@@ -1,29 +1,14 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include <cstdio>
-
-#include <list>
-#include <sstream>
-#include <string>
-#include <vector>
-
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
 
 #include <boost/bind/bind.hpp>
 
-#include <yarp/os/Bottle.h>
-#include <yarp/os/ConnectionWriter.h>
 #include <yarp/os/Network.h>
-#include <yarp/os/PortReader.h>
 #include <yarp/os/RpcServer.h>
-#include <yarp/os/Semaphore.h>
-#include <yarp/os/Vocab.h>
 
 #include "OywrrPortReader.hpp"
-
-#define VOCAB_OK yarp::os::createVocab('o','k')
-#define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
 
 /**
  * @ingroup OpenravePlugins
