@@ -230,8 +230,13 @@ world whereis tcp (manipulator),  world draw 0/1 (radius r g b).");
                     objIsStatic = false;
                     if (!checkIfString(request, 3, response))
                         return response.write(*out);
-                    std::string objName = request.get(3).asString();
-                    pEnv->ReadKinBodyXMLFile(objKinBodyPtr, objName);
+                    std::string fileName = request.get(3).asString();
+                    pEnv->ReadKinBodyXMLFile(objKinBodyPtr, fileName);
+                    objName.append("file_");
+                    std::ostringstream s;
+                    s << fileCount;
+                    objName.append(s.str());
+                    fileCount++;
                 }
                 else
                 {

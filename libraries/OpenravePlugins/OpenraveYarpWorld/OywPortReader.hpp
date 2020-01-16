@@ -16,7 +16,7 @@
 class OywPortReader : public yarp::os::PortReader
 {
 public:
-    OywPortReader() : boxCount(0), sboxCount (0), cylCount(0), scylCount(0), sphCount(0), ssphCount(0), meshCount(0) {}
+    OywPortReader() : boxCount(0), sboxCount (0), cylCount(0), scylCount(0), sphCount(0), ssphCount(0), meshCount(0), fileCount(0) {}
     void setEnvironment(OpenRAVE::EnvironmentBasePtr value) { pEnv = value; }
     void setRobot(OpenRAVE::RobotBasePtr value) { pRobot = value; }
     void setRobotManip(OpenRAVE::RobotBase::ManipulatorPtr value) { pRobotManip = value; }
@@ -28,7 +28,7 @@ private:
 
     // box/sbox/cyl/scyl/sph/ssph
     std::vector<OpenRAVE::KinBodyPtr> objKinBodyPtrs;
-    int boxCount, sboxCount, cylCount, scylCount, sphCount, ssphCount, meshCount;
+    int boxCount, sboxCount, cylCount, scylCount, sphCount, ssphCount, meshCount, fileCount;
 
     OpenRAVE::EnvironmentBasePtr pEnv;  // set in setEnvironment
     OpenRAVE::RobotBasePtr pRobot;  // set in setRobot
