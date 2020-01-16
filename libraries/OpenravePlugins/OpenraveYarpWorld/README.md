@@ -46,8 +46,13 @@ world mk ssph 0.1 0.5 0 1.5
 ```
 
 A `world mk file (absolute path)` example:
-```
+```bash
 world mk file data/mug1.kinbody.xml
+```
+
+Now move the mug:
+```bash
+world mv file_0 0 0 1
 ```
 
 A `world grab (manipulatorName) (objName) 0/1` example (replace `arm` for `rightArm` if you are with `teoSim`):
