@@ -99,11 +99,11 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                 return response.write(*out);
             if (request.get(2).asString() == "box")
             {
+                std::string boxName("box_");
                 {
                     // lock the environment!
                     OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                     OpenRAVE::KinBodyPtr boxKinBodyPtr = OpenRAVE::RaveCreateKinBody(pEnv,"");
-                    std::string boxName("box_");
                     std::ostringstream s;  // boxName += std::to_string(boxKinBodyPtrs.size()+1);  // C++11 only
                     s << boxKinBodyPtrs.size()+1;
                     boxName += s.str();
@@ -123,15 +123,17 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                     boxKinBodyPtrs.push_back(boxKinBodyPtr);
                 }  // the environment is not locked anymore
                 boxKinBodyPtrs[boxKinBodyPtrs.size()-1]->GetLinks()[0]->SetStatic(false);
+                CD_SUCCESS("Created: %s\n", boxName.c_str());
                 response.addVocab(VOCAB_OK);
+                response.addString(boxName);
             }
             else if (request.get(2).asString() == "sbox")
             {
+                std::string sboxName("sbox_");
                 {
                     // lock the environment!
                     OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                     OpenRAVE::KinBodyPtr sboxKinBodyPtr = OpenRAVE::RaveCreateKinBody(pEnv,"");
-                    std::string sboxName("sbox_");
                     std::ostringstream s;  // sboxName += std::to_string(sboxKinBodyPtrs.size()+1);  // C++11 only
                     s << sboxKinBodyPtrs.size()+1;
                     sboxName += s.str();
@@ -145,15 +147,17 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                     pEnv->Add(sboxKinBodyPtr,true);
                     sboxKinBodyPtrs.push_back(sboxKinBodyPtr);
                 }  // the environment is not locked anymore
+                CD_SUCCESS("Created: %s\n", sboxName.c_str());
                 response.addVocab(VOCAB_OK);
+                response.addString(sboxName);
             }
             else if (request.get(2).asString() == "ssph")
             {
+                std::string ssphName("ssph_");
                 {
                     // lock the environment!
                     OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                     OpenRAVE::KinBodyPtr ssphKinBodyPtr = OpenRAVE::RaveCreateKinBody(pEnv,"");
-                    std::string ssphName("ssph_");
                     std::ostringstream s;  // ssphName += std::to_string(ssphKinBodyPtrs.size()+1);  // C++11 only
                     s << ssphKinBodyPtrs.size()+1;
                     ssphName += s.str();
@@ -166,15 +170,17 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                     pEnv->Add(ssphKinBodyPtr,true);
                     ssphKinBodyPtrs.push_back(ssphKinBodyPtr);
                 }  // the environment is not locked anymore
+                CD_SUCCESS("Created: %s\n", ssphName.c_str());
                 response.addVocab(VOCAB_OK);
+                response.addString(ssphName);
             }
             else if (request.get(2).asString() == "scyl")
             {
+                std::string scylName("scyl_");
                 {
                     // lock the environment!
                     OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                     OpenRAVE::KinBodyPtr scylKinBodyPtr = OpenRAVE::RaveCreateKinBody(pEnv,"");
-                    std::string scylName("scyl_");
                     std::ostringstream s;  // scylName += std::to_string(scylKinBodyPtrs.size()+1);  // C++11 only
                     s << scylKinBodyPtrs.size()+1;
                     scylName += s.str();
@@ -197,16 +203,17 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                     pEnv->Add(scylKinBodyPtr,true);
                     scylKinBodyPtrs.push_back(scylKinBodyPtr);
                 }  // the environment is not locked anymore
+                CD_SUCCESS("Created: %s\n", scylName.c_str());
                 response.addVocab(VOCAB_OK);
-
+                response.addString(scylName);
             }
             else if (request.get(2).asString() == "mesh")
             {
+                std::string meshName("mesh_");
                 {
                     // lock the environment!
                     OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                     OpenRAVE::KinBodyPtr meshKinBodyPtr = RaveCreateKinBody(pEnv,"");
-                    std::string meshName("mesh_");
                     std::ostringstream s;  // meshName += std::to_string(meshKinBodyPtrs.size()+1);  // C++11 only
                     s << meshKinBodyPtrs.size()+1;
                     meshName += s.str();
@@ -235,20 +242,26 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                     pEnv->Add(meshKinBodyPtr,true);
                     meshKinBodyPtrs.push_back(meshKinBodyPtr);
                 }  // the environment is not locked anymore
+                CD_SUCCESS("Created: %s\n", meshName.c_str());
                 response.addVocab(VOCAB_OK);
-
+                response.addString(meshName);
             }
             else if (request.get(2).asString() == "obj")
             {
+                if (!checkIfString(request, 3, response))
+                    return response.write(*out);
+                std::string objName = request.get(3).asString();
                 {
                     // lock the environment!
                     OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
                     OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(pEnv,"");
-                    pEnv->ReadKinBodyXMLFile(objKinBodyPtr, request.get(3).asString().c_str());
+                    pEnv->ReadKinBodyXMLFile(objKinBodyPtr, objName);
                     pEnv->Add(objKinBodyPtr,true);
                     objKinBodyPtrs.push_back(objKinBodyPtr);
                 }  // the environment is not locked anymore
+                CD_SUCCESS("Created: %s\n", objName.c_str());
                 response.addVocab(VOCAB_OK);
+                response.addString(objName);
             }
             else response.addVocab(VOCAB_FAILED);
         }
@@ -430,6 +443,8 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                 return response.write(*out);
             if (request.get(2).asString()=="obj")
             {
+                if (!checkIfString(request, 3, response))
+                    return response.write(*out);
                 OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString().c_str());
                 CD_INFO("We want to know where is ->> %s\n", objPtr->GetName().c_str());
                 if(objPtr)
