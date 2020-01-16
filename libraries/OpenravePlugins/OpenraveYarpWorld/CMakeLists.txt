@@ -10,18 +10,20 @@ include_directories(${OpenRAVE_INCLUDE_DIRS})
 link_directories(${OpenRAVE_LIBRARY_DIRS})
 
 add_library(OpenraveYarpWorld MODULE OpenraveYarpWorld.cpp
-                                                 OywPortReader.cpp
-                                                 OpenraveYarpWorld.hpp
-                                                 OywPortReader.hpp)
+                                     OywPeriodicWrite.cpp
+                                     OywPortReader.cpp
+                                     OpenraveYarpWorld.hpp
+                                     OywPeriodicWrite.hpp
+                                     OywPortReader.hpp)
 
 set_target_properties(OpenraveYarpWorld PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
-                                                               LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+                                                   LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
 target_link_libraries(OpenraveYarpWorld YARP::YARP_OS
-                                                    YARP::YARP_init
-                                                    ${OpenRAVE_LIBRARIES}
-                                                    Boost::boost
-                                                    ROBOTICSLAB::ColorDebug)
+                                        YARP::YARP_init
+                                        ${OpenRAVE_LIBRARIES}
+                                        Boost::boost
+                                        ROBOTICSLAB::ColorDebug)
 
 include(InstallOpenravePlugin)
 

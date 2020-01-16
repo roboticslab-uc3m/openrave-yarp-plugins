@@ -7,8 +7,6 @@
 
 #include <ColorDebug.h>
 
-#include "OywPortReader.hpp"
-
 #include "OpenraveYarpWorld.hpp"
 
 // -----------------------------------------------------------------------------
@@ -17,14 +15,19 @@ OpenraveYarpWorld::OpenraveYarpWorld(OpenRAVE::EnvironmentBasePtr penv) : OpenRA
 {
     __description = "OpenraveYarpWorld plugin.";
     OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpWorld::Open, this,_1,_2),"opens OpenraveYarpWorld");
+
+    CD_INFO("Checking for yarp network...\n");
+    if ( ! yarp.checkNetwork() )
+        CD_ERROR("Found no yarp network (try running \"yarpserver &\")!\n");
+    CD_SUCCESS("Found yarp network.\n");
 }
 
 // -----------------------------------------------------------------------------
 
 OpenraveYarpWorld::~OpenraveYarpWorld()
 {
-    worldRpcServer.interrupt();
-    worldRpcServer.close();
+    oywRpcServer.interrupt();
+    oywRpcServer.close();
 }
 
 // -----------------------------------------------------------------------------
@@ -33,6 +36,27 @@ void OpenraveYarpWorld::Destroy()
 {
 
     RAVELOG_INFO("module unloaded from environment\n");
+}
+
+// -----------------------------------------------------------------------------
+
+bool OpenraveYarpWorld::addYarpPluginsLists(yarp::os::Bottle& info)
+{
+    /*for (size_t i=0;i<yarpPluginsProperties.size();i++)
+    {
+        if(yarpPluginsProperties[i].check("remotelyClosed"))
+            continue;
+        yarp::os::Bottle& b = info.addList();
+        b.addInt32(i);
+        yarp::os::Property openOptions(yarpPluginsProperties[i]);
+        openOptions.unput("penv");
+        openOptions.unput("allManipulators");
+        openOptions.unput("allSensors");
+        yarp::os::Bottle openOptionsBottle;
+        openOptionsBottle.fromString(openOptions.toString());
+        b.append(openOptionsBottle);
+    }*/
+    return true;
 }
 
 // -----------------------------------------------------------------------------
@@ -52,33 +76,24 @@ int OpenraveYarpWorld::main(const std::string& cmd)
 
 bool OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
 {
-    std::vector<std::string> funcionArgs;
-    while(sinput)
+    CD_INFO("Checking for yarp network...\n");
+    if ( ! yarp.checkNetwork() )
     {
-        std::string funcionArg;
-        sinput >> funcionArg;
-        funcionArgs.push_back(funcionArg);
-    }
-
-    std::string portName("/OpenraveYarpWorld/rpc:s");
-
-    if (funcionArgs.size() > 0)
-    {
-        if( funcionArgs[0][0] == '/')
-            portName = funcionArgs[0];
-    }
-    RAVELOG_INFO("portName: %s\n",portName.c_str());
-
-    if ( !yarp.checkNetwork() )
-    {
-        RAVELOG_INFO("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+        CD_ERROR("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+        sout << "-1 ";
         return false;
     }
+    CD_SUCCESS("Found yarp network.\n");
 
+    std::string s(std::istreambuf_iterator<char>(sinput), {});
 
-    RAVELOG_INFO("penv: %p\n",GetEnv().get());
+    yarp::os::Property options;
+    options.fromArguments(s.c_str());
+
+    CD_DEBUG("config: %s\n", options.toString().c_str());
+
+    CD_INFO("penv: %p\n",GetEnv().get());
     OpenRAVE::EnvironmentBasePtr penv = GetEnv();
-
 
     //-- Get the robot
     std::vector<OpenRAVE::RobotBasePtr> robots;
@@ -87,13 +102,15 @@ bool OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
     probot = robots.at(0);  // which is a RobotBasePtr
     CD_INFO("Using robot 0 (%s) as main robot.\n", probot->GetName().c_str());
 
-    //-- processor
-    processor.setEnvironment(penv);
-    processor.setRobot(probot);
+    //-- PortReader and RpcServer
+    oywPortReader.setEnvironment(penv);
+    oywPortReader.setRobot(probot);
+    oywRpcServer.open("/OpenraveYarpWorld/rpc:s");
+    oywRpcServer.setReader(oywPortReader);
 
-    //-- world rpc server
-    worldRpcServer.open(portName);
-    worldRpcServer.setReader(processor);
+    //-- PeriodicWrite
+    oywPeriodicWrite.setOpenraveYarpWorldPtr(this);
+    oywPeriodicWrite.open("/OpenraveYarpWorld/state:o");
 
     return true;
 }

@@ -8,6 +8,9 @@
 
 #include <openrave/openrave.h>
 
+#include "OywPortReader.hpp"
+#include "OywPeriodicWrite.hpp"
+
 /**
  * @ingroup OpenravePlugins
  * \defgroup OpenraveYarpWorld
@@ -28,14 +31,18 @@ public:
     virtual ~OpenraveYarpWorld();
     virtual void Destroy();
 
+    bool addYarpPluginsLists(yarp::os::Bottle& info);
     int main(const std::string& cmd);
 
     bool Open(std::ostream& sout, std::istream& sinput);
 
 private:
     yarp::os::Network yarp;
-    yarp::os::RpcServer worldRpcServer;
-    OywPortReader processor;
+
+    OywPortReader oywPortReader;
+    yarp::os::RpcServer oywRpcServer;
+
+    OywPeriodicWrite oywPeriodicWrite;
 
     OpenRAVE::RobotBasePtr probot;
 };
