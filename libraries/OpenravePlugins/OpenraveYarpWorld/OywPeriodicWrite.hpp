@@ -6,7 +6,7 @@
 #include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Port.h>
 
-class OpenraveYarpPluginLoader;
+class OpenraveYarpWorld;
 
 /**
  * @ingroup OpenraveYarpPluginLoader
@@ -16,9 +16,9 @@ class OywPeriodicWrite : yarp::os::PeriodicThread, public yarp::os::Port
 {
 public:
     OywPeriodicWrite();
-    void setOpenraveYarpPluginLoaderPtr(OpenraveYarpPluginLoader *value) { openraveYarpPluginLoaderPtr = value; }
+    void setOpenraveYarpWorldPtr(OpenraveYarpWorld *value) { openraveYarpWorldPtr = value; }
 private:
-    OpenraveYarpPluginLoader* openraveYarpPluginLoaderPtr;
+    OpenraveYarpWorld* openraveYarpWorldPtr;
     virtual void run() override;
 };
 

@@ -74,7 +74,6 @@ bool OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
     CD_INFO("penv: %p\n",GetEnv().get());
     OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
-
     //-- Get the robot
     std::vector<OpenRAVE::RobotBasePtr> robots;
     penv->GetRobots(robots);
@@ -89,6 +88,7 @@ bool OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
     oywRpcServer.setReader(oywPortReader);
 
     //-- PeriodicWrite
+    oywPeriodicWrite.setOpenraveYarpWorldPtr(this);
     oywPeriodicWrite.open("/OpenraveYarpWorld/state:o");
 
     return true;
