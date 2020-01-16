@@ -40,8 +40,47 @@ void OpenraveYarpWorld::Destroy()
 
 // -----------------------------------------------------------------------------
 
-bool OpenraveYarpWorld::addYarpPluginsLists(yarp::os::Bottle& info)
+bool OpenraveYarpWorld::addWorldInfo(yarp::os::Bottle& info)
 {
+    /*
+    //-- Variable to save info
+    std::stringstream info;
+
+    //-- Get robots
+    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
+    pEnv->GetRobots(vectorOfRobotPtr);
+
+    //-- For each robot
+    for(size_t robotPtrIdx=0; robotPtrIdx<vectorOfRobotPtr.size(); robotPtrIdx++)
+    {
+        info << "Robot ["<< robotPtrIdx <<"]"<<" named ["<<vectorOfRobotPtr[robotPtrIdx]->GetName().c_str()<<"]";
+        info <<" with manipulators: ";
+
+        //-- Get manipulators
+        std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[robotPtrIdx]->GetManipulators();
+
+        //-- For each manipulator
+        for(size_t manipulatorPtrIdx=0; manipulatorPtrIdx<vectorOfManipulatorPtr.size(); manipulatorPtrIdx++)
+        {
+            info <<"("<<manipulatorPtrIdx<<")"<<vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName().c_str()<<" ";
+        }
+    }
+
+    info << " // "; // -- to separate information!!
+
+    // -- Get bodies
+    std::vector<OpenRAVE::KinBodyPtr> vectorOfBodiesPtr;
+    pEnv->GetBodies(vectorOfBodiesPtr);
+
+    info << "Total bodies in the environment: ";
+
+    // -- For each body
+    for(size_t bodiesPtrIdx=0; bodiesPtrIdx<vectorOfBodiesPtr.size(); bodiesPtrIdx++)
+    {
+        info << "("<< bodiesPtrIdx <<")"<<vectorOfBodiesPtr[bodiesPtrIdx]->GetName().c_str()<<" ";
+    }*/
+
+
     /*for (size_t i=0;i<yarpPluginsProperties.size();i++)
     {
         if(yarpPluginsProperties[i].check("remotelyClosed"))
@@ -105,6 +144,7 @@ bool OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
     //-- PortReader and RpcServer
     oywPortReader.setEnvironment(penv);
     oywPortReader.setRobot(probot);
+    oywPortReader.setOpenraveYarpWorldPtr(this);
     oywRpcServer.open("/OpenraveYarpWorld/rpc:s");
     oywRpcServer.setReader(oywPortReader);
 
