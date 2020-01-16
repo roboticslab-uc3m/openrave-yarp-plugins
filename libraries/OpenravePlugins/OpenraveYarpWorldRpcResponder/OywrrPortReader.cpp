@@ -3,6 +3,8 @@
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionReader.h>
 
+#include <ColorDebug.h>
+
 #include "OywrrPortReader.hpp"
 
 // -----------------------------------------------------------------------------
@@ -16,7 +18,7 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
 {
     yarp::os::Bottle in, out;
     in.read(connection);
-    std::printf("[WorldRpcResponder] Got %s\n", in.toString().c_str());
+    CD_DEBUG("Request: %s\n", in.toString().c_str());
     yarp::os::ConnectionWriter *returnToSender = connection.getWriter();
     if (returnToSender==NULL) return false;
     std::string choice = in.get(0).asString();
@@ -288,14 +290,14 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString()); // <in.get(2).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
                         pRobot->Grab(boxKinBodyPtrs[inIndex-1]);
-                        std::printf("The box is grabbed!!\n");
+                        CD_INFO("The box is grabbed!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else if (in.get(5).asInt32()==0)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Release(boxKinBodyPtrs[inIndex-1]);
-                        std::printf("The box is released!!\n");
+                        CD_INFO("The box is released!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else out.addVocab(VOCAB_FAILED);
@@ -311,14 +313,14 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Grab(sboxKinBodyPtrs[inIndex-1]);
-                        std::printf("The sbox is grabbed!!\n");
+                        CD_INFO("The sbox is grabbed!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else if (in.get(5).asInt32()==0)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Release(sboxKinBodyPtrs[inIndex-1]);
-                        std::printf("The sbox is released!!\n");
+                        CD_INFO("The sbox is released!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else out.addVocab(VOCAB_FAILED);
@@ -334,14 +336,14 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Grab(ssphKinBodyPtrs[inIndex-1]);
-                        std::printf("The sphere is grabbed!!\n");
+                        CD_INFO("The sphere is grabbed!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else if (in.get(5).asInt32()==0)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Release(ssphKinBodyPtrs[inIndex-1]);
-                        std::printf("The sphere is released!!\n");
+                        CD_INFO("The sphere is released!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else out.addVocab(VOCAB_FAILED);
@@ -357,14 +359,14 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Grab(scylKinBodyPtrs[inIndex-1]);
-                        std::printf("The cylinder is grabbed!!\n");
+                        CD_INFO("The cylinder is grabbed!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else if (in.get(5).asInt32()==0)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
                         pRobot->Release(scylKinBodyPtrs[inIndex-1]);
-                        std::printf("The cylinder is released!!\n");
+                        CD_INFO("The cylinder is released!!\n");
                         out.addVocab(VOCAB_OK);
                     }
                     else out.addVocab(VOCAB_FAILED);
@@ -376,18 +378,18 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                 OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(in.get(4).asString().c_str());
                 if(objPtr)
                 {
-                    std::printf("[WorldRpcResponder] success: object %s exists.\n", in.get(4).asString().c_str());
+                    CD_SUCCESS("object %s exists.\n", in.get(4).asString().c_str());
                     if (in.get(5).asInt32()==1)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
-                        std::printf("The cylinder is grabbed!!\n");
+                        CD_INFO("The cylinder is grabbed!!\n");
                         pRobot->Grab(objPtr);
                         out.addVocab(VOCAB_OK);
                     }
                     else if (in.get(5).asInt32()==0)
                     {
                         pRobot->SetActiveManipulator(in.get(2).asString());
-                        std::printf("The cylinder is released!!\n");
+                        CD_INFO("The cylinder is released!!\n");
                         pRobot->Release(objPtr);
                         out.addVocab(VOCAB_OK);
                     }
@@ -395,7 +397,7 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                 }
                 else // null pointer
                 {
-                    std::printf("[WorldRpcResponder] warning: object %s does not exist.\n", in.get(3).asString().c_str());
+                    CD_WARNING("object %s does not exist.\n", in.get(3).asString().c_str());
                     out.addVocab(VOCAB_FAILED);
                 }
             }
@@ -406,12 +408,12 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
             if (in.get(2).asString()=="obj")
             {
                 OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(in.get(3).asString().c_str());
-                std::printf("We want to know where is ->> %s\n", objPtr->GetName().c_str());
+                CD_INFO("We want to know where is ->> %s\n", objPtr->GetName().c_str());
                 if(objPtr)
                 {
                     //Transform t = objPtr->GetTransform();
                     OpenRAVE::Vector tr = objPtr->GetTransform().trans;
-                    std::printf("[WorldRpcResponder] success: object %s at %f, %f, %f.\n", in.get(3).asString().c_str(), tr.x,tr.y,tr.z);
+                    CD_SUCCESS("object %s at %f, %f, %f.\n", in.get(3).asString().c_str(), tr.x,tr.y,tr.z);
                     yarp::os::Bottle trans;
                     trans.addFloat64(tr.x);
                     trans.addFloat64(tr.y);
@@ -421,7 +423,7 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                 }
                 else // null pointer
                 {
-                    std::printf("[WorldRpcResponder] warning: object %s does not exist.\n", in.get(3).asString().c_str());
+                    CD_WARNING("object %s does not exist.\n", in.get(3).asString().c_str());
                     out.addVocab(VOCAB_FAILED);
                 }
             }
@@ -438,7 +440,7 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
                 tool.rot = ee.rot;
                 OpenRAVE::Transform tcp = ee * tool;
                 //Transform tcp = ee;
-                std::printf("[WorldRpcResponder] success: TCP at %f, %f, %f.\n", tcp.trans.x, tcp.trans.y, tcp.trans.z);
+                CD_SUCCESS("TCP at %f, %f, %f.\n", tcp.trans.x, tcp.trans.y, tcp.trans.z);
                 yarp::os::Bottle trans;
                 trans.addFloat64(tcp.trans.x);
                 trans.addFloat64(tcp.trans.y);
@@ -449,7 +451,7 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
             }
             else
             {
-                std::printf("[WorldRpcResponder] warning: where is what?\n");
+                CD_WARNING("where is what?\n");
                 out.addVocab(VOCAB_FAILED);
             }
 
@@ -458,13 +460,13 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& connection)
         {
             if (in.get(2).asInt32() == 0)
             {
-                std::printf("[WorldRpcResponder] success: Turning draw OFF.\n");
+                CD_SUCCESS("Turning draw OFF.\n");
                 robotDraw = 0;
                 out.addVocab(VOCAB_OK);
             }
             else
             {
-                std::printf("[WorldRpcResponder] success: Turning draw ON.\n");
+                CD_SUCCESS("Turning draw ON.\n");
                 robotDraw = in.get(2).asInt32();
                 if (in.size() >= 4) drawRadius = in.get(3).asFloat64();
                 if (in.size() >= 7)

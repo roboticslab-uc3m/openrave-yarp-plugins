@@ -5,6 +5,8 @@
 
 #include <boost/bind/bind.hpp>
 
+#include <ColorDebug.h>
+
 #include "OywrrPortReader.hpp"
 
 #include "OpenraveYarpWorldRpcResponder.hpp"
@@ -84,7 +86,7 @@ bool OpenraveYarpWorldRpcResponder::Open(std::ostream& sout, std::istream& sinpu
     penv->GetRobots(robots);
     //-- Robot 0
     probot = robots.at(0);  // which is a RobotBasePtr
-    std::printf("OpenRaveYarpWorldRpcResponder using robot 0 (%s) as main robot.\n", probot->GetName().c_str());
+    CD_INFO("Using robot 0 (%s) as main robot.\n", probot->GetName().c_str());
 
     //-- processor
     processor.setEnvironment(penv);

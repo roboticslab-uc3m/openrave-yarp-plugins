@@ -20,18 +20,22 @@ Then communicate via:
 yarp rpc /OpenraveYarpWorldRpcResponder/rpc:s
 ```
 
-For instance:
+For instance, get help:
 ```bash
 help
 ```
 
-Or:
+Get information on the environment existing elements:
 ```bash
 info
 ```
 
+Create a dynamic box (an `sbox` would be static), which is interesting if you activate Physics Engine ODE and Set Gravity -Z!
+```bash
+world mk box 0.1 0.1 0.1 0 0 1.5
+```
+
 More examples:
-- `world mk box 0.1 0.1 0.1 0 0 1.5` (a `sbox` would be static; activate Physics Engine ODE and Set Gravity -Z!)
 - `world grab (manipulator) (obj) (num) 0/1`
 - `world whereis tcp (manipulator)`
 - `world whereis obj (name)`

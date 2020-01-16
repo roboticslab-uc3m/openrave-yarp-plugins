@@ -16,9 +16,9 @@ class OywrrPortReader : public yarp::os::PortReader
 {
 public:
 
-    void setEnvironment(OpenRAVE::EnvironmentBasePtr _pEnv) { pEnv = _pEnv; }
-    void setRobot(OpenRAVE::RobotBasePtr _pRobot) { pRobot = _pRobot; }
-    void setRobotManip(OpenRAVE::RobotBase::ManipulatorPtr _pRobotManip) { pRobotManip = _pRobotManip; }
+    void setEnvironment(OpenRAVE::EnvironmentBasePtr pEnv) { pEnv = pEnv; }
+    void setRobot(OpenRAVE::RobotBasePtr pRobot) { pRobot = pRobot; }
+    void setRobotManip(OpenRAVE::RobotBase::ManipulatorPtr pRobotManip) { pRobotManip = pRobotManip; }
 
 private:
     // -- variables
