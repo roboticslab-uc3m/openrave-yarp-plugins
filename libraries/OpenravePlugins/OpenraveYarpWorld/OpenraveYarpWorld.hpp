@@ -38,8 +38,8 @@ public:
 private:
     yarp::os::Network yarp;
 
-    yarp::os::RpcServer worldRpcServer;
-    OywPortReader processor;
+    OywPortReader oywPortReader;
+    yarp::os::RpcServer oywRpcServer;
 
     OywPeriodicWrite oywPeriodicWrite;
 
