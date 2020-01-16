@@ -40,22 +40,37 @@ void OpenraveYarpWorld::Destroy()
 
 // -----------------------------------------------------------------------------
 
-bool OpenraveYarpWorld::addYarpPluginsLists(yarp::os::Bottle& info)
+bool OpenraveYarpWorld::addWorldInfo(yarp::os::Bottle& info)
 {
-    /*for (size_t i=0;i<yarpPluginsProperties.size();i++)
+    //-- Robots
+    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
+    GetEnv()->GetRobots(vectorOfRobotPtr);
+
+    for(size_t robotPtrIdx=0; robotPtrIdx<vectorOfRobotPtr.size(); robotPtrIdx++)
     {
-        if(yarpPluginsProperties[i].check("remotelyClosed"))
-            continue;
-        yarp::os::Bottle& b = info.addList();
-        b.addInt32(i);
-        yarp::os::Property openOptions(yarpPluginsProperties[i]);
-        openOptions.unput("penv");
-        openOptions.unput("allManipulators");
-        openOptions.unput("allSensors");
-        yarp::os::Bottle openOptionsBottle;
-        openOptionsBottle.fromString(openOptions.toString());
-        b.append(openOptionsBottle);
-    }*/
+        yarp::os::Bottle& robotList = info.addList();
+        robotList.addString("robot");
+        robotList.addString(vectorOfRobotPtr[robotPtrIdx]->GetName());
+
+        std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[robotPtrIdx]->GetManipulators();
+        for(size_t manipulatorPtrIdx=0; manipulatorPtrIdx<vectorOfManipulatorPtr.size(); manipulatorPtrIdx++)
+        {
+            yarp::os::Bottle& manipulatorList = robotList.addList();
+            manipulatorList.addString("manipulator");
+            manipulatorList.addString(vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName());
+        }
+    }
+
+    // -- KinBodies
+    std::vector<OpenRAVE::KinBodyPtr> vectorOfBodiesPtr;
+    GetEnv()->GetBodies(vectorOfBodiesPtr);
+
+    for(size_t bodiesPtrIdx=0; bodiesPtrIdx<vectorOfBodiesPtr.size(); bodiesPtrIdx++)
+    {
+        yarp::os::Bottle& kinbodyList = info.addList();
+        kinbodyList.addString("kinbody");
+        kinbodyList.addString(vectorOfBodiesPtr[bodiesPtrIdx]->GetName());
+    }
     return true;
 }
 
@@ -105,6 +120,7 @@ bool OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
     //-- PortReader and RpcServer
     oywPortReader.setEnvironment(penv);
     oywPortReader.setRobot(probot);
+    oywPortReader.setOpenraveYarpWorldPtr(this);
     oywRpcServer.open("/OpenraveYarpWorld/rpc:s");
     oywRpcServer.setReader(oywPortReader);
 

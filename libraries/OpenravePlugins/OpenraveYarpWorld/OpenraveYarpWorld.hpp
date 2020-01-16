@@ -31,7 +31,7 @@ public:
     virtual ~OpenraveYarpWorld();
     virtual void Destroy();
 
-    bool addYarpPluginsLists(yarp::os::Bottle& info);
+    bool addWorldInfo(yarp::os::Bottle& info);
     int main(const std::string& cmd);
 
     bool Open(std::ostream& sout, std::istream& sinput);

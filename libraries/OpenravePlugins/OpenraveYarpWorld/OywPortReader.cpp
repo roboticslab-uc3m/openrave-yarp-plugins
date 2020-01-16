@@ -5,6 +5,8 @@
 
 #include <ColorDebug.h>
 
+#include "OpenraveYarpWorld.hpp"
+
 #include "OywPortReader.hpp"
 
 // -----------------------------------------------------------------------------
@@ -62,44 +64,7 @@ world draw 0/1 (radius r g b).");
     }
     else if (choice == "info") //-- info
     {
-        //-- Variable to save info
-        std::stringstream info;
-
-        //-- Get robots
-        std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-        pEnv->GetRobots(vectorOfRobotPtr);
-
-        //-- For each robot
-        for(size_t robotPtrIdx=0; robotPtrIdx<vectorOfRobotPtr.size(); robotPtrIdx++)
-        {
-            info << "Robot ["<< robotPtrIdx <<"]"<<" named ["<<vectorOfRobotPtr[robotPtrIdx]->GetName().c_str()<<"]";
-            info <<" with manipulators: ";
-
-            //-- Get manipulators
-            std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[robotPtrIdx]->GetManipulators();
-
-            //-- For each manipulator
-            for(size_t manipulatorPtrIdx=0; manipulatorPtrIdx<vectorOfManipulatorPtr.size(); manipulatorPtrIdx++)
-            {
-                info <<"("<<manipulatorPtrIdx<<")"<<vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName().c_str()<<" ";
-            }
-        }
-
-        info << " // "; // -- to separate information!!
-
-        // -- Get bodies
-        std::vector<OpenRAVE::KinBodyPtr> vectorOfBodiesPtr;
-        pEnv->GetBodies(vectorOfBodiesPtr);
-
-        info << "Total bodies in the environment: ";
-
-        // -- For each body
-        for(size_t bodiesPtrIdx=0; bodiesPtrIdx<vectorOfBodiesPtr.size(); bodiesPtrIdx++)
-        {
-            info << "("<< bodiesPtrIdx <<")"<<vectorOfBodiesPtr[bodiesPtrIdx]->GetName().c_str()<<" ";
-        }
-
-        response.addString(info.str());
+        openraveYarpWorldPtr->addWorldInfo(response);
         return response.write(*out);
     }
     else if (choice=="world") //-- world

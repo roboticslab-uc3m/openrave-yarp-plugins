@@ -9,6 +9,8 @@
 
 #include <openrave/openrave.h>
 
+class OpenraveYarpWorld;
+
 /**
  * @ingroup OpenraveYarpWorld
  * @brief Processes RPC requests.
@@ -20,9 +22,10 @@ public:
     void setEnvironment(OpenRAVE::EnvironmentBasePtr value) { pEnv = value; }
     void setRobot(OpenRAVE::RobotBasePtr value) { pRobot = value; }
     void setRobotManip(OpenRAVE::RobotBase::ManipulatorPtr value) { pRobotManip = value; }
+    void setOpenraveYarpWorldPtr(OpenraveYarpWorld *value) { openraveYarpWorldPtr = value; }
 
 private:
-    // -- variables
+    OpenraveYarpWorld* openraveYarpWorldPtr;
     int robotDraw;
     double drawRadius, drawR, drawG, drawB;
 
