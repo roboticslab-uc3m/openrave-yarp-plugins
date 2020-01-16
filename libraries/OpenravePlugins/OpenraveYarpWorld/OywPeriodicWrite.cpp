@@ -21,7 +21,7 @@ void OywPeriodicWrite::run()
         return;
 
     yarp::os::Bottle info;
-    //OpenraveYarpWorld->addYarpPluginsLists(info);
+    openraveYarpWorldPtr->addYarpPluginsLists(info);
 
     if(0 == info.size())
         return;

@@ -40,6 +40,27 @@ void OpenraveYarpWorld::Destroy()
 
 // -----------------------------------------------------------------------------
 
+bool OpenraveYarpWorld::addYarpPluginsLists(yarp::os::Bottle& info)
+{
+    /*for (size_t i=0;i<yarpPluginsProperties.size();i++)
+    {
+        if(yarpPluginsProperties[i].check("remotelyClosed"))
+            continue;
+        yarp::os::Bottle& b = info.addList();
+        b.addInt32(i);
+        yarp::os::Property openOptions(yarpPluginsProperties[i]);
+        openOptions.unput("penv");
+        openOptions.unput("allManipulators");
+        openOptions.unput("allSensors");
+        yarp::os::Bottle openOptionsBottle;
+        openOptionsBottle.fromString(openOptions.toString());
+        b.append(openOptionsBottle);
+    }*/
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
 int OpenraveYarpWorld::main(const std::string& cmd)
 {
     RAVELOG_INFO("module initialized with \"%s\"\n", cmd.c_str());
