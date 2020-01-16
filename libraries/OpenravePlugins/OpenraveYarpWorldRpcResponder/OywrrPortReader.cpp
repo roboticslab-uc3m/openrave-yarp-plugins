@@ -26,6 +26,7 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
     {
         CD_ERROR("expected type string at 0 but got wrong data type!\n");
         response.addVocab(VOCAB_FAILED);
+        response.addString("expected type string at 0 but got wrong data type!");
         return response.write(*out);
     }
     std::string choice = request.get(0).asString();
@@ -487,7 +488,9 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
         else response.addVocab(VOCAB_FAILED);
         return response.write(*out);
     }
+    CD_ERROR("Command not understood, try 'help'.\n");
     response.addVocab(VOCAB_FAILED);
+    response.addString("Command not understood, try 'help'");
     return response.write(*out);
 }
 
