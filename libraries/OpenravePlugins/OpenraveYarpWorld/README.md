@@ -45,6 +45,11 @@ A `world mk sph/ssph (radius) (three params for pos)` example to create a static
 world mk ssph 0.1 0.5 0 1.5
 ```
 
+A `world mk file (absolute path)` example:
+```
+world mk file data/mug1.kinbody.xml
+```
+
 A `world grab (manipulatorName) (objName) 0/1` example (replace `arm` for `rightArm` if you are with `teoSim`):
 ```bash
 world grab arm box_0 1
