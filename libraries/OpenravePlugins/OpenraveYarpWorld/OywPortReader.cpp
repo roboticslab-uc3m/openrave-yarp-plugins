@@ -5,16 +5,16 @@
 
 #include <ColorDebug.h>
 
-#include "OywrrPortReader.hpp"
+#include "OywPortReader.hpp"
 
 // -----------------------------------------------------------------------------
 
-const yarp::conf::vocab32_t OywrrPortReader::VOCAB_OK = yarp::os::createVocab('o','k');
-const yarp::conf::vocab32_t OywrrPortReader::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
+const yarp::conf::vocab32_t OywPortReader::VOCAB_OK = yarp::os::createVocab('o','k');
+const yarp::conf::vocab32_t OywPortReader::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
 
 // -----------------------------------------------------------------------------
 
-bool OywrrPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os::Bottle& response)
+bool OywPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os::Bottle& response)
 {
     if (request.get(index).isString())
         return true;
@@ -30,7 +30,7 @@ bool OywrrPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::
 
 // -----------------------------------------------------------------------------
 
-bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
+bool OywPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
     if (!request.read(in)) return false;

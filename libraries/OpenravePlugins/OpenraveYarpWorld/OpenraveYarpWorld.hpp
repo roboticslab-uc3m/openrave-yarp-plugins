@@ -10,22 +10,22 @@
 
 /**
  * @ingroup OpenravePlugins
- * \defgroup OpenraveYarpWorldRpcResponder
+ * \defgroup OpenraveYarpWorld
  *
- * @brief Contains roboticslab::OpenraveYarpWorldRpcResponder.
+ * @brief Contains roboticslab::OpenraveYarpWorld.
  */
 
 /**
- * @ingroup OpenraveYarpWorldRpcResponder
+ * @ingroup OpenraveYarpWorld
  * @brief Opens YARP RpcPort, to control environment.
  */
-class OpenraveYarpWorldRpcResponder : public OpenRAVE::ModuleBase
+class OpenraveYarpWorld : public OpenRAVE::ModuleBase
 {
 public:
 
-    OpenraveYarpWorldRpcResponder(OpenRAVE::EnvironmentBasePtr penv);
+    OpenraveYarpWorld(OpenRAVE::EnvironmentBasePtr penv);
 
-    virtual ~OpenraveYarpWorldRpcResponder();
+    virtual ~OpenraveYarpWorld();
     virtual void Destroy();
 
     int main(const std::string& cmd);
@@ -35,7 +35,7 @@ public:
 private:
     yarp::os::Network yarp;
     yarp::os::RpcServer worldRpcServer;
-    OywrrPortReader processor;
+    OywPortReader processor;
 
     OpenRAVE::RobotBasePtr probot;
 };

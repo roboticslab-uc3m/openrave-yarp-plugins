@@ -10,10 +10,10 @@
 #include <openrave/openrave.h>
 
 /**
- * @ingroup OpenraveYarpWorldRpcResponder
+ * @ingroup OpenraveYarpWorld
  * @brief Processes RPC requests.
  */
-class OywrrPortReader : public yarp::os::PortReader
+class OywPortReader : public yarp::os::PortReader
 {
 public:
 

@@ -7,21 +7,21 @@
 
 #include <ColorDebug.h>
 
-#include "OywrrPortReader.hpp"
+#include "OywPortReader.hpp"
 
-#include "OpenraveYarpWorldRpcResponder.hpp"
+#include "OpenraveYarpWorld.hpp"
 
 // -----------------------------------------------------------------------------
 
-OpenraveYarpWorldRpcResponder::OpenraveYarpWorldRpcResponder(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
+OpenraveYarpWorld::OpenraveYarpWorld(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
 {
-    __description = "OpenraveYarpWorldRpcResponder plugin.";
-    OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpWorldRpcResponder::Open, this,_1,_2),"opens OpenraveYarpWorldRpcResponder");
+    __description = "OpenraveYarpWorld plugin.";
+    OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpWorld::Open, this,_1,_2),"opens OpenraveYarpWorld");
 }
 
 // -----------------------------------------------------------------------------
 
-OpenraveYarpWorldRpcResponder::~OpenraveYarpWorldRpcResponder()
+OpenraveYarpWorld::~OpenraveYarpWorld()
 {
     worldRpcServer.interrupt();
     worldRpcServer.close();
@@ -29,7 +29,7 @@ OpenraveYarpWorldRpcResponder::~OpenraveYarpWorldRpcResponder()
 
 // -----------------------------------------------------------------------------
 
-void OpenraveYarpWorldRpcResponder::Destroy()
+void OpenraveYarpWorld::Destroy()
 {
 
     RAVELOG_INFO("module unloaded from environment\n");
@@ -37,7 +37,7 @@ void OpenraveYarpWorldRpcResponder::Destroy()
 
 // -----------------------------------------------------------------------------
 
-int OpenraveYarpWorldRpcResponder::main(const std::string& cmd)
+int OpenraveYarpWorld::main(const std::string& cmd)
 {
     RAVELOG_INFO("module initialized with \"%s\"\n", cmd.c_str());
     // hard-coding "open", note that actual Open enabled portName selection
@@ -50,7 +50,7 @@ int OpenraveYarpWorldRpcResponder::main(const std::string& cmd)
 
 // -----------------------------------------------------------------------------
 
-bool OpenraveYarpWorldRpcResponder::Open(std::ostream& sout, std::istream& sinput)
+bool OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
 {
     std::vector<std::string> funcionArgs;
     while(sinput)
@@ -60,7 +60,7 @@ bool OpenraveYarpWorldRpcResponder::Open(std::ostream& sout, std::istream& sinpu
         funcionArgs.push_back(funcionArg);
     }
 
-    std::string portName("/OpenraveYarpWorldRpcResponder/rpc:s");
+    std::string portName("/OpenraveYarpWorld/rpc:s");
 
     if (funcionArgs.size() > 0)
     {
@@ -104,7 +104,7 @@ OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type
 {
     if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpworldrpcresponder" )
     {
-        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpWorldRpcResponder(penv));
+        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpWorld(penv));
     }
     return OpenRAVE::InterfaceBasePtr();
 }
@@ -113,7 +113,7 @@ OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type
 
 void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
 {
-    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpWorldRpcResponder");
+    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpWorld");
 }
 
 // -----------------------------------------------------------------------------
