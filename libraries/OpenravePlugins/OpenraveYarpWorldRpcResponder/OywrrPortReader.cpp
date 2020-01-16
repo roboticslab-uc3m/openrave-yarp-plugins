@@ -322,6 +322,18 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
         {
             // -- rpc command to write: world + grab + "part of robot" + name object + index + 0
             // --                         0       1           2              3           4     5
+            if (!checkIfString(request, 2, response))
+                return response.write(*out);
+            try
+            {
+                pRobot->SetActiveManipulator(request.get(2).asString()); // <in.get(2).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
+            }
+            catch (const std::exception& ex)
+            {
+                CD_ERROR("Caught openrave_exception: %s\n", ex.what());
+                response.addVocab(VOCAB_FAILED);
+                return response.write(*out);
+            }
             if (!checkIfString(request, 3, response))
                 return response.write(*out);
             if(request.get(3).asString()=="box")
@@ -331,14 +343,12 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                 {
                     if (request.get(5).asInt32()==1)
                     {
-                        pRobot->SetActiveManipulator(request.get(2).asString()); // <in.get(2).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
                         pRobot->Grab(boxKinBodyPtrs[inIndex-1]);
                         CD_INFO("The box is grabbed!!\n");
                         response.addVocab(VOCAB_OK);
                     }
                     else if (request.get(5).asInt32()==0)
                     {
-                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Release(boxKinBodyPtrs[inIndex-1]);
                         CD_INFO("The box is released!!\n");
                         response.addVocab(VOCAB_OK);
@@ -354,14 +364,12 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                 {
                     if (request.get(5).asInt32()==1)
                     {
-                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Grab(sboxKinBodyPtrs[inIndex-1]);
                         CD_INFO("The sbox is grabbed!!\n");
                         response.addVocab(VOCAB_OK);
                     }
                     else if (request.get(5).asInt32()==0)
                     {
-                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Release(sboxKinBodyPtrs[inIndex-1]);
                         CD_INFO("The sbox is released!!\n");
                         response.addVocab(VOCAB_OK);
@@ -377,14 +385,12 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                 {
                     if (request.get(5).asInt32()==1)
                     {
-                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Grab(ssphKinBodyPtrs[inIndex-1]);
                         CD_INFO("The sphere is grabbed!!\n");
                         response.addVocab(VOCAB_OK);
                     }
                     else if (request.get(5).asInt32()==0)
                     {
-                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Release(ssphKinBodyPtrs[inIndex-1]);
                         CD_INFO("The sphere is released!!\n");
                         response.addVocab(VOCAB_OK);
@@ -400,14 +406,12 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                 {
                     if (request.get(5).asInt32()==1)
                     {
-                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Grab(scylKinBodyPtrs[inIndex-1]);
                         CD_INFO("The cylinder is grabbed!!\n");
                         response.addVocab(VOCAB_OK);
                     }
                     else if (request.get(5).asInt32()==0)
                     {
-                        pRobot->SetActiveManipulator(request.get(2).asString());
                         pRobot->Release(scylKinBodyPtrs[inIndex-1]);
                         CD_INFO("The cylinder is released!!\n");
                         response.addVocab(VOCAB_OK);
@@ -424,24 +428,13 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                     CD_SUCCESS("object %s exists.\n", request.get(4).asString().c_str());
                     if (request.get(5).asInt32()==1)
                     {
-                        try
-                        {
-                            pRobot->SetActiveManipulator(request.get(2).asString());
-                        }
-                        catch (const std::exception& ex)
-                        {
-                            CD_ERROR("Caught openrave_exception: %s\n", ex.what());
-                            response.addVocab(VOCAB_FAILED);
-                            return response.write(*out);
-                        }
-                        CD_INFO("The cylinder is grabbed!!\n");
+                        CD_INFO("The object is grabbed!!\n");
                         pRobot->Grab(objPtr);
                         response.addVocab(VOCAB_OK);
                     }
                     else if (request.get(5).asInt32()==0)
                     {
-                        pRobot->SetActiveManipulator(request.get(2).asString());
-                        CD_INFO("The cylinder is released!!\n");
+                        CD_INFO("The object is released!!\n");
                         pRobot->Release(objPtr);
                         response.addVocab(VOCAB_OK);
                     }
