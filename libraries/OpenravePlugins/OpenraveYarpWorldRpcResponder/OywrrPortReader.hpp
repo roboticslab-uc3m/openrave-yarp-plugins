@@ -6,9 +6,10 @@
 #include <yarp/os/PortReader.h>
 #include <yarp/os/Vocab.h>
 
-#define VOCAB_OK yarp::os::createVocab('o','k')
-#define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
-
+/**
+ * @ingroup OpenraveYarpWorldRpcResponder
+ * @brief Processes RPC requests.
+ */
 class OywrrPortReader : public yarp::os::PortReader
 {
 public:
