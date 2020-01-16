@@ -40,6 +40,11 @@ A `world mk cyl/scyl (radius height) (three params for pos)` example to create a
 world mk scyl 0.1 0.1 0 0.5 1.5
 ```
 
+A `world mk sph/ssph (radius) (three params for pos)` example to create a static sphere:
+```bash
+world mk ssph 0.1 0.5 0 1.5
+```
+
 A `world grab (manipulatorName) (objName) 0/1` example (replace `arm` for `rightArm` if you are with `teoSim`):
 ```bash
 world grab arm box_0 1
