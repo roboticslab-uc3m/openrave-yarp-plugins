@@ -52,7 +52,7 @@ world mk file data/mug1.kinbody.xml
 
 Now move the mug:
 ```bash
-world mv file_0 0 0 1
+world set file_0 0 0 1
 ```
 
 A `world grab (manipulatorName) (objName) 0/1` example (replace `arm` for `rightArm` if you are with `teoSim`):
@@ -60,6 +60,13 @@ A `world grab (manipulatorName) (objName) 0/1` example (replace `arm` for `right
 world grab arm box_0 1
 ```
 
-More examples:
-- `world whereis tcp (manipulator)`
-- `world whereis obj (name)`
+A `world get obj (name)` example:
+```bash
+world get obj file_0
+```
+
+A `world get tcp (manipulator)` example:
+```bash
+world get tcp arm
+```
+
