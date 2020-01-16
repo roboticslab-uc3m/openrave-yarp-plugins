@@ -8,6 +8,9 @@
 
 #include <openrave/openrave.h>
 
+#include "OywPortReader.hpp"
+#include "OywPeriodicWrite.hpp"
+
 /**
  * @ingroup OpenravePlugins
  * \defgroup OpenraveYarpWorld

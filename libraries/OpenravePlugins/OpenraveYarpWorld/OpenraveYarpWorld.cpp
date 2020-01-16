@@ -7,8 +7,6 @@
 
 #include <ColorDebug.h>
 
-#include "OywPortReader.hpp"
-
 #include "OpenraveYarpWorld.hpp"
 
 // -----------------------------------------------------------------------------
