@@ -50,6 +50,7 @@ bool OywPortReader::read(yarp::os::ConnectionReader& in)
 help, \
 list, \
 world del all, \
+world del obj (objName), \
 world get obj (objName), \
 world get tcp (manipulator), \
 world grab (manipulatorName) (objName) 0/1, \
@@ -71,14 +72,41 @@ world draw 0/1 (radius r g b).");
     {
         if (!checkIfString(request, 1, response))
             return response.write(*out);
-        if ((request.get(1).asString()=="del")&&(request.get(2).asString()=="all"))
+        if (request.get(1).asString()=="del")
         {
-            for (unsigned int i=0; i<objKinBodyPtrs.size(); i++)
+            if (!checkIfString(request, 2, response))
+                return response.write(*out);
+            if (request.get(2).asString()=="all")
             {
-                pEnv->Remove(objKinBodyPtrs[i]);
+                for (unsigned int i=0; i<objKinBodyPtrs.size(); i++)
+                {
+                    pEnv->Remove(objKinBodyPtrs[i]);
+                }
+                objKinBodyPtrs.clear();
+                response.addVocab(VOCAB_OK);
             }
-            objKinBodyPtrs.clear();
-            response.addVocab(VOCAB_OK);
+            else if (request.get(2).asString()=="obj")
+            {
+                OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString());
+                if(objPtr)
+                {
+                    pEnv->Remove(objPtr);
+                    response.addVocab(VOCAB_OK);
+                }
+                else // null pointer
+                {
+                    CD_ERROR("object %s does not exist.\n", request.get(3).asString().c_str());
+                    response.addVocab(VOCAB_FAILED);
+                    response.addString("object does not exist");
+                }
+            }
+            else
+            {
+                CD_ERROR("'all' or 'obj (objName)'.\n");
+                response.addVocab(VOCAB_FAILED);
+                response.addString("'all' or 'obj (objName)");
+                return response.write(*out);
+            }
         }
         else if (request.get(1).asString()=="get")
         {
@@ -88,7 +116,7 @@ world draw 0/1 (radius r g b).");
             {
                 if (!checkIfString(request, 3, response))
                     return response.write(*out);
-                OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString().c_str());
+                OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString());
                 if(objPtr)
                 {
                     //Transform t = objPtr->GetTransform();
