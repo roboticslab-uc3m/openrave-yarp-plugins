@@ -30,14 +30,34 @@ Get information on the environment existing elements:
 info
 ```
 
-Create a dynamic box (an `sbox` would be static), which is interesting if you activate Physics Engine ODE and Set Gravity -Z!
+A `world mk box/sbox (three params for size) (three params for pos)` example to create a dynamic box (an `sbox` would be static), which is interesting if you activate Physics Engine ODE and Set Gravity -Z!
 ```bash
 world mk box 0.1 0.1 0.1 0 0 1.5
 ```
 
-A `world grab (manipulator) (obj) (num) 0/1` example (replace `arm` for `rightArm` if you are with `teoSim`):
+A `world mk cyl/scyl (radius height) (three params for pos)` example to create a static cylinder:
 ```bash
-world grab arm obj box_1 1
+world mk scyl 0.1 0.1 0 0.5 1.5
+```
+
+A `world mk sph/ssph (radius) (three params for pos)` example to create a static sphere:
+```bash
+world mk ssph 0.1 0.5 0 1.5
+```
+
+A `world mk file (absolute path)` example:
+```bash
+world mk file data/mug1.kinbody.xml
+```
+
+Now move the mug:
+```bash
+world mv file_0 0 0 1
+```
+
+A `world grab (manipulatorName) (objName) 0/1` example (replace `arm` for `rightArm` if you are with `teoSim`):
+```bash
+world grab arm box_0 1
 ```
 
 More examples:
