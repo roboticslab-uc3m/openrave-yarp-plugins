@@ -24,9 +24,9 @@ OpenraveYarpPluginLoader::OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr 
         CD_ERROR("Found no yarp network (try running \"yarpserver &\")!\n");
     CD_SUCCESS("Found yarp network.\n");
 
-    openPortReader.setOpenraveYarpPluginLoaderPtr(this);
-    openPortRpcServer.setReader(openPortReader);
-    openPortRpcServer.open("/OpenraveYarpPluginLoader/rpc:s");
+    oyplPortReader.setOpenraveYarpPluginLoaderPtr(this);
+    oyplRpcServer.setReader(oyplPortReader);
+    oyplRpcServer.open("/OpenraveYarpPluginLoader/rpc:s");
 
     openPortPeriodicWrite.setOpenraveYarpPluginLoaderPtr(this);
     openPortPeriodicWrite.open("/OpenraveYarpPluginLoader/state:o");
@@ -43,10 +43,10 @@ OpenraveYarpPluginLoader::~OpenraveYarpPluginLoader()
         yarpPlugins[i] = 0;
     }
 
-    openPortRpcServer.interrupt();
+    oyplRpcServer.interrupt();
     openPortPeriodicWrite.interrupt();
 
-    openPortRpcServer.close();
+    oyplRpcServer.close();
     openPortPeriodicWrite.close();
 }
 

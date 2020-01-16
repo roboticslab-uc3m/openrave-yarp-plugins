@@ -42,8 +42,8 @@ private:
     std::vector<yarp::dev::PolyDriver*> yarpPlugins;
     std::vector<yarp::os::Property> yarpPluginsProperties;
 
-    OyplPortReader openPortReader;
-    yarp::os::RpcServer openPortRpcServer;
+    OyplPortReader oyplPortReader;
+    yarp::os::RpcServer oyplRpcServer;
 
     OyplPeriodicWrite openPortPeriodicWrite;
 };
