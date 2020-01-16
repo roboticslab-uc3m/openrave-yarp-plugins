@@ -53,7 +53,8 @@ world mk file (absolute path), \
 world mv (objName) (three params for pos), \
 world grab (manipulatorName) (objName) 0/1, \
 world whereis obj (objName), \
-world whereis tcp (manipulator),  world draw 0/1 (radius r g b).");
+world whereis tcp (manipulator), \
+world draw 0/1 (radius r g b).");
         return response.write(*out);
     }
     else if (choice == "info") //-- info
