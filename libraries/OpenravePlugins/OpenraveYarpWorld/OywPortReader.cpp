@@ -233,7 +233,7 @@ world draw 0/1 (radius r g b).");
             OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString().c_str());
             if(!objPtr)
             {
-                CD_ERROR("object %s does not exist.\n", request.get(3).asString().c_str());
+                CD_ERROR("object %s does not exist.\n", request.get(2).asString().c_str());
                 response.addVocab(VOCAB_FAILED);
                 response.addString("object does not exist");
                 return response.write(*out);
