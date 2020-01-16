@@ -300,7 +300,8 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
         {
             // -- rpc command to write: world + grab + "part of robot" + name object + index + 0
             // --                         0       1           2              3           4     5
-
+            if (!checkIfString(request, 3, response))
+                return response.write(*out);
             if(request.get(3).asString()=="box")
             {
                 int inIndex = (request.get(4).asInt32()); // -- index of the object
@@ -425,6 +426,8 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
         }
         else if (request.get(1).asString()=="whereis")
         {
+            if (!checkIfString(request, 2, response))
+                return response.write(*out);
             if (request.get(2).asString()=="obj")
             {
                 OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString().c_str());
@@ -452,6 +455,8 @@ bool OywrrPortReader::read(yarp::os::ConnectionReader& in)
                 std::vector<OpenRAVE::RobotBasePtr> robots;
                 pEnv->GetRobots(robots);
                 OpenRAVE::RobotBasePtr robotPtr = robots.at(0);  //-- For now, we use only the first robot
+                if (!checkIfString(request, 3, response))
+                    return response.write(*out);
                 pRobotManip = robotPtr->GetManipulator(request.get(3).asString()); //-- <in.get(3).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
                 OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
                 OpenRAVE::Transform tool;
