@@ -343,7 +343,18 @@ world draw 0/1 (radius r g b).");
                     if (!checkIfString(request, 3, response))
                         return response.write(*out);
                     std::string fileName = request.get(3).asString();
-                    pEnv->ReadKinBodyXMLFile(objKinBodyPtr, fileName);
+                    objKinBodyPtr = pEnv->ReadKinBodyXMLFile(fileName);
+                    if(!!objKinBodyPtr)
+                    {
+                        CD_SUCCESS("Loaded file: %s\n", fileName.c_str());
+                    }
+                    else
+                    {
+                        CD_ERROR("Could not load file: %s.\n", fileName.c_str());
+                        response.addVocab(VOCAB_FAILED);
+                        response.addString("could not load file");
+                        return response.write(*out);
+                    }
                     objName.append("file_");
                     std::ostringstream s;
                     s << fileCount;
