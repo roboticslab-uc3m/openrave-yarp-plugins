@@ -65,8 +65,8 @@ A `world grab (manipulatorName) (objName) 0/1` example (replace `arm` for `right
 world grab arm box_0 1
 ```
 
-A `world fk (manipulatorName)` example:
+A `world fk (robotName) (manipulatorName)` example:
 ```bash
-world fk arm
+world fk BarrettWAM arm
 ```
 

@@ -68,7 +68,7 @@ help, \
 list, \
 world delall created, \
 world del obj (objName), \
-world fk (manipulatorName), \
+world fk (robotName) (manipulatorName), \
 world get (objName), \
 world grab (manipulatorName) (objName) 0/1, \
 world mk box/sbox (three params for size) (three params for pos), \
@@ -122,18 +122,19 @@ world draw 0/1 (radius r g b).");
         {
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
-            std::vector<OpenRAVE::RobotBasePtr> robots;
-            OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = nullptr;
-            pEnv->GetRobots(robots);
-            for(size_t robotIdx = 0; robotIdx<robots.size(); robotIdx++)
+            if (!checkIfString(request, 3, response))
+                return response.write(*out);
+            OpenRAVE::RobotBasePtr fkRobotPtr = pEnv->GetRobot(request.get(2).asString());
+            if(!fkRobotPtr)
             {
-                pRobotManip = robots[robotIdx]->GetManipulator(request.get(2).asString());
-                if(!!pRobotManip)
-                    break;
+                CD_ERROR("Could not find robot: %s.\n", request.get(2).asString().c_str());
+                response.addVocab(VOCAB_FAILED);
+                return response.write(*out);
             }
+            OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = fkRobotPtr->GetManipulator(request.get(3).asString());
             if(!pRobotManip)
             {
-                CD_ERROR("Could not find manipulator.\n");
+                CD_ERROR("Could not find manipulator: %s.\n", request.get(3).asString().c_str());
                 response.addVocab(VOCAB_FAILED);
                 return response.write(*out);
             }
