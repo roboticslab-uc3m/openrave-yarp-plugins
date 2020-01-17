@@ -60,13 +60,13 @@ A `world get (name)` example:
 world get file_0
 ```
 
-A `world grab (manipulatorName) (objName) 0/1` example (replace `arm` for `rightArm` if you are with `teoSim`):
+A `world grab (robotName) (manipulatorName) (objName) 0/1` example (replace `arm` for `rightArm` if you are with `teoSim`):
 ```bash
-world grab arm box_0 1
+world grab BarrettWAM arm box_0 1
 ```
 
-A `world fk (manipulatorName)` example:
+A `world fk (robotName) (manipulatorName)` example:
 ```bash
-world fk arm
+world fk BarrettWAM arm
 ```
 

@@ -32,11 +32,19 @@ bool OywPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os
 
 // -----------------------------------------------------------------------------
 
-bool OywPortReader::tryToSetActiveManipulator(const std::string& manipulatorName, yarp::os::Bottle& response)
+bool OywPortReader::tryToSetActiveManipulator(const std::string& robot, const std::string& manipulator, yarp::os::Bottle& response)
 {
+    OpenRAVE::RobotBasePtr wantActiveRobotPtr = pEnv->GetRobot(robot);
+    if(!wantActiveRobotPtr)
+    {
+        CD_ERROR("Could not find robot: %s.\n", robot.c_str());
+        response.addVocab(VOCAB_FAILED);
+        return false;
+    }
+
     try
     {
-        pRobot->SetActiveManipulator(manipulatorName);
+        wantActiveRobotPtr->SetActiveManipulator(manipulator);
     }
     catch (const std::exception& ex)
     {
@@ -68,9 +76,9 @@ help, \
 list, \
 world delall created, \
 world del obj (objName), \
-world fk (manipulatorName), \
+world fk (robotName) (manipulatorName), \
 world get (objName), \
-world grab (manipulatorName) (objName) 0/1, \
+world grab (robotName) (manipulatorName) (objName) 0/1, \
 world mk box/sbox (three params for size) (three params for pos), \
 world mk cyl/scyl (radius height) (three params for pos), \
 world mk sph/ssph (radius) (three params for pos), \
@@ -120,12 +128,24 @@ world draw 0/1 (radius r g b).");
         }
         else if (request.get(1).asString()=="fk")
         {
-            std::vector<OpenRAVE::RobotBasePtr> robots;
-            pEnv->GetRobots(robots);
-            OpenRAVE::RobotBasePtr robotPtr = robots.at(0);  //-- For now, we use only the first robot
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
-            OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = robotPtr->GetManipulator(request.get(2).asString());
+            if (!checkIfString(request, 3, response))
+                return response.write(*out);
+            OpenRAVE::RobotBasePtr fkRobotPtr = pEnv->GetRobot(request.get(2).asString());
+            if(!fkRobotPtr)
+            {
+                CD_ERROR("Could not find robot: %s.\n", request.get(2).asString().c_str());
+                response.addVocab(VOCAB_FAILED);
+                return response.write(*out);
+            }
+            OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = fkRobotPtr->GetManipulator(request.get(3).asString());
+            if(!pRobotManip)
+            {
+                CD_ERROR("Could not find manipulator: %s.\n", request.get(3).asString().c_str());
+                response.addVocab(VOCAB_FAILED);
+                return response.write(*out);
+            }
             OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
             OpenRAVE::Transform tool;
             //tool.trans = Vector(0.0,0.0,1.3);
@@ -167,35 +187,37 @@ world draw 0/1 (radius r g b).");
         }
         else if (request.get(1).asString()=="grab")
         {
-            // -- rpc command to write: world + grab + "part of robot" + name object + 0
-            // --                         0       1           2              3         4
+            // -- rpc command to write: world + grab + robotName + manipulartorName + name object + 0
+            // --                         0       1           2              3         4            5
             if (!checkIfString(request, 2, response))
-                return response.write(*out);
-            if (!tryToSetActiveManipulator(request.get(2).asString(), response))
                 return response.write(*out);
             if (!checkIfString(request, 3, response))
                 return response.write(*out);
-            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString().c_str());
+            if (!checkIfString(request, 4, response))
+                return response.write(*out);
+            if (!tryToSetActiveManipulator(request.get(2).asString(), request.get(3).asString(), response))
+                return response.write(*out);
+            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(4).asString().c_str());
             if(objPtr)
             {
-                CD_SUCCESS("object %s exists.\n", request.get(3).asString().c_str());
-                if (request.get(4).asInt32()==1)
+                CD_SUCCESS("object %s exists.\n", request.get(4).asString().c_str());
+                if (request.get(5).asInt32()==1)
                 {
                     CD_INFO("The object is grabbed!!\n");
-                    pRobot->Grab(objPtr);
+                    pEnv->GetRobot(request.get(2).asString())->Grab(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
-                else if (request.get(4).asInt32()==0)
+                else if (request.get(5).asInt32()==0)
                 {
                     CD_INFO("The object is released!!\n");
-                    pRobot->Release(objPtr);
+                    pEnv->GetRobot(request.get(2).asString())->Release(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
                 else response.addVocab(VOCAB_FAILED);
             }
             else // null pointer
             {
-                CD_WARNING("object %s does not exist.\n", request.get(3).asString().c_str());
+                CD_WARNING("object %s does not exist.\n", request.get(4).asString().c_str());
                 response.addVocab(VOCAB_FAILED);
             }
         }
