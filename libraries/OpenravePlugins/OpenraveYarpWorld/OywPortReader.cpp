@@ -120,12 +120,23 @@ world draw 0/1 (radius r g b).");
         }
         else if (request.get(1).asString()=="fk")
         {
-            std::vector<OpenRAVE::RobotBasePtr> robots;
-            pEnv->GetRobots(robots);
-            OpenRAVE::RobotBasePtr robotPtr = robots.at(0);  //-- For now, we use only the first robot
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
-            OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = robotPtr->GetManipulator(request.get(2).asString());
+            std::vector<OpenRAVE::RobotBasePtr> robots;
+            OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = nullptr;
+            pEnv->GetRobots(robots);
+            for(size_t robotIdx = 0; robotIdx<robots.size(); robotIdx++)
+            {
+                pRobotManip = robots[robotIdx]->GetManipulator(request.get(2).asString());
+                if(!!pRobotManip)
+                    break;
+            }
+            if(!pRobotManip)
+            {
+                CD_ERROR("Could not find manipulator.\n");
+                response.addVocab(VOCAB_FAILED);
+                return response.write(*out);
+            }
             OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
             OpenRAVE::Transform tool;
             //tool.trans = Vector(0.0,0.0,1.3);
