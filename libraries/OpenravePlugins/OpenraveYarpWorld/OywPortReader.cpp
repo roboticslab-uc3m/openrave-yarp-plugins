@@ -204,13 +204,13 @@ world draw 0/1 (radius r g b).");
                 if (request.get(5).asInt32()==1)
                 {
                     CD_INFO("The object is grabbed!!\n");
-                    pRobot->Grab(objPtr);
+                    pEnv->GetRobot(request.get(2).asString())->Grab(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
                 else if (request.get(5).asInt32()==0)
                 {
                     CD_INFO("The object is released!!\n");
-                    pRobot->Release(objPtr);
+                    pEnv->GetRobot(request.get(2).asString())->Release(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
                 else response.addVocab(VOCAB_FAILED);

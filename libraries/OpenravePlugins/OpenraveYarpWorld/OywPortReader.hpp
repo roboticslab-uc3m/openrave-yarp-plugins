@@ -20,7 +20,6 @@ class OywPortReader : public yarp::os::PortReader
 public:
     OywPortReader() : boxCount(0), sboxCount (0), cylCount(0), scylCount(0), sphCount(0), ssphCount(0), meshCount(0), fileCount(0) {}
     void setEnvironment(OpenRAVE::EnvironmentBasePtr value) { pEnv = value; }
-    void setRobot(OpenRAVE::RobotBasePtr value) { pRobot = value; }
     void setOpenraveYarpWorldPtr(OpenraveYarpWorld *value) { openraveYarpWorldPtr = value; }
 
 private:
@@ -33,7 +32,6 @@ private:
     int boxCount, sboxCount, cylCount, scylCount, sphCount, ssphCount, meshCount, fileCount;
 
     OpenRAVE::EnvironmentBasePtr pEnv;  // set in setEnvironment
-    OpenRAVE::RobotBasePtr pRobot;  // set in setRobot
 
     // Implement the actual responder (callback on RPC).
     virtual bool read(yarp::os::ConnectionReader& in);

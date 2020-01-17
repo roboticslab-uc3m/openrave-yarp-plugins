@@ -119,7 +119,6 @@ bool OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
 
     //-- PortReader and RpcServer
     oywPortReader.setEnvironment(penv);
-    oywPortReader.setRobot(probot);
     oywPortReader.setOpenraveYarpWorldPtr(this);
     oywRpcServer.open("/OpenraveYarpWorld/rpc:s");
     oywRpcServer.setReader(oywPortReader);
