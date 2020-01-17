@@ -11,6 +11,9 @@
 #include "OywPortReader.hpp"
 #include "OywPeriodicWrite.hpp"
 
+namespace roboticslab
+{
+
 /**
  * @ingroup OpenravePlugins
  * \defgroup OpenraveYarpWorld
@@ -46,5 +49,7 @@ private:
 
     OpenRAVE::RobotBasePtr probot;
 };
+
+} // namespace roboticslab
 
 #endif // __OPENRAVE_YARP_WORLD_HPP__

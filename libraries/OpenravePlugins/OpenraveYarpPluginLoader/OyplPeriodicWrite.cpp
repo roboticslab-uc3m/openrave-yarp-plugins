@@ -8,14 +8,14 @@
 
 // -----------------------------------------------------------------------------
 
-OyplPeriodicWrite::OyplPeriodicWrite() : yarp::os::PeriodicThread(1.0)
+roboticslab::OyplPeriodicWrite::OyplPeriodicWrite() : yarp::os::PeriodicThread(1.0)
 {
     PeriodicThread::start();
 }
 
 // -----------------------------------------------------------------------------
 
-void OyplPeriodicWrite::run()
+void roboticslab::OyplPeriodicWrite::run()
 {
     if(!Port::isOpen())
         return;

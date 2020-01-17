@@ -13,6 +13,9 @@
 #include "OyplPortReader.hpp"
 #include "OyplPeriodicWrite.hpp"
 
+namespace roboticslab
+{
+
 /**
  * @ingroup OpenravePlugins
  * \defgroup OpenraveYarpPluginLoader
@@ -47,5 +50,7 @@ private:
 
     OyplPeriodicWrite openPortPeriodicWrite;
 };
+
+} // namespace roboticslab
 
 #endif // __OPENRAVE_YARP_PLUGIN_LOADER_HPP__

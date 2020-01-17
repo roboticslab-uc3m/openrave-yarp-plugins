@@ -6,6 +6,9 @@
 #include <yarp/os/PortReader.h>
 #include <yarp/os/Vocab.h>
 
+namespace roboticslab
+{
+
 class OpenraveYarpPluginLoader;
 
 /**
@@ -24,5 +27,7 @@ private:
     static const yarp::conf::vocab32_t VOCAB_OK;
     static const yarp::conf::vocab32_t VOCAB_FAILED;
 };
+
+} // namespace roboticslab
 
 #endif // __OPEN_PORT_READER_HPP__

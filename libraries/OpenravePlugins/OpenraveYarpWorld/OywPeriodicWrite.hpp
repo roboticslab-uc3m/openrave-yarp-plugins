@@ -6,11 +6,14 @@
 #include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Port.h>
 
+namespace roboticslab
+{
+
 class OpenraveYarpWorld;
 
 /**
- * @ingroup OpenraveYarpPluginLoader
- * @brief Publishes open YARP plugin list.
+ * @ingroup OpenraveYarpWorld
+ * @brief Publishes bodies.
  */
 class OywPeriodicWrite : yarp::os::PeriodicThread, public yarp::os::Port
 {
@@ -21,5 +24,7 @@ private:
     OpenraveYarpWorld* openraveYarpWorldPtr;
     virtual void run() override;
 };
+
+} // namespace roboticslab
 
 #endif // __OYW_PERIODIC_WRITE_HPP__

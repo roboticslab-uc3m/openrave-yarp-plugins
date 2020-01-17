@@ -11,12 +11,12 @@
 
 // -----------------------------------------------------------------------------
 
-const yarp::conf::vocab32_t OywPortReader::VOCAB_OK = yarp::os::createVocab('o','k');
-const yarp::conf::vocab32_t OywPortReader::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
+const yarp::conf::vocab32_t roboticslab::OywPortReader::VOCAB_OK = yarp::os::createVocab('o','k');
+const yarp::conf::vocab32_t roboticslab::OywPortReader::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
 
 // -----------------------------------------------------------------------------
 
-bool OywPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os::Bottle& response)
+bool roboticslab::OywPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os::Bottle& response)
 {
     if (request.get(index).isString())
         return true;
@@ -32,7 +32,7 @@ bool OywPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os
 
 // -----------------------------------------------------------------------------
 
-bool OywPortReader::tryToSetActiveManipulator(const std::string& robot, const std::string& manipulator, yarp::os::Bottle& response)
+bool roboticslab::OywPortReader::tryToSetActiveManipulator(const std::string& robot, const std::string& manipulator, yarp::os::Bottle& response)
 {
     OpenRAVE::RobotBasePtr wantActiveRobotPtr = pEnv->GetRobot(robot);
     if(!wantActiveRobotPtr)
@@ -57,7 +57,7 @@ bool OywPortReader::tryToSetActiveManipulator(const std::string& robot, const st
 
 // -----------------------------------------------------------------------------
 
-bool OywPortReader::read(yarp::os::ConnectionReader& in)
+bool roboticslab::OywPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
     if (!request.read(in)) return false;

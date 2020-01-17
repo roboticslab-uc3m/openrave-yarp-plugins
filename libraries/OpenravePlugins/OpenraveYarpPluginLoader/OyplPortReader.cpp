@@ -11,12 +11,12 @@
 
 // -----------------------------------------------------------------------------
 
-const yarp::conf::vocab32_t OyplPortReader::VOCAB_OK = yarp::os::createVocab('o','k');
-const yarp::conf::vocab32_t OyplPortReader::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
+const yarp::conf::vocab32_t roboticslab::OyplPortReader::VOCAB_OK = yarp::os::createVocab('o','k');
+const yarp::conf::vocab32_t roboticslab::OyplPortReader::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
 
 // -----------------------------------------------------------------------------
 
-bool OyplPortReader::read(yarp::os::ConnectionReader& in)
+bool roboticslab::OyplPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
     if (!request.read(in)) return false;

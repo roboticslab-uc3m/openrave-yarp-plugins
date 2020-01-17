@@ -6,6 +6,9 @@
 #include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Port.h>
 
+namespace roboticslab
+{
+
 class OpenraveYarpPluginLoader;
 
 /**
@@ -21,5 +24,7 @@ private:
     OpenraveYarpPluginLoader* openraveYarpPluginLoaderPtr;
     virtual void run() override;
 };
+
+} // namespace roboticslab
 
 #endif // __OPEN_PORT_PERIODIC_WRITE_HPP__

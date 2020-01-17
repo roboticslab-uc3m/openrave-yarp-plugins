@@ -9,6 +9,9 @@
 
 #include <openrave/openrave.h>
 
+namespace roboticslab
+{
+
 class OpenraveYarpWorld;
 
 /**
@@ -44,5 +47,7 @@ private:
     static const yarp::conf::vocab32_t VOCAB_OK;
     static const yarp::conf::vocab32_t VOCAB_FAILED;
 };
+
+} // namespace roboticslab
 
 #endif // __OYW_PORT_READER_HPP__

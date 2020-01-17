@@ -14,7 +14,7 @@
 
 // -----------------------------------------------------------------------------
 
-OpenraveYarpPluginLoader::OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
+roboticslab::OpenraveYarpPluginLoader::OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
 {
     __description = "OpenraveYarpPluginLoader plugin.";
     OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens OpenraveYarpPluginLoader");
@@ -34,7 +34,7 @@ OpenraveYarpPluginLoader::OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr 
 
 // -----------------------------------------------------------------------------
 
-OpenraveYarpPluginLoader::~OpenraveYarpPluginLoader()
+roboticslab::OpenraveYarpPluginLoader::~OpenraveYarpPluginLoader()
 {
     for(int i=0;i<yarpPlugins.size();i++)
     {
@@ -52,14 +52,14 @@ OpenraveYarpPluginLoader::~OpenraveYarpPluginLoader()
 
 // -----------------------------------------------------------------------------
 
-void OpenraveYarpPluginLoader::Destroy()
+void roboticslab::OpenraveYarpPluginLoader::Destroy()
 {
     RAVELOG_INFO("module unloaded from environment\n");
 }
 
 // -----------------------------------------------------------------------------
 
-bool OpenraveYarpPluginLoader::addYarpPluginsLists(yarp::os::Bottle& info)
+bool roboticslab::OpenraveYarpPluginLoader::addYarpPluginsLists(yarp::os::Bottle& info)
 {
     for (size_t i=0;i<yarpPluginsProperties.size();i++)
     {
@@ -80,7 +80,7 @@ bool OpenraveYarpPluginLoader::addYarpPluginsLists(yarp::os::Bottle& info)
 
 // -----------------------------------------------------------------------------
 
-int OpenraveYarpPluginLoader::main(const std::string& cmd)
+int roboticslab::OpenraveYarpPluginLoader::main(const std::string& cmd)
 {
     CD_DEBUG("[%s]\n", cmd.c_str());
     std::stringstream ss(cmd);
@@ -163,7 +163,7 @@ int OpenraveYarpPluginLoader::main(const std::string& cmd)
 
 // -----------------------------------------------------------------------------
 
-bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
+bool roboticslab::OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
 {
     CD_INFO("Checking for yarp network...\n");
     if ( ! yarp.checkNetwork() )
@@ -412,7 +412,7 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
 
 // -----------------------------------------------------------------------------
 
-bool OpenraveYarpPluginLoader::close(const int i)
+bool roboticslab::OpenraveYarpPluginLoader::close(const int i)
 {
     if(!yarpPlugins[i]->close())
     {
@@ -431,7 +431,7 @@ OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type
 {
     if( type == OpenRAVE::PT_Module && interfacename == "openraveyarppluginloader")
     {
-        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPluginLoader(penv));
+        return OpenRAVE::InterfaceBasePtr(new roboticslab::OpenraveYarpPluginLoader(penv));
     }
     return OpenRAVE::InterfaceBasePtr();
 }
