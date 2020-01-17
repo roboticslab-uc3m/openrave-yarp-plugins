@@ -172,11 +172,10 @@ world draw 0/1 (radius r g b).");
                 //Transform t = objPtr->GetTransform();
                 OpenRAVE::Vector tr = objPtr->GetTransform().trans;
                 CD_SUCCESS("object %s at %f, %f, %f.\n", objPtr->GetName().c_str(), tr.x,tr.y,tr.z);
-                yarp::os::Bottle trans;
+                yarp::os::Bottle& trans = response.addList();
                 trans.addFloat64(tr.x);
                 trans.addFloat64(tr.y);
                 trans.addFloat64(tr.z);
-                response.addList() = trans;
                 response.addVocab(VOCAB_OK);
             }
             else // null pointer
