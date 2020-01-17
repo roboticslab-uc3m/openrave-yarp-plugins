@@ -121,7 +121,7 @@ world draw 0/1 (radius r g b).");
                 pEnv->Remove(objPtr);
                 response.addVocab(VOCAB_OK);
             }
-            else // null pointer
+            else
             {
                 CD_ERROR("object %s does not exist.\n", request.get(2).asString().c_str());
                 response.addVocab(VOCAB_FAILED);
@@ -216,7 +216,7 @@ world draw 0/1 (radius r g b).");
                 }
                 else response.addVocab(VOCAB_FAILED);
             }
-            else // null pointer
+            else
             {
                 CD_WARNING("object %s does not exist.\n", request.get(4).asString().c_str());
                 response.addVocab(VOCAB_FAILED);
