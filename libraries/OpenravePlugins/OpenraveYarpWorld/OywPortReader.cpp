@@ -97,10 +97,10 @@ world draw 0/1 (radius r g b).");
     {
         if (!checkIfString(request, 1, response))
             return response.write(*out);
-        if (!checkIfString(request, 2, response))
-            return response.write(*out);
         if (request.get(1).asString()=="delall")
         {
+            if (!checkIfString(request, 2, response))
+                return response.write(*out);
             if (request.get(2).asString()=="created")
             {
                 for (unsigned int i=0; i<objKinBodyPtrs.size(); i++)
@@ -113,6 +113,8 @@ world draw 0/1 (radius r g b).");
         }
         if (request.get(1).asString()=="del")
         {
+            if (!checkIfString(request, 2, response))
+                return response.write(*out);
             OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString());
             if(objPtr)
             {
@@ -187,8 +189,7 @@ world draw 0/1 (radius r g b).");
         }
         else if (request.get(1).asString()=="grab")
         {
-            // -- rpc command to write: world + grab + robotName + manipulatorName + objectName + 0/1
-            // --                       0       1      2           3                 4            5
+            // -- (0)world + (1)grab + (2)robotName + (3)manipulatorName + (4)objectName + (5)0/1
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
             if (!checkIfString(request, 3, response))
