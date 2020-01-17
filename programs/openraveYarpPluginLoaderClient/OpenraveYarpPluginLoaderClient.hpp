@@ -14,6 +14,9 @@
 namespace roboticslab
 {
 
+/**
+ * @ingroup OpenraveYarpPluginLoaderClient
+ */
 class CallbackPort : public yarp::os::BufferedPort<yarp::os::Bottle>
 {
 public:
@@ -26,10 +29,7 @@ private:
 };
 
 /**
- * @ingroup openraveYarpPluginLoaderClient
- *
- * @brief openraveYarpPluginLoaderClient.
- *
+ * @ingroup OpenraveYarpPluginLoaderClient
  */
 class OpenraveYarpPluginLoaderClient : public yarp::os::RFModule
 {
