@@ -21,7 +21,6 @@ public:
     OywPortReader() : boxCount(0), sboxCount (0), cylCount(0), scylCount(0), sphCount(0), ssphCount(0), meshCount(0), fileCount(0) {}
     void setEnvironment(OpenRAVE::EnvironmentBasePtr value) { pEnv = value; }
     void setRobot(OpenRAVE::RobotBasePtr value) { pRobot = value; }
-    void setRobotManip(OpenRAVE::RobotBase::ManipulatorPtr value) { pRobotManip = value; }
     void setOpenraveYarpWorldPtr(OpenraveYarpWorld *value) { openraveYarpWorldPtr = value; }
 
 private:
