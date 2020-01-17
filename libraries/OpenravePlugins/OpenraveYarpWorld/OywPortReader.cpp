@@ -32,6 +32,23 @@ bool OywPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os
 
 // -----------------------------------------------------------------------------
 
+bool OywPortReader::tryToSetActiveManipulator(const std::string& manipulatorName, yarp::os::Bottle& response)
+{
+    try
+    {
+        pRobot->SetActiveManipulator(manipulatorName);
+    }
+    catch (const std::exception& ex)
+    {
+        CD_ERROR("Caught openrave_exception: %s\n", ex.what());
+        response.addVocab(VOCAB_FAILED);
+        return false;
+    }
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
 bool OywPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
@@ -49,10 +66,10 @@ bool OywPortReader::read(yarp::os::ConnectionReader& in)
         response.addString("Available commands: \
 help, \
 list, \
-world del all, \
+world delall created, \
 world del obj (objName), \
-world get obj (objName), \
-world get tcp (manipulator), \
+world fk (manipulatorName), \
+world get (objName), \
 world grab (manipulatorName) (objName) 0/1, \
 world mk box/sbox (three params for size) (three params for pos), \
 world mk cyl/scyl (radius height) (three params for pos), \
@@ -72,11 +89,11 @@ world draw 0/1 (radius r g b).");
     {
         if (!checkIfString(request, 1, response))
             return response.write(*out);
-        if (request.get(1).asString()=="del")
+        if (!checkIfString(request, 2, response))
+            return response.write(*out);
+        if (request.get(1).asString()=="delall")
         {
-            if (!checkIfString(request, 2, response))
-                return response.write(*out);
-            if (request.get(2).asString()=="all")
+            if (request.get(2).asString()=="created")
             {
                 for (unsigned int i=0; i<objKinBodyPtrs.size(); i++)
                 {
@@ -85,86 +102,68 @@ world draw 0/1 (radius r g b).");
                 objKinBodyPtrs.clear();
                 response.addVocab(VOCAB_OK);
             }
-            else if (request.get(2).asString()=="obj")
+        }
+        if (request.get(1).asString()=="del")
+        {
+            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString());
+            if(objPtr)
             {
-                OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString());
-                if(objPtr)
-                {
-                    pEnv->Remove(objPtr);
-                    response.addVocab(VOCAB_OK);
-                }
-                else // null pointer
-                {
-                    CD_ERROR("object %s does not exist.\n", request.get(3).asString().c_str());
-                    response.addVocab(VOCAB_FAILED);
-                    response.addString("object does not exist");
-                }
+                pEnv->Remove(objPtr);
+                response.addVocab(VOCAB_OK);
             }
-            else
+            else // null pointer
             {
-                CD_ERROR("'all' or 'obj (objName)'.\n");
+                CD_ERROR("object %s does not exist.\n", request.get(2).asString().c_str());
                 response.addVocab(VOCAB_FAILED);
-                response.addString("'all' or 'obj (objName)");
-                return response.write(*out);
+                response.addString("object does not exist");
             }
+        }
+        else if (request.get(1).asString()=="fk")
+        {
+            std::vector<OpenRAVE::RobotBasePtr> robots;
+            pEnv->GetRobots(robots);
+            OpenRAVE::RobotBasePtr robotPtr = robots.at(0);  //-- For now, we use only the first robot
+            if (!checkIfString(request, 2, response))
+                return response.write(*out);
+            OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = robotPtr->GetManipulator(request.get(2).asString());
+            OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
+            OpenRAVE::Transform tool;
+            //tool.trans = Vector(0.0,0.0,1.3);
+            tool.rot = OpenRAVE::geometry::quatFromAxisAngle(OpenRAVE::Vector(0,0,0)); //-- Converts an axis-angle rotation into a quaternion.
+            tool.rot = ee.rot;
+            OpenRAVE::Transform tcp = ee * tool;
+            //Transform tcp = ee;
+            CD_SUCCESS("TCP at %f, %f, %f.\n", tcp.trans.x, tcp.trans.y, tcp.trans.z);
+            yarp::os::Bottle trans;
+            trans.addFloat64(tcp.trans.x);
+            trans.addFloat64(tcp.trans.y);
+            trans.addFloat64(tcp.trans.z);
+            response.addList() = trans;
+            response.addVocab(VOCAB_OK);
         }
         else if (request.get(1).asString()=="get")
         {
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
-            if (request.get(2).asString()=="obj")
+            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString());
+            if(objPtr)
             {
-                if (!checkIfString(request, 3, response))
-                    return response.write(*out);
-                OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString());
-                if(objPtr)
-                {
-                    //Transform t = objPtr->GetTransform();
-                    OpenRAVE::Vector tr = objPtr->GetTransform().trans;
-                    CD_SUCCESS("object %s at %f, %f, %f.\n", objPtr->GetName().c_str(), tr.x,tr.y,tr.z);
-                    yarp::os::Bottle trans;
-                    trans.addFloat64(tr.x);
-                    trans.addFloat64(tr.y);
-                    trans.addFloat64(tr.z);
-                    response.addList() = trans;
-                    response.addVocab(VOCAB_OK);
-                }
-                else // null pointer
-                {
-                    CD_ERROR("object %s does not exist.\n", request.get(3).asString().c_str());
-                    response.addVocab(VOCAB_FAILED);
-                    response.addString("object does not exist");
-                }
-            }
-            else if (request.get(2).asString()=="tcp")
-            {
-                std::vector<OpenRAVE::RobotBasePtr> robots;
-                pEnv->GetRobots(robots);
-                OpenRAVE::RobotBasePtr robotPtr = robots.at(0);  //-- For now, we use only the first robot
-                if (!checkIfString(request, 3, response))
-                    return response.write(*out);
-                pRobotManip = robotPtr->GetManipulator(request.get(3).asString()); //-- <in.get(3).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
-                OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
-                OpenRAVE::Transform tool;
-                //tool.trans = Vector(0.0,0.0,1.3);
-                tool.rot = OpenRAVE::geometry::quatFromAxisAngle(OpenRAVE::Vector(0,0,0)); //-- Converts an axis-angle rotation into a quaternion.
-                tool.rot = ee.rot;
-                OpenRAVE::Transform tcp = ee * tool;
-                //Transform tcp = ee;
-                CD_SUCCESS("TCP at %f, %f, %f.\n", tcp.trans.x, tcp.trans.y, tcp.trans.z);
+                //Transform t = objPtr->GetTransform();
+                OpenRAVE::Vector tr = objPtr->GetTransform().trans;
+                CD_SUCCESS("object %s at %f, %f, %f.\n", objPtr->GetName().c_str(), tr.x,tr.y,tr.z);
                 yarp::os::Bottle trans;
-                trans.addFloat64(tcp.trans.x);
-                trans.addFloat64(tcp.trans.y);
-                trans.addFloat64(tcp.trans.z);
+                trans.addFloat64(tr.x);
+                trans.addFloat64(tr.y);
+                trans.addFloat64(tr.z);
                 response.addList() = trans;
                 response.addVocab(VOCAB_OK);
             }
-            else
+            else // null pointer
             {
-                CD_WARNING("where is what?\n");
+                CD_ERROR("object %s does not exist.\n", request.get(3).asString().c_str());
                 response.addVocab(VOCAB_FAILED);
+                response.addString("object does not exist");
             }
-
         }
         else if (request.get(1).asString()=="grab")
         {
@@ -172,16 +171,8 @@ world draw 0/1 (radius r g b).");
             // --                         0       1           2              3         4
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
-            try
-            {
-                pRobot->SetActiveManipulator(request.get(2).asString()); // <in.get(2).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
-            }
-            catch (const std::exception& ex)
-            {
-                CD_ERROR("Caught openrave_exception: %s\n", ex.what());
-                response.addVocab(VOCAB_FAILED);
+            if (!tryToSetActiveManipulator(request.get(2).asString(), response))
                 return response.write(*out);
-            }
             if (!checkIfString(request, 3, response))
                 return response.write(*out);
             OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString().c_str());

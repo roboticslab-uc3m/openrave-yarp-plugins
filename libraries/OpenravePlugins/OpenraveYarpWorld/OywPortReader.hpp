@@ -21,7 +21,6 @@ public:
     OywPortReader() : boxCount(0), sboxCount (0), cylCount(0), scylCount(0), sphCount(0), ssphCount(0), meshCount(0), fileCount(0) {}
     void setEnvironment(OpenRAVE::EnvironmentBasePtr value) { pEnv = value; }
     void setRobot(OpenRAVE::RobotBasePtr value) { pRobot = value; }
-    void setRobotManip(OpenRAVE::RobotBase::ManipulatorPtr value) { pRobotManip = value; }
     void setOpenraveYarpWorldPtr(OpenraveYarpWorld *value) { openraveYarpWorldPtr = value; }
 
 private:
@@ -35,12 +34,13 @@ private:
 
     OpenRAVE::EnvironmentBasePtr pEnv;  // set in setEnvironment
     OpenRAVE::RobotBasePtr pRobot;  // set in setRobot
-    OpenRAVE::RobotBase::ManipulatorPtr pRobotManip;  // set in setRobot
 
     // Implement the actual responder (callback on RPC).
     virtual bool read(yarp::os::ConnectionReader& in);
 
     bool checkIfString(yarp::os::Bottle& request, int index, yarp::os::Bottle& response);
+    bool tryToSetActiveManipulator(const std::string& manipulatorName, yarp::os::Bottle& response);
+
 
     static const yarp::conf::vocab32_t VOCAB_OK;
     static const yarp::conf::vocab32_t VOCAB_FAILED;
