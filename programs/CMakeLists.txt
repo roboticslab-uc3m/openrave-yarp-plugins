@@ -2,3 +2,4 @@
 # Authors: Juan G. Victores
 
 add_subdirectory(openraveYarpPluginLoaderClient)
+add_subdirectory(openraveYarpWorldClient)
