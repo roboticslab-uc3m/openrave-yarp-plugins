@@ -32,6 +32,23 @@ bool OywPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os
 
 // -----------------------------------------------------------------------------
 
+bool OywPortReader::tryToSetActiveManipulator(const std::string& manipulatorName, yarp::os::Bottle& response)
+{
+    try
+    {
+        pRobot->SetActiveManipulator(manipulatorName);
+    }
+    catch (const std::exception& ex)
+    {
+        CD_ERROR("Caught openrave_exception: %s\n", ex.what());
+        response.addVocab(VOCAB_FAILED);
+        return false;
+    }
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
 bool OywPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
@@ -52,7 +69,7 @@ list, \
 world del all, \
 world del obj (objName), \
 world get obj (objName), \
-world get tcp (manipulator), \
+world get tcp (manipulatorName), \
 world grab (manipulatorName) (objName) 0/1, \
 world mk box/sbox (three params for size) (three params for pos), \
 world mk cyl/scyl (radius height) (three params for pos), \
@@ -112,10 +129,10 @@ world draw 0/1 (radius r g b).");
         {
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
+            if (!checkIfString(request, 3, response))
+                return response.write(*out);
             if (request.get(2).asString()=="obj")
             {
-                if (!checkIfString(request, 3, response))
-                    return response.write(*out);
                 OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString());
                 if(objPtr)
                 {
@@ -141,8 +158,6 @@ world draw 0/1 (radius r g b).");
                 std::vector<OpenRAVE::RobotBasePtr> robots;
                 pEnv->GetRobots(robots);
                 OpenRAVE::RobotBasePtr robotPtr = robots.at(0);  //-- For now, we use only the first robot
-                if (!checkIfString(request, 3, response))
-                    return response.write(*out);
                 OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = robotPtr->GetManipulator(request.get(3).asString());
                 OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
                 OpenRAVE::Transform tool;
@@ -172,16 +187,8 @@ world draw 0/1 (radius r g b).");
             // --                         0       1           2              3         4
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
-            try
-            {
-                pRobot->SetActiveManipulator(request.get(2).asString()); // <in.get(2).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
-            }
-            catch (const std::exception& ex)
-            {
-                CD_ERROR("Caught openrave_exception: %s\n", ex.what());
-                response.addVocab(VOCAB_FAILED);
+            if (!tryToSetActiveManipulator(request.get(2).asString(), response))
                 return response.write(*out);
-            }
             if (!checkIfString(request, 3, response))
                 return response.write(*out);
             OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString().c_str());
