@@ -66,7 +66,7 @@ bool OywPortReader::read(yarp::os::ConnectionReader& in)
         response.addString("Available commands: \
 help, \
 list, \
-world del all, \
+world delall created, \
 world del obj (objName), \
 world fk (manipulatorName), \
 world get (objName), \
@@ -89,11 +89,11 @@ world draw 0/1 (radius r g b).");
     {
         if (!checkIfString(request, 1, response))
             return response.write(*out);
-        if (request.get(1).asString()=="del")
+        if (!checkIfString(request, 2, response))
+            return response.write(*out);
+        if (request.get(1).asString()=="delall")
         {
-            if (!checkIfString(request, 2, response))
-                return response.write(*out);
-            if (request.get(2).asString()=="all")
+            if (request.get(2).asString()=="created")
             {
                 for (unsigned int i=0; i<objKinBodyPtrs.size(); i++)
                 {
@@ -102,27 +102,20 @@ world draw 0/1 (radius r g b).");
                 objKinBodyPtrs.clear();
                 response.addVocab(VOCAB_OK);
             }
-            else if (request.get(2).asString()=="obj")
+        }
+        if (request.get(1).asString()=="del")
+        {
+            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString());
+            if(objPtr)
             {
-                OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString());
-                if(objPtr)
-                {
-                    pEnv->Remove(objPtr);
-                    response.addVocab(VOCAB_OK);
-                }
-                else // null pointer
-                {
-                    CD_ERROR("object %s does not exist.\n", request.get(3).asString().c_str());
-                    response.addVocab(VOCAB_FAILED);
-                    response.addString("object does not exist");
-                }
+                pEnv->Remove(objPtr);
+                response.addVocab(VOCAB_OK);
             }
-            else
+            else // null pointer
             {
-                CD_ERROR("'all' or 'obj (objName)'.\n");
+                CD_ERROR("object %s does not exist.\n", request.get(2).asString().c_str());
                 response.addVocab(VOCAB_FAILED);
-                response.addString("'all' or 'obj (objName)");
-                return response.write(*out);
+                response.addString("object does not exist");
             }
         }
         else if (request.get(1).asString()=="fk")
