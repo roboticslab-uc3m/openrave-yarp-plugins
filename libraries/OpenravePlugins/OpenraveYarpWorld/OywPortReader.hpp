@@ -19,23 +19,24 @@ class OywPortReader : public yarp::os::PortReader
 {
 public:
     OywPortReader() : boxCount(0), sboxCount (0), cylCount(0), scylCount(0), sphCount(0), ssphCount(0), meshCount(0), fileCount(0) {}
-    void setEnvironment(OpenRAVE::EnvironmentBasePtr value) { pEnv = value; }
     void setOpenraveYarpWorldPtr(OpenraveYarpWorld *value) { openraveYarpWorldPtr = value; }
+    void setEnvironment(OpenRAVE::EnvironmentBasePtr value) { pEnv = value; }
 
 private:
     OpenraveYarpWorld* openraveYarpWorldPtr;
-    int robotDraw;
-    double drawRadius, drawR, drawG, drawB;
+    OpenRAVE::EnvironmentBasePtr pEnv;
 
     // box/sbox/cyl/scyl/sph/ssph
     std::vector<OpenRAVE::KinBodyPtr> objKinBodyPtrs;
     int boxCount, sboxCount, cylCount, scylCount, sphCount, ssphCount, meshCount, fileCount;
 
-    OpenRAVE::EnvironmentBasePtr pEnv;  // set in setEnvironment
+    int robotDraw;
+    double drawRadius, drawR, drawG, drawB;
 
     // Implement the actual responder (callback on RPC).
     virtual bool read(yarp::os::ConnectionReader& in);
 
+    // Internally used members
     bool checkIfString(yarp::os::Bottle& request, int index, yarp::os::Bottle& response);
     bool tryToSetActiveManipulator(const std::string& robot, const std::string& manipulator, yarp::os::Bottle& response);
 
