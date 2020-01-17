@@ -26,12 +26,17 @@ OpenraveYarpWorldClient::OpenraveYarpWorldClient() : detectedFirst(false)
 
 bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
 {
-
     if(rf.check("help"))
     {
         std::printf("OpenraveYarpWorldClient options:\n");
         std::printf("\t--help (this help)\t--from [file.ini]\t--context [path]\n");
         CD_DEBUG_NO_HEADER("%s\n",rf.toString().c_str());
+        return false;
+    }
+
+    if(!rf.check("file"))
+    {
+        CD_ERROR("Missing file parameter, bye!\n");
         return false;
     }
 
@@ -41,15 +46,10 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
         return false;
     }
 
-    yarp::os::Property openOptions;
-    openOptions.fromString(rf.toString());
-    openOptions.unput("from");
-    CD_DEBUG("openOptions: %s\n",openOptions.toString().c_str());
-
     std::string callbackPortName("/");
-    if(openOptions.check("device"))
+    if(rf.check("device"))
     {
-        callbackPortName.append(openOptions.find("device").asString());
+        callbackPortName.append(rf.find("device").asString());
         callbackPortName.append("/");
     }
     callbackPortName.append("OpenraveYarpWorld/state:i");
@@ -65,12 +65,13 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
     }
     callbackPort.useCallback();
 
-    yarp::os::Bottle openOptionsBottle;
-    openOptionsBottle.fromString(openOptions.toString());
 
     yarp::os::Bottle cmd, res;
-    cmd.addString("open");
-    cmd.append(openOptionsBottle);
+    cmd.addString("world");
+    cmd.addString("mk");
+    cmd.addString("file");
+    cmd.addString(rf.find("file").asString());
+
     CD_DEBUG("cmd: %s\n",cmd.toString().c_str());
     rpcClient.write(cmd, res);
 
