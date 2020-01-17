@@ -13,7 +13,7 @@ class OpenraveYarpWorld;
 
 /**
  * @ingroup OpenraveYarpWorld
- * @brief Processes RPC requests.
+ * @brief Processes RPC requests for OpenraveYarpWorld.
  */
 class OywPortReader : public yarp::os::PortReader
 {
