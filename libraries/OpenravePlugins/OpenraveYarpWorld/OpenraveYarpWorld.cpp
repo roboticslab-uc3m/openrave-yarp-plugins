@@ -135,7 +135,7 @@ bool OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
 {
-    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpworldrpcresponder" )
+    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpworld" )
     {
         return OpenRAVE::InterfaceBasePtr(new OpenraveYarpWorld(penv));
     }
