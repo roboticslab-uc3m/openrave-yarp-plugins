@@ -156,11 +156,10 @@ world draw 0/1 (radius r g b).");
             OpenRAVE::Transform tcp = ee * tool;
             //Transform tcp = ee;
             CD_SUCCESS("TCP at %f, %f, %f.\n", tcp.trans.x, tcp.trans.y, tcp.trans.z);
-            yarp::os::Bottle trans;
+            yarp::os::Bottle& trans = response.addList();
             trans.addFloat64(tcp.trans.x);
             trans.addFloat64(tcp.trans.y);
             trans.addFloat64(tcp.trans.z);
-            response.addList() = trans;
             response.addVocab(VOCAB_OK);
         }
         else if (request.get(1).asString()=="get")
