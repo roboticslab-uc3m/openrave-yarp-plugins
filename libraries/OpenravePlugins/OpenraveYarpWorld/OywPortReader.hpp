@@ -34,7 +34,6 @@ private:
 
     OpenRAVE::EnvironmentBasePtr pEnv;  // set in setEnvironment
     OpenRAVE::RobotBasePtr pRobot;  // set in setRobot
-    OpenRAVE::RobotBase::ManipulatorPtr pRobotManip;  // set in setRobot
 
     // Implement the actual responder (callback on RPC).
     virtual bool read(yarp::os::ConnectionReader& in);

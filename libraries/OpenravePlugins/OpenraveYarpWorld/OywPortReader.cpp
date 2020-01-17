@@ -143,7 +143,7 @@ world draw 0/1 (radius r g b).");
                 OpenRAVE::RobotBasePtr robotPtr = robots.at(0);  //-- For now, we use only the first robot
                 if (!checkIfString(request, 3, response))
                     return response.write(*out);
-                pRobotManip = robotPtr->GetManipulator(request.get(3).asString()); //-- <in.get(3).asString()> will have to be the robot manipulator used in XML file. E.g: rigthArm for TEO"
+                OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = robotPtr->GetManipulator(request.get(3).asString());
                 OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
                 OpenRAVE::Transform tool;
                 //tool.trans = Vector(0.0,0.0,1.3);
