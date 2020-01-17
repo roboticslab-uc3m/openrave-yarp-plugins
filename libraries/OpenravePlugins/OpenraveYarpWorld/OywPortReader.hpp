@@ -39,7 +39,7 @@ private:
     virtual bool read(yarp::os::ConnectionReader& in);
 
     bool checkIfString(yarp::os::Bottle& request, int index, yarp::os::Bottle& response);
-    bool tryToSetActiveManipulator(const std::string& manipulatorName, yarp::os::Bottle& response);
+    bool tryToSetActiveManipulator(const std::string& robot, const std::string& manipulator, yarp::os::Bottle& response);
 
 
     static const yarp::conf::vocab32_t VOCAB_OK;
