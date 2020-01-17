@@ -225,15 +225,9 @@ world draw 0/1 (radius r g b).");
                     boxes[0].extents = OpenRAVE::Vector(request.get(3).asFloat64(), request.get(4).asFloat64(), request.get(5).asFloat64());
                     boxes[0].pos = OpenRAVE::Vector(request.get(6).asFloat64(), request.get(7).asFloat64(), request.get(8).asFloat64());
                     objKinBodyPtr->InitFromBoxes(boxes,true);
-                    objKinBodyPtr->GetLinks()[0]->SetMass(1);
                     if(request.get(2).asString() == "box")
                     {
                         objIsStatic = false;
-                        OpenRAVE::Vector inertia(1,1,1);
-                        objKinBodyPtr->GetLinks()[0]->SetPrincipalMomentsOfInertia(inertia);
-                        OpenRAVE::Transform pose(OpenRAVE::Vector(1,0,0,0),OpenRAVE::Vector(0,0,0));
-                        objKinBodyPtr->GetLinks()[0]->SetLocalMassFrame(pose);
-
                         objName.append("box_");
                         std::ostringstream s;
                         s << boxCount;
@@ -349,6 +343,12 @@ world draw 0/1 (radius r g b).");
                     response.addVocab(VOCAB_FAILED);
                     return response.write(*out);
                 }
+
+                objKinBodyPtr->GetLinks()[0]->SetMass(1);
+                OpenRAVE::Transform localMassFrame(OpenRAVE::Vector(1,0,0,0),OpenRAVE::Vector(0,0,0));
+                objKinBodyPtr->GetLinks()[0]->SetLocalMassFrame(localMassFrame);
+                OpenRAVE::Vector inertia(1,1,1);
+                objKinBodyPtr->GetLinks()[0]->SetPrincipalMomentsOfInertia(inertia);
 
                 objKinBodyPtr->SetName(objName);
                 pEnv->Add(objKinBodyPtr,true);
