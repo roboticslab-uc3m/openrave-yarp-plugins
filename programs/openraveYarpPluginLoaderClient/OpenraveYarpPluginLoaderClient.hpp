@@ -52,7 +52,10 @@ private:
     virtual bool updateModule() override;
     virtual bool close() override;
 
+
     static const int DEFAULT_PERIOD_S;
+    static const yarp::conf::vocab32_t VOCAB_OK;
+    static const yarp::conf::vocab32_t VOCAB_FAILED;
 };
 
 }  // namespace roboticslab

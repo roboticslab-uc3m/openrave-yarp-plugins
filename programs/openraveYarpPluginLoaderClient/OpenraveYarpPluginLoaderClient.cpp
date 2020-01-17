@@ -7,15 +7,14 @@
 
 #include <ColorDebug.h>
 
-#define VOCAB_OK yarp::os::createVocab('o','k')
-#define VOCAB_FAILED yarp::os::createVocab('f','a','i','l')
-
 namespace roboticslab
 {
 
 /************************************************************************/
 
 const int OpenraveYarpPluginLoaderClient::DEFAULT_PERIOD_S = 1.0;
+const yarp::conf::vocab32_t OpenraveYarpPluginLoaderClient::VOCAB_OK = yarp::os::createVocab('o','k');
+const yarp::conf::vocab32_t OpenraveYarpPluginLoaderClient::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
 
 /************************************************************************/
 
