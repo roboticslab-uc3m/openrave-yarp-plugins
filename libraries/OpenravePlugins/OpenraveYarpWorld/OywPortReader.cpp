@@ -187,8 +187,8 @@ world draw 0/1 (radius r g b).");
         }
         else if (request.get(1).asString()=="grab")
         {
-            // -- rpc command to write: world + grab + robotName + manipulartorName + name object + 0
-            // --                         0       1           2              3         4            5
+            // -- rpc command to write: world + grab + robotName + manipulatorName + objectName + 0/1
+            // --                       0       1      2           3                 4            5
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
             if (!checkIfString(request, 3, response))
@@ -200,16 +200,16 @@ world draw 0/1 (radius r g b).");
             OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(4).asString().c_str());
             if(objPtr)
             {
-                CD_SUCCESS("object %s exists.\n", request.get(4).asString().c_str());
+                CD_INFO("object %s exists.\n", request.get(4).asString().c_str());
                 if (request.get(5).asInt32()==1)
                 {
-                    CD_INFO("The object is grabbed!!\n");
+                    CD_SUCCESS("object grabbed!!\n");
                     pEnv->GetRobot(request.get(2).asString())->Grab(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
                 else if (request.get(5).asInt32()==0)
                 {
-                    CD_INFO("The object is released!!\n");
+                    CD_SUCCESS("object released!!\n");
                     pEnv->GetRobot(request.get(2).asString())->Release(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }

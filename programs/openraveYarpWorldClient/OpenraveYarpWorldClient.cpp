@@ -65,7 +65,6 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
     }
     callbackPort.useCallback();
 
-
     yarp::os::Bottle cmd, res;
     cmd.addString("world");
     cmd.addString("mk");
