@@ -68,8 +68,8 @@ help, \
 list, \
 world del all, \
 world del obj (objName), \
-world get obj (objName), \
-world get tcp (manipulatorName), \
+world fk (manipulatorName), \
+world get (objName), \
 world grab (manipulatorName) (objName) 0/1, \
 world mk box/sbox (three params for size) (three params for pos), \
 world mk cyl/scyl (radius height) (three params for pos), \
@@ -125,61 +125,52 @@ world draw 0/1 (radius r g b).");
                 return response.write(*out);
             }
         }
+        else if (request.get(1).asString()=="fk")
+        {
+            std::vector<OpenRAVE::RobotBasePtr> robots;
+            pEnv->GetRobots(robots);
+            OpenRAVE::RobotBasePtr robotPtr = robots.at(0);  //-- For now, we use only the first robot
+            if (!checkIfString(request, 2, response))
+                return response.write(*out);
+            OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = robotPtr->GetManipulator(request.get(2).asString());
+            OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
+            OpenRAVE::Transform tool;
+            //tool.trans = Vector(0.0,0.0,1.3);
+            tool.rot = OpenRAVE::geometry::quatFromAxisAngle(OpenRAVE::Vector(0,0,0)); //-- Converts an axis-angle rotation into a quaternion.
+            tool.rot = ee.rot;
+            OpenRAVE::Transform tcp = ee * tool;
+            //Transform tcp = ee;
+            CD_SUCCESS("TCP at %f, %f, %f.\n", tcp.trans.x, tcp.trans.y, tcp.trans.z);
+            yarp::os::Bottle trans;
+            trans.addFloat64(tcp.trans.x);
+            trans.addFloat64(tcp.trans.y);
+            trans.addFloat64(tcp.trans.z);
+            response.addList() = trans;
+            response.addVocab(VOCAB_OK);
+        }
         else if (request.get(1).asString()=="get")
         {
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
-            if (!checkIfString(request, 3, response))
-                return response.write(*out);
-            if (request.get(2).asString()=="obj")
+            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString());
+            if(objPtr)
             {
-                OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(3).asString());
-                if(objPtr)
-                {
-                    //Transform t = objPtr->GetTransform();
-                    OpenRAVE::Vector tr = objPtr->GetTransform().trans;
-                    CD_SUCCESS("object %s at %f, %f, %f.\n", objPtr->GetName().c_str(), tr.x,tr.y,tr.z);
-                    yarp::os::Bottle trans;
-                    trans.addFloat64(tr.x);
-                    trans.addFloat64(tr.y);
-                    trans.addFloat64(tr.z);
-                    response.addList() = trans;
-                    response.addVocab(VOCAB_OK);
-                }
-                else // null pointer
-                {
-                    CD_ERROR("object %s does not exist.\n", request.get(3).asString().c_str());
-                    response.addVocab(VOCAB_FAILED);
-                    response.addString("object does not exist");
-                }
-            }
-            else if (request.get(2).asString()=="tcp")
-            {
-                std::vector<OpenRAVE::RobotBasePtr> robots;
-                pEnv->GetRobots(robots);
-                OpenRAVE::RobotBasePtr robotPtr = robots.at(0);  //-- For now, we use only the first robot
-                OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = robotPtr->GetManipulator(request.get(3).asString());
-                OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
-                OpenRAVE::Transform tool;
-                //tool.trans = Vector(0.0,0.0,1.3);
-                tool.rot = OpenRAVE::geometry::quatFromAxisAngle(OpenRAVE::Vector(0,0,0)); //-- Converts an axis-angle rotation into a quaternion.
-                tool.rot = ee.rot;
-                OpenRAVE::Transform tcp = ee * tool;
-                //Transform tcp = ee;
-                CD_SUCCESS("TCP at %f, %f, %f.\n", tcp.trans.x, tcp.trans.y, tcp.trans.z);
+                //Transform t = objPtr->GetTransform();
+                OpenRAVE::Vector tr = objPtr->GetTransform().trans;
+                CD_SUCCESS("object %s at %f, %f, %f.\n", objPtr->GetName().c_str(), tr.x,tr.y,tr.z);
                 yarp::os::Bottle trans;
-                trans.addFloat64(tcp.trans.x);
-                trans.addFloat64(tcp.trans.y);
-                trans.addFloat64(tcp.trans.z);
+                trans.addFloat64(tr.x);
+                trans.addFloat64(tr.y);
+                trans.addFloat64(tr.z);
                 response.addList() = trans;
                 response.addVocab(VOCAB_OK);
             }
-            else
+            else // null pointer
             {
-                CD_WARNING("where is what?\n");
+                CD_ERROR("object %s does not exist.\n", request.get(3).asString().c_str());
                 response.addVocab(VOCAB_FAILED);
+                response.addString("object does not exist");
             }
-
         }
         else if (request.get(1).asString()=="grab")
         {

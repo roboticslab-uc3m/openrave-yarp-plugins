@@ -55,18 +55,18 @@ Now move the mug:
 world set file_0 0 0 1
 ```
 
+A `world get (name)` example:
+```bash
+world get file_0
+```
+
 A `world grab (manipulatorName) (objName) 0/1` example (replace `arm` for `rightArm` if you are with `teoSim`):
 ```bash
 world grab arm box_0 1
 ```
 
-A `world get obj (name)` example:
+A `world fk (manipulatorName)` example:
 ```bash
-world get obj file_0
-```
-
-A `world get tcp (manipulator)` example:
-```bash
-world get tcp arm
+world fk arm
 ```
 
