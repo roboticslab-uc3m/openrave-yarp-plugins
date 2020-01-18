@@ -124,8 +124,11 @@ bool OpenraveYarpPluginLoaderClient::updateModule()
 {
     //CD_DEBUG("OpenraveYarpPluginLoaderClient alive...\n");
 
-    if(-1 == callbackPort.lastTime) //-- wait for first read
+    if(-1 == callbackPort.lastTime)
+    {
+        CD_DEBUG("wait for first read...\n");
         return true;
+    }
 
     if(!detectedFirst)
     {
@@ -180,13 +183,13 @@ bool OpenraveYarpPluginLoaderClient::close()
 
 /************************************************************************/
 
-CallbackPort::CallbackPort() : lastTime(-1)
+OyplCallbackPort::OyplCallbackPort() : lastTime(-1)
 {
 }
 
 /************************************************************************/
 
-void CallbackPort::onRead(yarp::os::Bottle& b)
+void OyplCallbackPort::onRead(yarp::os::Bottle& b)
 {
     availableIdsMutex.lock();
     availableIds.clear();

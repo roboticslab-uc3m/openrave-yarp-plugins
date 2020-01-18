@@ -17,11 +17,11 @@ namespace roboticslab
 /**
  * @ingroup OpenraveYarpWorldClient
  */
-class CallbackPort : public yarp::os::BufferedPort<yarp::os::Bottle>
+class OywCallbackPort : public yarp::os::BufferedPort<yarp::os::Bottle>
 {
 public:
-    CallbackPort();
-    std::vector<int> availableIds;
+    OywCallbackPort();
+    std::vector<std::string> availableIds;
     std::mutex availableIdsMutex;
     double lastTime;
 private:
@@ -39,7 +39,7 @@ public:
 
 private:
     yarp::os::RpcClient rpcClient;
-    CallbackPort callbackPort;
+    OywCallbackPort callbackPort;
     std::string openedId;
 
     bool openedInAvailable();
