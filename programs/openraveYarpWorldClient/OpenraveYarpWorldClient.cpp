@@ -89,8 +89,7 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
     }
     CD_SUCCESS("%s\n", res.toString().c_str());
 
-    for(size_t i=1; i<res.size(); i++)
-        openedIds.push_back(res.get(i).asInt32());
+    openedId = res.get(1).asString();
 
     return true;
 }
@@ -100,7 +99,7 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
 bool OpenraveYarpWorldClient::openedInAvailable()
 {
     callbackPort.availableIdsMutex.lock();
-    for(size_t openedIdx=0; openedIdx<openedIds.size(); openedIdx++)
+    /*for(size_t openedIdx=0; openedIdx<openedIds.size(); openedIdx++)
     {
         //CD_DEBUG("Is open %d available?\n",openedIds[openedIdx]);
         bool innerFound = false;
@@ -120,7 +119,7 @@ bool OpenraveYarpWorldClient::openedInAvailable()
             CD_DEBUG("no\n");
             return false;
         }
-    }
+    }*/
     callbackPort.availableIdsMutex.unlock();
     CD_DEBUG("yes\n");
     return true;
@@ -168,9 +167,9 @@ bool OpenraveYarpWorldClient::close()
     CD_INFO("\n");
 
     yarp::os::Bottle cmd, res;
-    cmd.addString("close");
-    for(size_t i=0; i<openedIds.size(); i++)
-        cmd.addInt32(openedIds[i]);
+    cmd.addString("world");
+    cmd.addString("del");
+    cmd.addString(openedId);
     rpcClient.write(cmd, res);
 
     CD_INFO("%s\n", res.toString().c_str());

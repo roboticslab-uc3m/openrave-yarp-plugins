@@ -40,7 +40,7 @@ public:
 private:
     yarp::os::RpcClient rpcClient;
     CallbackPort callbackPort;
-    std::vector<int> openedIds;
+    std::string openedId;
 
     bool openedInAvailable();
     bool detectedFirst;
