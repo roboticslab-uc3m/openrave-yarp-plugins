@@ -2,6 +2,7 @@
 
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionReader.h>
+#include <yarp/os/ResourceFinder.h>
 
 #include <ColorDebug.h>
 
@@ -350,10 +351,26 @@ world draw 0/1 (radius r g b).");
                     }
                     else
                     {
-                        CD_ERROR("Could not load file: %s.\n", fileName.c_str());
-                        response.addVocab(VOCAB_FAILED);
-                        response.addString("could not load file");
-                        return response.write(*out);
+                        CD_INFO("Could not load '%s' file, attempting via yarp::os::ResourceFinder.\n",fileName.c_str());
+
+                        yarp::os::ResourceFinder rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
+                        std::string fullFileName = rf.findFileByName(fileName);
+                        if(fullFileName.empty())
+                        {
+                            CD_ERROR("Could not find '%s' file via yarp::os::ResourceFinder either.\n", fileName.c_str());
+                            response.addVocab(VOCAB_FAILED);
+                            response.addString("could not load file");
+                            return response.write(*out);
+                        }
+                        CD_INFO("Loading '%s' file.\n", fullFileName.c_str());
+                        objKinBodyPtr = openraveYarpWorldPtr->GetEnv()->ReadKinBodyXMLFile(fullFileName);
+                        if(!objKinBodyPtr)
+                        {
+                            CD_ERROR("Could not load '%s' file.\n", fullFileName.c_str());
+                            response.addVocab(VOCAB_FAILED);
+                            response.addString("could not load file");
+                            return response.write(*out);
+                        }
                     }
                     objName.append("file_");
                     std::ostringstream s;
