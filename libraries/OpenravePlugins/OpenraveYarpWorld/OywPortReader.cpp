@@ -84,7 +84,7 @@ world mk box/sbox (three params for size) (three params for pos), \
 world mk cyl/scyl (radius height) (three params for pos), \
 world mk sph/ssph (radius) (three params for pos), \
 world mk mesh (no params yet), \
-world mk file (absolute path), \
+world mk file (fileName) (three params for pos), \
 world set (objName) (three params for pos), \
 world draw 0/1 (radius r g b).");
         return response.write(*out);
@@ -372,6 +372,12 @@ world draw 0/1 (radius r g b).");
                             return response.write(*out);
                         }
                     }
+                    OpenRAVE::Transform T = objKinBodyPtr->GetTransform();
+                    T.trans.x = request.get(4).asFloat64(); // [m]
+                    T.trans.y = request.get(5).asFloat64(); // [m]
+                    T.trans.z = request.get(6).asFloat64(); // [m]
+                    objKinBodyPtr->SetTransform(T);
+
                     objName.append("file_");
                     std::ostringstream s;
                     s << fileCount;
