@@ -35,12 +35,25 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
     }
     CD_DEBUG("config: %s\n", rf.toString().c_str());
 
-    if(!rf.check("file"))
+    //-- file parameter
+    if(!rf.check("file", "file name of object to be loaded"))
     {
         CD_ERROR("Missing file parameter, bye!\n");
         return false;
     }
     std::string fileName = rf.find("file").asString();
+
+    //-- pos parameter
+    yarp::os::Bottle pos;
+    if(rf.check("pos", "initial cartesian position"))
+    {
+        pos = rf.findGroup("pos").tail();
+        CD_INFO("Using pos: %s\n", pos.toString().c_str());
+    }
+    else
+    {
+        CD_INFO("Not using pos.\n");
+    }
 
     //-- RpcClient
     std::string rpcClientName("/");
@@ -81,6 +94,7 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
     cmd.addString("mk");
     cmd.addString("file");
     cmd.addString(rf.find("file").asString());
+    cmd.append(pos);
 
     CD_DEBUG("cmd: %s\n",cmd.toString().c_str());
     rpcClient.write(cmd, res);
