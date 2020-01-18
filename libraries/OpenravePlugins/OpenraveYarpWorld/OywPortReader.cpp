@@ -75,7 +75,7 @@ bool roboticslab::OywPortReader::read(yarp::os::ConnectionReader& in)
 help, \
 list, \
 world delall created, \
-world del obj (objName), \
+world del (objName), \
 world fk (robotName) (manipulatorName), \
 world get (objName), \
 world grab (robotName) (manipulatorName) (objName) 0/1, \
