@@ -42,6 +42,15 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
     }
     std::string fileName = rf.find("file").asString();
 
+    std::string rpcClientName("/");
+    rpcClientName.append(fileName);
+    rpcClientName.append("/");
+    rpcClientName.append("OpenraveYarpWorld/rpc:c");
+    if(!callbackPort.open(rpcClientName))
+    {
+        CD_ERROR("!callbackPort.open, bye!\n");
+        return false;
+    }
     if(!rpcClient.addOutput("/OpenraveYarpWorld/rpc:s"))
     {
         CD_ERROR("RpcServer \"/OpenraveYarpWorld/rpc:s\" not found, bye!\n");
