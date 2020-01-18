@@ -75,7 +75,7 @@ bool roboticslab::OywPortReader::read(yarp::os::ConnectionReader& in)
 help, \
 list, \
 world delall created, \
-world del obj (objName), \
+world del (objName), \
 world fk (robotName) (manipulatorName), \
 world get (objName), \
 world grab (robotName) (manipulatorName) (objName) 0/1, \
@@ -97,10 +97,10 @@ world draw 0/1 (radius r g b).");
     {
         if (!checkIfString(request, 1, response))
             return response.write(*out);
-        if (!checkIfString(request, 2, response))
-            return response.write(*out);
         if (request.get(1).asString()=="delall")
         {
+            if (!checkIfString(request, 2, response))
+                return response.write(*out);
             if (request.get(2).asString()=="created")
             {
                 for (unsigned int i=0; i<objKinBodyPtrs.size(); i++)
@@ -113,13 +113,15 @@ world draw 0/1 (radius r g b).");
         }
         if (request.get(1).asString()=="del")
         {
+            if (!checkIfString(request, 2, response))
+                return response.write(*out);
             OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString());
             if(objPtr)
             {
                 pEnv->Remove(objPtr);
                 response.addVocab(VOCAB_OK);
             }
-            else // null pointer
+            else
             {
                 CD_ERROR("object %s does not exist.\n", request.get(2).asString().c_str());
                 response.addVocab(VOCAB_FAILED);
@@ -154,11 +156,10 @@ world draw 0/1 (radius r g b).");
             OpenRAVE::Transform tcp = ee * tool;
             //Transform tcp = ee;
             CD_SUCCESS("TCP at %f, %f, %f.\n", tcp.trans.x, tcp.trans.y, tcp.trans.z);
-            yarp::os::Bottle trans;
+            yarp::os::Bottle& trans = response.addList();
             trans.addFloat64(tcp.trans.x);
             trans.addFloat64(tcp.trans.y);
             trans.addFloat64(tcp.trans.z);
-            response.addList() = trans;
             response.addVocab(VOCAB_OK);
         }
         else if (request.get(1).asString()=="get")
@@ -171,11 +172,10 @@ world draw 0/1 (radius r g b).");
                 //Transform t = objPtr->GetTransform();
                 OpenRAVE::Vector tr = objPtr->GetTransform().trans;
                 CD_SUCCESS("object %s at %f, %f, %f.\n", objPtr->GetName().c_str(), tr.x,tr.y,tr.z);
-                yarp::os::Bottle trans;
+                yarp::os::Bottle& trans = response.addList();
                 trans.addFloat64(tr.x);
                 trans.addFloat64(tr.y);
                 trans.addFloat64(tr.z);
-                response.addList() = trans;
                 response.addVocab(VOCAB_OK);
             }
             else // null pointer
@@ -187,8 +187,7 @@ world draw 0/1 (radius r g b).");
         }
         else if (request.get(1).asString()=="grab")
         {
-            // -- rpc command to write: world + grab + robotName + manipulartorName + name object + 0
-            // --                         0       1           2              3         4            5
+            // -- (0)world + (1)grab + (2)robotName + (3)manipulatorName + (4)objectName + (5)0/1
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
             if (!checkIfString(request, 3, response))
@@ -200,22 +199,22 @@ world draw 0/1 (radius r g b).");
             OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(4).asString().c_str());
             if(objPtr)
             {
-                CD_SUCCESS("object %s exists.\n", request.get(4).asString().c_str());
+                CD_INFO("object %s exists.\n", request.get(4).asString().c_str());
                 if (request.get(5).asInt32()==1)
                 {
-                    CD_INFO("The object is grabbed!!\n");
+                    CD_SUCCESS("object grabbed!!\n");
                     pEnv->GetRobot(request.get(2).asString())->Grab(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
                 else if (request.get(5).asInt32()==0)
                 {
-                    CD_INFO("The object is released!!\n");
+                    CD_SUCCESS("object released!!\n");
                     pEnv->GetRobot(request.get(2).asString())->Release(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
                 else response.addVocab(VOCAB_FAILED);
             }
-            else // null pointer
+            else
             {
                 CD_WARNING("object %s does not exist.\n", request.get(4).asString().c_str());
                 response.addVocab(VOCAB_FAILED);
@@ -344,7 +343,18 @@ world draw 0/1 (radius r g b).");
                     if (!checkIfString(request, 3, response))
                         return response.write(*out);
                     std::string fileName = request.get(3).asString();
-                    pEnv->ReadKinBodyXMLFile(objKinBodyPtr, fileName);
+                    objKinBodyPtr = pEnv->ReadKinBodyXMLFile(fileName);
+                    if(!!objKinBodyPtr)
+                    {
+                        CD_SUCCESS("Loaded file: %s\n", fileName.c_str());
+                    }
+                    else
+                    {
+                        CD_ERROR("Could not load file: %s.\n", fileName.c_str());
+                        response.addVocab(VOCAB_FAILED);
+                        response.addString("could not load file");
+                        return response.write(*out);
+                    }
                     objName.append("file_");
                     std::ostringstream s;
                     s << fileCount;

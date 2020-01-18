@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __OPENRAVE_YARP_PLUGIN_LOADER_CLIENT__
-#define __OPENRAVE_YARP_PLUGIN_LOADER_CLIENT__
+#ifndef __OPENRAVE_YARP_WORLD_CLIENT__
+#define __OPENRAVE_YARP_WORLD_CLIENT__
 
 #include <mutex>
 #include <vector>
@@ -15,13 +15,13 @@ namespace roboticslab
 {
 
 /**
- * @ingroup OpenraveYarpPluginLoaderClient
+ * @ingroup OpenraveYarpWorldClient
  */
-class OyplCallbackPort : public yarp::os::BufferedPort<yarp::os::Bottle>
+class OywCallbackPort : public yarp::os::BufferedPort<yarp::os::Bottle>
 {
 public:
-    OyplCallbackPort();
-    std::vector<int> availableIds;
+    OywCallbackPort();
+    std::vector<std::string> availableIds;
     std::mutex availableIdsMutex;
     double lastTime;
 private:
@@ -29,18 +29,18 @@ private:
 };
 
 /**
- * @ingroup OpenraveYarpPluginLoaderClient
+ * @ingroup OpenraveYarpWorldClient
  */
-class OpenraveYarpPluginLoaderClient : public yarp::os::RFModule
+class OpenraveYarpWorldClient : public yarp::os::RFModule
 {
 public:
-    OpenraveYarpPluginLoaderClient();
+    OpenraveYarpWorldClient();
     bool configure(yarp::os::ResourceFinder &rf);
 
 private:
     yarp::os::RpcClient rpcClient;
-    OyplCallbackPort callbackPort;
-    std::vector<int> openedIds;
+    OywCallbackPort callbackPort;
+    std::string openedId;
 
     bool openedInAvailable();
     bool detectedFirst;
@@ -60,4 +60,4 @@ private:
 
 }  // namespace roboticslab
 
-#endif  // __OPENRAVE_YARP_PLUGIN_LOADER_CLIENT__
+#endif  // __OPENRAVE_YARP_WORLD_CLIENT__

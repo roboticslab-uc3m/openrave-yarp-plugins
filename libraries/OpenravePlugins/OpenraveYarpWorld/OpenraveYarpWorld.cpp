@@ -110,13 +110,6 @@ bool roboticslab::OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinp
     CD_INFO("penv: %p\n",GetEnv().get());
     OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
-    //-- Get the robot
-    std::vector<OpenRAVE::RobotBasePtr> robots;
-    penv->GetRobots(robots);
-    //-- Robot 0
-    probot = robots.at(0);  // which is a RobotBasePtr
-    CD_INFO("Using robot 0 (%s) as main robot.\n", probot->GetName().c_str());
-
     //-- PortReader and RpcServer
     oywPortReader.setEnvironment(penv);
     oywPortReader.setOpenraveYarpWorldPtr(this);
