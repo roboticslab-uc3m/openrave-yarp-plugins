@@ -45,14 +45,14 @@ A `world mk sph/ssph (radius) (three params for pos)` example to create a static
 world mk ssph 0.1 0.5 0 1.5
 ```
 
-A `world mk file (absolute path)` example:
+A `world mk file (fileName) (three params for pos)` example:
 ```bash
-world mk file data/mug1.kinbody.xml
+world mk file data/mug1.kinbody.xml 0.5 0.5 1.5
 ```
 
 Now move the mug:
 ```bash
-world set file_0 0 0 1
+world set file_0 0.5 0.5 2.0
 ```
 
 A `world get (name)` example:
