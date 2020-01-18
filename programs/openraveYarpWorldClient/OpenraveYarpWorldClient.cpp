@@ -33,12 +33,14 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
         CD_DEBUG_NO_HEADER("%s\n",rf.toString().c_str());
         return false;
     }
+    CD_DEBUG("config: %s\n", rf.toString().c_str());
 
     if(!rf.check("file"))
     {
         CD_ERROR("Missing file parameter, bye!\n");
         return false;
     }
+    std::string fileName = rf.find("file").asString();
 
     if(!rpcClient.addOutput("/OpenraveYarpWorld/rpc:s"))
     {
@@ -47,11 +49,8 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
     }
 
     std::string callbackPortName("/");
-    if(rf.check("device"))
-    {
-        callbackPortName.append(rf.find("device").asString());
-        callbackPortName.append("/");
-    }
+    callbackPortName.append(fileName);
+    callbackPortName.append("/");
     callbackPortName.append("OpenraveYarpWorld/state:i");
     if(!callbackPort.open(callbackPortName))
     {
