@@ -46,12 +46,17 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
     openOptions.unput("from");
     CD_DEBUG("openOptions: %s\n",openOptions.toString().c_str());
 
-    std::string callbackPortName("/");
-    if(openOptions.check("device"))
+    if(!openOptions.check("device"))
     {
-        callbackPortName.append(openOptions.find("device").asString());
-        callbackPortName.append("/");
+        CD_ERROR("Missing device parameter, bye!\n");
+        return false;
     }
+    std::string deviceName = openOptions.find("device").asString();
+
+    //-- CallbackPort
+    std::string callbackPortName("/");
+    callbackPortName.append(deviceName);
+    callbackPortName.append("/");
     callbackPortName.append("OpenraveYarpPluginLoader/state:i");
     if(!callbackPort.open(callbackPortName))
     {
