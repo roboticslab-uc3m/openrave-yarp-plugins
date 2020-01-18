@@ -46,8 +46,6 @@ private:
     yarp::os::RpcServer oywRpcServer;
 
     OywPeriodicWrite oywPeriodicWrite;
-
-    OpenRAVE::RobotBasePtr probot;
 };
 
 } // namespace roboticslab
