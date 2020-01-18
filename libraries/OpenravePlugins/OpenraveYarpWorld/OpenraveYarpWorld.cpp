@@ -111,7 +111,6 @@ bool roboticslab::OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinp
     OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
     //-- PortReader and RpcServer
-    oywPortReader.setEnvironment(penv);
     oywPortReader.setOpenraveYarpWorldPtr(this);
     oywRpcServer.open("/OpenraveYarpWorld/rpc:s");
     oywRpcServer.setReader(oywPortReader);

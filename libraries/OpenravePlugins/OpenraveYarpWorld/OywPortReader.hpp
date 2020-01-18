@@ -23,11 +23,9 @@ class OywPortReader : public yarp::os::PortReader
 public:
     OywPortReader() : boxCount(0), sboxCount (0), cylCount(0), scylCount(0), sphCount(0), ssphCount(0), meshCount(0), fileCount(0) {}
     void setOpenraveYarpWorldPtr(OpenraveYarpWorld *value) { openraveYarpWorldPtr = value; }
-    void setEnvironment(OpenRAVE::EnvironmentBasePtr value) { pEnv = value; }
 
 private:
     OpenraveYarpWorld* openraveYarpWorldPtr;
-    OpenRAVE::EnvironmentBasePtr pEnv;
 
     // box/sbox/cyl/scyl/sph/ssph
     std::vector<OpenRAVE::KinBodyPtr> objKinBodyPtrs;

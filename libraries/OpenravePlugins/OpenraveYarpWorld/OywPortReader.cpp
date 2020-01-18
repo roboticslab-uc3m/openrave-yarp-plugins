@@ -34,7 +34,7 @@ bool roboticslab::OywPortReader::checkIfString(yarp::os::Bottle& request, int in
 
 bool roboticslab::OywPortReader::tryToSetActiveManipulator(const std::string& robot, const std::string& manipulator, yarp::os::Bottle& response)
 {
-    OpenRAVE::RobotBasePtr wantActiveRobotPtr = pEnv->GetRobot(robot);
+    OpenRAVE::RobotBasePtr wantActiveRobotPtr = openraveYarpWorldPtr->GetEnv()->GetRobot(robot);
     if(!wantActiveRobotPtr)
     {
         CD_ERROR("Could not find robot: %s.\n", robot.c_str());
@@ -105,7 +105,7 @@ world draw 0/1 (radius r g b).");
             {
                 for (unsigned int i=0; i<objKinBodyPtrs.size(); i++)
                 {
-                    pEnv->Remove(objKinBodyPtrs[i]);
+                    openraveYarpWorldPtr->GetEnv()->Remove(objKinBodyPtrs[i]);
                 }
                 objKinBodyPtrs.clear();
                 response.addVocab(VOCAB_OK);
@@ -115,10 +115,10 @@ world draw 0/1 (radius r g b).");
         {
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
-            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString());
+            OpenRAVE::KinBodyPtr objPtr = openraveYarpWorldPtr->GetEnv()->GetKinBody(request.get(2).asString());
             if(objPtr)
             {
-                pEnv->Remove(objPtr);
+                openraveYarpWorldPtr->GetEnv()->Remove(objPtr);
                 response.addVocab(VOCAB_OK);
             }
             else
@@ -134,7 +134,7 @@ world draw 0/1 (radius r g b).");
                 return response.write(*out);
             if (!checkIfString(request, 3, response))
                 return response.write(*out);
-            OpenRAVE::RobotBasePtr fkRobotPtr = pEnv->GetRobot(request.get(2).asString());
+            OpenRAVE::RobotBasePtr fkRobotPtr = openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString());
             if(!fkRobotPtr)
             {
                 CD_ERROR("Could not find robot: %s.\n", request.get(2).asString().c_str());
@@ -166,7 +166,7 @@ world draw 0/1 (radius r g b).");
         {
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
-            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString());
+            OpenRAVE::KinBodyPtr objPtr = openraveYarpWorldPtr->GetEnv()->GetKinBody(request.get(2).asString());
             if(objPtr)
             {
                 //Transform t = objPtr->GetTransform();
@@ -196,20 +196,20 @@ world draw 0/1 (radius r g b).");
                 return response.write(*out);
             if (!tryToSetActiveManipulator(request.get(2).asString(), request.get(3).asString(), response))
                 return response.write(*out);
-            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(4).asString().c_str());
+            OpenRAVE::KinBodyPtr objPtr = openraveYarpWorldPtr->GetEnv()->GetKinBody(request.get(4).asString().c_str());
             if(objPtr)
             {
                 CD_INFO("object %s exists.\n", request.get(4).asString().c_str());
                 if (request.get(5).asInt32()==1)
                 {
                     CD_SUCCESS("object grabbed!!\n");
-                    pEnv->GetRobot(request.get(2).asString())->Grab(objPtr); // robot was found at tryToSetActiveManipulator
+                    openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Grab(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
                 else if (request.get(5).asInt32()==0)
                 {
                     CD_SUCCESS("object released!!\n");
-                    pEnv->GetRobot(request.get(2).asString())->Release(objPtr); // robot was found at tryToSetActiveManipulator
+                    openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Release(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
                 else response.addVocab(VOCAB_FAILED);
@@ -226,8 +226,8 @@ world draw 0/1 (radius r g b).");
                 return response.write(*out);
             {
                 // lock the environment!
-                OpenRAVE::EnvironmentMutex::scoped_lock lock(pEnv->GetMutex());
-                OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(pEnv,"");
+                OpenRAVE::EnvironmentMutex::scoped_lock lock(openraveYarpWorldPtr->GetEnv()->GetMutex());
+                OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(openraveYarpWorldPtr->GetEnv(),"");
 
                 std::string objName;
                 bool objIsStatic = true; // this is the OpenRAVE default
@@ -343,7 +343,7 @@ world draw 0/1 (radius r g b).");
                     if (!checkIfString(request, 3, response))
                         return response.write(*out);
                     std::string fileName = request.get(3).asString();
-                    objKinBodyPtr = pEnv->ReadKinBodyXMLFile(fileName);
+                    objKinBodyPtr = openraveYarpWorldPtr->GetEnv()->ReadKinBodyXMLFile(fileName);
                     if(!!objKinBodyPtr)
                     {
                         CD_SUCCESS("Loaded file: %s\n", fileName.c_str());
@@ -374,7 +374,7 @@ world draw 0/1 (radius r g b).");
                 objKinBodyPtr->GetLinks()[0]->SetPrincipalMomentsOfInertia(inertia);
 
                 objKinBodyPtr->SetName(objName);
-                pEnv->Add(objKinBodyPtr,true);
+                openraveYarpWorldPtr->GetEnv()->Add(objKinBodyPtr,true);
                 if(!objIsStatic)
                 {
                     objKinBodyPtr->GetLinks()[0]->SetStatic(false);
@@ -390,7 +390,7 @@ world draw 0/1 (radius r g b).");
         {
             if (!checkIfString(request, 2, response))
                 return response.write(*out);
-            OpenRAVE::KinBodyPtr objPtr = pEnv->GetKinBody(request.get(2).asString().c_str());
+            OpenRAVE::KinBodyPtr objPtr = openraveYarpWorldPtr->GetEnv()->GetKinBody(request.get(2).asString().c_str());
             if(!objPtr)
             {
                 CD_ERROR("object %s does not exist.\n", request.get(2).asString().c_str());
