@@ -35,23 +35,38 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
         return false;
     }
 
+    yarp::os::Property openOptions;
+    openOptions.fromString(rf.toString());
+    openOptions.unput("from");
+    CD_DEBUG("openOptions: %s\n",openOptions.toString().c_str());
+
+    if(!openOptions.check("device"))
+    {
+        CD_ERROR("Missing device parameter, bye!\n");
+        return false;
+    }
+    std::string deviceName = openOptions.find("device").asString();
+
+    //-- RpcClient
+    std::string rpcClientName("/");
+    rpcClientName.append(deviceName);
+    rpcClientName.append("/");
+    rpcClientName.append("OpenraveYarpPluginLoader/rpc:c");
+    if(!rpcClient.open(rpcClientName))
+    {
+        CD_ERROR("!rpcClient.open, bye!\n");
+        return false;
+    }
     if(!rpcClient.addOutput("/OpenraveYarpPluginLoader/rpc:s"))
     {
         CD_ERROR("RpcServer \"/OpenraveYarpPluginLoader/rpc:s\" not found, bye!\n");
         return false;
     }
 
-    yarp::os::Property openOptions;
-    openOptions.fromString(rf.toString());
-    openOptions.unput("from");
-    CD_DEBUG("openOptions: %s\n",openOptions.toString().c_str());
-
+    //-- CallbackPort
     std::string callbackPortName("/");
-    if(openOptions.check("device"))
-    {
-        callbackPortName.append(openOptions.find("device").asString());
-        callbackPortName.append("/");
-    }
+    callbackPortName.append(deviceName);
+    callbackPortName.append("/");
     callbackPortName.append("OpenraveYarpPluginLoader/state:i");
     if(!callbackPort.open(callbackPortName))
     {
