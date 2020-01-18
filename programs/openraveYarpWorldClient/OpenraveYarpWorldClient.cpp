@@ -102,7 +102,7 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
 bool OpenraveYarpWorldClient::openedInAvailable()
 {
     callbackPort.availableIdsMutex.lock();
-    CD_DEBUG("Is open %s available?\n", openedId.c_str());
+    //CD_DEBUG("Is open %s available?\n", openedId.c_str());
     bool innerFound = false;
     for(size_t i=0; i<callbackPort.availableIds.size(); i++)
     {
@@ -198,13 +198,17 @@ OywCallbackPort::OywCallbackPort() : lastTime(-1)
 
 void OywCallbackPort::onRead(yarp::os::Bottle& b)
 {
-    CD_DEBUG("%s\n", b.toString().c_str());
+    //CD_DEBUG("* %s\n", b.toString().c_str());
     availableIdsMutex.lock();
     availableIds.clear();
     for(size_t i=0; i<b.size(); i++)
     {
         yarp::os::Bottle* elems = b.get(i).asList();
-        availableIds.push_back(elems->get(0).asString());
+        //CD_DEBUG("** %s\n", elems->toString().c_str());
+        if(elems->check("kinbody"))
+        {
+            availableIds.push_back(elems->find("kinbody").asString());
+        }
     }
     availableIdsMutex.unlock();
     lastTime = yarp::os::Time::now();
