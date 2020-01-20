@@ -23,7 +23,7 @@ Then open a viewer:
 yarpview --name /yarpview/camera/img:i
 ```
 
-Connect the viewer:
+Connect the viewer (remove `mjpeg` if not available):
 ```bash
-yarp connect /BarrettWAM/camera /yarpview/camera/img:i
+yarp connect /BarrettWAM/camera /yarpview/camera/img:i mjpeg
 ```

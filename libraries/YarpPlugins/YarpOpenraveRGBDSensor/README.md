@@ -24,9 +24,9 @@ Then open a viewer for RGB:
 yarpview --name /yarpview/rgb/img:i
 ```
 
-Connect the viewer for RGB (change `/BarrettWAM` to `/ecroSim` for alternative):
+Connect the viewer for RGB (remove `mjpeg` if not available; change `/BarrettWAM` to `/ecroSim` for alternative):
 ```bash
-yarp connect /BarrettWAM/rgbImage:o /yarpview/rgb/img:i
+yarp connect /BarrettWAM/rgbImage:o /yarpview/rgb/img:i mjpeg
 ```
 
 Open another viewer for depth:
@@ -34,9 +34,9 @@ Open another viewer for depth:
 yarpview --name /yarpview/depth/img:i
 ```
 
-Connect the viewer for depth (change `/BarrettWAM` to `/ecroSim` for alternative):
+Connect the viewer for depth (remove `udp+recv.portmonitor+type.dll+file.depthimage` if not available; change `/BarrettWAM` to `/ecroSim` for alternative):
 ```bash
-yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i
+yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i udp+recv.portmonitor+type.dll+file.depthimage
 ```
 
 ## Example 2 (no RGB)
