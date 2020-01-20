@@ -21,8 +21,6 @@ Open `YarpOpenraveAnalogSensors` device with the `physicsRobot.env.xml` environm
 yarpdev --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices 0 --period 50 --env openrave/physicsRobot.env.xml --name /Physicsbot --view
 ```
 
-Note: This invocation not working due to [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60) and beyond. Therefore, you can instead jump directly and use: [../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraveanalogsensors](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenraveanalogsensors)
-
 Read from port:
 ```bash
 yarp read ... /Physicsbot/measures:o

@@ -118,17 +118,16 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
             pcontrols.push_back(pIndivControl);
         }
 
-        penv->StopSimulation();
-        penv->StartSimulation(0.01);
-
         //-- Console output of the robot ConfigurationSpecification
         //OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
         //for (std::size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
         //{
         //    CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
         //}
-
     }
+
+    penv->StopSimulation();
+    penv->StartSimulation(0.01);
 
     return true;
 }

@@ -67,6 +67,9 @@ bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
         vectorOfForce6DSensorDataPtr[i] = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::Force6DSensorData>(vectorOfSensorPtrForForce6Ds[i]->CreateSensorData(OpenRAVE::SensorBase::ST_Force6D));
     }
 
+    penv->StopSimulation();
+    penv->StartSimulation(0.01);
+
     return true;
 }
 

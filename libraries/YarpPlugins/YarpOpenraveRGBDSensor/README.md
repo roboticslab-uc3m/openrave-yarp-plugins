@@ -17,7 +17,7 @@ Open `YarpOpenraveRGBDSensor` device with `data/testwamcamera.env.xml` environme
 yarpdev --device YarpOpenraveRGBDSensor --env data/testwamcamera.env.xml --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 3 --view --name /BarrettWAM --collision ode
 ```
 
-Note: This invocation not working due to [#60](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60) and beyond. Therefore, you can instead jump directly and use: [../../OpenravePlugins/OpenraveYarpPluginLoader#rgbdsensor](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravergbdsensor)
+Note: There is a race condition and `--collsion ode` is not caught. Via this invocation, if FCL is installed, activate collision ODE via the GUI.
    
 Then open a viewer for RGB:
 ```bash
@@ -41,10 +41,11 @@ yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i udp+recv.portmonitor
 
 ## Example 2 (no RGB)
 
-Example invocation not working due to https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/60 and beyond:
 ```bash
-yarpdev --device YarpOpenraveRGBDSensor --env openrave/mapping_room.env.xml --robotIndex 0 --depthSensorIndex 0 --view --name /robot --collision ode
+yarpdev --device YarpOpenraveRGBDSensor --env openrave/mapping_room.env.xml --robotIndex 0 --depthSensorIndex 0 --view --name /ecroSim --collision ode
 ```
+
+Note: There is a race condition and `--collsion ode` is not caught. Via this invocation, if FCL is installed, activate collision ODE via the GUI.
 
 [examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py](../../../examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py)
 
@@ -53,7 +54,7 @@ Open a viewer for depth:
 yarpview --name /yarpview/depth/img:i
 ```
 
-Connect the viewer for depth (change `/BarrettWAM` to `/ecroSim` for alternative):
+Connect the viewer for depth (remove `udp+recv.portmonitor+type.dll+file.depthimage` if not available; change `/BarrettWAM` to `/ecroSim` for alternative):
 ```bash
-yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i
+yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i udp+recv.portmonitor+type.dll+file.depthimage
 ```
