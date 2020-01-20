@@ -17,6 +17,8 @@ Open `YarpOpenraveRGBDSensor` device with `data/testwamcamera.env.xml` environme
 yarpdev --device YarpOpenraveRGBDSensor --env data/testwamcamera.env.xml --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 3 --view --name /BarrettWAM --collision ode
 ```
 
+Python equivalent: [examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB](../../../examples/python/openraveYarpPluginLoader-rgbdsensor.py)
+
 Note: There is a race condition and `--collsion ode` is not caught. Via this invocation, if FCL is installed, activate collision ODE via the GUI.
    
 Then open a viewer for RGB:
@@ -47,7 +49,7 @@ yarpdev --device YarpOpenraveRGBDSensor --env openrave/mapping_room.env.xml --ro
 
 Note: There is a race condition and `--collsion ode` is not caught. Via this invocation, if FCL is installed, activate collision ODE via the GUI.
 
-[examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py](../../../examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py)
+Python equivalent: [examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py](../../../examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py)
 
 Open a viewer for depth:
 ```bash
