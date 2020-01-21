@@ -106,6 +106,10 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     {
         rgbSensorBasePtr = nullptr;
         rgbReady = true;
+
+        penv->StopSimulation();
+        penv->StartSimulation(0.01);
+
         return true;
     }
 
