@@ -19,8 +19,6 @@ yarpdev --device YarpOpenraveRGBDSensor --env data/testwamcamera.env.xml --robot
 
 Python equivalent: [examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB](../../../examples/python/openraveYarpPluginLoader-rgbdsensor.py)
 
-Note: There is a race condition and `--collsion ode` is not caught. Via this invocation, if FCL is installed, activate collision ODE via the GUI.
-   
 Then open a viewer for RGB:
 ```bash
 yarpview --name /yarpview/rgb/img:i
