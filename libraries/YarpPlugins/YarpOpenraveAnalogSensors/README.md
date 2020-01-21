@@ -26,7 +26,7 @@ Read from port:
 yarp read ... /Physicsbot/measures:o
 ```
 
-Or even (requires [BottleExtract](https://github.com/roboticslab-uc3m/yarp-devices/tree/e3b9d8e0874c75d26a1b0e05d9d63bcf805aff76/libraries/YarpPlugins/PortMonitorPlugins/cpp/bottle_extract_portmonitor):
+Or even (requires [BottleExtract](https://github.com/roboticslab-uc3m/yarp-devices/tree/e3b9d8e0874c75d26a1b0e05d9d63bcf805aff76/libraries/YarpPlugins/PortMonitorPlugins/cpp/bottle_extract_portmonitor)):
 ```bash
 yarpscope --index "(0 1 2 3 4 5)" --color "(Red Green Blue LightRed LightGreen LightBlue)"
 ```
