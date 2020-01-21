@@ -45,8 +45,6 @@ yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i udp+recv.portmonitor
 yarpdev --device YarpOpenraveRGBDSensor --env openrave/mapping_room.env.xml --robotIndex 0 --depthSensorIndex 0 --view --name /ecroSim --collision ode
 ```
 
-Note: There is a race condition and `--collsion ode` is not caught. Via this invocation, if FCL is installed, activate collision ODE via the GUI.
-
 Python equivalent: [examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py](../../../examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py)
 
 Open a viewer for depth:
