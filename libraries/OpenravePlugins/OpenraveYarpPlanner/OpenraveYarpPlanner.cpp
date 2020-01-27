@@ -189,7 +189,7 @@ bool roboticslab::OpenraveYarpPlanner::Open(std::ostream& sout, std::istream& si
 
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
 {
-    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarppluginloader")
+    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpplanner")
     {
         return OpenRAVE::InterfaceBasePtr(new roboticslab::OpenraveYarpPlanner(penv));
     }
