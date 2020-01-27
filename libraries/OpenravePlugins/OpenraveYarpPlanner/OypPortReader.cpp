@@ -26,49 +26,18 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
 
     if ( request.get(0).asString() == "help" ) //-- help
     {
-        response.addString("Available commands: help, list, open (device ...) ...");
+        response.addString("Available commands: help, plan (three params for pos), goto (three params for pos)");
         return response.write(*out);
     }
-    else if ( request.get(0).asString() == "list" ) //-- list
+    else if ( request.get(0).asString() == "plan" ) //-- plan
     {
-        //openraveYarpPlannerPtr->addYarpPluginsLists(response);
-        //response.addVocab(VOCAB_OK);
-        return response.write(*out);
-    }
-    else if ( request.get(0).asString() == "open" ) //-- open
-    {
-        std::string cmdStr;
-        for(size_t i=1; i<request.size(); i++)
-        {
-            if(!request.get(i).isList())
-            {
-                CD_ERROR("Expected list at %d.\n",i);
-                response.addVocab(VOCAB_FAILED);
-                response.addString("Expected list");
-                return response.write(*out);
-            }
-            yarp::os::Bottle* elem = request.get(i).asList();
-            cmdStr.append("--");
-            cmdStr.append(elem->toString());
-            cmdStr.append(" ");
-        }
-        CD_DEBUG("%s\n", cmdStr.c_str());
-
-        std::stringstream sout;
-        std::stringstream sinput(cmdStr);
-
-        if(!openraveYarpPlannerPtr->Open(sout, sinput))
-        {
-            response.addVocab(VOCAB_FAILED);
-            response.addString("Open failed");
-            return response.write(*out);
-        }
         response.addVocab(VOCAB_OK);
-        int value;
-        while(sout >> value)
-        {
-           response.addInt32(value);
-        }
+        return response.write(*out);
+    }
+    else if ( request.get(0).asString() == "goto" ) //-- goto
+    {
+
+        response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
 
