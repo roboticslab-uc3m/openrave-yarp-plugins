@@ -5,5 +5,6 @@
 add_subdirectory(OpenraveForceSensor)
 add_subdirectory(OpenraveYarpForceEstimator)
 add_subdirectory(OpenraveYarpPaintSquares)
+add_subdirectory(OpenraveYarpPlanner)
 add_subdirectory(OpenraveYarpPluginLoader)
 add_subdirectory(OpenraveYarpWorld)
