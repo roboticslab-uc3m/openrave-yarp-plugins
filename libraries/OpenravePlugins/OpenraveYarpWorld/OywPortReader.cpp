@@ -84,7 +84,7 @@ world mk box/sbox (three params for size) (three params for pos), \
 world mk cyl/scyl (radius height) (three params for pos), \
 world mk sph/ssph (radius) (three params for pos), \
 world mk mesh (no params yet), \
-world mk file (fileName) (three params for pos), \
+world mk file (fileName) (three params for pos) [four params for axis angle (deg)]], \
 world set (objName) (three params for pos), \
 world draw 0/1 (radius r g b).");
         return response.write(*out);
@@ -376,6 +376,12 @@ world draw 0/1 (radius r g b).");
                     T.trans.x = request.get(4).asFloat64(); // [m]
                     T.trans.y = request.get(5).asFloat64(); // [m]
                     T.trans.z = request.get(6).asFloat64(); // [m]
+                    if(request.size() > 7)
+                    {
+                        OpenRAVE::Vector vaxis(request.get(7).asFloat64(), request.get(8).asFloat64(), request.get(9).asFloat64());
+                        OpenRAVE::dReal fangle = request.get(10).asFloat64();
+                        T.rot = quatFromAxisAngle(vaxis, fangle * M_PI / 180.0f);
+                    }
                     objKinBodyPtr->SetTransform(T);
 
                     objName.append("file_");

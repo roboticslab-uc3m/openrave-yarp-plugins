@@ -55,6 +55,18 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
         CD_INFO("Not using pos.\n");
     }
 
+    //-- ori parameter
+    yarp::os::Bottle ori;
+    if(rf.check("ori", "initial cartesian orientation"))
+    {
+        ori = rf.findGroup("ori").tail();
+        CD_INFO("Using ori: %s\n", ori.toString().c_str());
+    }
+    else
+    {
+        CD_INFO("Not using ori.\n");
+    }
+
     //-- RpcClient
     std::string rpcClientName("/");
     rpcClientName.append(fileName);
@@ -95,6 +107,7 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
     cmd.addString("file");
     cmd.addString(rf.find("file").asString());
     cmd.append(pos);
+    cmd.append(ori);
 
     CD_DEBUG("cmd: %s\n",cmd.toString().c_str());
     rpcClient.write(cmd, res);
