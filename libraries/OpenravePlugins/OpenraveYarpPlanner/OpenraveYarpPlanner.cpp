@@ -78,39 +78,6 @@ bool roboticslab::OpenraveYarpPlanner::Open(std::ostream& sout, std::istream& si
 
     CD_DEBUG("config: %s\n", options.toString().c_str());
 
-    //-- Get and put pointer to environment
-    CD_INFO("penv: %p\n",GetEnv().get());
-    OpenRAVE::EnvironmentBasePtr penv = GetEnv();
-    yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
-    options.put("penv",v);
-
-    //-- Fill robotIndices from: robotIndex/robotIndices/allRobots
-    std::vector<int> robotIndices;
-
-    std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
-    penv->GetRobots(vectorOfRobotPtr);
-
-    if( options.check("robotIndex") )
-    {
-        int robotIndex = options.find("robotIndex").asInt32();
-        robotIndices.push_back(robotIndex);
-    }
-    else if( options.check("robotIndices") )
-    {
-        CD_ERROR("robotIndices not implemented yet. Bye!\n");
-        sout << "-1 ";
-        return false;
-    }
-    else if( options.check("allRobots") )
-    {
-        for(int i=0;i<vectorOfRobotPtr.size();i++)
-            robotIndices.push_back(i);
-    }
-    else
-    {
-        CD_INFO("Not using --robotIndex or --robotIndices or --allRobots parameter.\n");
-        return true;
-    }
     return true;
 }
 
