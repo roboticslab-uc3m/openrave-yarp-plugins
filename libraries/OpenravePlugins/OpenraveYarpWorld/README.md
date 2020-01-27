@@ -45,9 +45,9 @@ A `world mk sph/ssph (radius) (three params for pos)` example to create a static
 world mk ssph 0.1 0.5 0 1.5
 ```
 
-A `world mk file (fileName) (three params for pos)` example:
+A `world mk file (fileName) (three params for pos) [four params for axis angle (deg)]]` example:
 ```bash
-world mk file data/mug1.kinbody.xml 0.5 0.5 1.5
+world mk file data/mug1.kinbody.xml 0.5 0.5 1.5 0 0 1 45
 ```
 
 Now move the mug:
