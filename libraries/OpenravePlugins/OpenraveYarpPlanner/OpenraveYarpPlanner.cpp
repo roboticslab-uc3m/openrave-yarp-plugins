@@ -49,82 +49,12 @@ void roboticslab::OpenraveYarpPlanner::Destroy()
 
 int roboticslab::OpenraveYarpPlanner::main(const std::string& cmd)
 {
-    CD_DEBUG("[%s]\n", cmd.c_str());
-    std::stringstream ss(cmd);
-
-    //-- Fill openStrings and envString
-    std::vector<std::string> openStrings;
-    std::string envString("");
-
-    enum mode { none, open, env };
-    int currentMode = mode::none;
-    while( ! ss.eof() )
-    {
-        std::string tmp;
-        ss >> tmp;
-
-        if(tmp == "open")
-        {
-            std::string openString("open");
-            openStrings.push_back(openString);
-            currentMode = mode::open;
-        }
-        else if(tmp == "env")
-        {
-            currentMode = mode::env;
-        }
-        else
-        {
-            if(currentMode == mode::open)
-            {
-                openStrings[openStrings.size()-1].append(" ");
-                openStrings[openStrings.size()-1].append(tmp);
-            }
-            else if(currentMode == mode::env)
-            {
-                envString = tmp;
-            }
-        }
-    }
-
-    CD_DEBUG("env: '%s'\n",envString.c_str());
-
-    if(envString!="")
-    {
-        if ( !!GetEnv()->Load(envString.c_str()) )
-        {
-            CD_SUCCESS("Loaded '%s' environment.\n",envString.c_str());
-        }
-        else
-        {
-            CD_DEBUG("Could not load '%s' environment, attempting via yarp::os::ResourceFinder.\n",envString.c_str());
-
-            yarp::os::ResourceFinder rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
-            std::string fullEnvString = rf.findFileByName(envString);
-
-            if ( !GetEnv()->Load(fullEnvString.c_str()) )
-            {
-                CD_ERROR("Could not load '%s' environment.\n",fullEnvString.c_str());
-                return 1;
-            }
-            CD_SUCCESS("Loaded '%s' environment.\n",fullEnvString.c_str());
-        }
-    }
-
-    //-- Open each openString
-    for(int i=0;i<openStrings.size();i++)
-    {
-        CD_DEBUG("open[%d]: [%s]\n",i,openStrings[i].c_str());
-
-        std::istringstream sinput( openStrings[i] );
-        std::ostringstream sout;
-        if( ! OpenRAVE::InterfaceBase::SendCommand(sout,sinput) )
-        {
-            CD_ERROR("%s\n",sout.str().c_str());
-            return 1;
-        }
-        CD_SUCCESS("Open ids: %s\n",sout.str().c_str());
-    }
+    RAVELOG_INFO("module initialized with \"%s\"\n", cmd.c_str());
+    // hard-coding "open"
+    std::istringstream sinput("open");
+    std::ostringstream sout;
+    if( ! OpenRAVE::InterfaceBase::SendCommand(sout,sinput) )
+        return 1;
     return 0;
 }
 
