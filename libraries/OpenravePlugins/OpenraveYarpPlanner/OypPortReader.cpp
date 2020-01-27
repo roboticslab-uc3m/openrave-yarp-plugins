@@ -31,6 +31,22 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
     }
     else if ( request.get(0).asString() == "plan" ) //-- plan
     {
+        OpenRAVE::ModuleBasePtr pbasemanip = RaveCreateModule(openraveYarpPlannerPtr->GetEnv(),"basemanipulation");
+        openraveYarpPlannerPtr->GetEnv()->Add(pbasemanip,true,"BarrettWAM"); // load the module
+        {
+            OpenRAVE::EnvironmentMutex::scoped_lock lock(openraveYarpPlannerPtr->GetEnv()->GetMutex()); // lock environment
+            std::stringstream cmdin,cmdout;
+            cmdin << "MoveManipulator goal -0.75 1.24 -0.064 2.33 -1.16 -1.548 1.19";
+            // start the planner and run the robot
+            RAVELOG_INFO("%s\n",cmdin.str().c_str());
+            if( !pbasemanip->SendCommand(cmdout,cmdin) )
+            {
+                response.addVocab(VOCAB_FAILED);
+                response.write(*out);
+                return true;
+            }
+        }
+
         response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
