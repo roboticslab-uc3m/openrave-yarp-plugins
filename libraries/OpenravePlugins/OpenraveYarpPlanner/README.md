@@ -16,5 +16,5 @@ There are 2 ways to invoke `OpenraveYarpPlanner`:
 
 ## Example 1
 ```bash
-openrave --module OpenraveYarpPlanner
+openrave data/lab1.env.xml --viewer qtcoin --collision ode --module OpenraveYarpPlanner
 ```
