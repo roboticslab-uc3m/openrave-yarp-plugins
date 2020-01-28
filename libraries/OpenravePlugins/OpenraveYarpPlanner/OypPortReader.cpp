@@ -26,7 +26,7 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
 
     if ( request.get(0).asString() == "help" ) //-- help
     {
-        response.addString("Available commands: help, plan (three params for pos), goto (three params for pos)");
+        response.addString("Available commands: help, plan, goto");
         return response.write(*out);
     }
     else if ( request.get(0).asString() == "plan" ) //-- plan
