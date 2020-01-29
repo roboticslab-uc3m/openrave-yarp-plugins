@@ -87,7 +87,7 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
         openraveYarpPlannerPtr->GetEnv()->Add(pbasemanip,true,request.get(1).asString()); // load the module
 
         std::stringstream cmdin, cmdout;
-        cmdin << "MoveManipulator goal ";
+        cmdin << "MoveManipulator outputtraj goal ";
         for(int jointIdx=0; jointIdx<request.size()-3; jointIdx++)
         {
             double value = request.get(jointIdx+3).asFloat64();
@@ -97,7 +97,7 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
             cmdin << value;
             cmdin << " ";
         }
-        CD_DEBUG("%s\n", cmdin.str().c_str());
+        CD_DEBUG("cmd: '%s'\n", cmdin.str().c_str());
 
         {
             OpenRAVE::EnvironmentMutex::scoped_lock lock(openraveYarpPlannerPtr->GetEnv()->GetMutex()); // lock environment
@@ -108,6 +108,7 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
                 response.write(*out);
                 return true;
             }
+            CD_DEBUG("res: '%s'\n", cmdout.str().c_str());
         }
 
         response.addVocab(VOCAB_OK);
@@ -115,6 +116,44 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
     }
     else if ( request.get(0).asString() == "goto" ) //-- goto
     {
+        if (!checkIfString(request, 1, response))
+            return response.write(*out);
+        if (!checkIfString(request, 2, response))
+            return response.write(*out);
+        if (!tryToSetActiveManipulator(request.get(1).asString(), request.get(2).asString(), response))
+            return response.write(*out);
+
+        OpenRAVE::RobotBasePtr robotPtr = openraveYarpPlannerPtr->GetEnv()->GetRobot(request.get(1).asString());
+        OpenRAVE::RobotBase::ManipulatorPtr manipulatorPtr = robotPtr->GetManipulator(request.get(2).asString());
+        std::vector<int> manipulatorIDs = manipulatorPtr->GetArmIndices();
+
+        OpenRAVE::ModuleBasePtr pbasemanip = RaveCreateModule(openraveYarpPlannerPtr->GetEnv(),"basemanipulation");
+        openraveYarpPlannerPtr->GetEnv()->Add(pbasemanip,true,request.get(1).asString()); // load the module
+
+        std::stringstream cmdin, cmdout;
+        cmdin << "MoveManipulator goal ";
+        for(int jointIdx=0; jointIdx<request.size()-3; jointIdx++)
+        {
+            double value = request.get(jointIdx+3).asFloat64();
+            OpenRAVE::RobotBase::JointPtr jointPtr = robotPtr->GetJointFromDOFIndex(manipulatorIDs[jointIdx]);
+            if( jointPtr->IsRevolute(0) )
+                value *= M_PI / 180.0;
+            cmdin << value;
+            cmdin << " ";
+        }
+        CD_DEBUG("cmd: '%s'\n", cmdin.str().c_str());
+
+        {
+            OpenRAVE::EnvironmentMutex::scoped_lock lock(openraveYarpPlannerPtr->GetEnv()->GetMutex()); // lock environment
+
+            if( !pbasemanip->SendCommand(cmdout,cmdin) )
+            {
+                response.addVocab(VOCAB_FAILED);
+                response.write(*out);
+                return true;
+            }
+            CD_DEBUG("res: '%s'\n", cmdout.str().c_str());
+        }
 
         response.addVocab(VOCAB_OK);
         return response.write(*out);
