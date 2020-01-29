@@ -86,9 +86,13 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
 
             std::stringstream cmdin, cmdout;
             cmdin << "MoveManipulator goal ";
-            yarp::os::Bottle subBottle;
-            subBottle.copy(request, 3);
-            cmdin << subBottle.toString();
+
+            for(int jointIdx=0; jointIdx<request.size()-3; jointIdx++)
+            {
+                double value = request.get(jointIdx+3).asFloat64() * M_PI / 180.0;
+                cmdin << value;
+                cmdin << " ";
+            }
             CD_DEBUG("%s\n", cmdin.str().c_str());
 
             if( !pbasemanip->SendCommand(cmdout,cmdin) )
