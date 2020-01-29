@@ -16,6 +16,47 @@ const yarp::conf::vocab32_t roboticslab::OypPortReader::VOCAB_FAILED = yarp::os:
 
 // -----------------------------------------------------------------------------
 
+bool roboticslab::OypPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os::Bottle& response)
+{
+    if (request.get(index).isString())
+        return true;
+    response.addVocab(VOCAB_FAILED);
+    std::stringstream ss;
+    ss << "expected type string but got wrong data type at ";
+    ss << index;
+    response.addString(ss.str());
+    ss << "\n";
+    CD_ERROR(ss.str().c_str(), index);
+    return false;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::OypPortReader::tryToSetActiveManipulator(const std::string& robot, const std::string& manipulator, yarp::os::Bottle& response)
+{
+    OpenRAVE::RobotBasePtr wantActiveRobotPtr = openraveYarpPlannerPtr->GetEnv()->GetRobot(robot);
+    if(!wantActiveRobotPtr)
+    {
+        CD_ERROR("Could not find robot: %s.\n", robot.c_str());
+        response.addVocab(VOCAB_FAILED);
+        return false;
+    }
+
+    try
+    {
+        wantActiveRobotPtr->SetActiveManipulator(manipulator);
+    }
+    catch (const std::exception& ex)
+    {
+        CD_ERROR("Caught openrave_exception: %s\n", ex.what());
+        response.addVocab(VOCAB_FAILED);
+        return false;
+    }
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
 bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
@@ -31,14 +72,23 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
     }
     else if ( request.get(0).asString() == "plan" ) //-- plan
     {
+        if (!checkIfString(request, 1, response))
+            return response.write(*out);
+        if (!checkIfString(request, 2, response))
+            return response.write(*out);
+        if (!tryToSetActiveManipulator(request.get(1).asString(), request.get(2).asString(), response))
+            return response.write(*out);
+
         OpenRAVE::ModuleBasePtr pbasemanip = RaveCreateModule(openraveYarpPlannerPtr->GetEnv(),"basemanipulation");
-        openraveYarpPlannerPtr->GetEnv()->Add(pbasemanip,true,"BarrettWAM"); // load the module
+        openraveYarpPlannerPtr->GetEnv()->Add(pbasemanip,true,request.get(1).asString()); // load the module
         {
             OpenRAVE::EnvironmentMutex::scoped_lock lock(openraveYarpPlannerPtr->GetEnv()->GetMutex()); // lock environment
 
             std::stringstream cmdin, cmdout;
             cmdin << "MoveManipulator goal ";
-            cmdin << request.tail().toString();
+            yarp::os::Bottle subBottle;
+            subBottle.copy(request, 3);
+            cmdin << subBottle.toString();
             CD_DEBUG("%s\n", cmdin.str().c_str());
 
             if( !pbasemanip->SendCommand(cmdout,cmdin) )
