@@ -79,6 +79,10 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
         if (!tryToSetActiveManipulator(request.get(1).asString(), request.get(2).asString(), response))
             return response.write(*out);
 
+        OpenRAVE::RobotBasePtr robotPtr = openraveYarpPlannerPtr->GetEnv()->GetRobot(request.get(1).asString());
+        OpenRAVE::RobotBase::ManipulatorPtr manipulatorPtr = robotPtr->GetManipulator(request.get(2).asString());
+        std::vector<int> manipulatorIDs = manipulatorPtr->GetArmIndices();
+
         OpenRAVE::ModuleBasePtr pbasemanip = RaveCreateModule(openraveYarpPlannerPtr->GetEnv(),"basemanipulation");
         openraveYarpPlannerPtr->GetEnv()->Add(pbasemanip,true,request.get(1).asString()); // load the module
         {
@@ -89,7 +93,10 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
 
             for(int jointIdx=0; jointIdx<request.size()-3; jointIdx++)
             {
-                double value = request.get(jointIdx+3).asFloat64() * M_PI / 180.0;
+                double value = request.get(jointIdx+3).asFloat64();
+                OpenRAVE::RobotBase::JointPtr jointPtr = robotPtr->GetJointFromDOFIndex(manipulatorIDs[jointIdx]);
+                if( jointPtr->IsRevolute(0) )
+                    value *= M_PI / 180.0;
                 cmdin << value;
                 cmdin << " ";
             }
