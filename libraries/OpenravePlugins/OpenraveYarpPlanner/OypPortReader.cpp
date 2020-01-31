@@ -119,8 +119,22 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
            std::vector< OpenRAVE::dReal > point;
            ptraj->Sample(point, time);
            CD_DEBUG("[%f] ", time);
+           size_t numJoints = (point.size() - 2) / 2;
            for(int i=0; i<point.size(); i++)
            {
+               if(i < numJoints)
+               {
+                   OpenRAVE::RobotBase::JointPtr jointPtr = robotPtr->GetJointFromDOFIndex(manipulatorIDs[i]);
+                   if( jointPtr->IsRevolute(0) )
+                       point[i] *= 180.0 / M_PI;
+               }
+               else if(i < numJoints*2)
+               {
+                   OpenRAVE::RobotBase::JointPtr jointPtr = robotPtr->GetJointFromDOFIndex(manipulatorIDs[i-numJoints]);
+                   if( jointPtr->IsRevolute(0) )
+                       point[i] *= 180.0 / M_PI;
+
+               }
                CD_DEBUG_NO_HEADER("%f ", point[i]);
            }
            CD_DEBUG_NO_HEADER("\n");
