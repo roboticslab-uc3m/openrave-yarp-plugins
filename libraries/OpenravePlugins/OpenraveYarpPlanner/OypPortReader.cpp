@@ -118,9 +118,10 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
         {
            std::vector< OpenRAVE::dReal > point;
            ptraj->Sample(point, time);
-           CD_DEBUG("[%f] ", time);
            size_t numJoints = (point.size() - 2) / 2;
-           for(int i=0; i<point.size(); i++)
+           CD_DEBUG_NO_HEADER("%f ", time); // cmd timestamp
+           //CD_DEBUG_NO_HEADER("%f ", point[point.size()-2]); // res timestamp, observed strange last val
+           for(int i=0; i<point.size()-2; i++) // skip timestamp and iswaypoint
            {
                if(i < numJoints)
                {
