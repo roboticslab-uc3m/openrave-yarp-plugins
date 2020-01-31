@@ -108,8 +108,8 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
                 response.write(*out);
                 return true;
             }
-            CD_DEBUG("res: '%s'\n", cmdout.str().c_str());
         }
+        CD_DEBUG("res: '%s'\n", cmdout.str().c_str());
 
         response.addVocab(VOCAB_OK);
         return response.write(*out);
@@ -152,8 +152,8 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
                 response.write(*out);
                 return true;
             }
-            CD_DEBUG("res: '%s'\n", cmdout.str().c_str());
         }
+        CD_DEBUG("res: '%s'\n", cmdout.str().c_str());
 
         response.addVocab(VOCAB_OK);
         return response.write(*out);
