@@ -111,6 +111,21 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
         }
         CD_DEBUG("res: '%s'\n", cmdout.str().c_str());
 
+        OpenRAVE::TrajectoryBasePtr ptraj = RaveCreateTrajectory(openraveYarpPlannerPtr->GetEnv(),"");
+        ptraj->deserialize(cmdout);
+        CD_DEBUG("Duration: %f\n", ptraj->GetDuration());
+        for (double time=0.0; time < ptraj->GetDuration(); time+=0.01)
+        {
+           std::vector< OpenRAVE::dReal > point;
+           ptraj->Sample(point, time);
+           CD_DEBUG("[%f] ", time);
+           for(int i=0; i<point.size(); i++)
+           {
+               CD_DEBUG_NO_HEADER("%f ", point[i]);
+           }
+           CD_DEBUG_NO_HEADER("\n");
+        }
+
         response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
