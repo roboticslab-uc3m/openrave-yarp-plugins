@@ -67,10 +67,10 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
 
     if ( request.get(0).asString() == "help" ) //-- help
     {
-        response.addString("Available commands: help, plan, goto");
+        response.addString("Available commands: help, goto (robotName) (manipulatorName) (joint pos goals)");
         return response.write(*out);
     }
-    else if ( request.get(0).asString() == "plan" ) //-- plan
+    else if ( request.get(0).asString() == "goto" ) //-- goto
     {
         if (!checkIfString(request, 1, response))
             return response.write(*out);
@@ -111,11 +111,17 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
         }
         CD_DEBUG("res: '%s'\n", cmdout.str().c_str());
 
+        response.addVocab(VOCAB_OK);
+
         OpenRAVE::TrajectoryBasePtr ptraj = RaveCreateTrajectory(openraveYarpPlannerPtr->GetEnv(),"");
         ptraj->deserialize(cmdout);
         CD_DEBUG("Duration: %f\n", ptraj->GetDuration());
         for (double time=0.0; time < ptraj->GetDuration(); time+=0.01)
         {
+           yarp::os::Bottle& waypointBottle = response.addList();
+           waypointBottle.addFloat64(time);
+           yarp::os::Bottle& waypointPosBottle = waypointBottle.addList();
+           yarp::os::Bottle& waypointVelBottle = waypointBottle.addList();
            std::vector< OpenRAVE::dReal > point;
            ptraj->Sample(point, time);
            size_t numJoints = (point.size() - 2) / 2;
@@ -128,20 +134,20 @@ bool roboticslab::OypPortReader::read(yarp::os::ConnectionReader& in)
                    OpenRAVE::RobotBase::JointPtr jointPtr = robotPtr->GetJointFromDOFIndex(manipulatorIDs[i]);
                    if( jointPtr->IsRevolute(0) )
                        point[i] *= 180.0 / M_PI;
+                   waypointPosBottle.addFloat64(point[i]);
                }
                else if(i < numJoints*2)
                {
                    OpenRAVE::RobotBase::JointPtr jointPtr = robotPtr->GetJointFromDOFIndex(manipulatorIDs[i-numJoints]);
                    if( jointPtr->IsRevolute(0) )
                        point[i] *= 180.0 / M_PI;
-
+                   waypointVelBottle.addFloat64(point[i]);
                }
                CD_DEBUG_NO_HEADER("%f ", point[i]);
            }
            CD_DEBUG_NO_HEADER("\n");
         }
 
-        response.addVocab(VOCAB_OK);
         return response.write(*out);
     }
 

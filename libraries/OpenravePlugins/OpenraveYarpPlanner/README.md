@@ -18,3 +18,18 @@ There are 2 ways to invoke `OpenraveYarpPlanner`:
 ```bash
 openrave data/lab1.env.xml --viewer qtcoin --collision ode --module OpenraveYarpPlanner
 ```
+
+Then communicate via:
+```
+yarp rpc /OpenraveYarpPlanner/rpc:s
+```
+
+For instance, get help:
+```bash
+help
+```
+
+A `goto (robotName) (manipulatorName) (joint pos goals)` example:
+```bash
+goto BarrettWAM arm 0 0 0 90 0 0 0
+```
