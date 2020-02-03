@@ -24,18 +24,18 @@ roboticslab::OpenraveYarpPlanner::OpenraveYarpPlanner(OpenRAVE::EnvironmentBaseP
         CD_ERROR("Found no yarp network (try running \"yarpserver &\")!\n");
     CD_SUCCESS("Found yarp network.\n");
 
-    oyplPortReader.setOpenraveYarpPlannerPtr(this);
-    oyplRpcServer.setReader(oyplPortReader);
-    oyplRpcServer.open("/OpenraveYarpPlanner/rpc:s");
+    oypPortReader.setOpenraveYarpPlannerPtr(this);
+    oypRpcServer.setReader(oypPortReader);
+    oypRpcServer.open("/OpenraveYarpPlanner/rpc:s");
 }
 
 // -----------------------------------------------------------------------------
 
 roboticslab::OpenraveYarpPlanner::~OpenraveYarpPlanner()
 {
-    oyplRpcServer.interrupt();
+    oypRpcServer.interrupt();
 
-    oyplRpcServer.close();
+    oypRpcServer.close();
 }
 
 // -----------------------------------------------------------------------------

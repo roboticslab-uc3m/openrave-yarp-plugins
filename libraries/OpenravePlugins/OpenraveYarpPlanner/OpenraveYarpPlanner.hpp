@@ -40,8 +40,8 @@ public:
 private:
     yarp::os::Network yarp;
 
-    OypPortReader oyplPortReader;
-    yarp::os::RpcServer oyplRpcServer;
+    OypPortReader oypPortReader;
+    yarp::os::RpcServer oypRpcServer;
 };
 
 } // namespace roboticslab
