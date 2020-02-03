@@ -48,7 +48,7 @@ private:
     OyplPortReader oyplPortReader;
     yarp::os::RpcServer oyplRpcServer;
 
-    OyplPeriodicWrite openPortPeriodicWrite;
+    OyplPeriodicWrite oyplPeriodicWrite;
 };
 
 } // namespace roboticslab

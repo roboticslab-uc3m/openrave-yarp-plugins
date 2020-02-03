@@ -28,8 +28,8 @@ roboticslab::OpenraveYarpPluginLoader::OpenraveYarpPluginLoader(OpenRAVE::Enviro
     oyplRpcServer.setReader(oyplPortReader);
     oyplRpcServer.open("/OpenraveYarpPluginLoader/rpc:s");
 
-    openPortPeriodicWrite.setOpenraveYarpPluginLoaderPtr(this);
-    openPortPeriodicWrite.open("/OpenraveYarpPluginLoader/state:o");
+    oyplPeriodicWrite.setOpenraveYarpPluginLoaderPtr(this);
+    oyplPeriodicWrite.open("/OpenraveYarpPluginLoader/state:o");
 }
 
 // -----------------------------------------------------------------------------
@@ -44,10 +44,10 @@ roboticslab::OpenraveYarpPluginLoader::~OpenraveYarpPluginLoader()
     }
 
     oyplRpcServer.interrupt();
-    openPortPeriodicWrite.interrupt();
+    oyplPeriodicWrite.interrupt();
 
     oyplRpcServer.close();
-    openPortPeriodicWrite.close();
+    oyplPeriodicWrite.close();
 }
 
 // -----------------------------------------------------------------------------
