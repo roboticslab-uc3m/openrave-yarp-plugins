@@ -27,7 +27,10 @@ roboticslab::OpenraveYarpWorld::OpenraveYarpWorld(OpenRAVE::EnvironmentBasePtr p
 roboticslab::OpenraveYarpWorld::~OpenraveYarpWorld()
 {
     oywRpcServer.interrupt();
+    oywPeriodicWrite.interrupt();
+
     oywRpcServer.close();
+    oywPeriodicWrite.close();
 }
 
 // -----------------------------------------------------------------------------
