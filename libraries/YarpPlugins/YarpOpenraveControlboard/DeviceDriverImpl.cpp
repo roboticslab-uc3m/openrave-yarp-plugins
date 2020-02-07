@@ -116,6 +116,9 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
             CD_DEBUG("Attach individual controller for manipulatorIDs[%d]: %d\n",i,tmpIndices[0]);
             multi->AttachController(pIndivControl, tmpIndices, 0);
             pcontrols.push_back(pIndivControl);
+            /*std::stringstream cmd, res;
+            cmd << "SetThrowExceptions 1";
+            pIndivControl->SendCommand(res, cmd);*/
         }
 
         //-- Console output of the robot ConfigurationSpecification
