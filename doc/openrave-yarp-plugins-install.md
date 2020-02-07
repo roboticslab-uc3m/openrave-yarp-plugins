@@ -1,16 +1,20 @@
-## openrave-yarp-plugins: Installation from Source Code
+# openrave-yarp-plugins: Installation from Source Code
 
 First install the dependencies:
-- [Install CMake 3.12+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-cmake.md/)
-- [Install YCM 0.11+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-ycm.md/)
-- [Install YARP 3.2+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-yarp.md/)
-- [Install OpenRAVE 0.9+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-openrave.md/)
-- [Install Boost](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-boost.md/) (implicitly required by OpenRAVE)
-  - Compiled components: Boost.Thread
-  - Header-only components: Boost.Bind, Boost.SmartPtr
+- [Install CMake 3.12+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-cmake.md)
+- [Install YCM 0.11+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-ycm.md)
+- [Install YARP 3.2+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-yarp.md)
+- [Install OpenRAVE 0.9+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-openrave.md)
+- [Install Boost](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-boost.md) (implicitly required by OpenRAVE)
+    - Compiled components: Boost.Thread
+    - Header-only components: Boost.Bind, Boost.SmartPtr
 - [Install color-debug](https://github.com/roboticslab-uc3m/color-debug)
 
-# Install openrave-yarp-plugins on Ubuntu (working on all tested versions)
+### Components with known additional/specific dependencies
+- [../libraries/YarpPlugins/YarpOpenraveAnalogSensors](../libraries/YarpPlugins/YarpOpenraveAnalogSensors#requirements)
+- [../libraries/YarpPlugins/YarpOpenraveRobotManager](../libraries/YarpPlugins/YarpOpenraveRobotManager#requirements)
+
+## Install openrave-yarp-plugins on Ubuntu (working on all tested versions)
 
 Our software integrates the previous dependencies. Note that you will be prompted for your password upon using `sudo` a couple of times:
 

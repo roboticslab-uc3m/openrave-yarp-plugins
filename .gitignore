@@ -32,6 +32,7 @@
 *.user
 *.swp
 *.md.backup
+*.autosave
 
 # Folders
 **/build*/

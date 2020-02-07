@@ -17,7 +17,13 @@ try:
         raveLogError("Plugin not correctly loaded")
 
     env=Environment()
+
+    # Force viewer "qtcoin" for RGB sensor
     env.SetViewer('qtcoin')
+
+    # Force CollisionChecker "ode" for Depth sensor
+    collisionChecker = RaveCreateCollisionChecker(env,'ode')
+    env.SetCollisionChecker(collisionChecker)
 
     example = "default"  # "default" or "ecro"
 

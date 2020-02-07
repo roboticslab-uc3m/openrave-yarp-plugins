@@ -73,6 +73,9 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
     _width = geomDataPtr->width;
     _height = geomDataPtr->height;
 
+    penv->StopSimulation();
+    penv->StartSimulation(0.01);
+
     return true;
 }
 

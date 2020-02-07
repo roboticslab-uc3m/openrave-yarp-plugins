@@ -34,7 +34,7 @@ class YarpOpenraveRGBDSensor : YarpOpenraveBase,
 public:
 
     // Set the Thread Rate in the class constructor
-    YarpOpenraveRGBDSensor() : rgb(true) {}
+    YarpOpenraveRGBDSensor() : rgb(true), rgbReady(false), depthReady(false) {}
 
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImageImpl.cpp -------
     /**
@@ -94,7 +94,7 @@ public:
      */
 
     /**
-     * Get the extrinsic parameters ofrom the device
+     * Get the extrinsic parameters from the device
      * @param  extrinsic  return a rototranslation matrix describing the position
      *         of the depth optical frame with respect to the rgb frame
      * @return true if success
@@ -103,7 +103,7 @@ public:
 
     /**
      * Return an error message in case of error. For debugging purpose and user notification.
-     * Error message will be reset after any succesful command
+     * Error message will be reset after any successful command
      * @return A string explaining the last error occurred.
      */
     virtual std::string getLastErrorMsg(yarp::os::Stamp *timeStamp = NULL)  {}
@@ -111,30 +111,25 @@ public:
     /**
      * Get the rgb frame from the device.
      * The pixel type of the source image will usually be set as a VOCAB_PIXEL_RGB,
-     * but the user can call the function with the pixel type of his/her choise. The convertion
+     * but the user can call the function with the pixel type of his/her choice. The conversion
      * if possible, will be done automatically on client side (TO BO VERIFIED).
      * Note: this will consume CPU power because it will not use GPU optimization.
      * Use VOCAB_PIXEL_RGB for best performances.
      *
      * @param rgbImage the image to be filled.
-     * @param timeStamp time in which the image was acquired. Optional, the user must provide memory allocation
+     * @param timeStamp time in which the image was acquired. Optional, ignored if nullptr.
      * @return True on success
      */
-    virtual bool getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::os::Stamp *timeStamp = NULL);
+    virtual bool getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::os::Stamp *timeStamp = NULL) override;
 
     /**
      * Get the depth frame from the device.
-     * The pixel type of the source image will usually be set as a VOCAB_PIXEL_RGB,
-     * but the user can call the function with the pixel type of his/her choise. The convertion
-     * if possible, will be done automatically on client side.
-     * Note: this will consume CPU power because it will not use GPU optimization.
-     * Use VOCAB_PIXEL_RGB for best performances.
      *
-     * @param rgbImage the image to be filled.
-     * @param timeStamp time in which the image was acquired. Optional, the user must provide memory allocation
+     * @param depthImage the depth image to be filled, depth measured in meters.
+     * @param timeStamp time in which the image was acquired. Optional, ignored if nullptr.
      * @return True on success
      */
-    virtual bool getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp = NULL);
+    virtual bool getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp = NULL) override;
 
     /**
     * Get the both the color and depth frame in a single call. Implementation should assure the best possible synchronization
@@ -147,7 +142,7 @@ public:
     * @param depthStamp pointer to memory to hold the Stamp of the depth frame
     * @return true if able to get both data.
     */
-    virtual bool getImages(yarp::sig::FlexImage &colorFrame, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthFrame, yarp::os::Stamp *colorStamp=NULL, yarp::os::Stamp *depthStamp=NULL);
+    virtual bool getImages(yarp::sig::FlexImage &colorFrame, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthFrame, yarp::os::Stamp *colorStamp=NULL, yarp::os::Stamp *depthStamp=NULL)  override;
 
     /**
      * Get the surrent status of the sensor, using enum type
@@ -155,13 +150,15 @@ public:
      * @return an enum representing the status of the robot or an error code
      * if any error is present
      */
-    virtual RGBDSensor_status getSensorStatus();
+    virtual RGBDSensor_status getSensorStatus() override;
 
 private:
 
-    // General Grabber parameters //
+    // General RGBDSensor parameters //
     int rgbHeight, rgbWidth, depthHeight, depthWidth;
     bool rgb;
+    bool rgbReady;
+    bool depthReady;
 
     //OpenRAVE//
     OpenRAVE::SensorBasePtr depthSensorBasePtr;

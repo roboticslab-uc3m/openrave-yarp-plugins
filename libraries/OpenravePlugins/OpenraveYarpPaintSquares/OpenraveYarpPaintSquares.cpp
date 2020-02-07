@@ -52,7 +52,7 @@
 
 #include <ColorDebug.h>
 
-#define DEFAULT_RATE_MS 0.1
+#define DEFAULT_RATE_S 0.1
 #define DEFAULT_SQUARES 64
 #define DEFAULT_PORT_NAME "/openraveYarpPaintSquares/rpc:s"
 
@@ -118,7 +118,7 @@ private:
 class OpenraveYarpPaintSquares : public OpenRAVE::ModuleBase, public yarp::os::PeriodicThread
 {
 public:
-    OpenraveYarpPaintSquares(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::PeriodicThread(DEFAULT_RATE_MS * 0.001) {
+    OpenraveYarpPaintSquares(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::PeriodicThread(DEFAULT_RATE_S) {
         __description = "OpenraveYarpPaintSquares plugin.";
         OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens OpenraveYarpPaintSquares");
     }

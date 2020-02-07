@@ -107,8 +107,15 @@ bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
     {
         std::string physics = config.find("physics").asString();
         CD_DEBUG("Found --physics parameter: %s.\n", physics.c_str());
-        penv->SetPhysicsEngine(OpenRAVE::RaveCreatePhysicsEngine(penv,physics));
+        penv->SetPhysicsEngine(OpenRAVE::RaveCreatePhysicsEngine(penv, physics));
         penv->GetPhysicsEngine()->SetGravity(OpenRAVE::Vector(0,0,-9.8));
+    }
+
+    if( config.check("collision","use collsion engine: 'ode'|...") )
+    {
+        std::string collision = config.find("collision").asString();
+        CD_DEBUG("Found --collision parameter: %s.\n", collision.c_str());
+        penv->SetCollisionChecker(OpenRAVE::RaveCreateCollisionChecker(penv, collision));
     }
 
     return true;

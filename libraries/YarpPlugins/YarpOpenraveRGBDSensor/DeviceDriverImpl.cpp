@@ -99,37 +99,52 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     depthHeight = 0;
     depthWidth = 0;
 
+    depthReady = true;
+
     //-- RGB sensor
-    if(rgb)
+    if(!rgb) //-- treat special no RGB case
     {
-        rgbSensorBasePtr = vectorOfSensorPtr.at(rgbSensorIndex)->GetSensor();
+        rgbSensorBasePtr = nullptr;
+        rgbReady = true;
 
-        std::string rgbName = rgbSensorBasePtr->GetName();
-        printf("Rgb sensor %d name: %s\n",rgbSensorIndex,rgbName.c_str());
-        // printf("Rgb sensor %d description: %s\n",rgbSensorIndex,rgbSensorBasePtr->GetDescription().c_str());
+        penv->StopSimulation();
+        penv->StartSimulation(0.01);
 
-        if ( ! rgbSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
-        {
-            CD_ERROR("Rgb sensor %d does not support ST_Camera.\n", rgbSensorIndex );
-            return false;
-        }
-
-        // Activate the sensor
-        rgbSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
-
-        // Render data on
-        //rgbSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);  // Show the sensor image in a separate window
-
-        // Get pointer to geom properties of sensor
-        boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> rgbGeomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(rgbSensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
-
-        // Get pointer to sensed data
-        rgbSensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(rgbSensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
-
-        CD_INFO("Rgb width: %d, height: %d.\n",rgbGeomDataPtr->width,rgbGeomDataPtr->height);
-        rgbWidth = rgbGeomDataPtr->width;
-        rgbHeight = rgbGeomDataPtr->height;
+        return true;
     }
+
+    rgbSensorBasePtr = vectorOfSensorPtr.at(rgbSensorIndex)->GetSensor();
+
+    std::string rgbName = rgbSensorBasePtr->GetName();
+    printf("Rgb sensor %d name: %s\n",rgbSensorIndex,rgbName.c_str());
+    // printf("Rgb sensor %d description: %s\n",rgbSensorIndex,rgbSensorBasePtr->GetDescription().c_str());
+
+    if ( ! rgbSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
+    {
+        CD_ERROR("Rgb sensor %d does not support ST_Camera.\n", rgbSensorIndex );
+        return false;
+    }
+
+    // Activate the sensor
+    rgbSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_PowerOn);
+
+    // Render data on
+    //rgbSensorBasePtr->Configure(OpenRAVE::SensorBase::CC_RenderDataOn);  // Show the sensor image in a separate window
+
+    // Get pointer to geom properties of sensor
+    boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> rgbGeomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(rgbSensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
+
+    // Get pointer to sensed data
+    rgbSensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(rgbSensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
+
+    CD_INFO("Rgb width: %d, height: %d.\n",rgbGeomDataPtr->width,rgbGeomDataPtr->height);
+    rgbWidth = rgbGeomDataPtr->width;
+    rgbHeight = rgbGeomDataPtr->height;
+
+    rgbReady = true;
+
+    penv->StopSimulation();
+    penv->StartSimulation(0.01);
 
     return true;
 }

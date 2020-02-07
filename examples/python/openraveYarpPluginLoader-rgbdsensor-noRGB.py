@@ -19,6 +19,10 @@ try:
     env=Environment()
     env.SetViewer('qtcoin')
 
+    # Force CollisionChecker "ode" for Depth sensor
+    collisionChecker = RaveCreateCollisionChecker(env,'ode')
+    env.SetCollisionChecker(collisionChecker)
+
     example = "default"  # "default" or "ecro"
 
     if example == "ecro":

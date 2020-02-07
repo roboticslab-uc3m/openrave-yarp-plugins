@@ -43,31 +43,34 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
 {
     //CD_DEBUG("\n");
 
-    if(rgb)
-    {
-        rgbSensorBasePtr->GetSensorData(rgbSensorDataPtr);
-
-        std::vector<uint8_t> currentFrame = rgbSensorDataPtr->vimagedata;
-        //CD_DEBUG("Vector size: %d\n",currentFrame.size()); // i.e. 480 * 640 * 3 = 921600;
-        if(0 == currentFrame.size())
-        {
-            //CD_DEBUG("Waiting for camera...\n");
-            return false;
-        }
-
-        yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
-        tmpImage.setExternal(currentFrame.data(),rgbWidth,rgbHeight);
-
-        //-- Similar to YarpOpenraveGrabber IFrameGrabberImageImpl.cpp, make copy to avoid glitch.
-        rgbImage.copy(tmpImage);
-    }
-    else
-    {
-        yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
-        rgbImage.copy(tmpImage);
-    }
-
     timeStamp->update( yarp::os::Time::now() );
+
+    if(!rgb) //-- treat special no RGB case
+    {
+        yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
+        rgbImage.copy(tmpImage);
+        return true;
+    }
+
+    if(!rgbSensorBasePtr->GetSensorData(rgbSensorDataPtr))
+    {
+        CD_DEBUG("RGB: GetSensorData fail...\n");
+        return false;
+    }
+
+    std::vector<uint8_t> currentFrame = rgbSensorDataPtr->vimagedata;
+    //CD_DEBUG("Vector size: %d\n",currentFrame.size()); // i.e. 480 * 640 * 3 = 921600;
+    if(0 == currentFrame.size())
+    {
+        CD_DEBUG("RGB: 0 == currentFrame.size()...\n");
+        return false;
+    }
+
+    yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
+    tmpImage.setExternal(currentFrame.data(),rgbWidth,rgbHeight);
+
+    //-- Similar to YarpOpenraveGrabber IFrameGrabberImageImpl.cpp, make copy to avoid glitch.
+    rgbImage.copy(tmpImage);
 
     return true;
 }
@@ -78,7 +81,13 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
 {
     //CD_DEBUG("\n");
 
-    depthSensorBasePtr->GetSensorData(depthSensorDataPtr);
+    timeStamp->update( yarp::os::Time::now() );
+
+    if(!depthSensorBasePtr->GetSensorData(depthSensorDataPtr))
+    {
+        CD_DEBUG("Depth: GetSensorData fail...\n");
+        return false;
+    }
 
     std::vector<OpenRAVE::Vector> sensorRanges = depthSensorDataPtr->ranges;
 
@@ -128,11 +137,9 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
         {
             OpenRAVE::Vector ranges = sensorRanges[i_y + (i_x * depthImage.height())];
             double distance = std::sqrt(ranges.lengthsqr3());
-            depthImage(i_x, i_y) = distance * 1000.0;  // give mm
+            depthImage(i_x, i_y) = distance;  // [meters]
         }
     }
-
-    timeStamp->update( yarp::os::Time::now() );
 
     return true;
 }
@@ -151,7 +158,10 @@ bool YarpOpenraveRGBDSensor::getImages(yarp::sig::FlexImage &colorFrame, yarp::s
 
 yarp::dev::IRGBDSensor::RGBDSensor_status YarpOpenraveRGBDSensor::getSensorStatus()
 {
-    return yarp::dev::IRGBDSensor::RGBD_SENSOR_OK_IN_USE;
+    if ((!rgbReady)||(!depthReady))
+        return RGBDSensor_status::RGBD_SENSOR_NOT_READY;
+
+    return RGBDSensor_status::RGBD_SENSOR_OK_IN_USE;
 }
 
 // ----------------------------------------------------------------------------
