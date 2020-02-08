@@ -28,7 +28,11 @@ namespace roboticslab
  * @brief Implements the YARP_dev IFrameGrabberImage, etc.
  * interface class member functions.
  */
-class YarpOpenraveGrabber : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::IFrameGrabberImage, public yarp::dev::IRgbVisualParams
+class YarpOpenraveGrabber : YarpOpenraveBase,
+                            public yarp::dev::DeviceDriver,
+                            public yarp::dev::IFrameGrabberControls,
+                            public yarp::dev::IFrameGrabberImage,
+                            public yarp::dev::IRgbVisualParams
 {
 public:
 
@@ -36,47 +40,32 @@ public:
     YarpOpenraveGrabber() {}
 
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImageImpl.cpp -------
-    /**
-     * Open the DeviceDriver.
-     * @param config is a list of parameters for the device.
-     * Which parameters are effective for your device can vary.
-     * See \ref dev_examples "device invocation examples".
-     * If there is no example for your device,
-     * you can run the "yarpdev" program with the verbose flag
-     * set to probe what parameters the device is checking.
-     * If that fails too,
-     * you'll need to read the source code (please nag one of the
-     * yarp developers to add documentation for your device).
-     * @return true/false upon success/failure
-     */
-    virtual bool open(yarp::os::Searchable& config);
 
-    /**
-     * Close the DeviceDriver.
-     * @return true/false on success/failure.
-     */
+    virtual bool open(yarp::os::Searchable& config);
     virtual bool close();
 
+    // ------- IFrameGrabberControls declarations. Implementation in IFrameGrabberControlsImpl.cpp -------
+
+    bool getCameraDescription(CameraDescriptor *camera) override;
+    bool hasFeature(int feature, bool *hasFeature) override;
+    bool setFeature(int feature, double value) override;
+    bool getFeature(int feature, double *value) override;
+    bool setFeature(int feature, double  value1, double  value2) override;
+    bool getFeature(int feature, double *value1, double *value2) override;
+    bool hasOnOff(int feature, bool *HasOnOff) override;
+    bool setActive(int feature, bool onoff) override;
+    bool getActive(int feature, bool *isActive) override;
+    bool hasAuto(int feature, bool *hasAuto) override;
+    bool hasManual(int feature, bool *hasManual) override;
+    bool hasOnePush(int feature, bool *hasOnePush) override;
+    bool setMode(int feature, FeatureMode mode) override;
+    bool getMode(int feature, FeatureMode *mode) override;
+    bool setOnePush(int feature) override;
+
     // ------- IFrameGrabberImage declarations. Implementation in IFrameGrabberImageImpl.cpp -------
-    /**
-     * Get an rgb image from the frame grabber, if required
-     * demosaicking/color reconstruction is applied
-     *
-     * @param image the image to be filled
-     * @return true/false upon success/failure
-     */
+
     virtual bool getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& image);
-
-    /**
-     * Return the height of each frame.
-     * @return image height
-     */
     virtual int height() const;
-
-    /**
-     * Return the width of each frame.
-     * @return image width
-     */
     virtual int width() const;
 
     // ------- IRgbVisualParams declarations. Look at IVisualParams.h for documentation. Implementation in IFrameGrabberImageImpl.cpp -------
