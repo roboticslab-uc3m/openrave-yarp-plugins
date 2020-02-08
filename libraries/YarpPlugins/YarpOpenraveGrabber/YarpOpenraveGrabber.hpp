@@ -46,21 +46,21 @@ public:
 
     // ------- IFrameGrabberControls declarations. Implementation in IFrameGrabberControlsImpl.cpp -------
 
-    bool getCameraDescription(CameraDescriptor *camera) { return false; }
-    bool hasFeature(int feature, bool *hasFeature) { return false; }
-    bool setFeature(int feature, double value) { return false; }
-    bool getFeature(int feature, double *value) { return false; }
-    bool setFeature(int feature, double  value1, double  value2) { return false; }
-    bool getFeature(int feature, double *value1, double *value2) { return false; }
-    bool hasOnOff(int feature, bool *HasOnOff) { return false; }
-    bool setActive(int feature, bool onoff) { return false; }
-    bool getActive(int feature, bool *isActive) { return false; }
-    bool hasAuto(int feature, bool *hasAuto) { return false; }
-    bool hasManual(int feature, bool *hasManual) { return false; }
-    bool hasOnePush(int feature, bool *hasOnePush) { return false; }
-    bool setMode(int feature, FeatureMode mode) { return false; }
-    bool getMode(int feature, FeatureMode *mode) { return false; }
-    bool setOnePush(int feature) { return false; }
+    bool getCameraDescription(CameraDescriptor *camera) override;
+    bool hasFeature(int feature, bool *hasFeature) override;
+    bool setFeature(int feature, double value) override;
+    bool getFeature(int feature, double *value) override;
+    bool setFeature(int feature, double  value1, double  value2) override;
+    bool getFeature(int feature, double *value1, double *value2) override;
+    bool hasOnOff(int feature, bool *HasOnOff) override;
+    bool setActive(int feature, bool onoff) override;
+    bool getActive(int feature, bool *isActive) override;
+    bool hasAuto(int feature, bool *hasAuto) override;
+    bool hasManual(int feature, bool *hasManual) override;
+    bool hasOnePush(int feature, bool *hasOnePush) override;
+    bool setMode(int feature, FeatureMode mode) override;
+    bool getMode(int feature, FeatureMode *mode) override;
+    bool setOnePush(int feature) override;
 
     // ------- IFrameGrabberImage declarations. Implementation in IFrameGrabberImageImpl.cpp -------
 

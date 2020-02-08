@@ -19,6 +19,7 @@ if(NOT SKIP_YarpOpenraveGrabber)
 
     yarp_add_plugin(YarpOpenraveGrabber YarpOpenraveGrabber.hpp
                                         DeviceDriverImpl.cpp
+                                        IFrameGrabberControlsImpl.cpp
                                         IFrameGrabberImageImpl.cpp)
 
     set_target_properties(YarpOpenraveGrabber PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
