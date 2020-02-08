@@ -49,6 +49,8 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
     else if(YARP_FEATURE_ZOOM == feature)
     {
         modGeomDataPtr->intrinsics.focal_length = value;
+        modGeomDataPtr->intrinsics.fx = value * origGeomDataPtr->width;
+        modGeomDataPtr->intrinsics.fy = value * origGeomDataPtr->height;
         boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> constModGeomDataPtr(modGeomDataPtr);
         sensorBasePtr->SetSensorGeometry(constModGeomDataPtr);
         return true;
