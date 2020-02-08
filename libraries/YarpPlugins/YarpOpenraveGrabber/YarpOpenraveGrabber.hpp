@@ -85,6 +85,7 @@ private:
 
     // General Grabber parameters //
     int _height, _width;
+    double zoom;
 
     //OpenRAVE//
     OpenRAVE::SensorBasePtr sensorBasePtr;

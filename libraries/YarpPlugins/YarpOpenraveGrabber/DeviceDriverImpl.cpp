@@ -31,6 +31,8 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 
     int sensorIndex = config.check("sensorIndex",yarp::os::Value(NOT_SET),"sensor index").asInt32();
 
+    zoom = 0.0; // Could be set via config
+
     if (sensorIndex == NOT_SET)
     {
         CD_ERROR("sensorIndex %d == NOT_SET, not loading yarpPlugin.\n",sensorIndex);
