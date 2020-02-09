@@ -89,6 +89,7 @@ private:
     //OpenRAVE//
     OpenRAVE::SensorBasePtr sensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> sensorDataPtr;
+    boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData> modGeomDataPtr;
 
     static const int NOT_SET;
 };
