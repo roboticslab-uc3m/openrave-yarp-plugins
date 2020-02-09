@@ -30,10 +30,13 @@ bool YarpOpenraveGrabber::hasFeature(int feature, bool *hasFeature)
 bool YarpOpenraveGrabber::setFeature(int feature, double value)
 {
     // Instead we could
-    // - Clone()
-    // - setintrinsic
-    //     - https://github.com/rdiankov/openrave/blob/2656da7b573004e3e12109b9831797a758a86981/plugins/basesensors/basecamera.h#L177
-    //     - sensor.SendCommand('setintrinsic 529 525 328 267 0.01 10')
+    // - http://www.openrave.org/docs/latest_stable/interface_types/sensor/basecamera/
+    //     - setintrinsic
+    //         - https://github.com/rdiankov/openrave/blob/2656da7b573004e3e12109b9831797a758a86981/plugins/basesensors/basecamera.h#L177
+    //         - https://github.com/personalrobotics/offscreen_render/issues/2#issuecomment-91033096
+    //             - sensor.SendCommand('setintrinsic 529 525 328 267 0.01 10')
+    //     - setdims
+    // - Clone() (???)
     boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> origGeomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
     modGeomDataPtr.reset(new OpenRAVE::SensorBase::CameraGeomData);
     modGeomDataPtr->intrinsics = origGeomDataPtr->intrinsics;
