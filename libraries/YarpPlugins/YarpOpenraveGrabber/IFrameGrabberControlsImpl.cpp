@@ -30,7 +30,7 @@ bool YarpOpenraveGrabber::hasFeature(int feature, bool *hasFeature)
 bool YarpOpenraveGrabber::setFeature(int feature, double value)
 {
     boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> origGeomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
-    OpenRAVE::SensorBase::CameraGeomData* modGeomDataPtr = new OpenRAVE::SensorBase::CameraGeomData;
+    boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData> modGeomDataPtr(new OpenRAVE::SensorBase::CameraGeomData);
     modGeomDataPtr->intrinsics = origGeomDataPtr->intrinsics;
     modGeomDataPtr->width = origGeomDataPtr->width;
     modGeomDataPtr->height = origGeomDataPtr->height;
