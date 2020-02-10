@@ -1,6 +1,7 @@
+#!/usr/bin/env python
+
 from openravepy import *
 import yarp
-import time
 
 try:
     RaveInitialize()
@@ -23,7 +24,7 @@ try:
 
     done = False
     while not done:
-        print 'wait to reach...'
+        print('wait to reach...')
         yarp.delay(1.0) # [s]
         done = pos.checkMotionDone()
 
