@@ -38,6 +38,7 @@ public:
     int main(const std::string& cmd);
 
     bool Open(std::ostream& sout, std::istream& sinput);
+    bool GetPenv(std::ostream& sout, std::istream& sinput);
     bool close(const int i);
 
 private:
