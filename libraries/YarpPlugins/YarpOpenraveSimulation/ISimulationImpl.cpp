@@ -12,6 +12,7 @@ namespace roboticslab
 bool YarpOpenraveSimulation::step(double value)
 {
     CD_DEBUG("\n");
+    penv->StepSimulation(value);
     return true;
 }
 
@@ -20,6 +21,7 @@ bool YarpOpenraveSimulation::step(double value)
 bool YarpOpenraveSimulation::start(double value)
 {
     CD_DEBUG("\n");
+    penv->StartSimulation(value);
     return true;
 }
 
@@ -28,6 +30,8 @@ bool YarpOpenraveSimulation::start(double value)
 
 bool YarpOpenraveSimulation::stop()
 {
+    CD_DEBUG("\n");
+    penv->StopSimulation();
     return true;
 }
 

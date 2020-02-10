@@ -39,7 +39,7 @@ public:
     virtual bool open(yarp::os::Searchable& config);
     virtual bool close();
 
-    // ------- IFrameSimulationControls declarations. Implementation in ISimulationImpl.cpp -------
+    // ------- ISimulation declarations. Implementation in ISimulationImpl.cpp -------
 
     virtual bool step(double value);
     virtual bool start(double value);
