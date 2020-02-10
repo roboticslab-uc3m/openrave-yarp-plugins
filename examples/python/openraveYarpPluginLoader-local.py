@@ -36,9 +36,13 @@ grabberDevice = yarp.PolyDriver(grabberOptions)
 # view specific interfaces
 pos = controlboardDevice.viewIPositionControl()
 controls = grabberDevice.viewIFrameGrabberControls()
+grabber = grabberDevice.viewIFrameGrabberImage()
 
 # do stuff
 controls.setFeature(yarp.YARP_FEATURE_ZOOM, 0.3)
+
+image = yarp.ImageRgb()
+grabber.getImage(image)
 
 pos.positionMove(1,45)
 
