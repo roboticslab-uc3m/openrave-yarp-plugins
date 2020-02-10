@@ -150,8 +150,8 @@ bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
         // RAVELOG_INFO("%s\n",cmdin.str().c_str());
         if( ! pModule->SendCommand(cmdout,cmdin) )
         {
-            CD_ERROR("Bad send 'open' command.\n");
-            return false;
+            CD_WARNING("Bad send 'open' command.\n");
+            //return false;
         }
         CD_SUCCESS("Sent 'open' command.\n");
     }
