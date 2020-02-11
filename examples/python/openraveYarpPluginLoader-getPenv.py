@@ -3,15 +3,23 @@
 from openravepy import *
 import yarp
 
+yarp.Network.init()
+yarp.Network.setLocalMode(True)
+
 try:
+    # Create environment
     RaveInitialize()
     env = Environment()
     env.Load("data/lab1.env.xml")
+
+    # Create viewer
     env.SetViewer('qtcoin')
 
+    # Create OpenraveYarpPluginLoader and obtain environment pointer (penv)
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
     penvStr = OpenraveYarpPluginLoader.SendCommand('getPenv')
 
+    # Controlboard using penv
     controlboardOptions = yarp.Property()
     penvNameValueStr = '(penv {' + penvStr + '})'
     controlboardOptions.fromString(penvNameValueStr)
@@ -20,7 +28,25 @@ try:
     controlboardOptions.put('manipulatorIndex',0)
     controlboardDevice = yarp.PolyDriver(controlboardOptions)
 
+    # Create Grabber using penv
+    grabberOptions = yarp.Property()
+    grabberOptions.put('penv',penvValue)
+    grabberOptions.put('device','YarpOpenraveGrabber')
+    grabberOptions.put('robotIndex',0)
+    grabberOptions.put('sensorIndex',0)
+    grabberDevice = yarp.PolyDriver(grabberOptions)
+
+    # View specific interfaces
     pos = controlboardDevice.viewIPositionControl()
+    controls = grabberDevice.viewIFrameGrabberControls()
+    grabber = grabberDevice.viewIFrameGrabberImage()
+
+    # do stuff
+    controls.setFeature(yarp.YARP_FEATURE_ZOOM, 0.3)
+
+    image = yarp.ImageRgb()
+    grabber.getImage(image)
+
     pos.positionMove(1,45)
 
     done = False
