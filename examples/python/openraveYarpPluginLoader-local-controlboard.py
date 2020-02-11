@@ -12,15 +12,15 @@ try:
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
     penvStr = OpenraveYarpPluginLoader.SendCommand('getPenv')
 
-    options = yarp.Property()
+    controlboardOptions = yarp.Property()
     penvNameValueStr = '(penv {' + penvStr + '})'
-    options.fromString(penvNameValueStr)
-    options.put('device','YarpOpenraveControlboard')
-    options.put('robotIndex',0)
-    options.put('manipulatorIndex',0)
-    dd = yarp.PolyDriver(options)
+    controlboardOptions.fromString(penvNameValueStr)
+    controlboardOptions.put('device','YarpOpenraveControlboard')
+    controlboardOptions.put('robotIndex',0)
+    controlboardOptions.put('manipulatorIndex',0)
+    controlboardDevice = yarp.PolyDriver(controlboardOptions)
 
-    pos = dd.viewIPositionControl()
+    pos = controlboardDevice.viewIPositionControl()
     pos.positionMove(1,45)
 
     done = False
