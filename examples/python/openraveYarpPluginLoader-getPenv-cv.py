@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import cv2
+import cv2 as cv
 import numpy as np
 import matplotlib.pylab
 
@@ -50,10 +50,18 @@ npImg = np.zeros((grabber.height(), grabber.width(), 3), dtype = np.uint8)
 yarpImg = yarp.ImageRgb()
 yarpImg.resize(grabber.width(), grabber.height())
 yarpImg.setExternal(npImg, npImg.shape[1], npImg.shape[0])
+yarp.delay(0.5)
 
-grabber.getImage(yarpImg)
-matplotlib.pylab.imshow(npImg,interpolation='none')
-matplotlib.pylab.show()
+grabber.getImage(yarpImg) # refeshes npImg
+#matplotlib.pylab.imshow(npImg,interpolation='none')
+#matplotlib.pylab.show() # blocking
+
+b,g,r = cv.split(npImg)
+colorMinusColor = r-g
+bin = cv.threshold(colorMinusColor,127,255,cv.THRESH_BINARY)
+
+matplotlib.pylab.imshow(bin,interpolation='none')
+matplotlib.pylab.show() # blocking
 
 pos.positionMove(1,45)
 
