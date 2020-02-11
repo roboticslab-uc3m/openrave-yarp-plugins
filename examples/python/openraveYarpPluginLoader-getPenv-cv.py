@@ -58,9 +58,17 @@ grabber.getImage(yarpImg) # refeshes npImg
 
 b,g,r = cv.split(npImg)
 colorMinusColor = r-g
-bin = cv.threshold(colorMinusColor,127,255,cv.THRESH_BINARY)
+# https://docs.opencv.org/4.2.0/d7/d4d/tutorial_py_thresholding.html
+res, binary = cv.threshold(colorMinusColor,127,255,cv.THRESH_BINARY)
+# https://docs.opencv.org/4.2.0/d4/d73/tutorial_py_contours_begin.html
+contours = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 
-matplotlib.pylab.imshow(bin,interpolation='none')
+#contours = contours[0] if imutils.is_cv2() else contours[1]
+contours = contours[1] # cv2
+contoursSorted = sorted(contours, key=lambda x: cv.contourArea(x), reverse=True)
+
+cv.drawContours(npImg, contoursSorted, 0, (0,255,0), 3)
+matplotlib.pylab.imshow(npImg,interpolation='none')
 matplotlib.pylab.show() # blocking
 
 pos.positionMove(1,45)
