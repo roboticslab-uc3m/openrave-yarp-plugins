@@ -94,6 +94,11 @@ bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
     }
     else if ( config.check("penv") )
     {
+        if(!config.find("penv").isBlob())
+        {
+            CD_ERROR("penv must be blob containing pointer to environment!\n");
+            return false;
+        }
         //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
         penv = *((OpenRAVE::EnvironmentBasePtr*)(config.find("penv").asBlob()));
     }
