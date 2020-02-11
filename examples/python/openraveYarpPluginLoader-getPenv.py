@@ -10,7 +10,7 @@ try:
     # Create environment
     RaveInitialize()
     env = Environment()
-    env.Load("data/lab1.env.xml")
+    env.Load("data/testwamcamera.env.xml")
 
     # Create viewer
     env.SetViewer('qtcoin')
@@ -18,11 +18,11 @@ try:
     # Create OpenraveYarpPluginLoader and obtain environment pointer (penv)
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
     penvStr = OpenraveYarpPluginLoader.SendCommand('getPenv')
+    penvNameValueStr = '(penv {' + penvStr + '})'
 
     # Controlboard using penv
     controlboardOptions = yarp.Property()
-    penvNameValueStr = '(penv {' + penvStr + '})'
-    controlboardOptions.fromString(penvNameValueStr)
+    controlboardOptions.fromString(penvNameValueStr) # put('penv',penvValue)
     controlboardOptions.put('device','YarpOpenraveControlboard')
     controlboardOptions.put('robotIndex',0)
     controlboardOptions.put('manipulatorIndex',0)
@@ -30,7 +30,7 @@ try:
 
     # Create Grabber using penv
     grabberOptions = yarp.Property()
-    grabberOptions.put('penv',penvValue)
+    grabberOptions.fromString(penvNameValueStr) # put('penv',penvValue)
     grabberOptions.put('device','YarpOpenraveGrabber')
     grabberOptions.put('robotIndex',0)
     grabberOptions.put('sensorIndex',0)
