@@ -56,9 +56,12 @@ grabber.getImage(yarpImg) # refeshes npImg
 #matplotlib.pylab.imshow(npImg,interpolation='none')
 #matplotlib.pylab.show() # blocking
 
-b,g,r = cv.split(npImg)
+r,g,b = cv.split(npImg)
 colorMinusColor = r-g
-res, binary = cv.threshold(colorMinusColor,127,255,cv.THRESH_BINARY)
+res, binary = cv.threshold(colorMinusColor,55,255,cv.THRESH_BINARY)
+kernel = np.ones((2,2),np.uint8)
+binary = cv.dilate(binary,kernel,iterations = 1)
+binary = cv.erode(binary,kernel,iterations = 1)
 contours = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 
 contours = contours[1] # cv2
