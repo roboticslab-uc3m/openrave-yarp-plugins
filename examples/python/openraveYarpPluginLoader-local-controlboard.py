@@ -13,7 +13,8 @@ try:
     penvStr = OpenraveYarpPluginLoader.SendCommand('getPenv')
 
     options = yarp.Property()
-    options.fromString(penvStr)
+    penvNameValueStr = '(penv {' + penvStr + '})'
+    options.fromString(penvNameValueStr)
     options.put('device','YarpOpenraveControlboard')
     options.put('robotIndex',0)
     options.put('manipulatorIndex',0)

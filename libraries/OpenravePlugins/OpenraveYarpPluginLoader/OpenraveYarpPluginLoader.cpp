@@ -415,14 +415,10 @@ bool roboticslab::OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istrea
 
 bool roboticslab::OpenraveYarpPluginLoader::GetPenv(std::ostream& sout, std::istream& sinput)
 {
-    //CD_DEBUG("penv: %p\n",GetEnv().get());
     OpenRAVE::EnvironmentBasePtr penv = GetEnv();
     yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
-    CD_DEBUG("Value: %s\n", v.toString().c_str());
-    yarp::os::Property options;
-    options.put("penv",v);
-    CD_DEBUG("Property: %s\n", options.toString().c_str());
-    sout << options.toString();
+    CD_DEBUG("penvValue: %s\n", v.toString().c_str());
+    sout << v.toString();
     return true;
 }
 

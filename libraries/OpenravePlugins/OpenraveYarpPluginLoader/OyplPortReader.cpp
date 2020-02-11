@@ -74,7 +74,6 @@ bool roboticslab::OyplPortReader::read(yarp::os::ConnectionReader& in)
     else if ( request.get(0).asString() == "getPenv" ) //-- getPenv
     {
         OpenRAVE::EnvironmentBasePtr penv = openraveYarpPluginLoaderPtr->GetEnv();
-        //CD_DEBUG("penv: %p\n",penv);
         yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
         CD_DEBUG("penvValue: %s\n", v.toString().c_str());
         response.add(v); // penvValue.isBlob()
