@@ -23,11 +23,12 @@ cmd = yarp.Bottle()
 res = yarp.Bottle()
 cmd.addString('getPenv')
 rpcClient.write(cmd,res)
-optionsBase = res.get(0).asDict() # yarp.Property()
-print(optionsBase.toString())
+penvValue = res.get(0) # penvValue.isBlob()
+print(penvValue.toString())
 
 # create more devices using the property that contains the environment pointer
-grabberOptions = yarp.Property(optionsBase)
+grabberOptions = yarp.Property()
+grabberOptions.put('penv',penvValue)
 grabberOptions.put('device','YarpOpenraveGrabber')
 grabberOptions.put('robotIndex',0)
 grabberOptions.put('sensorIndex',0)
@@ -51,4 +52,3 @@ while not done:
     print('wait to reach...')
     yarp.delay(1.0) # [s]
     done = pos.checkMotionDone()
-

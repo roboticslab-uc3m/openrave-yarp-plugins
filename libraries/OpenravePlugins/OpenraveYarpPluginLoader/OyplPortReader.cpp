@@ -73,12 +73,11 @@ bool roboticslab::OyplPortReader::read(yarp::os::ConnectionReader& in)
     }
     else if ( request.get(0).asString() == "getPenv" ) //-- getPenv
     {
-        //CD_DEBUG("penv: %p\n",openraveYarpPluginLoaderPtr->GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = openraveYarpPluginLoaderPtr->GetEnv();
+        //CD_DEBUG("penv: %p\n",penv);
         yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
-        CD_DEBUG("Value: %s\n", v.toString().c_str());
-        yarp::os::Property& options = response.addDict();
-        options.put("penv",v);
+        CD_DEBUG("penvValue: %s\n", v.toString().c_str());
+        response.add(v); // penvValue.isBlob()
         return response.write(*out);
     }
     else if ( request.get(0).asString() == "close" ) //-- close
