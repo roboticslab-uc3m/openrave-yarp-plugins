@@ -5,17 +5,17 @@ import yarp
 yarp.Network.init()
 yarp.Network.setLocalMode(True)
 
-# environment with YarpOpenraveControlboard and OpenraveYarpPluginLoader
+# Create (Controlboard + environment + OpenraveYarpPluginLoader + viewer)
 controlboardOptions = yarp.Property()
-controlboardOptions.put('env','data/testwamcamera.env.xml')
 controlboardOptions.put('device','YarpOpenraveControlboard')
 controlboardOptions.put('robotIndex',0)
 controlboardOptions.put('manipulatorIndex',0)
+controlboardOptions.put('env','data/testwamcamera.env.xml')
 controlboardOptions.put('orPlugin','OpenraveYarpPluginLoader')
 controlboardOptions.put('view',1)
 controlboardDevice = yarp.PolyDriver(controlboardOptions)
 
-# connect to OpenraveYarpPluginLoader to obtain environment pointer
+# Connect to OpenraveYarpPluginLoader and obtain environment pointer (penv)
 rpcClient = yarp.RpcClient()
 rpcClient.open('/OpenraveYarpPluginLoader/rpc:c')
 rpcClient.addOutput('/OpenraveYarpPluginLoader/rpc:s')
@@ -26,7 +26,7 @@ rpcClient.write(cmd,res)
 penvValue = res.get(0) # penvValue.isBlob()
 print(penvValue.toString())
 
-# create more devices using the property that contains the environment pointer
+# Create Grabber using penv
 grabberOptions = yarp.Property()
 grabberOptions.put('penv',penvValue)
 grabberOptions.put('device','YarpOpenraveGrabber')
@@ -34,7 +34,7 @@ grabberOptions.put('robotIndex',0)
 grabberOptions.put('sensorIndex',0)
 grabberDevice = yarp.PolyDriver(grabberOptions)
 
-# view specific interfaces
+# View specific interfaces
 pos = controlboardDevice.viewIPositionControl()
 controls = grabberDevice.viewIFrameGrabberControls()
 grabber = grabberDevice.viewIFrameGrabberImage()
