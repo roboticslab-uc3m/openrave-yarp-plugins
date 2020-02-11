@@ -1,21 +1,22 @@
 #!/usr/bin/env python
 
+import roboticslab_openrave_yarp_plugins
 import yarp
 
 yarp.Network.init()
 yarp.Network.setLocalMode(True)
 
-# environment with YarpOpenraveControlboard and OpenraveYarpPluginLoader
+# Create (Controlboard + environment + OpenraveYarpPluginLoader + viewer)
 controlboardOptions = yarp.Property()
-controlboardOptions.put('env','data/testwamcamera.env.xml')
 controlboardOptions.put('device','YarpOpenraveControlboard')
 controlboardOptions.put('robotIndex',0)
 controlboardOptions.put('manipulatorIndex',0)
+controlboardOptions.put('env','data/testwamcamera.env.xml')
 controlboardOptions.put('orPlugin','OpenraveYarpPluginLoader')
 controlboardOptions.put('view',1)
 controlboardDevice = yarp.PolyDriver(controlboardOptions)
 
-# connect to OpenraveYarpPluginLoader to obtain environment pointer
+# Connect to OpenraveYarpPluginLoader and obtain environment pointer (penv)
 rpcClient = yarp.RpcClient()
 rpcClient.open('/OpenraveYarpPluginLoader/rpc:c')
 rpcClient.addOutput('/OpenraveYarpPluginLoader/rpc:s')
@@ -23,22 +24,35 @@ cmd = yarp.Bottle()
 res = yarp.Bottle()
 cmd.addString('getPenv')
 rpcClient.write(cmd,res)
-optionsBase = res.get(0).asDict() # yarp.Property()
-print(optionsBase.toString())
+penvValue = res.get(0) # penvValue.isBlob()
+print(penvValue.toString())
 
-# create more devices using the property that contains the environment pointer
-grabberOptions = yarp.Property(optionsBase)
+# Create Grabber using penv
+grabberOptions = yarp.Property()
+grabberOptions.put('penv',penvValue)
 grabberOptions.put('device','YarpOpenraveGrabber')
 grabberOptions.put('robotIndex',0)
 grabberOptions.put('sensorIndex',0)
 grabberDevice = yarp.PolyDriver(grabberOptions)
 
-# view specific interfaces
+# Create Simulation using penv
+simulationOptions = yarp.Property()
+simulationOptions.put('penv',penvValue)
+simulationOptions.put('device','YarpOpenraveSimulation')
+simulationOptions.put('robotIndex',0) # required, dummy
+simulationDevice = yarp.PolyDriver(simulationOptions)
+
+# View specific interfaces
 pos = controlboardDevice.viewIPositionControl()
 controls = grabberDevice.viewIFrameGrabberControls()
 grabber = grabberDevice.viewIFrameGrabberImage()
+simulation = roboticslab_openrave_yarp_plugins.viewISimulation(simulationDevice) # syntax is different
 
 # do stuff
+simulation.stop()
+simulation.step(0.1)
+simulation.start(0.1)
+
 controls.setFeature(yarp.YARP_FEATURE_ZOOM, 0.3)
 
 image = yarp.ImageRgb()
@@ -51,4 +65,3 @@ while not done:
     print('wait to reach...')
     yarp.delay(1.0) # [s]
     done = pos.checkMotionDone()
-

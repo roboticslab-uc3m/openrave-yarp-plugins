@@ -95,7 +95,6 @@ install_basic_package_files(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS
                             COMPATIBILITY AnyNewerVersion
                             NO_SET_AND_CHECK_MACRO
                             NO_CHECK_REQUIRED_COMPONENTS_MACRO
-                            NO_EXPORT
                             NAMESPACE ROBOTICSLAB::)
 
 # Configure and create uninstall target.
