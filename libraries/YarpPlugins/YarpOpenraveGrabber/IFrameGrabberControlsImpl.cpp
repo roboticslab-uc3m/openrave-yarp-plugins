@@ -11,7 +11,8 @@ namespace roboticslab
 
 bool YarpOpenraveGrabber::getCameraDescription(CameraDescriptor *camera)
 {
-    return false;
+    *camera = cameraDescriptor;
+    return true;
 }
 
 // ----------------------------------------------------------------------------

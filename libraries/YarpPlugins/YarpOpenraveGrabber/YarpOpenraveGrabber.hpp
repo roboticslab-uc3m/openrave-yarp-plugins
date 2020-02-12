@@ -83,13 +83,16 @@ public:
 
 private:
 
-    // General Grabber parameters //
+    // General Grabber parameters
     int _height, _width;
 
-    //OpenRAVE//
+    // OpenRAVE
     OpenRAVE::SensorBasePtr sensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> sensorDataPtr;
     boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData> modGeomDataPtr;
+
+    // YARP
+    CameraDescriptor cameraDescriptor;
 
     static const int NOT_SET;
 };
