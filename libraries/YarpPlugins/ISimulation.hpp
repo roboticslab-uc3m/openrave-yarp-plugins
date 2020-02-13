@@ -36,6 +36,14 @@ public:
      */
     virtual bool step(double value) = 0;
 
+    /**
+     * Retrieve a void pointer that can be casted to a world/environment pointer used to control any element of the simulation.
+     * @param value storage to return param
+     * @param id optional param to specify id in case there are multiple environments/worlds/simulations
+     * @return true/false
+     */
+    virtual bool getSimulationRawPointer(void* value, size_t* size) = 0;
+
     virtual ~ISimulation() {}
 };
 

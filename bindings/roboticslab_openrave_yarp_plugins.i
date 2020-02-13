@@ -21,6 +21,7 @@
 %{
 /* Includes the header in the wrapper code */
 #include "ISimulation.hpp"
+#include <yarp/os/Value.h>
 %}
 
 /* See https://github.com/robotology/yarp/pull/1696 */
@@ -45,3 +46,13 @@ roboticslab::ISimulation *viewISimulation(yarp::dev::PolyDriver& d)
 }
 %}
 extern roboticslab::ISimulation *viewISimulation(yarp::dev::PolyDriver& d);
+
+%extend roboticslab::ISimulation {
+    void getSimulationRawPointerStr()
+    {
+        void* value;
+        size_t valueSize;
+        self->getSimulationRawPointer(value, &valueSize);
+        yarp::os::Value v(value, valueSize);
+    }
+}
