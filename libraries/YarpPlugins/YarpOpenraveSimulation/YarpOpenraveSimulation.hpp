@@ -3,8 +3,6 @@
 #ifndef __YARP_OPENRAVE_SIMULATION_HPP__
 #define __YARP_OPENRAVE_SIMULATION_HPP__
 
-#include <yarp/os/Value.h>
-
 #include <yarp/dev/DeviceDriver.h>
 
 #include <openrave/openrave.h>
@@ -46,7 +44,7 @@ public:
     virtual bool step(double value);
     virtual bool start(double value);
     virtual bool stop();
-    virtual bool getSimulationRawPointer(void* value, size_t* size) override;
+    bool getSimulationRawPointerValue(yarp::os::Value& value);
 
 private:
 

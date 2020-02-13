@@ -46,13 +46,3 @@ roboticslab::ISimulation *viewISimulation(yarp::dev::PolyDriver& d)
 }
 %}
 extern roboticslab::ISimulation *viewISimulation(yarp::dev::PolyDriver& d);
-
-%extend roboticslab::ISimulation {
-    void getSimulationRawPointerStr()
-    {
-        void* value;
-        size_t valueSize;
-        self->getSimulationRawPointer(value, &valueSize);
-        yarp::os::Value v(value, valueSize);
-    }
-}

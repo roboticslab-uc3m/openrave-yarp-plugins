@@ -37,13 +37,13 @@ bool YarpOpenraveSimulation::stop()
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveSimulation::getSimulationRawPointer(void *value, size_t* size)
+bool YarpOpenraveSimulation::getSimulationRawPointerValue(yarp::os::Value& value)
 {
     CD_DEBUG("\n");
-    value = &penv;
-    *size = sizeof(OpenRAVE::EnvironmentBasePtr);
+    yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
+    value = v;
+    CD_DEBUG("penvValue: %s\n", value.toString().c_str());
     return true;
-
 }
 
 // ----------------------------------------------------------------------------

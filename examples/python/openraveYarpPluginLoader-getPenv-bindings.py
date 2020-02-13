@@ -15,7 +15,8 @@ simulationOptions.put('view',1)
 simulationDevice = yarp.PolyDriver(simulationOptions)
 
 simulation = roboticslab_openrave_yarp_plugins.viewISimulation(simulationDevice) # syntax is different
-penvValue = simulation.getSimulationRawPointer()
+penvValue = yarp.Value()
+simulation.getSimulationRawPointerValue(penvValue)
 
 # Create Controlboard + using penv
 controlboardOptions = yarp.Property()
