@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __YARP_OPENRAVE_GRABBER_HPP__
-#define __YARP_OPENRAVE_GRABBER_HPP__
+#ifndef __YARP_OPENRAVE_SIMULATION_HPP__
+#define __YARP_OPENRAVE_SIMULATION_HPP__
 
 #include <yarp/dev/DeviceDriver.h>
 
@@ -44,6 +44,7 @@ public:
     virtual bool step(double value);
     virtual bool start(double value);
     virtual bool stop();
+    bool getSimulationRawPointerValue(yarp::os::Value& value);
 
 private:
 
@@ -55,4 +56,4 @@ private:
 
 }  // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_GRABBER_HPP__
+#endif  // __YARP_OPENRAVE_SIMULATION_HPP__

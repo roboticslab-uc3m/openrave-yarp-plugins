@@ -3,6 +3,8 @@
 #ifndef __I_SIMULATION_HPP__
 #define __I_SIMULATION_HPP__
 
+#include <yarp/os/Value.h>
+
 namespace roboticslab
 {
 
@@ -35,6 +37,14 @@ public:
      * @return true/false
      */
     virtual bool step(double value) = 0;
+
+    /**
+     * Retrieve a void pointer that can be casted to a world/environment pointer used to control any element of the simulation.
+     * @param value storage to return param
+     * @param id optional param to specify id in case there are multiple environments/worlds/simulations
+     * @return true/false
+     */
+    virtual bool getSimulationRawPointerValue(yarp::os::Value& value) = 0;
 
     virtual ~ISimulation() {}
 };
