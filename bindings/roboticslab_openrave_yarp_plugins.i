@@ -21,7 +21,6 @@
 %{
 /* Includes the header in the wrapper code */
 #include "ISimulation.hpp"
-#include <yarp/os/Value.h>
 %}
 
 /* See https://github.com/robotology/yarp/pull/1696 */
