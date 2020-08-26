@@ -44,7 +44,6 @@ addons:
     - libode-dev
     - libsoqt4-dev
     - libcoin80-dev
-    - rapidjson-dev
 
     # code coverage
     - lcov
@@ -70,6 +69,13 @@ install:
     --additional-cmake-options "-DSKIP_ACE:BOOL=ON"
     --prepend-to-linker-path lib
     --additional-export-paths "YARP_DATA_DIRS;share/yarp"
+
+  #-- Install RapidJSON
+  - >
+    source "$TRAVIS_BUILD_DIR/scripts/travis/git-cache-dependency.sh"
+    --package-name RapidJSON
+    --repo-url https://github.com/Tencent/rapidjson
+    --repo-checkout master
 
   #-- Install OpenRAVE
   - >
