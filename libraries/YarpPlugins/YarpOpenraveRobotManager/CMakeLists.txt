@@ -28,7 +28,7 @@ if(NOT SKIP_YarpOpenraveRobotManager)
     set_target_properties(YarpOpenraveRobotManager PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                               LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-    target_link_libraries(YarpOpenraveRobotManager YARP::YARP_OS
+    target_link_libraries(YarpOpenraveRobotManager YARP::YARP_os
                                                    YARP::YARP_dev
                                                    ${OpenRAVE_LIBRARIES}
                                                    ASROB::RobotInterfaces

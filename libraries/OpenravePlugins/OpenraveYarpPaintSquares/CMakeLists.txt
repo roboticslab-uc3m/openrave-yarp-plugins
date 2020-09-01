@@ -14,7 +14,7 @@ add_library(OpenraveYarpPaintSquares MODULE OpenraveYarpPaintSquares.cpp)
 set_target_properties(OpenraveYarpPaintSquares PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-target_link_libraries(OpenraveYarpPaintSquares YARP::YARP_OS
+target_link_libraries(OpenraveYarpPaintSquares YARP::YARP_os
                                                YARP::YARP_init
                                                ${OpenRAVE_LIBRARIES}
                                                Boost::boost

@@ -14,7 +14,7 @@ add_library(OpenraveForceSensor MODULE ForceSensor.cpp
 set_target_properties(OpenraveForceSensor PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-target_link_libraries(OpenraveForceSensor YARP::YARP_OS
+target_link_libraries(OpenraveForceSensor YARP::YARP_os
                                           YARP::YARP_init
                                           ${OpenRAVE_LIBRARIES}
                                           Boost::boost)
