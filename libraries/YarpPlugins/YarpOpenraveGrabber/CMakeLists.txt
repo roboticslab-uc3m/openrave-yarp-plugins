@@ -25,7 +25,7 @@ if(NOT SKIP_YarpOpenraveGrabber)
     set_target_properties(YarpOpenraveGrabber PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                          LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-    target_link_libraries(YarpOpenraveGrabber YARP::YARP_OS
+    target_link_libraries(YarpOpenraveGrabber YARP::YARP_os
                                               YARP::YARP_dev
                                               ${OpenRAVE_LIBRARIES}
                                               Boost::boost

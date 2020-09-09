@@ -23,7 +23,7 @@ if(NOT SKIP_YarpOpenraveSimulation)
     set_target_properties(YarpOpenraveSimulation PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                          LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-    target_link_libraries(YarpOpenraveSimulation YARP::YARP_OS
+    target_link_libraries(YarpOpenraveSimulation YARP::YARP_os
                                               YARP::YARP_dev
                                               ${OpenRAVE_LIBRARIES}
                                               Boost::boost

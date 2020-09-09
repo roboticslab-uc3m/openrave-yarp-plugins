@@ -10,11 +10,11 @@ env:
   global:
     - CACHE_DIR=~/cached-deps
     - YCM_CHECKOUT=ycm-0.11
-  matrix:
+  jobs:
+    - YARP_CHECKOUT=yarp-3.4
     - YARP_CHECKOUT=yarp-3.3
-    - YARP_CHECKOUT=yarp-3.2
 
-matrix:
+jobs:
   include:
     - if: type = cron
       compiler: gcc
@@ -44,7 +44,6 @@ addons:
     - libode-dev
     - libsoqt4-dev
     - libcoin80-dev
-    - rapidjson-dev
 
     # code coverage
     - lcov
@@ -70,6 +69,14 @@ install:
     --additional-cmake-options "-DSKIP_ACE:BOOL=ON"
     --prepend-to-linker-path lib
     --additional-export-paths "YARP_DATA_DIRS;share/yarp"
+
+  #-- Install RapidJSON
+  - >
+    source "$TRAVIS_BUILD_DIR/scripts/travis/git-cache-dependency.sh"
+    --package-name RapidJSON
+    --repo-url https://github.com/Tencent/rapidjson
+    --repo-checkout master
+    --additional-cmake-options "-DRAPIDJSON_BUILD_DOC:BOOL=OFF -DRAPIDJSON_BUILD_EXAMPLES:BOOL=OFF -DRAPIDJSON_BUILD_TESTS:BOOL=OFF"
 
   #-- Install OpenRAVE
   - >
