@@ -94,6 +94,11 @@ bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
     }
     else if ( config.check("penv") )
     {
+        if(!config.find("penv").isBlob())
+        {
+            CD_ERROR("penv must be blob containing pointer to environment!\n");
+            return false;
+        }
         //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
         penv = *((OpenRAVE::EnvironmentBasePtr*)(config.find("penv").asBlob()));
     }
@@ -150,8 +155,8 @@ bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
         // RAVELOG_INFO("%s\n",cmdin.str().c_str());
         if( ! pModule->SendCommand(cmdout,cmdin) )
         {
-            CD_ERROR("Bad send 'open' command.\n");
-            return false;
+            CD_WARNING("Bad send 'open' command.\n");
+            //return false;
         }
         CD_SUCCESS("Sent 'open' command.\n");
     }

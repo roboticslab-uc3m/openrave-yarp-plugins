@@ -33,35 +33,15 @@ class YarpOpenraveRGBDSensor : YarpOpenraveBase,
 {
 public:
 
-    // Set the Thread Rate in the class constructor
     YarpOpenraveRGBDSensor() : rgb(true), rgbReady(false), depthReady(false) {}
 
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImageImpl.cpp -------
-    /**
-     * Open the DeviceDriver.
-     * @param config is a list of parameters for the device.
-     * Which parameters are effective for your device can vary.
-     * See \ref dev_examples "device invocation examples".
-     * If there is no example for your device,
-     * you can run the "yarpdev" program with the verbose flag
-     * set to probe what parameters the device is checking.
-     * If that fails too,
-     * you'll need to read the source code (please nag one of the
-     * yarp developers to add documentation for your device).
-     * @return true/false upon success/failure
-     */
-    virtual bool open(yarp::os::Searchable& config);
 
-    /**
-     * Close the DeviceDriver.
-     * @return true/false on success/failure.
-     */
+    virtual bool open(yarp::os::Searchable& config);
     virtual bool close();
 
     // ------- IRGBDSensor declarations. Implementation in IRGBDSensorImpl.cpp -------
-    /*
-     *  IRgbVisualParams interface. Look at IVisualParams.h for documentation
-     */
+    // IRgbVisualParams interface. Look at IVisualParams.h for documentation
     virtual int  getRgbHeight() {}
     virtual int  getRgbWidth() {}
     virtual bool getRgbSupportedConfigurations(yarp::sig::VectorOf<yarp::dev::CameraConfig> &configurations) {}
@@ -73,9 +53,7 @@ public:
     virtual bool getRgbMirroring(bool &mirror) {}
     virtual bool setRgbMirroring(bool mirror) {}
 
-    /*
-     * IDepthVisualParams interface. Look at IVisualParams.h for documentation
-     */
+    // IDepthVisualParams interface. Look at IVisualParams.h for documentation
     virtual int    getDepthHeight();
     virtual int    getDepthWidth();
     virtual bool   setDepthResolution(int width, int height);
@@ -89,78 +67,23 @@ public:
     virtual bool   getDepthMirroring(bool &mirror) {}
     virtual bool   setDepthMirroring(bool mirror) {}
 
-    /*
-     * IRGBDSensor specific interface methods
-     */
-
-    /**
-     * Get the extrinsic parameters from the device
-     * @param  extrinsic  return a rototranslation matrix describing the position
-     *         of the depth optical frame with respect to the rgb frame
-     * @return true if success
-     */
+    // IRGBDSensor specific interface methods
     virtual bool getExtrinsicParam(yarp::sig::Matrix &extrinsic)  {}
-
-    /**
-     * Return an error message in case of error. For debugging purpose and user notification.
-     * Error message will be reset after any successful command
-     * @return A string explaining the last error occurred.
-     */
     virtual std::string getLastErrorMsg(yarp::os::Stamp *timeStamp = NULL)  {}
-
-    /**
-     * Get the rgb frame from the device.
-     * The pixel type of the source image will usually be set as a VOCAB_PIXEL_RGB,
-     * but the user can call the function with the pixel type of his/her choice. The conversion
-     * if possible, will be done automatically on client side (TO BO VERIFIED).
-     * Note: this will consume CPU power because it will not use GPU optimization.
-     * Use VOCAB_PIXEL_RGB for best performances.
-     *
-     * @param rgbImage the image to be filled.
-     * @param timeStamp time in which the image was acquired. Optional, ignored if nullptr.
-     * @return True on success
-     */
     virtual bool getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::os::Stamp *timeStamp = NULL) override;
-
-    /**
-     * Get the depth frame from the device.
-     *
-     * @param depthImage the depth image to be filled, depth measured in meters.
-     * @param timeStamp time in which the image was acquired. Optional, ignored if nullptr.
-     * @return True on success
-     */
     virtual bool getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp = NULL) override;
-
-    /**
-    * Get the both the color and depth frame in a single call. Implementation should assure the best possible synchronization
-    * is achieved accordingly to synch policy set by the user.
-    * TimeStamps are referred to acquisition time of the corresponding piece of information.
-    * If the device is not providing TimeStamps, then 'timeStamp' field should be set to '-1'.
-    * @param colorFrame pointer to FlexImage data to hold the color frame from the sensor
-    * @param depthFrame pointer to FlexImage data to hold the depth frame from the sensor
-    * @param colorStamp pointer to memory to hold the Stamp of the color frame
-    * @param depthStamp pointer to memory to hold the Stamp of the depth frame
-    * @return true if able to get both data.
-    */
     virtual bool getImages(yarp::sig::FlexImage &colorFrame, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthFrame, yarp::os::Stamp *colorStamp=NULL, yarp::os::Stamp *depthStamp=NULL)  override;
-
-    /**
-     * Get the surrent status of the sensor, using enum type
-     *
-     * @return an enum representing the status of the robot or an error code
-     * if any error is present
-     */
     virtual RGBDSensor_status getSensorStatus() override;
 
 private:
 
-    // General RGBDSensor parameters //
+    // General RGBDSensor parameters
     int rgbHeight, rgbWidth, depthHeight, depthWidth;
     bool rgb;
     bool rgbReady;
     bool depthReady;
 
-    //OpenRAVE//
+    // OpenRAVE
     OpenRAVE::SensorBasePtr depthSensorBasePtr;
     OpenRAVE::SensorBasePtr rgbSensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::LaserSensorData> depthSensorDataPtr;

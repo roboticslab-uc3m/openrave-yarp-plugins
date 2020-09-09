@@ -6,7 +6,7 @@ add_executable(openraveYarpWorldClient main.cpp
                                               OpenraveYarpWorldClient.cpp
                                               OpenraveYarpWorldClient.hpp)
 
-target_link_libraries(openraveYarpWorldClient YARP::YARP_OS
+target_link_libraries(openraveYarpWorldClient YARP::YARP_os
                                                      YARP::YARP_init
                                                      ROBOTICSLAB::ColorDebug)
 

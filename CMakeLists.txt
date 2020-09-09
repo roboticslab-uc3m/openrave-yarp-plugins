@@ -45,7 +45,7 @@ find_package(YCM 0.11 REQUIRED)
 find_package(COLOR_DEBUG REQUIRED)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost "${OpenRAVE_Boost_VERSION}" REQUIRED COMPONENTS thread)
-find_package(YARP 3.2 REQUIRED COMPONENTS OS dev sig)
+find_package(YARP 3.3 REQUIRED COMPONENTS os dev sig)
 
 # Soft dependencies.
 find_package(ASROB_YARP_DEVICES QUIET)
@@ -95,7 +95,6 @@ install_basic_package_files(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS
                             COMPATIBILITY AnyNewerVersion
                             NO_SET_AND_CHECK_MACRO
                             NO_CHECK_REQUIRED_COMPONENTS_MACRO
-                            NO_EXPORT
                             NAMESPACE ROBOTICSLAB::)
 
 # Configure and create uninstall target.

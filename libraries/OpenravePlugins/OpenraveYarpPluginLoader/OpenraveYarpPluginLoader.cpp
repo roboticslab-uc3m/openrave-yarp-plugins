@@ -18,6 +18,7 @@ roboticslab::OpenraveYarpPluginLoader::OpenraveYarpPluginLoader(OpenRAVE::Enviro
 {
     __description = "OpenraveYarpPluginLoader plugin.";
     OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens OpenraveYarpPluginLoader");
+    OpenRAVE::InterfaceBase::RegisterCommand("getPenv",boost::bind(&OpenraveYarpPluginLoader::GetPenv, this,_1,_2),"Gets a pointer to the environment");
 
     CD_INFO("Checking for yarp network...\n");
     if ( ! yarp.checkNetwork() )
@@ -407,6 +408,17 @@ bool roboticslab::OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istrea
             sout << " ";
         } //-- end Iterate through sensors
     } //-- end Iterate through robots
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::OpenraveYarpPluginLoader::GetPenv(std::ostream& sout, std::istream& sinput)
+{
+    OpenRAVE::EnvironmentBasePtr penv = GetEnv();
+    yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
+    CD_DEBUG("penvValue: %s\n", v.toString().c_str());
+    sout << v.toString();
     return true;
 }
 

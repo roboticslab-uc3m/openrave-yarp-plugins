@@ -45,9 +45,11 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 
     sensorBasePtr = vectorOfSensorPtr.at(sensorIndex)->GetSensor();
 
-    std::string tipo = sensorBasePtr->GetName();
+    std::string sensorName = sensorBasePtr->GetName();
 
-    printf("Sensor %d name: %s\n",sensorIndex,tipo.c_str());
+    printf("Sensor %d name: %s\n",sensorIndex,sensorName.c_str());
+    cameraDescriptor.deviceDescription = sensorName;
+    cameraDescriptor.busType = BUS_UNKNOWN;
 
     // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
 

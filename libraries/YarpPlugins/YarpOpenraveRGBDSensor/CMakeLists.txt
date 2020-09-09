@@ -24,7 +24,7 @@ if(NOT SKIP_YarpOpenraveRGBDSensor)
     set_target_properties(YarpOpenraveRGBDSensor PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                             LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-    target_link_libraries(YarpOpenraveRGBDSensor YARP::YARP_OS
+    target_link_libraries(YarpOpenraveRGBDSensor YARP::YARP_os
                                                  YARP::YARP_dev
                                                  ${OpenRAVE_LIBRARIES}
                                                  Boost::boost

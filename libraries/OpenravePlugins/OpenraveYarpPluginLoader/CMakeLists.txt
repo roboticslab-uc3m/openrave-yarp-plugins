@@ -19,7 +19,7 @@ add_library(OpenraveYarpPluginLoader MODULE OpenraveYarpPluginLoader.cpp
 set_target_properties(OpenraveYarpPluginLoader PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-target_link_libraries(OpenraveYarpPluginLoader YARP::YARP_OS
+target_link_libraries(OpenraveYarpPluginLoader YARP::YARP_os
                                                YARP::YARP_init
                                                YARP::YARP_dev
                                                ${OpenRAVE_LIBRARIES}
