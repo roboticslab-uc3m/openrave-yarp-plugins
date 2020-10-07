@@ -258,9 +258,9 @@ world draw 0/1 (radius r g b).");
                 }
                 else if((request.get(2).asString() == "cyl")||(request.get(2).asString() == "scyl"))
                 {
-                    std::list<OpenRAVE::KinBody::Link::GeometryInfo> scylInfoList;
-                    OpenRAVE::KinBody::Link::GeometryInfo scylInfo;
-                    scylInfo._type = OpenRAVE::KinBody::Link::GeomCylinder;
+                    std::list<OpenRAVE::KinBody::GeometryInfo> scylInfoList;
+                    OpenRAVE::KinBody::GeometryInfo scylInfo;
+                    scylInfo._type = OpenRAVE::GeometryType::GT_Cylinder;
                     OpenRAVE::Transform pose(OpenRAVE::Vector(1,0,0,0),OpenRAVE::Vector(request.get(5).asFloat64(),request.get(6).asFloat64(),request.get(7).asFloat64()));
                     scylInfo._t = pose;
                     OpenRAVE::Vector volume;
@@ -315,7 +315,7 @@ world draw 0/1 (radius r g b).");
                 else if (request.get(2).asString() == "mesh")
                 {
                     objIsStatic = false;
-                    OpenRAVE::KinBody::Link::TRIMESH raveMesh;
+                    OpenRAVE::TriMesh raveMesh;
                     raveMesh.indices.resize(6);
                     raveMesh.indices[0]=0;
                     raveMesh.indices[1]=1;

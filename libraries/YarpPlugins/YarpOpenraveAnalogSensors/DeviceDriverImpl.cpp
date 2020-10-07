@@ -50,7 +50,7 @@ bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
 
         std::string ftSensorName = vectorOfSensorPtrForForce6Ds[i]->GetName();
 
-        printf("Name of sensor with ftSensorIndex %d: '%s'\n", ftSensorIndex, ftSensorName.c_str());
+        printf("Name of sensor with ftSensorIndex %zu: '%s'\n", ftSensorIndex, ftSensorName.c_str());
 
         // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
 

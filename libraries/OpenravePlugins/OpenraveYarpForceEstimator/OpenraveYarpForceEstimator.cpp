@@ -281,7 +281,14 @@ public:
     }
 
     virtual ~OpenraveYarpForceEstimator() {
-         teoSimRateThread.port.close();
+        //-- Note that we start on element 1, first elem was not via new!!
+        for(size_t i=1;i<argv.size();i++)
+        {
+            delete[] argv[i];
+            argv[i] = 0;
+        }
+
+        teoSimRateThread.port.close();
     }
 
     virtual void Destroy() {
@@ -307,20 +314,17 @@ public:
 
         //-- Given "std::istream& sinput", create equivalent to "int argc, char *argv[]"
         //-- Note that char* != const char* given by std::string::c_str();
-        char* dummyProgramName = "dummyProgramName";
+        const char* dummyProgramName = "dummyProgramName";
         argv.push_back(dummyProgramName);
-
-        //vector<string> argv;
 
         while(sinput)
         {
             std::string str;
             sinput >> str;
-            if(str.length() == 0)  //-- Omits empty string that is usually at end via openrave.
+            if(str.empty())  //-- Omits empty string that is usually at end via openrave.
                 continue;
             char *cstr = new char[str.length() + 1];  // pushed to member argv to be deleted in ~.
             std::strcpy(cstr, str.c_str());
-
             argv.push_back(cstr);
         }
 
@@ -412,7 +416,7 @@ private:
     yarp::os::Network yarp;
     TeoSimRateThread teoSimRateThread;
 
-    std::vector<char *> argv;
+    std::vector<const char *> argv;
 
     DataProcessor processor;
     yarp::os::RpcServer rpcServer;
