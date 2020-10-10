@@ -15,7 +15,9 @@ openrave data/lab1.env.xml --module OpenraveYarpWorld
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpWorld.py](../../../examples/python/openraveYarpWorld.py)
 
-Then communicate via:
+## Interfacing with OpenraveYarpWorld
+
+Now communicate via:
 ```
 yarp rpc /OpenraveYarpWorld/rpc:s
 ```
