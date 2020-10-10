@@ -13,7 +13,7 @@ Then:
 ```bash
 openrave data/lab1.env.xml --module OpenraveYarpWorld
 ```
-The equivalent Python script can be found at: [../../../examples/python/openraveYarpWorldRpcResponder.py](../../../examples/python/openraveYarpWorldRpcResponder.py)
+The equivalent Python script can be found at: [../../../examples/python/openraveYarpWorld.py](../../../examples/python/openraveYarpWorld.py)
 
 Then communicate via:
 ```
