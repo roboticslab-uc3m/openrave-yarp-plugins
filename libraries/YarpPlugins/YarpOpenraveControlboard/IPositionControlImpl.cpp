@@ -151,15 +151,21 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(const double *refs) {  
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::relativeMove(int j, double delta) {
-    CD_INFO("Doing nothing.\n");
-    return true;
+    //CD_INFO("\n");
+
+    double v = radToDegIfNotPrismatic(j, vectorOfJointPtr[j]->GetValue(0) );
+
+    return positionMove(j, v+delta);
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::relativeMove(const double *deltas) {  // encExposed = deltas + encExposed
-    CD_INFO("Doing nothing.\n");
-    return true;
+    CD_INFO("\n");
+    bool ok = true;
+    for(unsigned int i=0;i<axes;i++)
+        ok &= relativeMove(i,deltas[i]);
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
