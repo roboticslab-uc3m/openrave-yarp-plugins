@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include <algorithm>
+#include <algorithm> // std::equal
 #include <string>
 
 #include <yarp/os/Bottle.h>
@@ -328,21 +328,48 @@ world draw 0/1 (radius r g b).");
                 else if (request.get(2).asString() == "mesh")
                 {
                     objIsStatic = false;
+
+                    const auto * vertices = request.get(3).asList();
+                    const auto * indices = request.get(4).asList();
+
                     OpenRAVE::TriMesh raveMesh;
-                    raveMesh.indices.resize(6);
-                    raveMesh.indices[0]=0;
-                    raveMesh.indices[1]=1;
-                    raveMesh.indices[2]=2;
-                    raveMesh.indices[3]=3;
-                    raveMesh.indices[4]=4;
-                    raveMesh.indices[5]=5;
-                    raveMesh.vertices.resize(6);
-                    raveMesh.vertices[0] = OpenRAVE::Vector(1.0,1.0,1.0);
-                    raveMesh.vertices[1] = OpenRAVE::Vector(1.0,1.5,1.0);
-                    raveMesh.vertices[2] = OpenRAVE::Vector(1.5,1.0,1.0);
-                    raveMesh.vertices[3] = OpenRAVE::Vector(1.0,1.5,1.0);
-                    raveMesh.vertices[4] = OpenRAVE::Vector(1.5,1.0,1.0);
-                    raveMesh.vertices[5] = OpenRAVE::Vector(1.5,1.5,1.5);
+                    raveMesh.vertices.reserve(vertices->size() / 3);
+                    raveMesh.indices.reserve(indices->size());
+
+                    for (auto i = 0; i < vertices->size(); i += 3)
+                    {
+                        OpenRAVE::Vector point(
+                            vertices->get(i).asFloat32(),
+                            vertices->get(i + 1).asFloat32(),
+                            vertices->get(i + 2).asFloat32()
+                        );
+
+                        raveMesh.vertices.push_back(point);
+                    }
+
+                    for (auto i = 0; i < indices->size(); i++)
+                    {
+                        raveMesh.indices.push_back(indices->get(i).asInt32());
+                    }
+
+                    OpenRAVE::Transform T;
+
+                    if (request.size() > 5)
+                    {
+                        T.trans.x = request.get(5).asFloat64(); // [m]
+                        T.trans.y = request.get(6).asFloat64(); // [m]
+                        T.trans.z = request.get(7).asFloat64(); // [m]
+                    }
+
+                    if (request.size() > 8)
+                    {
+                        OpenRAVE::Vector vaxis(request.get(8).asFloat64(), request.get(9).asFloat64(), request.get(10).asFloat64());
+                        OpenRAVE::dReal fangle = request.get(11).asFloat64();
+                        T.rot = quatFromAxisAngle(vaxis, fangle * M_PI / 180.0f);
+                    }
+
+                    raveMesh.ApplyTransform(T);
+
                     objKinBodyPtr->InitFromTrimesh(raveMesh,true);
 
                     objName.append("mesh_");
