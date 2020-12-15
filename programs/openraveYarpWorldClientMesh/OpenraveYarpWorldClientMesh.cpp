@@ -52,68 +52,70 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
     std::string local = PREFIX;
     std::string remote = rf.find("remote").asString();
 
-    yarp::os::Property sensorOptions = {
-        {"device", yarp::os::Value("RGBDSensorClient")},
-        {"localImagePort", yarp::os::Value(local + "/client/rgbImage:i")},
-        {"localDepthPort", yarp::os::Value(local + "/client/depthImage:i")},
-        {"localRpcPort", yarp::os::Value(local + "/client/rpc:o")},
-        {"remoteImagePort", yarp::os::Value(remote + "/rgbImage:o")},
-        {"remoteDepthPort", yarp::os::Value(remote + "/depthImage:o")},
-        {"remoteRpcPort", yarp::os::Value(remote + "/rpc:i")}
-    };
-
-    yarp::dev::PolyDriver sensorDevice(sensorOptions);
-
-    if (!sensorDevice.isValid())
-    {
-        yError() << "unable to connect to remote sensor";
-        return false;
-    }
-
-    yarp::dev::IRGBDSensor * iRGBDSensor;
-
-    if (!sensorDevice.view(iRGBDSensor))
-    {
-        yError() << "unable to view IRGBDSensor";
-        return false;
-    }
-
-#if YARP_VERSION_MINOR < 5
-    // Wait for the first few frames to arrive. We kept receiving invalid pixel codes
-    // from the depthCamera device if started straight away.
-    // https://github.com/roboticslab-uc3m/vision/issues/88
-    yarp::os::Time::delay(0.1);
-#endif
-
-    yarp::os::Property intrinsic;
-
-    if (!iRGBDSensor->getRgbIntrinsicParam(intrinsic))
-    {
-        yError() << "unable to retrieve depth intrinsic parameters";
-        return 1;
-    }
-
+    yarp::sig::IntrinsicParams depthParams;
     yarp::sig::ImageOf<yarp::sig::PixelFloat> depthImage;
 
-    for (auto n = 0;; n++)
     {
-        iRGBDSensor->getDepthImage(depthImage);
+        yarp::os::Property sensorOptions = {
+            {"device", yarp::os::Value("RGBDSensorClient")},
+            {"localImagePort", yarp::os::Value(local + "/client/rgbImage:i")},
+            {"localDepthPort", yarp::os::Value(local + "/client/depthImage:i")},
+            {"localRpcPort", yarp::os::Value(local + "/client/rpc:o")},
+            {"remoteImagePort", yarp::os::Value(remote + "/rgbImage:o")},
+            {"remoteDepthPort", yarp::os::Value(remote + "/depthImage:o")},
+            {"remoteRpcPort", yarp::os::Value(remote + "/rpc:i")}
+        };
 
-        if (depthImage.getRawImageSize() != 0)
+        yarp::dev::PolyDriver sensorDevice(sensorOptions);
+
+        if (!sensorDevice.isValid())
         {
-            break;
+            yError() << "unable to connect to remote sensor";
+            return false;
         }
-        else if (n == 10)
+
+        yarp::dev::IRGBDSensor * iRGBDSensor;
+
+        if (!sensorDevice.view(iRGBDSensor))
         {
-            yError() << "unable to acquire depth frame";
+            yError() << "unable to view IRGBDSensor";
+            return false;
+        }
+
+#if YARP_VERSION_MINOR < 5
+        // Wait for the first few frames to arrive. We kept receiving invalid pixel codes
+        // from the depthCamera device if started straight away.
+        // https://github.com/roboticslab-uc3m/vision/issues/88
+        yarp::os::Time::delay(0.1);
+#endif
+
+        yarp::os::Property intrinsic;
+
+        if (!iRGBDSensor->getRgbIntrinsicParam(intrinsic))
+        {
+            yError() << "unable to retrieve depth intrinsic parameters";
             return 1;
         }
 
-        yarp::os::Time::delay(0.1);
-    }
+        depthParams.fromProperty(intrinsic);
 
-    yarp::sig::IntrinsicParams depthParams;
-    depthParams.fromProperty(intrinsic);
+        for (auto n = 0;; n++)
+        {
+            iRGBDSensor->getDepthImage(depthImage);
+
+            if (depthImage.getRawImageSize() != 0)
+            {
+                break;
+            }
+            else if (n == 10)
+            {
+                yError() << "unable to acquire depth frame";
+                return 1;
+            }
+
+            yarp::os::Time::delay(0.1);
+        }
+    }
 
     yarp::sig::utils::PCL_ROI roi {0, 0, 0, 0};
 
@@ -122,40 +124,32 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
     if (rf.check("roi", "ROI of depth frame encoded as (minX maxX minY maxY)"))
     {
-        const auto & v_roi = rf.find("roi");
+        auto b_roi = rf.findGroup("roi").tail();
 
-        if (!v_roi.isList() || v_roi.asList()->size() != 4)
+        if (b_roi.size() != 4)
         {
             yError() << "--roi must be a list of 4 unsigned ints";
             return 1;
         }
 
-        const auto * b_roi = v_roi.asList();
-        roi.min_x = b_roi->get(0).asInt32();
-        roi.max_x = b_roi->get(1).asInt32();
-        roi.min_y = b_roi->get(2).asInt32();
-        roi.max_y = b_roi->get(3).asInt32();
+        roi.min_x = b_roi.get(0).asInt32();
+        roi.max_x = b_roi.get(1).asInt32();
+        roi.min_y = b_roi.get(2).asInt32();
+        roi.max_y = b_roi.get(3).asInt32();
     }
 
     if (rf.check("step", "decimation step of depth frame encoded as (stepX stepY)"))
     {
-        const auto & v_step = rf.find("step");
+        auto b_step = rf.findGroup("step").tail();
 
-        if (!v_step.isList() || v_step.asList()->size() != 2)
+        if (b_step.size() != 2)
         {
             yError() << "--step must be a list of 2 unsigned ints";
             return 1;
         }
 
-        const auto * b_step = v_step.asList();
-        stepX = b_step->get(0).asInt32();
-        stepY = b_step->get(1).asInt32();
-
-        if (stepX < 1 || stepY < 1)
-        {
-            yError() << "step cannot be less than 1";
-            return 1;
-        }
+        stepX = b_step.get(0).asInt32();
+        stepY = b_step.get(1).asInt32();
     }
 
     auto cloud = yarp::sig::utils::depthToPC(depthImage, depthParams, roi, stepX, stepY);
@@ -201,10 +195,6 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
         pos = rf.findGroup("pos").tail();
         yInfo() << "using --pos:" << pos.toString();
     }
-    else
-    {
-        yInfo() << "not using --pos";
-    }
 
     yarp::os::Bottle ori;
 
@@ -212,10 +202,6 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
     {
         ori = rf.findGroup("ori").tail();
         yInfo() << "using --ori:" << ori.toString();
-    }
-    else
-    {
-        yInfo() << "not using --ori";
     }
 
     std::string rpcClientName(remote);
