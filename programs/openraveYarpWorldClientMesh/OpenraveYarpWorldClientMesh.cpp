@@ -162,9 +162,20 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
     yarp::sig::VectorOf<yarp::os::Property> meshOptions {
         {
+            {"algorithm", yarp::os::Value("CropBox")},
+            {"keepOrganized", yarp::os::Value(true)},
+            {"maxZ", yarp::os::Value(1.5)} // default: 1.0
+        },
+        {
+            {"algorithm", yarp::os::Value("FastBilateralFilterOMP")},
+            {"sigmaR", yarp::os::Value(0.1)}, // default: 0.05
+            {"sigmaS", yarp::os::Value(50.0)} // default: 15.0
+        },
+        {
             {"algorithm", yarp::os::Value("OrganizedFastMesh")},
-            {"maxEdgeLengthA", yarp::os::Value(0.05)},
-            {"trianglePixelSize", yarp::os::Value(5)},
+            {"maxEdgeLengthA", yarp::os::Value(0.05)}, // default: 0.0
+            {"trianglePixelSize", yarp::os::Value(10)}, // default: 1
+            {"triangulationType", yarp::os::Value("triangleAdaptiveCut")}, // default: quadMesh
             {"useDepthAsDistance", yarp::os::Value(true)}
         },
         {
