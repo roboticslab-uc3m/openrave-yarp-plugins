@@ -48,6 +48,7 @@ find_package(Boost "${OpenRAVE_Boost_VERSION}" REQUIRED COMPONENTS thread)
 find_package(YARP 3.3 REQUIRED COMPONENTS os dev sig)
 
 # Soft dependencies.
+find_package(ROBOTICSLAB_KINEMATICS_DYNAMICS QUIET)
 find_package(ROBOTICSLAB_VISION QUIET)
 find_package(ASROB_YARP_DEVICES QUIET)
 find_package(Doxygen QUIET)
