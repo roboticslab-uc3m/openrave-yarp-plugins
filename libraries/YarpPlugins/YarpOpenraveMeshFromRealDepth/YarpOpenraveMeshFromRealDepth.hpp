@@ -3,7 +3,6 @@
 #ifndef __YARP_OPENRAVE_MESH_FROM_REAL_DEPTH_HPP__
 #define __YARP_OPENRAVE_MESH_FROM_REAL_DEPTH_HPP__
 
-#include <yarp/os/Bottle.h>
 #include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Property.h>
 
@@ -65,8 +64,7 @@ private:
     yarp::sig::IntrinsicParams depthIntrinsicParams;
     yarp::sig::VectorOf<yarp::os::Property> meshOptions;
     OpenRAVE::KinBodyPtr previousMesh;
-    yarp::os::Bottle pos;
-    yarp::os::Bottle ori;
+    OpenRAVE::RobotBase::AttachedSensorPtr depthSensor;
     yarp::sig::utils::PCL_ROI roi;
     int stepX;
     int stepY;

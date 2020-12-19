@@ -17,10 +17,27 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
 {
     yDebug() << "Config:" << config.toString();
 
-    if (!configureEnvironment(config) || !configureOpenravePlugins(config))
+    if (!configureEnvironment(config) || !configureOpenravePlugins(config) || !configureRobot(config))
     {
         return false;
     }
+
+    if (!config.check("depthSensorIndex", "depth sensor index"))
+    {
+        yError() << "Missing mandatory --depthSensorIndex parameter";
+        return false;
+    }
+
+    auto depthSensorIndex = config.find("depthSensorIndex").asInt32();
+    auto sensors = probot->GetAttachedSensors();
+
+    if (depthSensorIndex < 0 || depthSensorIndex >= sensors.size())
+    {
+        yError() << "Illegal depth sensor index, got" << sensors.size() << "attached sensors";
+        return false;
+    }
+
+    depthSensor = sensors[depthSensorIndex];
 
     if (!config.check("remote", "remote sensor port prefix"))
     {
@@ -97,18 +114,6 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
             {"algorithm", yarp::os::Value("SimplificationRemoveUnusedVertices")}
         }
     };
-
-    if (config.check("pos", "initial cartesian position"))
-    {
-        pos = config.findGroup("pos").tail();
-        yInfo() << "Using --pos:" << pos.toString();
-    }
-
-    if (config.check("ori", "initial cartesian orientation"))
-    {
-        ori = config.findGroup("ori").tail();
-        yInfo() << "Using --ori:" << ori.toString();
-    }
 
     penv->StopSimulation();
     penv->StartSimulation(0.01);
