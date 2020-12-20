@@ -17,11 +17,6 @@ if(ENABLE_openraveYarpWorldClientMesh)
                                                       YARP::YARP_sig
                                                       ROBOTICSLAB::YarpCloudUtils)
 
-    if(TARGET ROBOTICSLAB::KinematicsDynamicsInterfaces)
-        set_property(SOURCE OpenraveYarpWorldClientMesh.cpp PROPERTY COMPILE_DEFINITIONS HAVE_RL_KD)
-        target_link_libraries(openraveYarpWorldClientMesh ROBOTICSLAB::KinematicsDynamicsInterfaces)
-    endif()
-
     install(TARGETS openraveYarpWorldClientMesh
             DESTINATION ${CMAKE_INSTALL_BINDIR})
 

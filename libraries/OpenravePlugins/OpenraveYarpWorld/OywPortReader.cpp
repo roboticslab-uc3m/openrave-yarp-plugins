@@ -327,10 +327,33 @@ world draw 0/1 (radius r g b).");
                 }
                 else if (request.get(2).asString() == "mesh")
                 {
+                    if (!checkIfString(request, 3, response) || !checkIfString(request, 4, response))
+                    {
+                        return response.write(*out);
+                    }
+
+                    auto robotPtr = openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(3).asString());
+
+                    if (!robotPtr)
+                    {
+                        CD_ERROR("Could not find robot: %s.\n", request.get(3).asString().c_str());
+                        response.addVocab(VOCAB_FAILED);
+                        return response.write(*out);
+                    }
+
+                    auto sensorPtr = robotPtr->GetAttachedSensor(request.get(4).asString());
+
+                    if (!sensorPtr)
+                    {
+                        CD_ERROR("Could not find sensor: %s.\n", request.get(4).asString().c_str());
+                        response.addVocab(VOCAB_FAILED);
+                        return response.write(*out);
+                    }
+
                     objIsStatic = false;
 
-                    const auto * vertices = request.get(3).asList();
-                    const auto * indices = request.get(4).asList();
+                    const auto * vertices = request.get(5).asList();
+                    const auto * indices = request.get(6).asList();
 
                     OpenRAVE::TriMesh raveMesh;
                     raveMesh.vertices.reserve(vertices->size() / 3);
@@ -352,25 +375,8 @@ world draw 0/1 (radius r g b).");
                         raveMesh.indices.push_back(indices->get(i).asInt32());
                     }
 
-                    OpenRAVE::Transform T;
-
-                    if (request.size() > 5)
-                    {
-                        T.trans.x = request.get(5).asFloat64(); // [m]
-                        T.trans.y = request.get(6).asFloat64(); // [m]
-                        T.trans.z = request.get(7).asFloat64(); // [m]
-                    }
-
-                    if (request.size() > 8)
-                    {
-                        OpenRAVE::Vector vaxis(request.get(8).asFloat64(), request.get(9).asFloat64(), request.get(10).asFloat64());
-                        OpenRAVE::dReal fangle = request.get(11).asFloat64();
-                        T.rot = quatFromAxisAngle(vaxis, fangle * M_PI / 180.0f);
-                    }
-
-                    raveMesh.ApplyTransform(T);
-
-                    objKinBodyPtr->InitFromTrimesh(raveMesh,true);
+                    raveMesh.ApplyTransform(sensorPtr->GetTransform());
+                    objKinBodyPtr->InitFromTrimesh(raveMesh, true);
 
                     objName.append("mesh_");
                     std::ostringstream s;

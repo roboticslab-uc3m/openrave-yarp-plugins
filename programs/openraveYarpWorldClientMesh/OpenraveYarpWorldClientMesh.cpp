@@ -21,10 +21,6 @@
 
 #include <YarpCloudUtils.hpp>
 
-#ifdef HAVE_RL_KD
-#include <ICartesianControl.h>
-#endif
-
 namespace
 {
     constexpr auto VOCAB_OK = yarp::os::createVocab('o','k');
@@ -47,14 +43,26 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 {
     yDebug() << "config:" << rf.toString();
 
-    if (!rf.check("remoteSensor", "remote sensor port to connect to"))
+    if (!rf.check("remote", "remote sensor port to connect to"))
     {
-        yError() << "missing --remoteSensor parameter";
+        yError() << "missing --remote parameter";
+        return false;
+    }
+
+    if (!rf.check("robot", "virtual robot name"))
+    {
+        yError() << "missing --robot parameter";
+        return false;
+    }
+
+    if (!rf.check("sensor", "virtual sensor name"))
+    {
+        yError() << "missing --sensor parameter";
         return false;
     }
 
     std::string local = PREFIX;
-    std::string remote = rf.find("remoteSensor").asString();
+    std::string remote = rf.find("remote").asString();
 
     yarp::sig::IntrinsicParams depthParams;
     yarp::sig::ImageOf<yarp::sig::PixelFloat> depthImage;
@@ -158,79 +166,28 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
     auto cloud = yarp::sig::utils::depthToPC(depthImage, depthParams, roi, stepX, stepY);
 
-    yarp::sig::VectorOf<yarp::os::Property> meshOptions;
-
-    if (rf.check("remoteCartesian", "remote cartesian server to connect to"))
-    {
-#ifdef HAVE_RL_KD
-        auto remoteCartesian = rf.find("remoteCartesian").asString();
-
-        yarp::os::Property cartesianOptions {
-            {"device", yarp::os::Value("CartesianControlClient")},
-            {"cartesianLocal", yarp::os::Value(local + "/cartesian")},
-            {"cartesianRemote", yarp::os::Value(remoteCartesian)}
-        };
-
-        yarp::dev::PolyDriver cartesianDevice(cartesianOptions);
-
-        if (!cartesianDevice.isValid())
+    yarp::sig::VectorOf<yarp::os::Property> meshOptions {
         {
-            yError() << "unable to connect to remote cartesian server";
-            return false;
-        }
-
-        ICartesianControl * iCartesianControl;
-
-        if (!cartesianDevice.view(iCartesianControl))
+            {"algorithm", yarp::os::Value("CropBox")},
+            {"keepOrganized", yarp::os::Value(true)},
+            {"maxZ", yarp::os::Value(1.5)} // default: 1.0
+        },
         {
-            yError() << "unable to view ICartesianControl";
-            return false;
-        }
-
-        std::vector<double> x;
-
-        if (!iCartesianControl->stat(x))
+            {"algorithm", yarp::os::Value("FastBilateralFilterOMP")},
+            {"sigmaR", yarp::os::Value(0.1)}, // default: 0.05
+            {"sigmaS", yarp::os::Value(50.0)} // default: 15.0
+        },
         {
-            yError() << "unable to get current cartesian pose";
-            return false;
+            {"algorithm", yarp::os::Value("OrganizedFastMesh")},
+            {"maxEdgeLengthA", yarp::os::Value(0.05)}, // default: 0.0
+            {"trianglePixelSize", yarp::os::Value(10)}, // default: 1
+            {"triangulationType", yarp::os::Value("triangleAdaptiveCut")}, // default: quadMesh
+            {"useDepthAsDistance", yarp::os::Value(true)}
+        },
+        {
+            {"algorithm", yarp::os::Value("SimplificationRemoveUnusedVertices")}
         }
-
-        yarp::os::Bottle transformation;
-        transformation.addList() = {yarp::os::Value(x[0]), yarp::os::Value(x[1]), yarp::os::Value(x[2])};
-        transformation.addList() = {yarp::os::Value(x[3]), yarp::os::Value(x[4]), yarp::os::Value(x[5])};
-
-        meshOptions.push_back({
-            {"algorithm", yarp::os::Value("transformPointCloud")},
-            {"translation", transformation.get(0)},
-            {"rotation", transformation.get(1)}
-        });
-#else
-        yError() << "--remoteCartesian used, but the app was compiled with no ROBOTICSLAB::KinematicsDynamicsInterfaces support";
-        return false;
-#endif
-    }
-
-    meshOptions.push_back({
-        {"algorithm", yarp::os::Value("CropBox")},
-        {"keepOrganized", yarp::os::Value(true)},
-        {"maxZ", yarp::os::Value(1.5)} // default: 1.0
-    });
-
-    meshOptions.push_back({
-        {"algorithm", yarp::os::Value("FastBilateralFilterOMP")},
-        {"sigmaR", yarp::os::Value(0.1)}, // default: 0.05
-        {"sigmaS", yarp::os::Value(50.0)} // default: 15.0
-    });
-
-    meshOptions.push_back({
-        {"algorithm", yarp::os::Value("OrganizedFastMesh")},
-        {"maxEdgeLengthA", yarp::os::Value(0.05)}, // default: 0.0
-        {"trianglePixelSize", yarp::os::Value(10)}, // default: 1
-        {"triangulationType", yarp::os::Value("triangleAdaptiveCut")}, // default: quadMesh
-        {"useDepthAsDistance", yarp::os::Value(true)}
-    });
-
-    meshOptions.push_back({{"algorithm", yarp::os::Value("SimplificationRemoveUnusedVertices")}});
+    };
 
     yarp::sig::PointCloudXYZ meshVertices;
     yarp::sig::VectorOf<int> meshIndices;
@@ -242,22 +199,6 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
     }
 
     yInfo() << "got mesh of" << meshVertices.size() << "vertices and" << meshIndices.size() / 3 << "faces";
-
-    yarp::os::Bottle pos;
-
-    if (rf.check("pos", "initial cartesian position"))
-    {
-        pos = rf.findGroup("pos").tail();
-        yInfo() << "using --pos:" << pos.toString();
-    }
-
-    yarp::os::Bottle ori;
-
-    if (rf.check("ori", "initial cartesian orientation"))
-    {
-        ori = rf.findGroup("ori").tail();
-        yInfo() << "using --ori:" << ori.toString();
-    }
 
     std::string rpcClientName(remote);
     rpcClientName.append(local);
@@ -297,12 +238,11 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
     cmd.addString("world");
     cmd.addString("mk");
     cmd.addString("mesh");
+    cmd.add(rf.find("robot"));
+    cmd.add(rf.find("sensor"));
 
     auto & vertices = cmd.addList();
     auto & indices = cmd.addList();
-
-    cmd.append(pos);
-    cmd.append(ori);
 
     yDebug() << "command (redacted mesh):" << cmd.toString();
 
