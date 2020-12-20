@@ -21,6 +21,7 @@ install(TARGETS SimulationInterfaces
 add_subdirectory(YarpOpenraveAnalogSensors)
 add_subdirectory(YarpOpenraveControlboard)
 add_subdirectory(YarpOpenraveGrabber)
+add_subdirectory(YarpOpenraveMeshFromRealDepth)
 add_subdirectory(YarpOpenraveRGBDSensor)
 add_subdirectory(YarpOpenraveRobotManager)
 add_subdirectory(YarpOpenraveSimulation)

@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "OpenraveYarpWorldClient.hpp"
+#include "OpenraveYarpWorldClientFile.hpp"
 
 #include <yarp/os/Network.h>
 #include <yarp/os/Vocab.h>
@@ -12,23 +12,23 @@ namespace roboticslab
 
 /************************************************************************/
 
-const int OpenraveYarpWorldClient::DEFAULT_PERIOD_S = 1.0;
-const yarp::conf::vocab32_t OpenraveYarpWorldClient::VOCAB_OK = yarp::os::createVocab('o','k');
-const yarp::conf::vocab32_t OpenraveYarpWorldClient::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
+const int OpenraveYarpWorldClientFile::DEFAULT_PERIOD_S = 1.0;
+const yarp::conf::vocab32_t OpenraveYarpWorldClientFile::VOCAB_OK = yarp::os::createVocab('o','k');
+const yarp::conf::vocab32_t OpenraveYarpWorldClientFile::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
 
 /************************************************************************/
 
-OpenraveYarpWorldClient::OpenraveYarpWorldClient() : detectedFirst(false)
+OpenraveYarpWorldClientFile::OpenraveYarpWorldClientFile() : detectedFirst(false)
 {
 }
 
 /************************************************************************/
 
-bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
+bool OpenraveYarpWorldClientFile::configure(yarp::os::ResourceFinder &rf)
 {
     if(rf.check("help"))
     {
-        std::printf("OpenraveYarpWorldClient options:\n");
+        std::printf("OpenraveYarpWorldClientFile options:\n");
         std::printf("\t--help (this help)\t--from [file.ini]\t--context [path]\n");
         CD_DEBUG_NO_HEADER("%s\n",rf.toString().c_str());
         return false;
@@ -126,7 +126,7 @@ bool OpenraveYarpWorldClient::configure(yarp::os::ResourceFinder &rf)
 
 /************************************************************************/
 
-bool OpenraveYarpWorldClient::openedInAvailable()
+bool OpenraveYarpWorldClientFile::openedInAvailable()
 {
     callbackPort.availableIdsMutex.lock();
     //CD_DEBUG("Is open %s available?\n", openedId.c_str());
@@ -154,9 +154,9 @@ bool OpenraveYarpWorldClient::openedInAvailable()
 
 /************************************************************************/
 
-bool OpenraveYarpWorldClient::updateModule()
+bool OpenraveYarpWorldClientFile::updateModule()
 {
-    //CD_DEBUG("OpenraveYarpWorldClient alive...\n");
+    //CD_DEBUG("OpenraveYarpWorldClientFile alive...\n");
 
     if(-1 == callbackPort.lastTime)
     {
@@ -192,7 +192,7 @@ bool OpenraveYarpWorldClient::updateModule()
 
 /************************************************************************/
 
-bool OpenraveYarpWorldClient::close()
+bool OpenraveYarpWorldClientFile::close()
 {
     CD_INFO("\n");
 

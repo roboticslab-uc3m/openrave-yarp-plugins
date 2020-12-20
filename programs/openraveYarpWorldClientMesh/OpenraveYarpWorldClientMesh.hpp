@@ -1,9 +1,10 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __OPENRAVE_YARP_WORLD_CLIENT__
-#define __OPENRAVE_YARP_WORLD_CLIENT__
+#ifndef __OPENRAVE_YARP_WORLD_CLIENT_MESH_HPP__
+#define __OPENRAVE_YARP_WORLD_CLIENT_MESH_HPP__
 
 #include <mutex>
+#include <string>
 #include <vector>
 
 #include <yarp/os/BufferedPort.h>
@@ -15,7 +16,7 @@ namespace roboticslab
 {
 
 /**
- * @ingroup OpenraveYarpWorldClient
+ * @ingroup OpenraveYarpWorldClientMesh
  */
 class OywCallbackPort : public yarp::os::BufferedPort<yarp::os::Bottle>
 {
@@ -24,18 +25,19 @@ public:
     std::vector<std::string> availableIds;
     std::mutex availableIdsMutex;
     double lastTime;
+
 private:
-    virtual void onRead(yarp::os::Bottle& b) override;
+    virtual void onRead(yarp::os::Bottle & b) override;
 };
 
 /**
- * @ingroup OpenraveYarpWorldClient
+ * @ingroup OpenraveYarpWorldClientMesh
  */
-class OpenraveYarpWorldClient : public yarp::os::RFModule
+class OpenraveYarpWorldClientMesh : public yarp::os::RFModule
 {
 public:
-    OpenraveYarpWorldClient();
-    bool configure(yarp::os::ResourceFinder &rf);
+    OpenraveYarpWorldClientMesh();
+    bool configure(yarp::os::ResourceFinder & rf) override;
 
 private:
     yarp::os::RpcClient rpcClient;
@@ -49,15 +51,13 @@ private:
     {
         return DEFAULT_PERIOD_S;
     }
+
     virtual bool updateModule() override;
     virtual bool close() override;
 
-
-    static const int DEFAULT_PERIOD_S;
-    static const yarp::conf::vocab32_t VOCAB_OK;
-    static const yarp::conf::vocab32_t VOCAB_FAILED;
+    static constexpr auto DEFAULT_PERIOD_S = 1.0;
 };
 
-}  // namespace roboticslab
+} // namespace roboticslab
 
-#endif  // __OPENRAVE_YARP_WORLD_CLIENT__
+#endif // __OPENRAVE_YARP_WORLD_CLIENT_MESH_HPP__

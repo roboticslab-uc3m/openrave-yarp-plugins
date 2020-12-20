@@ -1,5 +1,8 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
+#include <algorithm> // std::equal
+#include <string>
+
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionReader.h>
 #include <yarp/os/ResourceFinder.h>
@@ -9,6 +12,16 @@
 #include "OpenraveYarpWorld.hpp"
 
 #include "OywPortReader.hpp"
+
+namespace
+{
+    inline bool endsWith(const std::string & base, const std::string & suffix)
+    {
+        // https://stackoverflow.com/a/2072890/10404307
+        if (suffix.size() > base.size()) return false;
+        return std::equal(suffix.rbegin(), suffix.rend(), base.rbegin());
+    }
+}
 
 // -----------------------------------------------------------------------------
 
@@ -314,23 +327,56 @@ world draw 0/1 (radius r g b).");
                 }
                 else if (request.get(2).asString() == "mesh")
                 {
+                    if (!checkIfString(request, 3, response) || !checkIfString(request, 4, response))
+                    {
+                        return response.write(*out);
+                    }
+
+                    auto robotPtr = openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(3).asString());
+
+                    if (!robotPtr)
+                    {
+                        CD_ERROR("Could not find robot: %s.\n", request.get(3).asString().c_str());
+                        response.addVocab(VOCAB_FAILED);
+                        return response.write(*out);
+                    }
+
+                    auto sensorPtr = robotPtr->GetAttachedSensor(request.get(4).asString());
+
+                    if (!sensorPtr)
+                    {
+                        CD_ERROR("Could not find sensor: %s.\n", request.get(4).asString().c_str());
+                        response.addVocab(VOCAB_FAILED);
+                        return response.write(*out);
+                    }
+
                     objIsStatic = false;
+
+                    const auto * vertices = request.get(5).asList();
+                    const auto * indices = request.get(6).asList();
+
                     OpenRAVE::TriMesh raveMesh;
-                    raveMesh.indices.resize(6);
-                    raveMesh.indices[0]=0;
-                    raveMesh.indices[1]=1;
-                    raveMesh.indices[2]=2;
-                    raveMesh.indices[3]=3;
-                    raveMesh.indices[4]=4;
-                    raveMesh.indices[5]=5;
-                    raveMesh.vertices.resize(6);
-                    raveMesh.vertices[0] = OpenRAVE::Vector(1.0,1.0,1.0);
-                    raveMesh.vertices[1] = OpenRAVE::Vector(1.0,1.5,1.0);
-                    raveMesh.vertices[2] = OpenRAVE::Vector(1.5,1.0,1.0);
-                    raveMesh.vertices[3] = OpenRAVE::Vector(1.0,1.5,1.0);
-                    raveMesh.vertices[4] = OpenRAVE::Vector(1.5,1.0,1.0);
-                    raveMesh.vertices[5] = OpenRAVE::Vector(1.5,1.5,1.5);
-                    objKinBodyPtr->InitFromTrimesh(raveMesh,true);
+                    raveMesh.vertices.reserve(vertices->size() / 3);
+                    raveMesh.indices.reserve(indices->size());
+
+                    for (auto i = 0; i < vertices->size(); i += 3)
+                    {
+                        OpenRAVE::Vector point(
+                            vertices->get(i).asFloat32(),
+                            vertices->get(i + 1).asFloat32(),
+                            vertices->get(i + 2).asFloat32()
+                        );
+
+                        raveMesh.vertices.push_back(point);
+                    }
+
+                    for (auto i = 0; i < indices->size(); i++)
+                    {
+                        raveMesh.indices.push_back(indices->get(i).asInt32());
+                    }
+
+                    raveMesh.ApplyTransform(sensorPtr->GetTransform());
+                    objKinBodyPtr->InitFromTrimesh(raveMesh, true);
 
                     objName.append("mesh_");
                     std::ostringstream s;
@@ -344,34 +390,35 @@ world draw 0/1 (radius r g b).");
                     if (!checkIfString(request, 3, response))
                         return response.write(*out);
                     std::string fileName = request.get(3).asString();
-                    objKinBodyPtr = openraveYarpWorldPtr->GetEnv()->ReadKinBodyXMLFile(fileName);
-                    if(!!objKinBodyPtr)
+                    yarp::os::ResourceFinder & rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
+                    std::string fullFileName = rf.findFileByName(fileName);
+                    if (fullFileName.empty())
                     {
-                        CD_SUCCESS("Loaded file: %s\n", fileName.c_str());
+                        CD_ERROR("Could not find '%s' file via yarp::os::ResourceFinder.\n", fileName.c_str());
+                        response.addVocab(VOCAB_FAILED);
+                        response.addString("could not load file");
+                        return response.write(*out);
+                    }
+                    CD_INFO("Loading '%s' file.\n", fullFileName.c_str());
+
+                    if (endsWith(fileName, ".ply"))
+                    {
+                        auto objTriMeshPtr = openraveYarpWorldPtr->GetEnv()->ReadTrimeshURI(nullptr, fullFileName);
+                        if (objTriMeshPtr) objKinBodyPtr->InitFromTrimesh(*objTriMeshPtr);
                     }
                     else
                     {
-                        CD_INFO("Could not load '%s' file, attempting via yarp::os::ResourceFinder.\n",fileName.c_str());
-
-                        yarp::os::ResourceFinder rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
-                        std::string fullFileName = rf.findFileByName(fileName);
-                        if(fullFileName.empty())
-                        {
-                            CD_ERROR("Could not find '%s' file via yarp::os::ResourceFinder either.\n", fileName.c_str());
-                            response.addVocab(VOCAB_FAILED);
-                            response.addString("could not load file");
-                            return response.write(*out);
-                        }
-                        CD_INFO("Loading '%s' file.\n", fullFileName.c_str());
-                        objKinBodyPtr = openraveYarpWorldPtr->GetEnv()->ReadKinBodyXMLFile(fullFileName);
-                        if(!objKinBodyPtr)
-                        {
-                            CD_ERROR("Could not load '%s' file.\n", fullFileName.c_str());
-                            response.addVocab(VOCAB_FAILED);
-                            response.addString("could not load file");
-                            return response.write(*out);
-                        }
+                        objKinBodyPtr = openraveYarpWorldPtr->GetEnv()->ReadKinBodyURI(fullFileName);
                     }
+
+                    if (!objKinBodyPtr)
+                    {
+                        CD_ERROR("Could not load '%s' file.\n", fullFileName.c_str());
+                        response.addVocab(VOCAB_FAILED);
+                        response.addString("could not load file");
+                        return response.write(*out);
+                    }
+
                     OpenRAVE::Transform T = objKinBodyPtr->GetTransform();
                     T.trans.x = request.get(4).asFloat64(); // [m]
                     T.trans.y = request.get(5).asFloat64(); // [m]
