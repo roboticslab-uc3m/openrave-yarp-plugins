@@ -2,7 +2,7 @@
 
 /**
  * @ingroup openrave_yarp_devices_programs
- * \defgroup OpenraveYarpWorldClient OpenraveYarpWorldClient
+ * \defgroup OpenraveYarpWorldClientFile OpenraveYarpWorldClientFile
  */
 
 #include <yarp/os/Network.h>
@@ -10,14 +10,14 @@
 
 #include <ColorDebug.h>
 
-#include "OpenraveYarpWorldClient.hpp"
+#include "OpenraveYarpWorldClientFile.hpp"
 
 int main(int argc, char *argv[])
 {
     yarp::os::ResourceFinder rf;
     rf.setVerbose(true);
-    rf.setDefaultContext("openraveYarpWorldClient");
-    rf.setDefaultConfigFile("openraveYarpWorldClient.ini");
+    rf.setDefaultContext("openraveYarpWorldClientFile");
+    rf.setDefaultConfigFile("openraveYarpWorldClientFile.ini");
     rf.configure(argc, argv);
 
     CD_INFO("Checking for yarp network...\n");
@@ -29,6 +29,6 @@ int main(int argc, char *argv[])
     }
     CD_SUCCESS("Found yarp network.\n");
 
-    roboticslab::OpenraveYarpWorldClient mod;
+    roboticslab::OpenraveYarpWorldClientFile mod;
     return mod.runModule(rf);
 }

@@ -1,4 +1,4 @@
-# openraveYarpWorldClient
+# openraveYarpWorldClientFile
 
 Example invocation:
 
@@ -14,5 +14,5 @@ openrave data/lab1.env.xml --module OpenraveYarpWorld
 
 Terminal 3:
 ```bash
-openraveYarpWorldClient --file data/mug1.kinbody.xml --pos 0.5 0.5 1.5
+openraveYarpWorldClientFile --file data/mug1.kinbody.xml --pos 0.5 0.5 1.5
 ```

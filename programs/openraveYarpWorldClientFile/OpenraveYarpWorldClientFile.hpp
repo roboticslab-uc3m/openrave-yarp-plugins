@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __OPENRAVE_YARP_WORLD_CLIENT__
-#define __OPENRAVE_YARP_WORLD_CLIENT__
+#ifndef __OPENRAVE_YARP_WORLD_CLIENT_FILE__
+#define __OPENRAVE_YARP_WORLD_CLIENT_FILE__
 
 #include <mutex>
 #include <vector>
@@ -15,7 +15,7 @@ namespace roboticslab
 {
 
 /**
- * @ingroup OpenraveYarpWorldClient
+ * @ingroup OpenraveYarpWorldClientFile
  */
 class OywCallbackPort : public yarp::os::BufferedPort<yarp::os::Bottle>
 {
@@ -29,12 +29,12 @@ private:
 };
 
 /**
- * @ingroup OpenraveYarpWorldClient
+ * @ingroup OpenraveYarpWorldClientFile
  */
-class OpenraveYarpWorldClient : public yarp::os::RFModule
+class OpenraveYarpWorldClientFile : public yarp::os::RFModule
 {
 public:
-    OpenraveYarpWorldClient();
+    OpenraveYarpWorldClientFile();
     bool configure(yarp::os::ResourceFinder &rf);
 
 private:
@@ -58,6 +58,6 @@ private:
     static const yarp::conf::vocab32_t VOCAB_FAILED;
 };
 
-}  // namespace roboticslab
+} // namespace roboticslab
 
-#endif  // __OPENRAVE_YARP_WORLD_CLIENT__
+#endif // __OPENRAVE_YARP_WORLD_CLIENT_FILE__
