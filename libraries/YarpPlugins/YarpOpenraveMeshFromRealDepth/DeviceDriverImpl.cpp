@@ -11,6 +11,12 @@
 
 using namespace roboticslab;
 
+namespace
+{
+    constexpr auto MAX_EDGE_LENGTH_A = 0.05;
+    constexpr auto TRIANGLE_PIXEL_SIZE = 10;
+}
+
 // -----------------------------------------------------------------------------
 
 bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
@@ -105,8 +111,8 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
     meshOptions = {
         {
             {"algorithm", yarp::os::Value("OrganizedFastMesh")},
-            {"maxEdgeLengthA", yarp::os::Value(0.1)}, // default: 0.0
-            {"trianglePixelSize", yarp::os::Value(15)}, // default: 1
+            {"maxEdgeLengthA", config.check("maxEdgeLengthA", yarp::os::Value(MAX_EDGE_LENGTH_A), "max edge length")}, // default: 0.0
+            {"trianglePixelSize", config.check("trianglePixelSize", yarp::os::Value(TRIANGLE_PIXEL_SIZE), "triangle pixel size")}, // default: 1
             {"triangulationType", yarp::os::Value("triangleAdaptiveCut")}, // default: quadMesh
             {"useDepthAsDistance", yarp::os::Value(true)}
         },

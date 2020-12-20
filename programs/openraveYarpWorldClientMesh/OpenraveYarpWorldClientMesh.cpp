@@ -26,6 +26,11 @@ namespace
     constexpr auto VOCAB_OK = yarp::os::createVocab('o','k');
     constexpr auto VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
     constexpr auto PREFIX = "/OpenraveYarpWorldMesh";
+    constexpr auto MAX_Z = 1.5;
+    constexpr auto SIGMA_R = 0.1;
+    constexpr auto SIGMA_S = 50.0;
+    constexpr auto MAX_EDGE_LENGTH_A = 0.05;
+    constexpr auto TRIANGLE_PIXEL_SIZE = 10;
 }
 
 namespace roboticslab
@@ -170,17 +175,17 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
         {
             {"algorithm", yarp::os::Value("CropBox")},
             {"keepOrganized", yarp::os::Value(true)},
-            {"maxZ", yarp::os::Value(1.5)} // default: 1.0
+            {"maxZ", rf.check("maxZ", yarp::os::Value(MAX_Z), "maximum Z for point cloud truncation")} // default: 1.0
         },
         {
             {"algorithm", yarp::os::Value("FastBilateralFilterOMP")},
-            {"sigmaR", yarp::os::Value(0.1)}, // default: 0.05
-            {"sigmaS", yarp::os::Value(50.0)} // default: 15.0
+            {"sigmaR", rf.check("sigmaR", yarp::os::Value(SIGMA_R), "sigma R")}, // default: 0.05
+            {"sigmaS", rf.check("sigmaS", yarp::os::Value(SIGMA_S), "sigma S")} // default: 15.0
         },
         {
             {"algorithm", yarp::os::Value("OrganizedFastMesh")},
-            {"maxEdgeLengthA", yarp::os::Value(0.05)}, // default: 0.0
-            {"trianglePixelSize", yarp::os::Value(10)}, // default: 1
+            {"maxEdgeLengthA", rf.check("maxEdgeLengthA", yarp::os::Value(MAX_EDGE_LENGTH_A), "max edge length")}, // default: 0.0
+            {"trianglePixelSize", rf.check("trianglePixelSize", yarp::os::Value(TRIANGLE_PIXEL_SIZE), "triangle pixel size")}, // default: 1
             {"triangulationType", yarp::os::Value("triangleAdaptiveCut")}, // default: quadMesh
             {"useDepthAsDistance", yarp::os::Value(true)}
         },
