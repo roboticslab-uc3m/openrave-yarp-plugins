@@ -24,11 +24,11 @@ if(NOT SKIP_YarpOpenraveSimulation)
                                                          LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
     target_link_libraries(YarpOpenraveSimulation YARP::YARP_os
-                                              YARP::YARP_dev
-                                              ${OpenRAVE_LIBRARIES}
-                                              Boost::boost
-                                              ROBOTICSLAB::ColorDebug
-                                              YarpOpenraveBase)
+                                                 YARP::YARP_dev
+                                                 ${OpenRAVE_LIBRARIES}
+                                                 Boost::boost
+                                                 ROBOTICSLAB::ColorDebug
+                                                 YarpOpenraveBase)
 
     target_include_directories(YarpOpenraveSimulation PRIVATE ${OpenRAVE_INCLUDE_DIRS})
 
