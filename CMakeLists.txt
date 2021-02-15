@@ -84,6 +84,7 @@ add_subdirectory(libraries)
 add_subdirectory(programs)
 add_subdirectory(share)
 add_subdirectory(doc)
+add_subdirectory(examples/cpp)
 
 # Store the package in the user registry.
 set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
