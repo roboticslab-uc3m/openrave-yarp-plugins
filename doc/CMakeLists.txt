@@ -9,7 +9,7 @@ elseif(NOT DOXYGEN_FOUND)
     return()
 endif()
 
-set(DOXYGEN_PROJECT_NAME "yarp-devices")
+set(DOXYGEN_PROJECT_NAME "openrave-yarp-plugins")
 set(DOXYGEN_REPEAT_BRIEF NO)
 set(DOXYGEN_EXTRACT_PRIVATE YES)
 set(DOXYGEN_EXTRACT_STATIC YES)
