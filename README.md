@@ -2,7 +2,7 @@
 
 OpenRAVE plugins to interface OpenRAVE with YARP.
 
-Link to Doxygen generated documentation: http://robots.uc3m.es/dox-openrave-yarp-plugins
+Link to Doxygen generated documentation: https://roboticslab-uc3m.github.io/openrave-yarp-plugins
 
 ## Installation
 
