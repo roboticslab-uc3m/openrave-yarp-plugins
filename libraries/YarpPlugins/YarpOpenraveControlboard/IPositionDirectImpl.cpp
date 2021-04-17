@@ -57,3 +57,44 @@ bool roboticslab::YarpOpenraveControlboard::setPositions(const double *refs)
 }
 
 // -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::getRefPosition(const int joint, double *ref)
+{
+    //CD_INFO("\n");
+
+    //-- Check if we are in positionDirect mode.
+    if( controlModes[joint] != VOCAB_CM_POSITION_DIRECT )
+    {
+        CD_ERROR("Not in positionDirect mode\n");
+        return false;
+    }
+
+    *ref = radToDegIfNotPrismatic(joint, manipulatorTargetRads[ joint ]);
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::getRefPositions(double *refs)
+{
+    //CD_INFO("\n");
+    bool ok = true;
+    for(unsigned int i=0;i<axes;i++)
+        ok &= getRefPosition(i,&refs[i]);
+    return ok;
+}
+
+// -----------------------------------------------------------------------------
+
+bool roboticslab::YarpOpenraveControlboard::getRefPositions(const int n_joint, const int *joints, double *refs)
+{
+    //CD_INFO("\n");
+    bool ok = true;
+    for(int i=0;i<n_joint;i++)
+    {
+        ok &= getRefPosition(joints[i],&refs[i]);
+    }
+    return ok;
+}
+
+// -----------------------------------------------------------------------------
