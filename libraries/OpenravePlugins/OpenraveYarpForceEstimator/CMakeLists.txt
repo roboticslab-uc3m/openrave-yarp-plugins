@@ -17,8 +17,7 @@ set_target_properties(OpenraveYarpForceEstimator PROPERTIES COMPILE_OPTIONS "${O
 target_link_libraries(OpenraveYarpForceEstimator YARP::YARP_os
                                                  YARP::YARP_init
                                                  ${OpenRAVE_LIBRARIES}
-                                                 Boost::boost
-                                                 ROBOTICSLAB::ColorDebug)
+                                                 Boost::boost)
 
 include(InstallOpenravePlugin)
 

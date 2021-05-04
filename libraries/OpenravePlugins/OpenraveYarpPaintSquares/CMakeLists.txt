@@ -17,8 +17,7 @@ set_target_properties(OpenraveYarpPaintSquares PROPERTIES COMPILE_OPTIONS "${Ope
 target_link_libraries(OpenraveYarpPaintSquares YARP::YARP_os
                                                YARP::YARP_init
                                                ${OpenRAVE_LIBRARIES}
-                                               Boost::boost
-                                               ROBOTICSLAB::ColorDebug)
+                                               Boost::boost)
 
 include(InstallOpenravePlugin)
 

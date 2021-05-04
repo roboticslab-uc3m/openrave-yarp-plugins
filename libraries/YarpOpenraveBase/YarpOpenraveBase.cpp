@@ -8,13 +8,12 @@
 #include <vector>
 
 #include <yarp/os/Bottle.h>
+#include <yarp/os/LogStream.h>
 #include <yarp/os/ResourceFinder.h>
 #include <yarp/os/Time.h>
 #include <yarp/os/Value.h>
 
 #include <boost/bind/bind.hpp>
-
-#include <ColorDebug.h>
 
 namespace roboticslab
 {
@@ -46,17 +45,15 @@ YarpOpenraveBase::YarpOpenraveBase()
 
 bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
 {
-    //CD_DEBUG("config: %s\n",config.toString().c_str());
-
     if ( ( config.check("env","path of environment") ) && ( config.check("penv","internal c++ pointer passed from OpenRAVE plugin to YARP device") ) )
     {
-        CD_ERROR("Please do not use --env and --penv simultaneously. Bye!\n");
+        yError() << "Please do not use --env and --penv simultaneously";
         return false;
     }
 
     if ( config.check("env") )
     {
-        CD_DEBUG("Found --env parameter.\n");
+        yDebug() << "Found --env parameter";
 
         // Initialize OpenRAVE-core
         OpenRAVE::RaveInitialize(true);  // Start openrave core
@@ -75,43 +72,43 @@ bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
 
         if ( !!penv->Load(envString.c_str()) )
         {
-            CD_SUCCESS("Loaded environment '%s'.\n",envString.c_str());
+            yInfo() << "Loaded environment" << envString;
         }
         else
         {
-            CD_DEBUG("Could not load '%s' environment, attempting via yarp::os::ResourceFinder.\n",envString.c_str());
+            yDebug() << "Could not load" << envString << "environment, attempting via yarp::os::ResourceFinder";
 
             yarp::os::ResourceFinder rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
             std::string fullEnvString = rf.findFileByName(envString);
 
             if ( !penv->Load(fullEnvString.c_str()) )
             {
-                CD_ERROR("Could not load '%s' environment.\n",fullEnvString.c_str());
+                yError() << "Could not load" << fullEnvString << "environment";
                 return false;
             }
-            CD_SUCCESS("Loaded '%s' environment.\n",fullEnvString.c_str());
+            yInfo() << "Loaded" << fullEnvString << "environment";
         }
     }
     else if ( config.check("penv") )
     {
         if(!config.find("penv").isBlob())
         {
-            CD_ERROR("penv must be blob containing pointer to environment!\n");
+            yError() << "penv must be blob containing pointer to environment";
             return false;
         }
-        //CD_DEBUG("penv: %p\n",*((const OpenRAVE::EnvironmentBase**)(config.find("penv").asBlob())));
+
         penv = *((OpenRAVE::EnvironmentBasePtr*)(config.find("penv").asBlob()));
     }
     else
     {
-        CD_ERROR("Please use --env or --penv parameter. Bye!\n");
+        yError() << "Please use --env or --penv parameter";
         return false;
     }
 
     if( config.check("physics","activate physics engine: 'ode'|...") )
     {
         std::string physics = config.find("physics").asString();
-        CD_DEBUG("Found --physics parameter: %s.\n", physics.c_str());
+        yDebug() << "Found --physics parameter:" << physics;
         penv->SetPhysicsEngine(OpenRAVE::RaveCreatePhysicsEngine(penv, physics));
         penv->GetPhysicsEngine()->SetGravity(OpenRAVE::Vector(0,0,-9.8));
     }
@@ -119,7 +116,7 @@ bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
     if( config.check("collision","use collsion engine: 'ode'|...") )
     {
         std::string collision = config.find("collision").asString();
-        CD_DEBUG("Found --collision parameter: %s.\n", collision.c_str());
+        yDebug() << "Found --collision parameter:" << collision;
         penv->SetCollisionChecker(OpenRAVE::RaveCreateCollisionChecker(penv, collision));
     }
 
@@ -130,22 +127,20 @@ bool YarpOpenraveBase::configureEnvironment(yarp::os::Searchable& config)
 
 bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
 {
-    //CD_DEBUG("config: %s\n",config.toString().c_str());
-
     if( ! penv )
     {
-        CD_ERROR("Note to developers: please call configureEnvironment() first.\n");
+        yError() << "Note to developers: please call configureEnvironment() first";
         return false;
     }
 
     if( config.check("orPlugin","name of OpenRAVE plugin to load") )
     {
-        CD_DEBUG("Found --orPlugin parameter.\n");
+        yDebug() << "Found --orPlugin parameter";
 
         std::string orPluginAndModuleName = config.find("orPlugin").asString();
         if ( ! OpenRAVE::RaveLoadPlugin(orPluginAndModuleName) )
         {
-            CD_ERROR("Could not load plugin '%s'\n",orPluginAndModuleName.c_str());
+            yError() << "Could not load plugin" << orPluginAndModuleName;
             return false;
         }
         OpenRAVE::ModuleBasePtr pModule = OpenRAVE::RaveCreateModule(penv,orPluginAndModuleName); // create the module
@@ -155,45 +150,45 @@ bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
         // RAVELOG_INFO("%s\n",cmdin.str().c_str());
         if( ! pModule->SendCommand(cmdout,cmdin) )
         {
-            CD_WARNING("Bad send 'open' command.\n");
+            yWarning() << "Bad send 'open' command";
             //return false;
         }
-        CD_SUCCESS("Sent 'open' command.\n");
+        yInfo() << "Sent 'open' command";
     }
 
     if( config.check("orPlugins","list of names of OpenRAVE plugin to load") )
     {
-        CD_DEBUG("Found --orPlugins parameter.\n");
+        yDebug() << "Found --orPlugins parameter";
 
         if( ! config.find("orPlugins").isList() )
         {
-            CD_ERROR("orPlugins usage from CLI: (read code) ->. Bye!\n");  //--orPlugins "(plugin1 (module module1) (commands \"open port\"))"
+            yError() << "orPlugins usage from CLI: (read code) ->"; //--orPlugins "(plugin1 (module module1) (commands \"open port\"))"
             return false;
         }
         yarp::os::Bottle orPlugins = config.findGroup("orPlugins");
-        CD_DEBUG("orPlugins: %s\n",orPlugins.toString().c_str());
+        yDebug() << "orPlugins:" << orPlugins.toString();
         for(int i=1; i<orPlugins.size();i++)  // elem(0) is "orPlugins"
         {
             if( ! orPlugins.get(i).isList() )
             {
-                CD_ERROR("orPlugins usage from CLI: (read code) ->. Bye!\n");  //--orPlugins "(plugin1 (module module1) (commands \"open port\"))"
+                yError() << "orPlugins usage from CLI: (read code) ->"; //--orPlugins "(plugin1 (module module1) (commands \"open port\"))"
                 return false;
             }
             yarp::os::Bottle* orPlugin = orPlugins.get(i).asList();
-            CD_DEBUG("orPlugin[%d]: %s\n",i,orPlugin->toString().c_str());
+            yDebug("orPlugin[%d]: %s",i,orPlugin->toString().c_str());
             std::string orPluginName = orPlugin->get(0).asString();
-            CD_DEBUG("* orPlugin[%d]: plugin: %s\n",i,orPluginName.c_str());
+            yDebug("* orPlugin[%d]: plugin: %s",i,orPluginName.c_str());
             std::string orModuleName = orPlugin->find("module").asString();
-            CD_DEBUG("* orPlugin[%d]: module: %s\n",i,orModuleName.c_str());
+            yDebug("* orPlugin[%d]: module: %s",i,orModuleName.c_str());
             if( orPlugin->check("commands") )
             {
-                CD_DEBUG("* orPlugin[%d]: commands: %s\n",i,orPlugin->find("commands").asString().c_str());
+                yDebug("* orPlugin[%d]: commands: %s",i,orPlugin->find("commands").asString().c_str());
             }
 
             //-- Load plugin (docs say will reload if already loaded)
             if ( ! OpenRAVE::RaveLoadPlugin(orPluginName) )
             {
-                CD_ERROR("Could not load plugin '%s'\n",orPluginName.c_str());
+                yError() << "Could not load plugin" << orPluginName;
                 return false;
             }
 
@@ -208,10 +203,10 @@ bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
                 // RAVELOG_INFO("%s\n",cmdin.str().c_str());
                 if( ! pModule->SendCommand(cmdout,cmdin) )
                 {
-                    CD_ERROR("Bad send '%s' command.\n",cmdin.str().c_str());
+                    yError("Bad send '%s' command",cmdin.str().c_str());
                     return false;
                 }
-                CD_SUCCESS("Sent '%s' command.\n",cmdin.str().c_str());
+                yInfo("Sent '%s' command",cmdin.str().c_str());
             }
         }
     }
@@ -222,11 +217,9 @@ bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
 
 bool YarpOpenraveBase::configureRobot(yarp::os::Searchable& config)
 {
-    //CD_DEBUG("config: %s\n",config.toString().c_str());
-
     if( ! penv )
     {
-        CD_ERROR("Note to developers: please call configureEnvironment() first.\n");
+        yError() << "Note to developers: please call configureEnvironment() first";
         return false;
     }
 
@@ -234,14 +227,14 @@ bool YarpOpenraveBase::configureRobot(yarp::os::Searchable& config)
 
     if (robotIndex == NOT_SET)
     {
-        CD_ERROR("robotIndex %d == NOT_SET, not loading yarpPlugin.\n",robotIndex);
+        yError() << "robotIndex" << robotIndex << "== NOT_SET, not loading yarpPlugin";
         return false;
     }
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
     penv->GetRobots(vectorOfRobotPtr);
     if((robotIndex >= vectorOfRobotPtr.size()) || (robotIndex < 0))
     {
-        CD_ERROR("robotIndex %d not in vectorOfRobotPtr ofsize() %d, not loading yarpPlugin.\n",robotIndex,vectorOfRobotPtr.size());
+        yError("robotIndex %d not in vectorOfRobotPtr ofsize() %zu, not loading yarpPlugin",robotIndex,vectorOfRobotPtr.size());
         return false;
     }
 
@@ -255,7 +248,6 @@ bool YarpOpenraveBase::configureRobot(yarp::os::Searchable& config)
 
 bool YarpOpenraveBase::clean()
 {
-    CD_INFO("\n");
     return true;
 }
 

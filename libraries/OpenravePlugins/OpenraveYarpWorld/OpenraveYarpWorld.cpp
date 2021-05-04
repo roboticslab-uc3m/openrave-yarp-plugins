@@ -5,7 +5,7 @@
 
 #include <boost/bind/bind.hpp>
 
-#include <ColorDebug.h>
+#include <yarp/os/LogStream.h>
 
 #include "OpenraveYarpWorld.hpp"
 
@@ -16,10 +16,10 @@ roboticslab::OpenraveYarpWorld::OpenraveYarpWorld(OpenRAVE::EnvironmentBasePtr p
     __description = "OpenraveYarpWorld plugin.";
     OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpWorld::Open, this,_1,_2),"opens OpenraveYarpWorld");
 
-    CD_INFO("Checking for yarp network...\n");
+    yInfo() << "Checking for yarp network...";
     if ( ! yarp.checkNetwork() )
-        CD_ERROR("Found no yarp network (try running \"yarpserver &\")!\n");
-    CD_SUCCESS("Found yarp network.\n");
+        yError() << "Found no yarp network (try running \"yarpserver &\")";
+    yInfo() << "Found yarp network";
 }
 
 // -----------------------------------------------------------------------------
@@ -94,23 +94,22 @@ int roboticslab::OpenraveYarpWorld::main(const std::string& cmd)
 
 bool roboticslab::OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
 {
-    CD_INFO("Checking for yarp network...\n");
+    yInfo() << "Checking for yarp network...";
     if ( ! yarp.checkNetwork() )
     {
-        CD_ERROR("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+        yError() << "Found no yarp network (try running \"yarpserver &\")";
         sout << "-1 ";
         return false;
     }
-    CD_SUCCESS("Found yarp network.\n");
 
     std::string s(std::istreambuf_iterator<char>(sinput), {});
 
     yarp::os::Property options;
     options.fromArguments(s.c_str());
 
-    CD_DEBUG("config: %s\n", options.toString().c_str());
+    yDebug() << "Config:" << options.toString();
 
-    CD_INFO("penv: %p\n",GetEnv().get());
+    yInfo() << "penv:" << GetEnv().get();
     OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
     //-- PortReader and RpcServer

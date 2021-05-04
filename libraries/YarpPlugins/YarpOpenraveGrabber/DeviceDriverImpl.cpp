@@ -5,9 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
-
-#include <ColorDebug.h>
 
 namespace roboticslab
 {
@@ -18,7 +17,7 @@ const int YarpOpenraveGrabber::NOT_SET = -1;
 
 bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 {
-    CD_DEBUG("config: %s\n",config.toString().c_str());
+    yDebug() << "YarpOpenraveGrabber config:" << config.toString();
 
     if ( ! configureEnvironment(config) )
         return false;
@@ -33,13 +32,13 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 
     if (sensorIndex == NOT_SET)
     {
-        CD_ERROR("sensorIndex %d == NOT_SET, not loading yarpPlugin.\n",sensorIndex);
+        yError() << "sensorIndex" << sensorIndex << "== NOT_SET, not loading yarpPlugin";
         return false;
     }
     std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
     if( (sensorIndex >= vectorOfSensorPtr.size()) || (sensorIndex < 0) )
     {
-        CD_ERROR("sensorIndex %d not within vectorOfSensorPtr of size() %d, not loading yarpPlugin.\n",sensorIndex,vectorOfSensorPtr.size());
+        yError("sensorIndex %d not within vectorOfSensorPtr of size() %zu, not loading yarpPlugin",sensorIndex,vectorOfSensorPtr.size());
         return false;
     }
 
@@ -47,7 +46,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 
     std::string sensorName = sensorBasePtr->GetName();
 
-    printf("Sensor %d name: %s\n",sensorIndex,sensorName.c_str());
+    yInfo() << "Sensor" << sensorIndex << "name:" << sensorName;
     cameraDescriptor.deviceDescription = sensorName;
     cameraDescriptor.busType = BUS_UNKNOWN;
 
@@ -55,7 +54,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 
     if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
     {
-        CD_ERROR("Sensor %d does not support ST_Camera.\n", sensorIndex );
+        yError() << "Sensor" << sensorIndex << "does not support ST_Camera";
         return false;
     }
 
@@ -71,7 +70,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
     // Get pointer to sensed data
     sensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(sensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
 
-    CD_INFO("Camera width: %d, height: %d.\n",geomDataPtr->width,geomDataPtr->height);
+    yInfo("Camera width: %d, height: %d",geomDataPtr->width,geomDataPtr->height);
     _width = geomDataPtr->width;
     _height = geomDataPtr->height;
 
@@ -85,7 +84,6 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 
 bool YarpOpenraveGrabber::close()
 {
-    CD_INFO("\n");
     return true;
 }
 

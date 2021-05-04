@@ -4,13 +4,13 @@
 
 #include <limits>
 
-#include <ColorDebug.h>
+#include <yarp/os/LogStream.h>
 
 // ------------------- IRemoteVariables Related ------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getRemoteVariable(std::string key, yarp::os::Bottle& val)
 {
-    CD_DEBUG("%s\n", key.c_str());
+    yTrace() << key;
     return false;
 }
 
@@ -18,7 +18,7 @@ bool roboticslab::YarpOpenraveControlboard::getRemoteVariable(std::string key, y
 
 bool roboticslab::YarpOpenraveControlboard::setRemoteVariable(std::string key, const yarp::os::Bottle& val)
 {
-    CD_DEBUG("%s\n", key.c_str());
+    yTrace() << key << val;
     return false;
 }
 
@@ -26,7 +26,7 @@ bool roboticslab::YarpOpenraveControlboard::setRemoteVariable(std::string key, c
 
 bool roboticslab::YarpOpenraveControlboard::getRemoteVariablesList(yarp::os::Bottle* listOfKeys)
 {
-    CD_DEBUG("\n");
+    yTrace();
     listOfKeys->clear();
     // Place each key in its own list so that clients can just call check('<key>') or !find('<key>').isNull().
     return true;

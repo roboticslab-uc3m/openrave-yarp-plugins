@@ -5,9 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
-
-#include <ColorDebug.h>
 
 namespace roboticslab
 {
@@ -16,7 +15,7 @@ namespace roboticslab
 
 bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
 {
-    CD_DEBUG("config: %s\n",config.toString().c_str());
+    yDebug() << "YarpOpenraveRobotManager config:" << config.toString();
 
     if ( ! configureEnvironment(config) )
         return false;
@@ -39,10 +38,11 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
     }
     else
     {
-        CD_ERROR("Unknown mode '%s' (use '4wd' or 'transform').\n",modeStr.c_str());
+        yError() << "Unknown mode" << modeStr << "(use '4wd' or 'transform')";
         return false;
     }
-    CD_DEBUG("Found --mode parameter: %s.\n", modeStr.c_str());
+
+    yDebug() << "Found --mode parameter:" << modeStr;
 
     //-- Create the controller, make sure to lock environment!
     {
@@ -86,7 +86,6 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
 
 bool YarpOpenraveRobotManager::close()
 {
-    CD_INFO("\n");
     return true;
 }
 

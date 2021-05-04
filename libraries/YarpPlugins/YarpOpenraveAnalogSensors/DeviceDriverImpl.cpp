@@ -4,9 +4,8 @@
 
 #include <string>
 
+#include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
-
-#include <ColorDebug.h>
 
 namespace roboticslab
 {
@@ -15,7 +14,7 @@ namespace roboticslab
 
 bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
 {
-    CD_DEBUG("config: %s\n",config.toString().c_str());
+    yDebug() << "YarpOpenraveAnalogSensors config:" << config.toString();
 
     if ( ! configureEnvironment(config) )
         return false;
@@ -28,7 +27,7 @@ bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
 
     if( ! config.check("ftSensorIndices", "force6D sensor indices"))
     {
-        CD_ERROR("Missing ftSensorIndices, not loading yarpPlugin.\n");
+        yError() << "Missing ftSensorIndices, not loading yarpPlugin";
         return false;
     }
 
@@ -42,7 +41,7 @@ bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
         size_t ftSensorIndex = ftSensorIndices.get(i).asInt32();
         if( ftSensorIndex >= vectorOfSensorPtr.size() )
         {
-            CD_ERROR("Sensor with ftSensorIndex %d not within vectorOfSensorPtr of size() %d, not loading yarpPlugin.\n", ftSensorIndex, vectorOfSensorPtr.size());
+            yError("Sensor with ftSensorIndex %zu not within vectorOfSensorPtr of size() %zu, not loading yarpPlugin", ftSensorIndex, vectorOfSensorPtr.size());
             return false;
         }
 
@@ -50,13 +49,13 @@ bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
 
         std::string ftSensorName = vectorOfSensorPtrForForce6Ds[i]->GetName();
 
-        printf("Name of sensor with ftSensorIndex %zu: '%s'\n", ftSensorIndex, ftSensorName.c_str());
+        yInfo("Name of sensor with ftSensorIndex %zu: '%s'", ftSensorIndex, ftSensorName.c_str());
 
         // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
 
         if ( ! vectorOfSensorPtrForForce6Ds[i]->Supports(OpenRAVE::SensorBase::ST_Force6D) )
         {
-            CD_ERROR("Sensor with ftSensorIndex %d does not support ST_Force6D.\n", ftSensorIndex);
+            yError() << "Sensor with ftSensorIndex" << ftSensorIndex << "does not support ST_Force6D";
             return false;
         }
 
@@ -77,7 +76,6 @@ bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
 
 bool YarpOpenraveAnalogSensors::close()
 {
-    CD_INFO("\n");
     return true;
 }
 

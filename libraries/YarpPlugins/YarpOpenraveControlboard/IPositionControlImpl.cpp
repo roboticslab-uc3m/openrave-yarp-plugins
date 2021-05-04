@@ -6,25 +6,27 @@
 #include <string>
 #include <vector>
 
-#include <ColorDebug.h>
+#include <yarp/os/LogStream.h>
 
 // ------------------- IPositionControl Related --------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getAxes(int *ax) {
+bool roboticslab::YarpOpenraveControlboard::getAxes(int *ax)
+{
     *ax = axes;
-    CD_INFO("Reporting %d axes are present\n", *ax);
+    yInfo() << "Reporting" << axes << "axes are present";
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  // encExposed = ref;
-    //CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref)
+{
+    yTrace() << j << ref;
 
     //-- Check if we are in position mode.
     if( controlModes[j] != VOCAB_CM_POSITION )
     {
-        CD_ERROR("Will not positionMove as not in positionMode (%d)\n",j);
+        yError() << "Will not positionMove() as joint" << j << "not in positionMode";
         return false;
     }
 
@@ -36,7 +38,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
     //-- But do not move if no velocity
     if( refSpeeds[ j ] == 0 )
     {
-        CD_DEBUG("[%d] (refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true.\n",j);
+        yDebug("[%d] (refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true",j);
         return true;
     }
 
@@ -59,7 +61,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         //std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
         //for(size_t i=0; i<activeDOFIndices.size(); i++)
         //{
-        //    CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
+        //    yDebug("activeDOFIndices[%d]: %d",i,activeDOFIndices[i]);
         //}
 
         //-- Could get the activeConfigurationSpecification from the robot, and modify it
@@ -103,7 +105,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
         //for (size_t i = 0; i < oneDofConfigurationSpecification._vgroups.size(); i++)
         //{
         //    OpenRAVE::ConfigurationSpecification::Group g = oneDofConfigurationSpecification._vgroups[i];
-        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        //    yDebug("[%d] %s, %d, %d, %s",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
         //}
 
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
@@ -114,7 +116,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
         OpenRAVE::dReal dofTime = std::abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
 
-        CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
+        yDebug("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
@@ -140,8 +142,9 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref) {  /
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::positionMove(const double *refs) {  // encExposed = refs;
-    CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::positionMove(const double *refs)
+{
+    yTrace();;
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= positionMove(i,refs[i]);
@@ -150,8 +153,9 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(const double *refs) {  
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::relativeMove(int j, double delta) {
-    //CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::relativeMove(int j, double delta)
+{
+    yTrace() << j << delta;
 
     double v = radToDegIfNotPrismatic(j, vectorOfJointPtr[j]->GetValue(0) );
 
@@ -160,8 +164,9 @@ bool roboticslab::YarpOpenraveControlboard::relativeMove(int j, double delta) {
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::relativeMove(const double *deltas) {  // encExposed = deltas + encExposed
-    CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::relativeMove(const double *deltas)
+{
+    yTrace();
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= relativeMove(i,deltas[i]);
@@ -170,16 +175,18 @@ bool roboticslab::YarpOpenraveControlboard::relativeMove(const double *deltas) {
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::checkMotionDone(int j, bool *flag) {
-    //CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::checkMotionDone(int j, bool *flag)
+{
+    yTrace() << j;
     *flag = pcontrols[j]->IsDone();
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::checkMotionDone(bool *flag) {
-    CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::checkMotionDone(bool *flag)
+{
+    yTrace();
     bool done = true;
     for(unsigned int j=0;j<axes;j++)
     {
@@ -193,13 +200,14 @@ bool roboticslab::YarpOpenraveControlboard::checkMotionDone(bool *flag) {
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setRefSpeed(int j, double sp) {
-    CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::setRefSpeed(int j, double sp)
+{
+    yTrace() << j << sp;
     double min,max;
     getVelLimits( j, &min, &max );
     if( sp > max )
     {
-        CD_WARNING("Setting %f refSpeed above %f maxVelLimit. All joint %d movements will be immediate.\n",sp,max,j);
+        yWarning() << "Setting" << sp << "refSpeed above" << max << "maxVelLimit, all joint" << j << "movements will be immediate";
     }
     refSpeeds[j] = sp;
     return true;
@@ -207,8 +215,9 @@ bool roboticslab::YarpOpenraveControlboard::setRefSpeed(int j, double sp) {
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const double *spds) {
-    CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const double *spds)
+{
+    yTrace();
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= setRefSpeed(i,spds[i]);
@@ -217,33 +226,34 @@ bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const double *spds) {
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setRefAcceleration(int j, double acc) {
-    CD_INFO("Doing nothing.\n");
-    return true;
+bool roboticslab::YarpOpenraveControlboard::setRefAcceleration(int j, double acc)
+{
+    yError() << "setRefAcceleration() not implemented";
+    return false;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const double *accs) {
-    CD_INFO("\n");
-    bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= setRefAcceleration(i,accs[i]);
-    return ok;
+bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const double *accs)
+{
+    yError() << "setRefAccelerations() not implemented";
+    return false;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefSpeed(int j, double *ref) {
-    CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::getRefSpeed(int j, double *ref)
+{
+    yTrace() << j;
     *ref = refSpeeds[j];
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(double *spds) {
-    CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(double *spds)
+{
+    yTrace();
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= getRefSpeed(i,&spds[i]);
@@ -252,25 +262,25 @@ bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(double *spds) {
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefAcceleration(int j, double *acc) {
-    CD_INFO("Doing nothing.\n");
-    return true;
+bool roboticslab::YarpOpenraveControlboard::getRefAcceleration(int j, double *acc)
+{
+    yError() << "getRefAcceleration() not implemented";
+    return false;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(double *accs) {
-    CD_INFO("\n");
-    bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= getRefAcceleration(i,&accs[i]);
-    return ok;
+bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(double *accs)
+{
+    yError() << "getRefAccelerations() not implemented";
+    return false;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::stop(int j) {
-    CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::stop(int j)
+{
+    yTrace() << j;
     OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
     std::vector<OpenRAVE::dReal> tmp;
     tmp.push_back(dofCurrentRads);
@@ -280,8 +290,9 @@ bool roboticslab::YarpOpenraveControlboard::stop(int j) {
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::stop() {
-    CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::stop()
+{
+    yTrace();
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= stop(i);
@@ -292,7 +303,7 @@ bool roboticslab::YarpOpenraveControlboard::stop() {
 
 bool roboticslab::YarpOpenraveControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
 {
-    CD_INFO("\n");
+    yTrace() << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -305,7 +316,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(const int n_joint, cons
 
 bool roboticslab::YarpOpenraveControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
 {
-    CD_INFO("\n");
+    yTrace() << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -318,7 +329,7 @@ bool roboticslab::YarpOpenraveControlboard::relativeMove(const int n_joint, cons
 
 bool roboticslab::YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flag)
 {
-    //CD_INFO("\n");
+    yTrace() << n_joint;
     bool ok = true;
     bool done = true;
     for(int i=0;i<n_joint;i++)
@@ -335,7 +346,7 @@ bool roboticslab::YarpOpenraveControlboard::checkMotionDone(const int n_joint, c
 
 bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
 {
-    CD_INFO("\n");
+    yTrace() << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -348,7 +359,7 @@ bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const int n_joint, cons
 
 bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
 {
-    CD_INFO("\n");
+    yTrace() << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -361,7 +372,7 @@ bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const int n_join
 
 bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
 {
-    CD_INFO("\n");
+    yTrace() << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -374,7 +385,7 @@ bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(const int n_joint, cons
 
 bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
 {
-    CD_INFO("\n");
+    yTrace() << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -387,7 +398,7 @@ bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(const int n_join
 
 bool roboticslab::YarpOpenraveControlboard::stop(const int n_joint, const int *joints)
 {
-    CD_INFO("\n");
+    yTrace() << n_joint;
     bool ok = true;
     for(unsigned int i=0;i<n_joint;i++)
         ok &= stop(joints[i]);
@@ -398,24 +409,24 @@ bool roboticslab::YarpOpenraveControlboard::stop(const int n_joint, const int *j
 
 bool roboticslab::YarpOpenraveControlboard::getTargetPosition(const int joint, double *ref)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    yError() << "getTargetPosition() not implemented";
+    return false;
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getTargetPositions(double *refs)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    yError() << "getTargetPositions() not implemented";
+    return false;
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    yError() << "getTargetPositions() not implemented";
+    return false;
 }
 
 // -----------------------------------------------------------------------------

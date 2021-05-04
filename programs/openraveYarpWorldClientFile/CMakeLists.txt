@@ -7,10 +7,7 @@ add_executable(openraveYarpWorldClientFile main.cpp
                                            OpenraveYarpWorldClientFile.hpp)
 
 target_link_libraries(openraveYarpWorldClientFile YARP::YARP_os
-                                                  YARP::YARP_init
-                                                  ROBOTICSLAB::ColorDebug)
-
-target_compile_features(openraveYarpWorldClientFile PRIVATE cxx_std_11)
+                                                  YARP::YARP_init)
 
 install(TARGETS openraveYarpWorldClientFile
         DESTINATION ${CMAKE_INSTALL_BINDIR})

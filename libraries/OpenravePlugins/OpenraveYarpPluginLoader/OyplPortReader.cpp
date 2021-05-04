@@ -2,8 +2,7 @@
 
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionReader.h>
-
-#include <ColorDebug.h>
+#include <yarp/os/LogStream.h>
 
 #include "OpenraveYarpPluginLoader.hpp"
 
@@ -20,7 +19,7 @@ bool roboticslab::OyplPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
     if (!request.read(in)) return false;
-    CD_DEBUG("Request: %s\n", request.toString().c_str());
+    yDebug() << "Request:" << request.toString();
     yarp::os::ConnectionWriter *out = in.getWriter();
     if (out==NULL) return true;
 
@@ -42,7 +41,7 @@ bool roboticslab::OyplPortReader::read(yarp::os::ConnectionReader& in)
         {
             if(!request.get(i).isList())
             {
-                CD_ERROR("Expected list at %d.\n",i);
+                yError() << "Expected list at" << i;
                 response.addVocab(VOCAB_FAILED);
                 response.addString("Expected list");
                 return response.write(*out);
@@ -52,7 +51,7 @@ bool roboticslab::OyplPortReader::read(yarp::os::ConnectionReader& in)
             cmdStr.append(elem->toString());
             cmdStr.append(" ");
         }
-        CD_DEBUG("%s\n", cmdStr.c_str());
+        yDebug() << cmdStr;
 
         std::stringstream sout;
         std::stringstream sinput(cmdStr);
@@ -75,7 +74,7 @@ bool roboticslab::OyplPortReader::read(yarp::os::ConnectionReader& in)
     {
         OpenRAVE::EnvironmentBasePtr penv = openraveYarpPluginLoaderPtr->GetEnv();
         yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
-        CD_DEBUG("penvValue: %s\n", v.toString().c_str());
+        yDebug() << "penvValue:" << v.toString();
         response.add(v); // penvValue.isBlob()
         return response.write(*out);
     }

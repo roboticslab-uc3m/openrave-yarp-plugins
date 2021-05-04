@@ -5,9 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
-
-#include <ColorDebug.h>
 
 namespace roboticslab
 {
@@ -16,7 +15,7 @@ namespace roboticslab
 
 bool YarpOpenraveSimulation::open(yarp::os::Searchable& config)
 {
-    CD_DEBUG("config: %s\n",config.toString().c_str());
+    yDebug() << "YarpOpenraveSimulation config:" << config.toString();
 
     if ( ! configureEnvironment(config) )
         return false;
@@ -34,7 +33,6 @@ bool YarpOpenraveSimulation::open(yarp::os::Searchable& config)
 
 bool YarpOpenraveSimulation::close()
 {
-    CD_INFO("\n");
     return true;
 }
 

@@ -2,13 +2,13 @@
 
 #include "YarpOpenraveControlboard.hpp"
 
-#include <ColorDebug.h>
+#include <yarp/os/LogStream.h>
 
 // ------------------ IAxisInfo Related -----------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getAxisName(int axis, std::string& name)
 {
-    CD_INFO("\n");
+    yTrace();
     if ((unsigned int)axis>axes) return false;
     name = vectorOfJointPtr[axis]->GetName();
     return true;
@@ -18,7 +18,7 @@ bool roboticslab::YarpOpenraveControlboard::getAxisName(int axis, std::string& n
 
 bool roboticslab::YarpOpenraveControlboard::getJointType(int axis, yarp::dev::JointTypeEnum& type)
 {
-    CD_INFO("\n");
+    yTrace();
     if ((unsigned int)axis>axes) return false;
 
     OpenRAVE::RobotBase::JointPtr jointPtr = vectorOfJointPtr[axis];

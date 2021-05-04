@@ -28,6 +28,7 @@
 #include <vector>
 
 #include <yarp/os/Bottle.h>
+#include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/ResourceFinder.h>
@@ -38,8 +39,6 @@
 #include <yarp/dev/PolyDriver.h>
 
 #include <ICartesianControl.h>
-
-#include <ColorDebug.h>
 
 #define DEFAULT_PREFIX "/robotDraw"
 #define DEFAULT_CARTESIAN_REMOTE "/asibotSim/CartesianControl"
@@ -52,16 +51,15 @@ int main(int argc, char *argv[])
 {
     yarp::os::Network yarp;
 
-    CD_INFO("Run \"%s --help\" for options.\n", argv[0]);
-    CD_INFO("%s checking for yarp network... ", argv[0]);
+    yInfo("Run \"%s --help\" for options", argv[0]);
+    yInfo("%s checking for yarp network...", argv[0]);
     std::fflush(stdout);
 
     if (!yarp::os::Network::checkNetwork())
     {
-        CD_ERROR_NO_HEADER("[fail]\n%s found no yarp network (try running \"yarpserver &\"), bye!\n", argv[0]);
+        yError() << argv[0] << "found no yarp network (try running \"yarpserver &\"), bye!";
         return 1;
     }
-    else CD_SUCCESS_NO_HEADER("[ok]\n");
 
     std::string prefix = "/robotDraw";
     std::string cartesianRemote = DEFAULT_CARTESIAN_REMOTE;
@@ -73,11 +71,11 @@ int main(int argc, char *argv[])
 
     if (rf.check("help"))
     {
-        CD_INFO("%s options:\n", argv[0]);
-        CD_INFO("\t--help (this help)\t--from [file.ini]\t--context [path]\n");
-        CD_INFO("\t--cartesianRemote (default: \"%s\")\n", cartesianRemote.c_str());
-        CD_INFO("\t--worldRemote (default: \"%s\")\n", worldRemote.c_str());
-        CD_INFO("\t--height (default: \"%f\")\n", height);
+        yInfo("%s options:", argv[0]);
+        yInfo("\t--help (this help)\t--from [file.ini]\t--context [path]");
+        yInfo("\t--cartesianRemote (default: \"%s\")", cartesianRemote.c_str());
+        yInfo("\t--worldRemote (default: \"%s\")", worldRemote.c_str());
+        yInfo("\t--height (default: \"%f\")", height);
     }
 
     if (rf.check("cartesianRemote"))
@@ -95,8 +93,8 @@ int main(int argc, char *argv[])
         height = rf.find("height").asFloat64();
     }
 
-    CD_INFO("robotDraw using cartesianRemote: %s, worldRemote: %s, height: %f.\n",
-            cartesianRemote.c_str(), worldRemote.c_str(), height);
+    yInfo("robotDraw using cartesianRemote: %s, worldRemote: %s, height: %f",
+          cartesianRemote.c_str(), worldRemote.c_str(), height);
 
     if (rf.check("help"))
     {
@@ -113,7 +111,7 @@ int main(int argc, char *argv[])
 
     if (!cartesianDevice.isValid())
     {
-        CD_ERROR("Cannot open cartesian device.\n");
+        yError() << "Cannot open cartesian device";
         return 1;
     }
 
@@ -121,7 +119,7 @@ int main(int argc, char *argv[])
 
     if (!cartesianDevice.view(iCartesianControl))
     {
-        CD_ERROR("Cannot view iCartesianControl.\n");
+        yError() << "Cannot view iCartesianControl";
         return 1;
     }
 
@@ -131,13 +129,13 @@ int main(int argc, char *argv[])
 
     if (!worldRpcClient.open(worldRpcClientName))
     {
-        CD_ERROR("Cannot open world RPC client.\n");
+        yError() << "Cannot open world RPC client";
         return 1;
     }
 
     if (!yarp::os::Network::connect(worldRpcClientName, worldRemote))
     {
-        CD_ERROR("Cannot connect to %s.\n", worldRemote.c_str());
+        yError() << "Cannot connect to" << worldRemote;
         return 1;
     }
 
@@ -146,7 +144,7 @@ int main(int argc, char *argv[])
 
     if (!pointsRpcServer.open(pointsRpcServerName))
     {
-        CD_ERROR("Cannot open point RPC server.\n");
+        yError() << "Cannot open point RPC server";
         return 1;
     }
 
@@ -157,7 +155,7 @@ int main(int argc, char *argv[])
     home[3] = 90.0;
     home[4] = 0.0;
 
-    CD_INFO("Homing.\n");
+    yInfo() << "Homing";
 
     iCartesianControl->movj(home);
     iCartesianControl->wait();
@@ -171,14 +169,14 @@ int main(int argc, char *argv[])
 
     while (true)
     {
-        CD_SUCCESS("%s on BLOCKING WAIT for draw request,\n", pointsRpcServerName.c_str());
-        CD_INFO("usage: [draw] r g b p0x p0y p1x p1y ... pNx pNy\n");
-        CD_INFO("example: [draw] 1 1 1 0 0 .1 0 .1 .1 0 .1 0 0\n");
+        yInfo() << pointsRpcServerName << "on BLOCKING WAIT for draw request";
+        yInfo() << "Usage: [draw] r g b p0x p0y p1x p1y ... pNx pNy";
+        yInfo() << "Example: [draw] 1 1 1 0 0 .1 0 .1 .1 0 .1 0 0";
 
         yarp::os::Bottle pointsIn, pointsOut;
         pointsRpcServer.read(pointsIn, true);
 
-        CD_DEBUG("Got %s\n", pointsIn.toString().c_str());
+        yDebug() << "Got" << pointsIn.toString();
 
         pointsOut.clear();
         pointsOut.addVocab(VOCAB_OK);
@@ -191,7 +189,7 @@ int main(int argc, char *argv[])
         aprox0[3] = targets[3];
         aprox0[4] = targets[4];
 
-        CD_INFO("Moving to aprox0.\n");
+        yInfo() << "Moving to aprox0";
 
         iCartesianControl->movj(aprox0);
         iCartesianControl->wait();
@@ -203,7 +201,7 @@ int main(int argc, char *argv[])
         p0[3] = targets[3];
         p0[4] = targets[4];
 
-        CD_INFO("Moving to p0.\n");
+        yInfo() << "Moving to p0";
 
         iCartesianControl->movj(p0);
         iCartesianControl->wait();
@@ -222,7 +220,7 @@ int main(int argc, char *argv[])
         worldRpcClient.write(worldOut, worldIn);
 
 //        for (int i=3; i<(bIn.size());i=i+2) {
-        for (int i = 7; i < pointsIn.size(); i = i + 2)
+        for (unsigned int i = 7; i < pointsIn.size(); i += 2)
         {
             std::vector<double> tmpTargets(5);
             tmpTargets[0] = targets[0] + pointsIn.get(i).asFloat64();
@@ -249,12 +247,12 @@ int main(int argc, char *argv[])
         aproxN[3] = targets[3];
         aproxN[4] = targets[4];
 
-        CD_INFO("Moving to aproxN.\n");
+        yInfo() << "Moving to aproxN";
 
         iCartesianControl->movj(aproxN);
         iCartesianControl->wait();
 
-        CD_INFO("Homing.\n");
+        yInfo() << "Homing";
 
         iCartesianControl->movj(home);
         iCartesianControl->wait();

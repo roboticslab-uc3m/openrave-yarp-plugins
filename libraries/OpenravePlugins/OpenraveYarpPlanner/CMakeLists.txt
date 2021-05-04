@@ -21,8 +21,7 @@ target_link_libraries(OpenraveYarpPlanner YARP::YARP_os
                                                YARP::YARP_init
                                                YARP::YARP_dev
                                                ${OpenRAVE_LIBRARIES}
-                                               Boost::boost
-                                               ROBOTICSLAB::ColorDebug)
+                                               Boost::boost)
 
 include(InstallOpenravePlugin)
 

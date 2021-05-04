@@ -8,7 +8,6 @@ First install the dependencies:
 - [Install Boost](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-boost.md) (implicitly required by OpenRAVE)
     - Compiled components: Boost.Thread
     - Header-only components: Boost.Bind, Boost.SmartPtr
-- [Install color-debug](https://github.com/roboticslab-uc3m/color-debug)
 
 ### Components with known additional/specific dependencies
 - [../libraries/YarpPlugins/YarpOpenraveAnalogSensors](../libraries/YarpPlugins/YarpOpenraveAnalogSensors#requirements)

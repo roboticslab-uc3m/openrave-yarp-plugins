@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include <ColorDebug.h>
+#include <yarp/os/LogStream.h>
 
 namespace roboticslab
 {
@@ -17,7 +17,7 @@ namespace roboticslab
 
 bool YarpOpenraveRobotManager::moveForward(double value)
 {
-    CD_DEBUG("%f\n",value);
+    yTrace() << value;
 
     switch (mode)
     {
@@ -27,24 +27,20 @@ bool YarpOpenraveRobotManager::moveForward(double value)
 
         OpenRAVE::dReal refVelocity = 3.0;  // [m/s]
         OpenRAVE::dReal dofTime = std::abs( OpenRAVE::dReal(value)  / refVelocity ); // Time in seconds
-        CD_DEBUG("abs(increment/vel) = abs(%d/%f) = %f [s]\n",value,refVelocity,dofTime);
+        yDebug("abs(increment/vel) = abs(%f/%f) = %f [s]",value,refVelocity,dofTime);
 
         OpenRAVE::Transform H_0_src = probot->GetTransform();
-        CD_DEBUG("H_0_src: %f %f %f | %f %f %f %f\n",
-                 H_0_src.trans.x, H_0_src.trans.y, H_0_src.trans.z,
-                 H_0_src.rot.x, H_0_src.rot.y, H_0_src.rot.z, H_0_src.rot.w);
+        yDebug() << "H_0_src:" << H_0_src.trans.x << H_0_src.trans.y << H_0_src.trans.z << "|" << H_0_src.rot.x << H_0_src.rot.y << H_0_src.rot.z << H_0_src.rot.w;
         //OpenRAVE::Vector H_0_src_axisAngle = OpenRAVE::geometry::axisAngleFromQuat(H_0_src.rot);
-        //CD_DEBUG("H_0_src_aa: %f %f %f %f\n", H_0_src_axisAngle.x, H_0_src_axisAngle.y, H_0_src_axisAngle.z, H_0_src_axisAngle.w);
+        //yDebug("H_0_src_aa: %f %f %f %f", H_0_src_axisAngle.x, H_0_src_axisAngle.y, H_0_src_axisAngle.z, H_0_src_axisAngle.w);
 
         OpenRAVE::Transform H_src_dst;
         H_src_dst.trans.x = value;
 
         OpenRAVE::Transform H_0_dst = H_0_src * H_src_dst;
-        CD_DEBUG("H_0_dst: %f %f %f | %f %f %f %f\n",
-                 H_0_dst.trans.x, H_0_dst.trans.y, H_0_dst.trans.z,
-                 H_0_dst.rot.x, H_0_dst.rot.y, H_0_dst.rot.z, H_0_dst.rot.w);
+        yDebug() << "H_0_dst:" << H_0_dst.trans.x << H_0_dst.trans.y << H_0_dst.trans.z << "|" << H_0_dst.rot.x << H_0_dst.rot.y << H_0_dst.rot.z << H_0_dst.rot.w;
         //OpenRAVE::Vector H_0_dst_axisAngle = OpenRAVE::geometry::axisAngleFromQuat(H_0_dst.rot);
-        //CD_DEBUG("H_0_dst_aa: %f %f %f %f\n", H_0_dst_axisAngle.x, H_0_dst_axisAngle.y, H_0_dst_axisAngle.z, H_0_dst_axisAngle.w);
+        //yDebug("H_0_dst_aa: %f %f %f %f", H_0_dst_axisAngle.x, H_0_dst_axisAngle.y, H_0_dst_axisAngle.z, H_0_dst_axisAngle.w);
 
 
         //-- Our own ConfigurationSpecification
@@ -87,7 +83,7 @@ bool YarpOpenraveRobotManager::moveForward(double value)
         //for (size_t i = 0; i < configurationSpecification._vgroups.size(); i++)
         //{
         //    OpenRAVE::ConfigurationSpecification::Group g = configurationSpecification._vgroups[i];
-        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        //    yDebug("[%d] %s, %d, %d, %s",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
         //}
 
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
@@ -133,7 +129,7 @@ bool YarpOpenraveRobotManager::moveForward(double value)
 
 bool YarpOpenraveRobotManager::turnLeft(double value)
 {
-    CD_DEBUG("%f\n",value);
+    yTrace() << value;
 
     switch (mode)
     {
@@ -143,14 +139,12 @@ bool YarpOpenraveRobotManager::turnLeft(double value)
 
         OpenRAVE::dReal refVelocity = 90.0;  // [deg/s]
         OpenRAVE::dReal dofTime = std::abs( OpenRAVE::dReal(value)  / refVelocity ); // Time in seconds
-        CD_DEBUG("abs(increment/vel) = abs(%d/%f) = %f [s]\n",value,refVelocity,dofTime);
+        yDebug("abs(increment/vel) = abs(%f/%f) = %f [s]",value,refVelocity,dofTime);
 
         OpenRAVE::Transform H_0_src = probot->GetTransform();
-        CD_DEBUG("H_0_src: %f %f %f | %f %f %f %f\n",
-                 H_0_src.trans.x, H_0_src.trans.y, H_0_src.trans.z,
-                 H_0_src.rot.x, H_0_src.rot.y, H_0_src.rot.z, H_0_src.rot.w);
+        yDebug() << "H_0_src:" << H_0_src.trans.x << H_0_src.trans.y << H_0_src.trans.z << "|" << H_0_src.rot.x << H_0_src.rot.y << H_0_src.rot.z << H_0_src.rot.w;
         //OpenRAVE::Vector H_0_src_axisAngle = OpenRAVE::geometry::axisAngleFromQuat(H_0_src.rot);
-        //CD_DEBUG("H_0_src_aa: %f %f %f %f\n", H_0_src_axisAngle.x, H_0_src_axisAngle.y, H_0_src_axisAngle.z, H_0_src_axisAngle.w);
+        //yDebug("H_0_src_aa: %f %f %f %f", H_0_src_axisAngle.x, H_0_src_axisAngle.y, H_0_src_axisAngle.z, H_0_src_axisAngle.w);
 
         OpenRAVE::dReal relAngleRad = OpenRAVE::dReal(value) * M_PI / 180.0;
 
@@ -161,11 +155,9 @@ bool YarpOpenraveRobotManager::turnLeft(double value)
         H_src_dst.rot.w = sin( relAngleRad / 2.0);
 
         OpenRAVE::Transform H_0_dst = H_0_src * H_src_dst;
-        CD_DEBUG("H_0_dst: %f %f %f | %f %f %f %f\n",
-                 H_0_dst.trans.x, H_0_dst.trans.y, H_0_dst.trans.z,
-                 H_0_dst.rot.x, H_0_dst.rot.y, H_0_dst.rot.z, H_0_dst.rot.w);
+        yDebug() << "H_0_dst:" << H_0_dst.trans.x << H_0_dst.trans.y << H_0_dst.trans.z << "|" << H_0_dst.rot.x << H_0_dst.rot.y << H_0_dst.rot.z << H_0_dst.rot.w;
         //OpenRAVE::Vector H_0_dst_axisAngle = OpenRAVE::geometry::axisAngleFromQuat(H_0_dst.rot);
-        //CD_DEBUG("H_0_dst_aa: %f %f %f %f\n", H_0_dst_axisAngle.x, H_0_dst_axisAngle.y, H_0_dst_axisAngle.z, H_0_dst_axisAngle.w);
+        //yDebug("H_0_dst_aa: %f %f %f %f", H_0_dst_axisAngle.x, H_0_dst_axisAngle.y, H_0_dst_axisAngle.z, H_0_dst_axisAngle.w);
 
 
         //-- Our own ConfigurationSpecification
@@ -208,7 +200,7 @@ bool YarpOpenraveRobotManager::turnLeft(double value)
         //for (size_t i = 0; i < configurationSpecification._vgroups.size(); i++)
         //{
         //    OpenRAVE::ConfigurationSpecification::Group g = configurationSpecification._vgroups[i];
-        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        //    yDebug("[%d] %s, %d, %d, %s",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
         //}
 
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
@@ -259,7 +251,7 @@ bool YarpOpenraveRobotManager::turnLeft(double value)
 
 bool YarpOpenraveRobotManager::stopMovement()
 {
-    CD_DEBUG("\n");
+    yTrace();
     switch (mode)
     {
     case TRANSFORM_IDEALCONTROLLER:
@@ -283,7 +275,7 @@ bool YarpOpenraveRobotManager::stopMovement()
 
 bool YarpOpenraveRobotManager::tiltDown(double value)
 {
-    CD_DEBUG("%f\n",value);
+    yTrace() << value;
     return true;
 }
 
@@ -291,7 +283,7 @@ bool YarpOpenraveRobotManager::tiltDown(double value)
 
 bool YarpOpenraveRobotManager::panLeft(double value)
 {
-    CD_DEBUG("%f\n",value);
+    yTrace() << value;
     return true;
 }
 
@@ -299,7 +291,7 @@ bool YarpOpenraveRobotManager::panLeft(double value)
 
 bool YarpOpenraveRobotManager::stopCameraMovement()
 {
-    CD_DEBUG("\n");
+    yTrace();
     return true;
 }
 

@@ -5,9 +5,8 @@
 
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionReader.h>
+#include <yarp/os/LogStream.h>
 #include <yarp/os/ResourceFinder.h>
-
-#include <ColorDebug.h>
 
 #include "OpenraveYarpWorld.hpp"
 
@@ -36,11 +35,9 @@ bool roboticslab::OywPortReader::checkIfString(yarp::os::Bottle& request, int in
         return true;
     response.addVocab(VOCAB_FAILED);
     std::stringstream ss;
-    ss << "expected type string but got wrong data type at ";
-    ss << index;
+    ss << "expected type string but got wrong data type at " << index;
     response.addString(ss.str());
-    ss << "\n";
-    CD_ERROR(ss.str().c_str(), index);
+    yError(ss.str().c_str(), index);
     return false;
 }
 
@@ -51,7 +48,7 @@ bool roboticslab::OywPortReader::tryToSetActiveManipulator(const std::string& ro
     OpenRAVE::RobotBasePtr wantActiveRobotPtr = openraveYarpWorldPtr->GetEnv()->GetRobot(robot);
     if(!wantActiveRobotPtr)
     {
-        CD_ERROR("Could not find robot: %s.\n", robot.c_str());
+        yError() << "Could not find robot:" << robot;
         response.addVocab(VOCAB_FAILED);
         return false;
     }
@@ -62,7 +59,7 @@ bool roboticslab::OywPortReader::tryToSetActiveManipulator(const std::string& ro
     }
     catch (const std::exception& ex)
     {
-        CD_ERROR("Caught openrave_exception: %s\n", ex.what());
+        yError() << "Caught openrave_exception:" << ex.what();
         response.addVocab(VOCAB_FAILED);
         return false;
     }
@@ -75,7 +72,7 @@ bool roboticslab::OywPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
     if (!request.read(in)) return false;
-    CD_DEBUG("Request: %s\n", request.toString().c_str());
+    yDebug() << "Request:" << request.toString();
     yarp::os::ConnectionWriter *out = in.getWriter();
     if (out==NULL) return true;
 
@@ -137,7 +134,7 @@ world draw 0/1 (radius r g b).");
             }
             else
             {
-                CD_ERROR("object %s does not exist.\n", request.get(2).asString().c_str());
+                yError() << "Object" << request.get(2).asString() << "does not exist";
                 response.addVocab(VOCAB_FAILED);
                 response.addString("object does not exist");
             }
@@ -151,14 +148,14 @@ world draw 0/1 (radius r g b).");
             OpenRAVE::RobotBasePtr fkRobotPtr = openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString());
             if(!fkRobotPtr)
             {
-                CD_ERROR("Could not find robot: %s.\n", request.get(2).asString().c_str());
+                yError() << "Could not find robot:" << request.get(2).asString();
                 response.addVocab(VOCAB_FAILED);
                 return response.write(*out);
             }
             OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = fkRobotPtr->GetManipulator(request.get(3).asString());
             if(!pRobotManip)
             {
-                CD_ERROR("Could not find manipulator: %s.\n", request.get(3).asString().c_str());
+                yError() << "Could not find manipulator:" << request.get(3).asString();
                 response.addVocab(VOCAB_FAILED);
                 return response.write(*out);
             }
@@ -169,7 +166,7 @@ world draw 0/1 (radius r g b).");
             tool.rot = ee.rot;
             OpenRAVE::Transform tcp = ee * tool;
             //Transform tcp = ee;
-            CD_SUCCESS("TCP at %f, %f, %f.\n", tcp.trans.x, tcp.trans.y, tcp.trans.z);
+            yInfo() << "TCP at" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
             yarp::os::Bottle& trans = response.addList();
             trans.addFloat64(tcp.trans.x);
             trans.addFloat64(tcp.trans.y);
@@ -185,7 +182,7 @@ world draw 0/1 (radius r g b).");
             {
                 //Transform t = objPtr->GetTransform();
                 OpenRAVE::Vector tr = objPtr->GetTransform().trans;
-                CD_SUCCESS("object %s at %f, %f, %f.\n", objPtr->GetName().c_str(), tr.x,tr.y,tr.z);
+                yInfo() << "Object" << objPtr->GetName() << "at" << tr.x << tr.y << tr.z;
                 yarp::os::Bottle& trans = response.addList();
                 trans.addFloat64(tr.x);
                 trans.addFloat64(tr.y);
@@ -194,7 +191,7 @@ world draw 0/1 (radius r g b).");
             }
             else // null pointer
             {
-                CD_ERROR("object %s does not exist.\n", request.get(3).asString().c_str());
+                yError() << "Object" << request.get(3).asString() << "does not exist";
                 response.addVocab(VOCAB_FAILED);
                 response.addString("object does not exist");
             }
@@ -213,16 +210,16 @@ world draw 0/1 (radius r g b).");
             OpenRAVE::KinBodyPtr objPtr = openraveYarpWorldPtr->GetEnv()->GetKinBody(request.get(4).asString().c_str());
             if(objPtr)
             {
-                CD_INFO("object %s exists.\n", request.get(4).asString().c_str());
+                yInfo() << "Object" << request.get(4).asString() << "exists";
                 if (request.get(5).asInt32()==1)
                 {
-                    CD_SUCCESS("object grabbed!!\n");
+                    yInfo() << "Object grabbed";
                     openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Grab(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
                 else if (request.get(5).asInt32()==0)
                 {
-                    CD_SUCCESS("object released!!\n");
+                    yInfo() << "Object released";
                     openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Release(objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
@@ -230,7 +227,7 @@ world draw 0/1 (radius r g b).");
             }
             else
             {
-                CD_WARNING("object %s does not exist.\n", request.get(4).asString().c_str());
+                yWarning() << "Object" << request.get(4).asString() << "does not exist";
                 response.addVocab(VOCAB_FAILED);
             }
         }
@@ -336,7 +333,7 @@ world draw 0/1 (radius r g b).");
 
                     if (!robotPtr)
                     {
-                        CD_ERROR("Could not find robot: %s.\n", request.get(3).asString().c_str());
+                        yError() << "Could not find robot:" << request.get(3).asString();
                         response.addVocab(VOCAB_FAILED);
                         return response.write(*out);
                     }
@@ -345,7 +342,7 @@ world draw 0/1 (radius r g b).");
 
                     if (!sensorPtr)
                     {
-                        CD_ERROR("Could not find sensor: %s.\n", request.get(4).asString().c_str());
+                        yError() << "Could not find sensor:" << request.get(4).asString();
                         response.addVocab(VOCAB_FAILED);
                         return response.write(*out);
                     }
@@ -394,12 +391,12 @@ world draw 0/1 (radius r g b).");
                     std::string fullFileName = rf.findFileByName(fileName);
                     if (fullFileName.empty())
                     {
-                        CD_ERROR("Could not find '%s' file via yarp::os::ResourceFinder.\n", fileName.c_str());
+                        yError() << "Could not find" << fileName << "file via yarp::os::ResourceFinder";
                         response.addVocab(VOCAB_FAILED);
                         response.addString("could not load file");
                         return response.write(*out);
                     }
-                    CD_INFO("Loading '%s' file.\n", fullFileName.c_str());
+                    yInfo() << "Loading" << fullFileName << "file";
 
                     if (endsWith(fileName, ".ply"))
                     {
@@ -413,7 +410,7 @@ world draw 0/1 (radius r g b).");
 
                     if (!objKinBodyPtr)
                     {
-                        CD_ERROR("Could not load '%s' file.\n", fullFileName.c_str());
+                        yError() << "Could not load" << fullFileName << "file";
                         response.addVocab(VOCAB_FAILED);
                         response.addString("could not load file");
                         return response.write(*out);
@@ -457,7 +454,7 @@ world draw 0/1 (radius r g b).");
                 }
                 objKinBodyPtrs.push_back(objKinBodyPtr);
 
-                CD_SUCCESS("Created: %s\n", objName.c_str());
+                yInfo() << "Created:" << objName;
                 response.addVocab(VOCAB_OK);
                 response.addString(objName);
             } // the environment is not locked anymore
@@ -469,7 +466,7 @@ world draw 0/1 (radius r g b).");
             OpenRAVE::KinBodyPtr objPtr = openraveYarpWorldPtr->GetEnv()->GetKinBody(request.get(2).asString().c_str());
             if(!objPtr)
             {
-                CD_ERROR("object %s does not exist.\n", request.get(2).asString().c_str());
+                yError() << "Object" << request.get(2).asString() << "does not exist";
                 response.addVocab(VOCAB_FAILED);
                 response.addString("object does not exist");
                 return response.write(*out);
@@ -485,13 +482,13 @@ world draw 0/1 (radius r g b).");
         {
             if (request.get(2).asInt32() == 0)
             {
-                CD_SUCCESS("Turning draw OFF.\n");
+                yInfo() << "Turning draw OFF";
                 robotDraw = 0;
                 response.addVocab(VOCAB_OK);
             }
             else
             {
-                CD_SUCCESS("Turning draw ON.\n");
+                yInfo() << "Turning draw ON";
                 robotDraw = request.get(2).asInt32();
                 if (request.size() >= 4) drawRadius = request.get(3).asFloat64();
                 if (request.size() >= 7)
@@ -512,7 +509,7 @@ world draw 0/1 (radius r g b).");
     }
     else
     {
-        CD_ERROR("Command not understood, try 'help'.\n");
+        yError() << "Command not understood, try 'help'";
         response.addVocab(VOCAB_FAILED);
         response.addString("Command not understood, try 'help'");
     }

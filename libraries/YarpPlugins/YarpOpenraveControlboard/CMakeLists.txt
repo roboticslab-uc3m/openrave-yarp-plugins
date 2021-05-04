@@ -37,7 +37,6 @@ if(NOT SKIP_YarpOpenraveControlboard)
                                                    YARP::YARP_dev
                                                    ${OpenRAVE_LIBRARIES}
                                                    Boost::boost
-                                                   ROBOTICSLAB::ColorDebug
                                                    YarpOpenraveBase)
 
     target_include_directories(YarpOpenraveControlboard PRIVATE ${OpenRAVE_INCLUDE_DIRS})
