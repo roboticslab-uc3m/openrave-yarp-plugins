@@ -8,11 +8,10 @@
 #include <string>
 #include <vector>
 
+#include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
 #include <boost/smart_ptr/shared_ptr.hpp>
-
-#include <ColorDebug.h>
 
 namespace roboticslab
 {
@@ -24,7 +23,7 @@ const int YarpOpenraveControlboard::NOT_SET = -1;
 
 bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
 {
-    CD_DEBUG("config: %s\n",config.toString().c_str());
+    yDebug() << "YarpOpenraveControlboard config:" << config.toString();
 
     if ( ! configureEnvironment(config) )
         return false;
@@ -40,13 +39,13 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
 
     if (manipulatorIndex == NOT_SET)
     {
-        CD_ERROR("manipulatorIndex %d == NOT_SET, not loading yarpPlugin.\n",manipulatorIndex);
+        yError() << "manipulatorIndex" << manipulatorIndex << "== NOT_SET, not loading yarpPlugin";
         return false;
     }
     std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = probot->GetManipulators();
     if( (manipulatorIndex >= vectorOfManipulatorPtr.size()) || (manipulatorIndex < 0) )
     {
-        CD_ERROR("manipulatorIndex %d not within vectorOfManipulatorPtr of size() %d, not loading yarpPlugin.\n",manipulatorIndex,vectorOfManipulatorPtr.size());
+        yError("manipulatorIndex %d not within vectorOfManipulatorPtr of size() %zu, not loading yarpPlugin",manipulatorIndex,vectorOfManipulatorPtr.size());
         return false;
     }
 
@@ -61,7 +60,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
     {
         OpenRAVE::RobotBase::JointPtr jointPtr = probot->GetJointFromDOFIndex(manipulatorIDs[i]);
         vectorOfJointPtr.push_back(jointPtr);
-        CD_DEBUG("Get JointPtr for manipulatorIDs[%d]: %d (%s)\n",i,manipulatorIDs[i],jointPtr->GetName().c_str());
+        yDebug("Get JointPtr for manipulatorIDs[%zu]: %d (%s)",i,manipulatorIDs[i],jointPtr->GetName().c_str());
     }
 
     //-- Create the controller, make sure to lock environment!
@@ -72,31 +71,31 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
         //--- Console output robot active DOF
         //for(std::size_t i=0; i<activeDOFIndices.size(); i++)
         //{
-        //    CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
+        //    yDebug("activeDOFIndices[%d]: %d",i,activeDOFIndices[i]);
         //}
 
         //-- Convert robot controller to multi if not already.
         OpenRAVE::ControllerBasePtr pcontrol = probot->GetController();
-        CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
+        yDebug() << "pcontrol:" << pcontrol.get() << pcontrol->GetXMLId();
         //-- Doing case insensitive check because defaults to IdealController but idealcontroller exists
         std::string controllerName( pcontrol->GetXMLId() );
         std::transform(controllerName.begin(), controllerName.end(), controllerName.begin(), ::tolower);
         if( controllerName == "idealcontroller" )
         {
-            CD_INFO("Detected idealcontroller, switch to genericmulticontroller.\n");
+            yInfo() << "Detected idealcontroller, switch to genericmulticontroller";
             pcontrol = OpenRAVE::RaveCreateMultiController(penv);
             probot->SetController(pcontrol,activeDOFIndices,1);  // idealcontroller -> genericmulticontroller
         }
         else if( controllerName == "genericmulticontroller")
         {
-            CD_INFO("Detected genericmulticontroller, which will be used.\n");
+            yInfo() << "Detected genericmulticontroller, which will be used";
         }
         else
         {
-            CD_ERROR("Non-treated controller case. Bye!\n");
+            yError() << "Non-treated controller case";
             return false;
         }
-        CD_DEBUG("pcontrol: %p, %s\n",pcontrol.get(),pcontrol->GetXMLId().c_str());
+        yDebug() << "pcontrol:" << pcontrol.get() << pcontrol->GetXMLId();
 
         //-- Safe to assume we have a multicontroller, store for usage.
         multi = boost::dynamic_pointer_cast< OpenRAVE::MultiControllerBase >(pcontrol);
@@ -106,14 +105,14 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
             OpenRAVE::ControllerBasePtr pIndivControlFromMulti = multi->GetController( manipulatorIDs[i] );
             if( !! pIndivControlFromMulti )
             {
-                CD_DEBUG("EXPERIMENTAL: Using existing individual controller for manipulatorIDs[%d]: %d (%s)\n",i,manipulatorIDs[i],pIndivControlFromMulti->GetXMLId().c_str());
+                yDebug("EXPERIMENTAL: Using existing individual controller for manipulatorIDs[%zu]: %i (%s)",i,manipulatorIDs[i],pIndivControlFromMulti->GetXMLId().c_str());
                 pcontrols.push_back(pIndivControlFromMulti);
                 continue;
             }
             OpenRAVE::ControllerBasePtr pIndivControl = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
             std::vector<int> tmpIndices;
             tmpIndices.push_back( manipulatorIDs[i] );
-            CD_DEBUG("Attach individual controller for manipulatorIDs[%d]: %d\n",i,tmpIndices[0]);
+            yDebug("Attach individual controller for manipulatorIDs[%zu]: %i",i,tmpIndices[0]);
             multi->AttachController(pIndivControl, tmpIndices, 0);
             pcontrols.push_back(pIndivControl);
             /*std::stringstream cmd, res;
@@ -125,7 +124,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
         //OpenRAVE::ConfigurationSpecification activeConfigurationSpecification = probot->GetActiveConfigurationSpecification();
         //for (std::size_t i = 0; i < activeConfigurationSpecification._vgroups.size(); i++)
         //{
-        //    CD_DEBUG("%d, %s, %s\n",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
+        //    yDebug("%d, %s, %s",i,activeConfigurationSpecification._vgroups[i].name.c_str(), activeConfigurationSpecification._vgroups[i].interpolation.c_str());
         //}
     }
 
@@ -139,7 +138,6 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
 
 bool YarpOpenraveControlboard::close()
 {
-    CD_INFO("\n");
     return true;
 }
 

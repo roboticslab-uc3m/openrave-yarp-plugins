@@ -42,6 +42,7 @@
 
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionWriter.h>
+#include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Port.h>
@@ -50,8 +51,6 @@
 #include <yarp/os/RpcServer.h>
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Value.h>
-
-#include <ColorDebug.h>
 
 #define NULL_JMC_MS 20
 
@@ -95,7 +94,7 @@ private:
     {
         yarp::os::Bottle request, response;
         if (!request.read(in)) return false;
-        CD_DEBUG("Request: %s\n", request.toString().c_str());
+        yDebug() << "Request:" << request.toString();
         yarp::os::ConnectionWriter *out = in.getWriter();
         if (out==NULL) return true;
 
@@ -303,14 +302,12 @@ public:
 
     bool Open(std::ostream& sout, std::istream& sinput)
     {
-
-        CD_INFO("Checking for yarp network...\n");
+        yInfo() << "Checking for yarp network...";
         if ( ! yarp.checkNetwork() )
         {
-            CD_ERROR("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+            yError() << "Found no yarp network (try running \"yarpserver &\")";
             return false;
         }
-        CD_SUCCESS("Found yarp network.\n");
 
         //-- Given "std::istream& sinput", create equivalent to "int argc, char *argv[]"
         //-- Note that char* != const char* given by std::string::c_str();
@@ -331,13 +328,13 @@ public:
         yarp::os::Property options;
         options.fromCommand(argv.size(),argv.data());
 
-        CD_DEBUG("config: %s\n", options.toString().c_str());
+        yDebug() << "Config:" << options.toString();
 
         std::string portName = options.check("name",yarp::os::Value(DEFAULT_PORT_NAME),"port name").asString();
-        CD_INFO("port name: %s\n",portName.c_str());
+        yInfo() << "Port name:" << portName;
 
         int wrinkleSize = options.check("wrinkleSize",yarp::os::Value(DEFAULT_WRINKLESIZE),"wrinkle Size").asInt32();
-        CD_INFO("wrinkle Size: %d\n",wrinkleSize);
+        yInfo() << "Wrinkle size:" << wrinkleSize;
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
@@ -370,11 +367,7 @@ public:
 
         teoSimRateThread.start();
 
-
-
         /*
-
-
 	if (funcionArgs.size() > 0)
         {
             if( funcionArgs[0][0] == '/')

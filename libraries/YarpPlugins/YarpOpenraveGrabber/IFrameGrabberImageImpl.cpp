@@ -8,8 +8,6 @@
 
 #include <yarp/sig/Image.h>
 
-#include <ColorDebug.h>
-
 namespace roboticslab
 {
 
@@ -20,10 +18,8 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
     sensorBasePtr->GetSensorData(sensorDataPtr);
 
     std::vector<uint8_t> currentFrame = sensorDataPtr->vimagedata;
-    //CD_DEBUG("Vector size: %d\n",currentFrame.size()); // i.e. 480 * 640 * 3 = 921600;
     if(0 == currentFrame.size())
     {
-        //CD_DEBUG("Waiting for camera...\n");
         return false;
     }
 
@@ -56,7 +52,6 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
 
 int YarpOpenraveGrabber::height() const
 {
-    CD_DEBUG("%d\n", _height);
     return _height;
 }
 
@@ -64,7 +59,6 @@ int YarpOpenraveGrabber::height() const
 
 int YarpOpenraveGrabber::width() const
 {
-    CD_DEBUG("%d\n", _width);
     return _width;
 }
 
@@ -72,7 +66,6 @@ int YarpOpenraveGrabber::width() const
 
 int YarpOpenraveGrabber::getRgbHeight()
 {
-    CD_DEBUG("%d\n", _height);
     return _height;
 }
 
@@ -80,7 +73,6 @@ int YarpOpenraveGrabber::getRgbHeight()
 
 int YarpOpenraveGrabber::getRgbWidth()
 {
-    CD_DEBUG("%d\n", _width);
     return _width;
 }
 

@@ -26,8 +26,6 @@ if(NOT SKIP_YarpOpenraveControlboard)
                                              IEncodersTimedImpl.cpp
                                              IPositionControlImpl.cpp
                                              IPositionDirectImpl.cpp
-                                             IRemoteVariablesImpl.cpp
-                                             ITorqueControlImpl.cpp
                                              IVelocityControlImpl.cpp)
 
     set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
@@ -37,7 +35,6 @@ if(NOT SKIP_YarpOpenraveControlboard)
                                                    YARP::YARP_dev
                                                    ${OpenRAVE_LIBRARIES}
                                                    Boost::boost
-                                                   ROBOTICSLAB::ColorDebug
                                                    YarpOpenraveBase)
 
     target_include_directories(YarpOpenraveControlboard PRIVATE ${OpenRAVE_INCLUDE_DIRS})

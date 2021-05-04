@@ -2,7 +2,7 @@
 
 #include "YarpOpenraveAnalogSensors.hpp"
 
-#include <ColorDebug.h>
+#include <yarp/os/LogStream.h>
 
 namespace roboticslab
 {
@@ -42,7 +42,7 @@ bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorMeasure(size_t sens_i
 {
     if(!vectorOfSensorPtrForForce6Ds[sens_index]->GetSensorData(vectorOfForce6DSensorDataPtr[sens_index]))
     {
-        CD_DEBUG("GetSensorData fail...\n");
+        yDebug() << "GetSensorData() failed";
         return false;
     }
 

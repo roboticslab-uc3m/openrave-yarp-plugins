@@ -5,10 +5,9 @@
  * \defgroup OpenraveYarpWorldClientFile OpenraveYarpWorldClientFile
  */
 
+#include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/ResourceFinder.h>
-
-#include <ColorDebug.h>
 
 #include "OpenraveYarpWorldClientFile.hpp"
 
@@ -20,14 +19,14 @@ int main(int argc, char *argv[])
     rf.setDefaultConfigFile("openraveYarpWorldClientFile.ini");
     rf.configure(argc, argv);
 
-    CD_INFO("Checking for yarp network...\n");
+    yInfo() << "Checking for yarp network...";
     yarp::os::Network yarp;
-    if (!yarp.checkNetwork())
+
+    if (!yarp::os::Network::checkNetwork())
     {
-        CD_ERROR("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+        yError() << "No yarp network found (try running \"yarpserver &\")";
         return 1;
     }
-    CD_SUCCESS("Found yarp network.\n");
 
     roboticslab::OpenraveYarpWorldClientFile mod;
     return mod.runModule(rf);

@@ -27,7 +27,6 @@ if(NOT SKIP_YarpOpenraveSimulation)
                                                  YARP::YARP_dev
                                                  ${OpenRAVE_LIBRARIES}
                                                  Boost::boost
-                                                 ROBOTICSLAB::ColorDebug
                                                  YarpOpenraveBase)
 
     target_include_directories(YarpOpenraveSimulation PRIVATE ${OpenRAVE_INCLUDE_DIRS})

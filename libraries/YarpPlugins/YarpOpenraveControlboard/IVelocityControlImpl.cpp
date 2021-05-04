@@ -6,16 +6,18 @@
 #include <string>
 #include <vector>
 
-#include <ColorDebug.h>
+#include <yarp/os/LogStream.h>
 
 // ------------------ IVelocity Related ----------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  // velExposed = sp;
+bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp)
+{
+    yTrace() << j << sp;
 
     //-- Check if we are in position mode.
     if( controlModes[j] != VOCAB_CM_VELOCITY )
     {
-        CD_ERROR("Will not velocityMove as not in velocityMode (%d)\n",j);
+        yError() << "Will not velocityMove() as joint" << j << "not in velocityMode";
         return false;
     }
 
@@ -30,8 +32,6 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
     double min = vLowerLimit[0];
     double max = vUpperLimit[0];
 
-    //CD_DEBUG("Limits %d: [%f, %f]\n",j,min,max);
-
     OpenRAVE::dReal dofTargetRads;
     double tol = 0.0001;
     if( sp > 0+tol )
@@ -41,11 +41,8 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
     else
     {
         this->stop(j);
-        //CD_INFO("Done near 0 vel (%d).\n",j);
         return true;
     }
-
-    //CD_DEBUG("Target %d: [%f]\n",j,dofTargetRads);
 
     {
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
@@ -56,7 +53,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
         this->getVelLimits( j, &velMin, &velMax );
         if( sp > velMax )
         {
-            CD_WARNING("Command exceeds joint speed limits (%f > %f)).\n",sp,velMax);
+            yWarning("Command exceeds joint speed limits (%f > %f))",sp,velMax);
             return true;
         }
 
@@ -64,7 +61,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
         //std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
         //for(size_t i=0; i<activeDOFIndices.size(); i++)
         //{
-        //    CD_DEBUG("activeDOFIndices[%d]: %d\n",i,activeDOFIndices[i]);
+        //    yDebug("activeDOFIndices[%d]: %d",i,activeDOFIndices[i]);
         //}
 
         //-- Could get the activeConfigurationSpecification from the robot, and modify it
@@ -108,7 +105,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
         //for (size_t i = 0; i < oneDofConfigurationSpecification._vgroups.size(); i++)
         //{
         //    OpenRAVE::ConfigurationSpecification::Group g = oneDofConfigurationSpecification._vgroups[i];
-        //    CD_DEBUG("[%d] %s, %d, %d, %s\n",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        //    yDebug("[%d] %s, %d, %d, %s",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
         //}
 
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
@@ -119,7 +116,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
 
         OpenRAVE::dReal dofTime = std::abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,sp) ) ); // Time in seconds
 
-        CD_DEBUG("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]\n",j,radToDegIfNotPrismatic(j,dofTargetRads),radToDegIfNotPrismatic(j,dofCurrentRads),sp,dofTime);
+        yDebug("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]",j,radToDegIfNotPrismatic(j,dofTargetRads),radToDegIfNotPrismatic(j,dofCurrentRads),sp,dofTime);
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
@@ -145,8 +142,9 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(int j, double sp) {  //
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::velocityMove(const double *sp) {
-    CD_INFO("\n");
+bool roboticslab::YarpOpenraveControlboard::velocityMove(const double *sp)
+{
+    yTrace();
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= velocityMove(i,sp[i]);
@@ -157,7 +155,7 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(const double *sp) {
 
 bool roboticslab::YarpOpenraveControlboard::velocityMove(const int n_joint, const int *joints, const double *spds)
 {
-    CD_INFO("\n");
+    yTrace() << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
         ok &= velocityMove(joints[i],spds[i]);
@@ -168,24 +166,24 @@ bool roboticslab::YarpOpenraveControlboard::velocityMove(const int n_joint, cons
 
 bool roboticslab::YarpOpenraveControlboard::getRefVelocity(const int joint, double *vel)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    yError() << "getRefVelocity() not implemented";
+    return false;
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getRefVelocities(double *vels)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    yError() << "getRefVelocities() not implemented";
+    return false;
 }
 
 // -----------------------------------------------------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::getRefVelocities(const int n_joint, const int *joints, double *vels)
 {
-    CD_ERROR("Not implemented yet.\n");
-    return true;
+    yError() << "getRefVelocities() not implemented";
+    return false;
 }
 
 // -----------------------------------------------------------------------------

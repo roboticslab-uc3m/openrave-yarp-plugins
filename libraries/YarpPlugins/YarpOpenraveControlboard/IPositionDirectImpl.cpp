@@ -4,18 +4,18 @@
 
 #include <vector>
 
-#include <ColorDebug.h>
+#include <yarp/os/LogStream.h>
 
 // ------------------- IPositionDirect Related --------------------------------
 
 bool roboticslab::YarpOpenraveControlboard::setPosition(int j, double ref)
 {
-    //CD_INFO("\n");
+    yTrace() << j << ref;
 
     //-- Check if we are in positionDirect mode.
     if( controlModes[j] != VOCAB_CM_POSITION_DIRECT )
     {
-        CD_ERROR("Will not positionMove as not in positionDirect mode\n");
+        yError() << "Will not setPosition() as joint" << j << "not in positionDirect mode";
         return false;
     }
 
@@ -36,7 +36,7 @@ bool roboticslab::YarpOpenraveControlboard::setPosition(int j, double ref)
 
 bool roboticslab::YarpOpenraveControlboard::setPositions(const int n_joint, const int *joints, const double *refs)
 {
-    //CD_INFO("\n");
+    yTrace() << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -49,7 +49,7 @@ bool roboticslab::YarpOpenraveControlboard::setPositions(const int n_joint, cons
 
 bool roboticslab::YarpOpenraveControlboard::setPositions(const double *refs)
 {
-    //CD_INFO("\n");
+    yTrace();
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= setPosition(i,refs[i]);

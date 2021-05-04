@@ -2,10 +2,9 @@
 
 #include "OpenraveYarpWorldClientFile.hpp"
 
+#include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/Vocab.h>
-
-#include <ColorDebug.h>
 
 namespace roboticslab
 {
@@ -26,19 +25,19 @@ OpenraveYarpWorldClientFile::OpenraveYarpWorldClientFile() : detectedFirst(false
 
 bool OpenraveYarpWorldClientFile::configure(yarp::os::ResourceFinder &rf)
 {
+    yDebug() << "OpenraveYarpWorldClientFile config:" << rf.toString();
+
     if(rf.check("help"))
     {
-        std::printf("OpenraveYarpWorldClientFile options:\n");
-        std::printf("\t--help (this help)\t--from [file.ini]\t--context [path]\n");
-        CD_DEBUG_NO_HEADER("%s\n",rf.toString().c_str());
+        yInfo() << "OpenraveYarpWorldClientFile options:";
+        yInfo() << "\t--help (this help)\t--from [file.ini]\t--context [path]";
         return false;
     }
-    CD_DEBUG("config: %s\n", rf.toString().c_str());
 
     //-- file parameter
     if(!rf.check("file", "file name of object to be loaded"))
     {
-        CD_ERROR("Missing file parameter, bye!\n");
+        yError() << "Missing file parameter";
         return false;
     }
     std::string fileName = rf.find("file").asString();
@@ -48,11 +47,11 @@ bool OpenraveYarpWorldClientFile::configure(yarp::os::ResourceFinder &rf)
     if(rf.check("pos", "initial cartesian position"))
     {
         pos = rf.findGroup("pos").tail();
-        CD_INFO("Using pos: %s\n", pos.toString().c_str());
+        yInfo() << "Using pos:" << pos.toString();
     }
     else
     {
-        CD_INFO("Not using pos.\n");
+        yInfo() << "Not using pos";
     }
 
     //-- ori parameter
@@ -60,11 +59,11 @@ bool OpenraveYarpWorldClientFile::configure(yarp::os::ResourceFinder &rf)
     if(rf.check("ori", "initial cartesian orientation"))
     {
         ori = rf.findGroup("ori").tail();
-        CD_INFO("Using ori: %s\n", ori.toString().c_str());
+        yInfo() << "Using ori:" << ori.toString();
     }
     else
     {
-        CD_INFO("Not using ori.\n");
+        yInfo() << "Not using ori";
     }
 
     //-- RpcClient
@@ -74,12 +73,12 @@ bool OpenraveYarpWorldClientFile::configure(yarp::os::ResourceFinder &rf)
     rpcClientName.append("OpenraveYarpWorld/rpc:c");
     if(!rpcClient.open(rpcClientName))
     {
-        CD_ERROR("!rpcClient.open, bye!\n");
+        yError() << "!rpcClient.open";
         return false;
     }
     if(!rpcClient.addOutput("/OpenraveYarpWorld/rpc:s"))
     {
-        CD_ERROR("RpcServer \"/OpenraveYarpWorld/rpc:s\" not found, bye!\n");
+        yError() << "RpcServer \"/OpenraveYarpWorld/rpc:s\" not found";
         return false;
     }
 
@@ -90,12 +89,12 @@ bool OpenraveYarpWorldClientFile::configure(yarp::os::ResourceFinder &rf)
     callbackPortName.append("OpenraveYarpWorld/state:i");
     if(!callbackPort.open(callbackPortName))
     {
-        CD_ERROR("!callbackPort.open, bye!\n");
+        yError() << "!callbackPort.open";
         return false;
     }
     if(!yarp::os::Network::connect("/OpenraveYarpWorld/state:o",callbackPortName))
     {
-        CD_ERROR("bye!\n");
+        yError() << "Unable to connect state port";
         return false;
     }
     callbackPort.useCallback();
@@ -109,15 +108,15 @@ bool OpenraveYarpWorldClientFile::configure(yarp::os::ResourceFinder &rf)
     cmd.append(pos);
     cmd.append(ori);
 
-    CD_DEBUG("cmd: %s\n",cmd.toString().c_str());
+    yDebug() << "cmd:" << cmd.toString();
     rpcClient.write(cmd, res);
 
     if(VOCAB_FAILED == res.get(0).asVocab())
     {
-        CD_ERROR("%s\n", res.toString().c_str());
+        yError() << "Client error:" << res.toString();
         return false;
     }
-    CD_SUCCESS("%s\n", res.toString().c_str());
+    yInfo() << "Client success:" << res.toString();
 
     openedId = res.get(1).asString();
 
@@ -129,26 +128,23 @@ bool OpenraveYarpWorldClientFile::configure(yarp::os::ResourceFinder &rf)
 bool OpenraveYarpWorldClientFile::openedInAvailable()
 {
     callbackPort.availableIdsMutex.lock();
-    //CD_DEBUG("Is open %s available?\n", openedId.c_str());
     bool innerFound = false;
     for(size_t i=0; i<callbackPort.availableIds.size(); i++)
     {
         if(openedId == callbackPort.availableIds[i])
         {
-            //CD_DEBUG("Yes\n");
             innerFound = true;
             break;
         }
     }
     if(!innerFound)
     {
-        //CD_DEBUG("No\n");
         callbackPort.availableIdsMutex.unlock();
-        CD_DEBUG("no\n");
+        yDebug() << "Open not available";
         return false;
     }
     callbackPort.availableIdsMutex.unlock();
-    CD_DEBUG("yes\n");
+    yDebug() << "Open available";
     return true;
 }
 
@@ -156,11 +152,9 @@ bool OpenraveYarpWorldClientFile::openedInAvailable()
 
 bool OpenraveYarpWorldClientFile::updateModule()
 {
-    //CD_DEBUG("OpenraveYarpWorldClientFile alive...\n");
-
     if(-1 == callbackPort.lastTime)
     {
-        CD_DEBUG("wait for first read...\n");
+        yDebug() << "Waiting for first read...";
         return true;
     }
 
@@ -170,20 +164,20 @@ bool OpenraveYarpWorldClientFile::updateModule()
         {
             detectedFirst = true;
         }
-        CD_DEBUG("Waiting for detectedFirst...\n");
+        yDebug() << "Waiting for detectedFirst...";
         return true;
     }
 
     if(!openedInAvailable())
     {
-        CD_INFO("!openedInAvailable(), bye!\n");
+        yInfo() << "!openedInAvailable()";
         return false;
     }
 
     double deltaTime = yarp::os::Time::now() - callbackPort.lastTime;
     if(deltaTime > DEFAULT_PERIOD_S * 2.0)
     {
-        CD_INFO("deltaTime > DEFAULT_PERIOD_S * 2.0, bye!\n");
+        yInfo() << "deltaTime > DEFAULT_PERIOD_S * 2.0";
         return false;
     }
 
@@ -194,15 +188,13 @@ bool OpenraveYarpWorldClientFile::updateModule()
 
 bool OpenraveYarpWorldClientFile::close()
 {
-    CD_INFO("\n");
-
     yarp::os::Bottle cmd, res;
     cmd.addString("world");
     cmd.addString("del");
     cmd.addString(openedId);
     rpcClient.write(cmd, res);
 
-    CD_INFO("%s\n", res.toString().c_str());
+    yInfo() << "Response on close:" << res.toString();
 
     callbackPort.disableCallback();
 
@@ -225,13 +217,11 @@ OywCallbackPort::OywCallbackPort() : lastTime(-1)
 
 void OywCallbackPort::onRead(yarp::os::Bottle& b)
 {
-    //CD_DEBUG("* %s\n", b.toString().c_str());
     availableIdsMutex.lock();
     availableIds.clear();
     for(size_t i=0; i<b.size(); i++)
     {
         yarp::os::Bottle* elems = b.get(i).asList();
-        //CD_DEBUG("** %s\n", elems->toString().c_str());
         if(elems->check("kinbody"))
         {
             availableIds.push_back(elems->find("kinbody").asString());

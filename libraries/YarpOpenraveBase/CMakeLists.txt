@@ -13,8 +13,7 @@ set_target_properties(YarpOpenraveBase PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CX
 
 target_link_libraries(YarpOpenraveBase PUBLIC YARP::YARP_os
                                               ${OpenRAVE_CORE_LIBRARIES}
-                                              Boost::thread
-                                       PRIVATE ROBOTICSLAB::ColorDebug)
+                                              Boost::thread)
 
 target_include_directories(YarpOpenraveBase PUBLIC ${OpenRAVE_INCLUDE_DIRS}
                                                    ${CMAKE_CURRENT_SOURCE_DIR})

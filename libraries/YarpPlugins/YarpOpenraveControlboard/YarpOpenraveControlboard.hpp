@@ -33,9 +33,7 @@ class YarpOpenraveControlboard : YarpOpenraveBase,
                                  public yarp::dev::IEncodersTimed,
                                  public yarp::dev::IPositionControl,
                                  public yarp::dev::IPositionDirect,
-                                 public yarp::dev::ITorqueControl,
-                                 public yarp::dev::IVelocityControl,
-                                 public yarp::dev::IRemoteVariables
+                                 public yarp::dev::IVelocityControl
 {
 public:
 
@@ -133,26 +131,6 @@ public:
     virtual bool setControlMode(const int j, const int mode);
     virtual bool setControlModes(const int n_joint, const int *joints, int *modes);
     virtual bool setControlModes(int *modes);
-
-    // -------- ITorqueControl declarations. Implementation in ITorqueControlImpl.cpp --------
-
-    virtual bool getRefTorques(double *t);
-    virtual bool getRefTorque(int j, double *t);
-    virtual bool setRefTorques(const double *t);
-    virtual bool setRefTorque(int j, double t);
-    virtual bool setRefTorques(const int n_joint, const int *joints, const double *t);
-    virtual bool getMotorTorqueParams(int j,  yarp::dev::MotorTorqueParameters *params);
-    virtual bool setMotorTorqueParams(int j, const yarp::dev::MotorTorqueParameters params);
-    virtual bool getTorque(int j, double *t);
-    virtual bool getTorques(double *t);
-    virtual bool getTorqueRange(int j, double *min, double *max);
-    virtual bool getTorqueRanges(double *min, double *max);
-
-    // ------- IRemoteVariables declarations. Implementation in IRemoteVariablesImpl.cpp -------
-
-    virtual bool getRemoteVariable(std::string key, yarp::os::Bottle& val);
-    virtual bool setRemoteVariable(std::string key, const yarp::os::Bottle& val);
-    virtual bool getRemoteVariablesList(yarp::os::Bottle* listOfKeys);
 
     // ------------------------------- Private -------------------------------------
 

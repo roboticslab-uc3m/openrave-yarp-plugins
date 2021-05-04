@@ -6,7 +6,6 @@ if(NOT YARP_FOUND)
     find_package(YARP 3.3 REQUIRED COMPONENTS os dev)
 endif()
 
-find_package(COLOR_DEBUG REQUIRED)
 find_package(ROBOTICSLAB_KINEMATICS_DYNAMICS REQUIRED)
 
 add_executable(robotDraw main.cpp)
@@ -14,5 +13,4 @@ add_executable(robotDraw main.cpp)
 target_link_libraries(robotDraw YARP::YARP_os
                                 YARP::YARP_init
                                 YARP::YARP_dev
-                                ROBOTICSLAB::KinematicsDynamicsInterfaces
-                                ROBOTICSLAB::ColorDebug)
+                                ROBOTICSLAB::KinematicsDynamicsInterfaces)

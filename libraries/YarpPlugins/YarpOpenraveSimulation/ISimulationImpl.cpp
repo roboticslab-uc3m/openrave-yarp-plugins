@@ -2,7 +2,7 @@
 
 #include "YarpOpenraveSimulation.hpp"
 
-#include <ColorDebug.h>
+#include <yarp/os/LogStream.h>
 
 namespace roboticslab
 {
@@ -11,7 +11,7 @@ namespace roboticslab
 
 bool YarpOpenraveSimulation::step(double value)
 {
-    CD_DEBUG("\n");
+    yTrace() << value;
     penv->StepSimulation(value);
     return true;
 }
@@ -20,7 +20,7 @@ bool YarpOpenraveSimulation::step(double value)
 
 bool YarpOpenraveSimulation::start(double value)
 {
-    CD_DEBUG("\n");
+    yTrace() << value;
     penv->StartSimulation(value);
     return true;
 }
@@ -30,7 +30,7 @@ bool YarpOpenraveSimulation::start(double value)
 
 bool YarpOpenraveSimulation::stop()
 {
-    CD_DEBUG("\n");
+    yTrace();
     penv->StopSimulation();
     return true;
 }
@@ -39,10 +39,9 @@ bool YarpOpenraveSimulation::stop()
 
 bool YarpOpenraveSimulation::getSimulationRawPointerValue(yarp::os::Value& value)
 {
-    CD_DEBUG("\n");
+    yTrace() << value.toString();
     yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
     value = v;
-    CD_DEBUG("penvValue: %s\n", value.toString().c_str());
     return true;
 }
 

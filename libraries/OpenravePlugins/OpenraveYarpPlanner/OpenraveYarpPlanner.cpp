@@ -5,10 +5,9 @@
 
 #include <boost/bind/bind.hpp>
 
+#include <yarp/os/LogStream.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/ResourceFinder.h>
-
-#include <ColorDebug.h>
 
 #include "OpenraveYarpPlanner.hpp"
 
@@ -19,10 +18,10 @@ roboticslab::OpenraveYarpPlanner::OpenraveYarpPlanner(OpenRAVE::EnvironmentBaseP
     __description = "OpenraveYarpPlanner plugin.";
     OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPlanner::Open, this,_1,_2),"opens OpenraveYarpPlanner");
 
-    CD_INFO("Checking for yarp network...\n");
+    yInfo() << "Checking for yarp network...";
     if ( ! yarp.checkNetwork() )
-        CD_ERROR("Found no yarp network (try running \"yarpserver &\")!\n");
-    CD_SUCCESS("Found yarp network.\n");
+        yError() << "Found no yarp network (try running \"yarpserver &\")";
+    yInfo() << "Found yarp network";
 
     oypPortReader.setOpenraveYarpPlannerPtr(this);
     oypRpcServer.setReader(oypPortReader);
@@ -62,21 +61,20 @@ int roboticslab::OpenraveYarpPlanner::main(const std::string& cmd)
 
 bool roboticslab::OpenraveYarpPlanner::Open(std::ostream& sout, std::istream& sinput)
 {
-    CD_INFO("Checking for yarp network...\n");
+    yInfo() << "Checking for yarp network...";
     if ( ! yarp.checkNetwork() )
     {
-        CD_ERROR("Found no yarp network (try running \"yarpserver &\"), bye!\n");
+        yError() << "Found no yarp network (try running \"yarpserver &\")";
         sout << "-1 ";
         return false;
     }
-    CD_SUCCESS("Found yarp network.\n");
 
     std::string s(std::istreambuf_iterator<char>(sinput), {});
 
     yarp::os::Property options;
     options.fromArguments(s.c_str());
 
-    CD_DEBUG("config: %s\n", options.toString().c_str());
+    yDebug() << "Config:" << options.toString();
 
     return true;
 }

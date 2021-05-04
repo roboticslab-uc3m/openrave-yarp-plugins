@@ -2,7 +2,7 @@
 
 #include "YarpOpenraveGrabber.hpp"
 
-#include <ColorDebug.h>
+#include <yarp/os/LogStream.h>
 
 namespace roboticslab
 {
@@ -53,7 +53,7 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
         modGeomDataPtr->gain = value;
         boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> constModGeomDataPtr(modGeomDataPtr);
         sensorBasePtr->SetSensorGeometry(constModGeomDataPtr);
-        CD_INFO("Gain set to %f (no visual effect observed at time of writing)\n", value);
+        yInfo() << "Gain set to" << value << "(no visual effect observed at time of writing)";
         return true;
     }
     else if(YARP_FEATURE_ZOOM == feature)
@@ -63,7 +63,7 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
         modGeomDataPtr->intrinsics.fy = value * origGeomDataPtr->height;
         boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> constModGeomDataPtr(modGeomDataPtr);
         sensorBasePtr->SetSensorGeometry(constModGeomDataPtr);
-        CD_INFO("Zoom set to %f\n", value);
+        yInfo() << "Zoom set to" << value;
         return true;
     }
 

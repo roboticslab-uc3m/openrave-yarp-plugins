@@ -8,10 +8,9 @@
 
 #include <vector>
 
+#include <yarp/os/LogStream.h>
 #include <yarp/os/Time.h>
 #include <yarp/sig/Image.h>
-
-#include <ColorDebug.h>
 
 namespace roboticslab
 {
@@ -41,8 +40,6 @@ bool YarpOpenraveRGBDSensor::setDepthResolution(int width, int height)
 
 bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::os::Stamp *timeStamp)
 {
-    //CD_DEBUG("\n");
-
     timeStamp->update( yarp::os::Time::now() );
 
     if(!rgb) //-- treat special no RGB case
@@ -54,15 +51,15 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
 
     if(!rgbSensorBasePtr->GetSensorData(rgbSensorDataPtr))
     {
-        CD_DEBUG("RGB: GetSensorData fail...\n");
+        yDebug() << "RGB: GetSensorData() failed";
         return false;
     }
 
     std::vector<uint8_t> currentFrame = rgbSensorDataPtr->vimagedata;
-    //CD_DEBUG("Vector size: %d\n",currentFrame.size()); // i.e. 480 * 640 * 3 = 921600;
+
     if(0 == currentFrame.size())
     {
-        CD_DEBUG("RGB: 0 == currentFrame.size()...\n");
+        yDebug() << "RGB: currentFrame.size() == 0";
         return false;
     }
 
@@ -79,13 +76,11 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
 
 bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp)
 {
-    //CD_DEBUG("\n");
-
     timeStamp->update( yarp::os::Time::now() );
 
     if(!depthSensorBasePtr->GetSensorData(depthSensorDataPtr))
     {
-        CD_DEBUG("Depth: GetSensorData fail...\n");
+        yDebug() << "Depth: GetSensorData() failed";
         return false;
     }
 
@@ -120,7 +115,7 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
         }
         else if (sensorRanges.size()==0)
         {
-            CD_WARNING("sensorRanges.size()==0\n");
+            yWarning() << "sensorRanges.size() == 0";
         }
         else
         {
