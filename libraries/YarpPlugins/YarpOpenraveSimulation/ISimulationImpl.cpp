@@ -39,10 +39,9 @@ bool YarpOpenraveSimulation::stop()
 
 bool YarpOpenraveSimulation::getSimulationRawPointerValue(yarp::os::Value& value)
 {
-    yTrace() << value;
+    yTrace() << value.toString();
     yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
     value = v;
-    yDebug() << "penvValue:" << value.toString();
     return true;
 }
 
