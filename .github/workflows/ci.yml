@@ -47,7 +47,7 @@ jobs:
         - { experimental: false, robotology: { yarp: master } }
 
     steps:
-    - name: Check out main project
+    - name: Check out openrave-yarp-plugins
       uses: actions/checkout@v2
 
     - name: Check out YCM
@@ -149,7 +149,7 @@ jobs:
         cmake --build . --parallel
         sudo cmake --build . --target install
 
-    - name: Build main project
+    - name: Build openrave-yarp-plugins
       working-directory: ${{github.workspace}}/build
       run: |
         cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER -DENABLE_examples=ON
@@ -157,6 +157,6 @@ jobs:
         sudo cmake --build . --target install
         sudo ldconfig
 
-    - name: Uninstall main project
+    - name: Uninstall openrave-yarp-plugins
       working-directory: ${{github.workspace}}/build
       run: sudo cmake --build . --target uninstall

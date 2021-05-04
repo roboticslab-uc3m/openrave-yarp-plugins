@@ -97,7 +97,7 @@ bool roboticslab::YarpOpenraveControlboard::getEncoderAcceleration(int j, double
 
 bool roboticslab::YarpOpenraveControlboard::getEncoderAccelerations(double *accs)
 {
-    yError() << "getEncoderAccelerations() not implemented";
+    //yError() << "getEncoderAccelerations() not implemented"; // too verbose
     return false;
 }
 
