@@ -88,13 +88,8 @@ jobs:
         repository: roboticslab-uc3m/kinematics-dynamics
         path: .deps/kinematics-dynamics
 
-    - name: Install Ubuntu 18.04 dependencies via apt
-      if: matrix.os == 'ubuntu-18.04'
-      run: sudo apt-get install -qq ccache libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libqt4-dev qt4-dev-tools libxml2-dev libode-dev libsoqt4-dev libcoin80-dev
-
-    - name: Install Ubuntu 20.04 dependencies via apt
-      if: matrix.os == 'ubuntu-20.04'
-      run: sudo apt-get install -qq ccache libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libxml2-dev libode-dev libopenscenegraph-dev
+    - name: Install dependencies via apt
+      run: sudo apt-get install -qq ccache libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libboost-date-time-dev libxml2-dev
 
     - name: Set up CMake
       uses: jwlawson/actions-setup-cmake@v1.7
@@ -136,7 +131,7 @@ jobs:
     - name: Build OpenRAVE
       working-directory: ${{github.workspace}}/.deps/openrave/build
       run: |
-        CFLAGS=-w CXXFLAGS=-w cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER -DOPT_VIDEORECORDING=OFF -DOPT_PYTHON=OFF
+        CFLAGS=-w CXXFLAGS=-w cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER -DOPT_VIDEORECORDING=OFF -DOPT_PLUGINS=OFF -DOPT_PYTHON=OFF -DOPT_COLLADA=OFF -DOPT_CBINDINGS=OFF
         cmake --build . --parallel
         sudo cmake --build . --target install
 
