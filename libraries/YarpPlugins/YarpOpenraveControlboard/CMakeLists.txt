@@ -26,8 +26,6 @@ if(NOT SKIP_YarpOpenraveControlboard)
                                              IEncodersTimedImpl.cpp
                                              IPositionControlImpl.cpp
                                              IPositionDirectImpl.cpp
-                                             IRemoteVariablesImpl.cpp
-                                             ITorqueControlImpl.cpp
                                              IVelocityControlImpl.cpp)
 
     set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
