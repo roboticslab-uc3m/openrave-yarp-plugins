@@ -3,6 +3,8 @@
 #ifndef __YARP_OPENRAVE_MESH_FROM_REAL_DEPTH_HPP__
 #define __YARP_OPENRAVE_MESH_FROM_REAL_DEPTH_HPP__
 
+#include <yarp/conf/version.h>
+
 #include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Property.h>
 
@@ -11,7 +13,9 @@
 #include <yarp/dev/PolyDriver.h>
 
 #include <yarp/sig/IntrinsicParams.h>
-#include <yarp/sig/PointCloudUtils.h>
+#if YARP_VERSION_MINOR >= 4
+# include <yarp/sig/PointCloudUtils.h>
+#endif
 #include <yarp/sig/Vector.h>
 
 #include <openrave/openrave.h>
@@ -40,11 +44,7 @@ class YarpOpenraveMeshFromRealDepth : YarpOpenraveBase,
                                       public yarp::dev::DeviceDriver
 {
 public:
-    YarpOpenraveMeshFromRealDepth() : yarp::os::PeriodicThread(DEFAULT_PERIOD),
-                                      iRGBDSensor(nullptr),
-                                      previousMesh(nullptr),
-                                      stepX(1),
-                                      stepY(1)
+    YarpOpenraveMeshFromRealDepth() : yarp::os::PeriodicThread(DEFAULT_PERIOD)
     {}
 
     ~YarpOpenraveMeshFromRealDepth()
@@ -60,14 +60,18 @@ protected:
 
 private:
     yarp::dev::PolyDriver sensorDevice;
-    yarp::dev::IRGBDSensor * iRGBDSensor;
+    yarp::dev::IRGBDSensor * iRGBDSensor {nullptr};
     yarp::sig::IntrinsicParams depthIntrinsicParams;
     yarp::sig::VectorOf<yarp::os::Property> meshOptions;
-    OpenRAVE::KinBodyPtr previousMesh;
+
+    OpenRAVE::KinBodyPtr previousMesh {nullptr};
     OpenRAVE::RobotBase::AttachedSensorPtr depthSensor;
+
+#if YARP_VERSION_MINOR >= 4
     yarp::sig::utils::PCL_ROI roi;
-    int stepX;
-    int stepY;
+    int stepX {1};
+    int stepY {1};
+#endif
 };
 
 } // namespace roboticslab

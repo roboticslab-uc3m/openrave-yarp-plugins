@@ -134,6 +134,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
         }
     }
 
+#if YARP_VERSION_MINOR >= 4
     yarp::sig::utils::PCL_ROI roi {0, 0, 0, 0};
 
     auto stepX = 1;
@@ -170,6 +171,9 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
     }
 
     auto cloud = yarp::sig::utils::depthToPC(depthImage, depthParams, roi, stepX, stepY);
+#else
+    auto cloud = yarp::sig::utils::depthToPC(depthImage, depthParams);
+#endif
 
     yarp::sig::VectorOf<yarp::os::Property> meshOptions {
         {

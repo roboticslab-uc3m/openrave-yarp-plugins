@@ -82,6 +82,12 @@ jobs:
         repository: asrob-uc3m/yarp-devices
         path: .deps/yarp-devices
 
+    - name: Check out roboticslab-uc3m/vision
+      uses: actions/checkout@v2
+      with:
+        repository: roboticslab-uc3m/vision
+        path: .deps/vision
+
     - name: Check out roboticslab-uc3m/kinematics-dynamics
       uses: actions/checkout@v2
       with:
@@ -89,7 +95,7 @@ jobs:
         path: .deps/kinematics-dynamics
 
     - name: Install dependencies via apt
-      run: sudo apt-get install -qq ccache libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libboost-date-time-dev libxml2-dev
+      run: sudo apt-get update && sudo apt-get install -qq ccache libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libboost-date-time-dev libxml2-dev libpcl-dev
 
     - name: Set up CMake
       uses: jwlawson/actions-setup-cmake@v1.7
@@ -102,7 +108,7 @@ jobs:
         key: ${{matrix.os}}-${{matrix.robotology.yarp}}-${{matrix.compiler.cc}}
 
     - name: Create build trees
-      run: cmake -E make_directory build .deps/ycm/build .deps/yarp/build .deps/rapidjson/build .deps/openrave/build .deps/yarp-devices/build .deps/kinematics-dynamics/build
+      run: cmake -E make_directory build .deps/ycm/build .deps/yarp/build .deps/rapidjson/build .deps/openrave/build .deps/yarp-devices/build .deps/vision/build .deps/kinematics-dynamics/build
 
     - name: Set environment variables
       run: echo "CMAKE_COMPILER=-DCMAKE_C_COMPILER=${{matrix.compiler.cc}} -DCMAKE_CXX_COMPILER=${{matrix.compiler.cxx}}" >> $GITHUB_ENV
@@ -137,6 +143,13 @@ jobs:
 
     - name: Build asrob-uc3m/yarp-devices
       working-directory: ${{github.workspace}}/.deps/yarp-devices/build
+      run: |
+        cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER
+        cmake --build . --parallel
+        sudo cmake --build . --target install
+
+    - name: Build roboticslab-uc3m/vision
+      working-directory: ${{github.workspace}}/.deps/vision/build
       run: |
         cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER
         cmake --build . --parallel
