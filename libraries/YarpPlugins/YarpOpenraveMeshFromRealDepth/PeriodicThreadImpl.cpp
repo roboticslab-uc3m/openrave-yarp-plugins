@@ -28,7 +28,11 @@ void YarpOpenraveMeshFromRealDepth::run()
     }
 
     // Compute point cloud
+#if YARP_VERSION_MINOR >= 4
     yarp::sig::PointCloudXYZ cloud = yarp::sig::utils::depthToPC(depthImage, depthIntrinsicParams, roi, stepX, stepY);
+#else
+    yarp::sig::PointCloudXYZ cloud = yarp::sig::utils::depthToPC(depthImage, depthIntrinsicParams);
+#endif
 
     // Reconstruct surface mesh
     yarp::sig::PointCloudXYZ meshVertices;

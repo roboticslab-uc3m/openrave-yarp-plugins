@@ -78,6 +78,7 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
 
     depthIntrinsicParams.fromProperty(depthIntrinsic);
 
+#if YARP_VERSION_MINOR >= 4
     if (config.check("roi", "ROI of depth frame encoded as (minX maxX minY maxY)"))
     {
         auto b_roi = config.findGroup("roi").tail();
@@ -107,6 +108,7 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
         stepX = b_step.get(0).asInt32();
         stepY = b_step.get(1).asInt32();
     }
+#endif
 
     meshOptions = {
         {
