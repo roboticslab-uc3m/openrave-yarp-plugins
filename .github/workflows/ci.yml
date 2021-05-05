@@ -95,7 +95,7 @@ jobs:
         path: .deps/kinematics-dynamics
 
     - name: Install dependencies via apt
-      run: sudo apt-get install -qq ccache libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libboost-date-time-dev libxml2-dev libpcl-dev
+      run: sudo apt-get update && sudo apt-get install -qq ccache libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libboost-date-time-dev libxml2-dev libpcl-dev
 
     - name: Set up CMake
       uses: jwlawson/actions-setup-cmake@v1.7
