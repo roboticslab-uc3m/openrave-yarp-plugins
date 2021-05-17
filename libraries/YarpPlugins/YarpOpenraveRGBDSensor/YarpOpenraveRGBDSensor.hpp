@@ -37,43 +37,43 @@ public:
 
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImageImpl.cpp -------
 
-    virtual bool open(yarp::os::Searchable& config);
-    virtual bool close();
+    bool open(yarp::os::Searchable& config) override;
+    bool close() override;
 
     // ------- IRGBDSensor declarations. Implementation in IRGBDSensorImpl.cpp -------
     // IRgbVisualParams interface. Look at IVisualParams.h for documentation
-    virtual int  getRgbHeight() {}
-    virtual int  getRgbWidth() {}
-    virtual bool getRgbSupportedConfigurations(yarp::sig::VectorOf<yarp::dev::CameraConfig> &configurations) {}
-    virtual bool getRgbResolution(int &width, int &height) {}
-    virtual bool setRgbResolution(int width, int height) {}
-    virtual bool getRgbFOV(double &horizontalFov, double &verticalFov) {}
-    virtual bool setRgbFOV(double horizontalFov, double verticalFov) {}
-    virtual bool getRgbIntrinsicParam(yarp::os::Property &intrinsic) {}
-    virtual bool getRgbMirroring(bool &mirror) {}
-    virtual bool setRgbMirroring(bool mirror) {}
+    int  getRgbHeight() override { return 0; }
+    int  getRgbWidth() override { return 0; }
+    bool getRgbSupportedConfigurations(yarp::sig::VectorOf<yarp::dev::CameraConfig> &configurations) override { return false; }
+    bool getRgbResolution(int &width, int &height) override { return false; }
+    bool setRgbResolution(int width, int height) override { return false; }
+    bool getRgbFOV(double &horizontalFov, double &verticalFov) override { return false; }
+    bool setRgbFOV(double horizontalFov, double verticalFov) override { return false; }
+    bool getRgbIntrinsicParam(yarp::os::Property &intrinsic) override { return false; }
+    bool getRgbMirroring(bool &mirror) override { return false; }
+    bool setRgbMirroring(bool mirror) override { return false; }
 
     // IDepthVisualParams interface. Look at IVisualParams.h for documentation
-    virtual int    getDepthHeight();
-    virtual int    getDepthWidth();
-    virtual bool   setDepthResolution(int width, int height);
-    virtual bool   getDepthFOV(double &horizontalFov, double &verticalFov) {}
-    virtual bool   setDepthFOV(double horizontalFov, double verticalFov) {}
-    virtual double getDepthAccuracy() {}
-    virtual bool   setDepthAccuracy(double accuracy) {}
-    virtual bool   getDepthClipPlanes(double &nearPlane, double &farPlane) {}
-    virtual bool   setDepthClipPlanes(double nearPlane, double farPlane) {}
-    virtual bool   getDepthIntrinsicParam(yarp::os::Property &intrinsic) {}
-    virtual bool   getDepthMirroring(bool &mirror) {}
-    virtual bool   setDepthMirroring(bool mirror) {}
+    int getDepthHeight() override;
+    int getDepthWidth() override;
+    bool setDepthResolution(int width, int height) override;
+    bool getDepthFOV(double &horizontalFov, double &verticalFov) override { return false; }
+    bool setDepthFOV(double horizontalFov, double verticalFov) override { return false; }
+    double getDepthAccuracy() override { return 0.0; }
+    bool setDepthAccuracy(double accuracy) override { return false; }
+    bool getDepthClipPlanes(double &nearPlane, double &farPlane) override { return false; }
+    bool setDepthClipPlanes(double nearPlane, double farPlane) override { return false; }
+    bool getDepthIntrinsicParam(yarp::os::Property &intrinsic) override { return false; }
+    bool getDepthMirroring(bool &mirror) override { return false; }
+    bool setDepthMirroring(bool mirror) override { return false; }
 
     // IRGBDSensor specific interface methods
-    virtual bool getExtrinsicParam(yarp::sig::Matrix &extrinsic)  {}
-    virtual std::string getLastErrorMsg(yarp::os::Stamp *timeStamp = NULL)  {}
-    virtual bool getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::os::Stamp *timeStamp = NULL) override;
-    virtual bool getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp = NULL) override;
-    virtual bool getImages(yarp::sig::FlexImage &colorFrame, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthFrame, yarp::os::Stamp *colorStamp=NULL, yarp::os::Stamp *depthStamp=NULL)  override;
-    virtual RGBDSensor_status getSensorStatus() override;
+    bool getExtrinsicParam(yarp::sig::Matrix &extrinsic) override { return false; }
+    std::string getLastErrorMsg(yarp::os::Stamp *timeStamp = NULL) override { return ""; }
+    bool getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::os::Stamp *timeStamp = NULL) override;
+    bool getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthImage, yarp::os::Stamp *timeStamp = NULL) override;
+    bool getImages(yarp::sig::FlexImage &colorFrame, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthFrame, yarp::os::Stamp *colorStamp=NULL, yarp::os::Stamp *depthStamp=NULL) override;
+    RGBDSensor_status getSensorStatus() override;
 
 private:
 

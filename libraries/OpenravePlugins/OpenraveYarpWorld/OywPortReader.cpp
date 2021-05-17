@@ -220,7 +220,7 @@ world draw 0/1 (radius r g b).");
                 else if (request.get(5).asInt32()==0)
                 {
                     yInfo() << "Object released";
-                    openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Release(objPtr); // robot was found at tryToSetActiveManipulator
+                    openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Release(*objPtr); // robot was found at tryToSetActiveManipulator
                     response.addVocab(VOCAB_OK);
                 }
                 else response.addVocab(VOCAB_FAILED);
