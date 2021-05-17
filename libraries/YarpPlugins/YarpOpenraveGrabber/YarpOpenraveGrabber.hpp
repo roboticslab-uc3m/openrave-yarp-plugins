@@ -3,8 +3,17 @@
 #ifndef __YARP_OPENRAVE_GRABBER_HPP__
 #define __YARP_OPENRAVE_GRABBER_HPP__
 
+#include <yarp/conf/version.h>
+
 #include <yarp/dev/DeviceDriver.h>
-#include <yarp/dev/FrameGrabberInterfaces.h>
+
+#if YARP_VERSION_MINOR >= 5
+# include <yarp/dev/IFrameGrabberImage.h>
+# include <yarp/dev/IFrameGrabberControls.h>
+#else
+# include <yarp/dev/FrameGrabberInterfaces.h>
+#endif
+
 #include <yarp/dev/IVisualParams.h>
 
 #include <openrave/openrave.h>
