@@ -19,7 +19,9 @@ if(NOT SKIP_YarpOpenraveRobotManager)
 
     yarp_add_plugin(YarpOpenraveRobotManager YarpOpenraveRobotManager.hpp
                                              DeviceDriverImpl.cpp
-                                             IRobotManagerImpl.cpp)
+                                             IRobotManagerImpl.cpp
+                                             LogComponent.hpp
+                                             LogComponent.cpp)
 
     set_target_properties(YarpOpenraveRobotManager PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                               LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

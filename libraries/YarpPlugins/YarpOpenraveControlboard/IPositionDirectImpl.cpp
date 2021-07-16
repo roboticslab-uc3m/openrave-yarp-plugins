@@ -6,16 +6,20 @@
 
 #include <yarp/os/LogStream.h>
 
+#include "LogComponent.hpp"
+
+using namespace roboticslab;
+
 // ------------------- IPositionDirect Related --------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setPosition(int j, double ref)
+bool YarpOpenraveControlboard::setPosition(int j, double ref)
 {
-    yTrace() << j << ref;
+    yCTrace(YORCB) << j << ref;
 
     //-- Check if we are in positionDirect mode.
     if( controlModes[j] != VOCAB_CM_POSITION_DIRECT )
     {
-        yError() << "Will not setPosition() as joint" << j << "not in positionDirect mode";
+        yCError(YORCB) << "Will not setPosition() as joint" << j << "not in positionDirect mode";
         return false;
     }
 
@@ -34,9 +38,9 @@ bool roboticslab::YarpOpenraveControlboard::setPosition(int j, double ref)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setPositions(const int n_joint, const int *joints, const double *refs)
+bool YarpOpenraveControlboard::setPositions(const int n_joint, const int *joints, const double *refs)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -47,9 +51,9 @@ bool roboticslab::YarpOpenraveControlboard::setPositions(const int n_joint, cons
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setPositions(const double *refs)
+bool YarpOpenraveControlboard::setPositions(const double *refs)
 {
-    yTrace();
+    yCTrace(YORCB);
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= setPosition(i,refs[i]);
@@ -58,14 +62,14 @@ bool roboticslab::YarpOpenraveControlboard::setPositions(const double *refs)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefPosition(const int joint, double *ref)
+bool YarpOpenraveControlboard::getRefPosition(const int joint, double *ref)
 {
-    yTrace() << joint;
+    yCTrace(YORCB) << joint;
 
     //-- Check if we are in positionDirect mode.
     if( controlModes[joint] != VOCAB_CM_POSITION_DIRECT )
     {
-        yError() << "Not in positionDirect mode at joint" << joint;
+        yCError(YORCB) << "Not in positionDirect mode at joint" << joint;
         return false;
     }
 
@@ -75,9 +79,9 @@ bool roboticslab::YarpOpenraveControlboard::getRefPosition(const int joint, doub
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefPositions(double *refs)
+bool YarpOpenraveControlboard::getRefPositions(double *refs)
 {
-    yTrace();
+    yCTrace(YORCB);
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= getRefPosition(i,&refs[i]);
@@ -86,9 +90,9 @@ bool roboticslab::YarpOpenraveControlboard::getRefPositions(double *refs)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefPositions(const int n_joint, const int *joints, double *refs)
+bool YarpOpenraveControlboard::getRefPositions(const int n_joint, const int *joints, double *refs)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {

@@ -8,14 +8,15 @@
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
-namespace roboticslab
-{
+#include "LogComponent.hpp"
+
+using namespace roboticslab;
 
 // ------------------- DeviceDriver Related ------------------------------------
 
 bool YarpOpenraveSimulation::open(yarp::os::Searchable& config)
 {
-    yDebug() << "YarpOpenraveSimulation config:" << config.toString();
+    yCDebug(YORS) << "YarpOpenraveSimulation config:" << config.toString();
 
     if ( ! configureEnvironment(config) )
         return false;
@@ -37,5 +38,3 @@ bool YarpOpenraveSimulation::close()
 }
 
 // -----------------------------------------------------------------------------
-
-}  // namespace roboticslab

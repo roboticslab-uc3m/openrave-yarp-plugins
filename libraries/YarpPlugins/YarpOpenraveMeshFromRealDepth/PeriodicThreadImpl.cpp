@@ -12,6 +12,8 @@
 
 #include <YarpCloudUtils.hpp>
 
+#include "LogComponent.hpp"
+
 using namespace roboticslab;
 
 // -----------------------------------------------------------------------------
@@ -23,7 +25,7 @@ void YarpOpenraveMeshFromRealDepth::run()
 
     if (!iRGBDSensor->getDepthImage(depthImage))
     {
-        yWarning() << "No frame received!";
+        yCWarning(YORMFRD) << "No frame received!";
         return;
     }
 
@@ -36,7 +38,7 @@ void YarpOpenraveMeshFromRealDepth::run()
 
     if (!YarpCloudUtils::meshFromCloud(cloud, meshVertices, meshIndices, meshOptions))
     {
-        yError() << "Reconstruction failed!";
+        yCError(YORMFRD) << "Reconstruction failed!";
         yarp::os::PeriodicThread::askToStop();
         return;
     }

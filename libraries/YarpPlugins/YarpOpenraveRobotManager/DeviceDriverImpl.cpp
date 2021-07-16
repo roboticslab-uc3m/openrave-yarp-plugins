@@ -8,14 +8,15 @@
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
-namespace roboticslab
-{
+#include "LogComponent.hpp"
+
+using namespace roboticslab;
 
 // ------------------- DeviceDriver Related ------------------------------------
 
 bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
 {
-    yDebug() << "YarpOpenraveRobotManager config:" << config.toString();
+    yCDebug(YORRM) << "Config:" << config.toString();
 
     if ( ! configureEnvironment(config) )
         return false;
@@ -38,11 +39,11 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
     }
     else
     {
-        yError() << "Unknown mode" << modeStr << "(use '4wd' or 'transform')";
+        yCError(YORRM) << "Unknown mode" << modeStr << "(use '4wd' or 'transform')";
         return false;
     }
 
-    yDebug() << "Found --mode parameter:" << modeStr;
+    yCDebug(YORRM) << "Found --mode parameter:" << modeStr;
 
     //-- Create the controller, make sure to lock environment!
     {
@@ -90,5 +91,3 @@ bool YarpOpenraveRobotManager::close()
 }
 
 // -----------------------------------------------------------------------------
-
-}  // namespace roboticslab

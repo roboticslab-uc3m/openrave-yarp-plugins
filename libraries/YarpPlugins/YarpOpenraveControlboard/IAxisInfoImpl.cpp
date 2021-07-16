@@ -4,11 +4,15 @@
 
 #include <yarp/os/LogStream.h>
 
+#include "LogComponent.hpp"
+
+using namespace roboticslab;
+
 // ------------------ IAxisInfo Related -----------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getAxisName(int axis, std::string& name)
+bool YarpOpenraveControlboard::getAxisName(int axis, std::string& name)
 {
-    yTrace();
+    yCTrace(YORCB);
     if ((unsigned int)axis>axes) return false;
     name = vectorOfJointPtr[axis]->GetName();
     return true;
@@ -16,9 +20,9 @@ bool roboticslab::YarpOpenraveControlboard::getAxisName(int axis, std::string& n
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getJointType(int axis, yarp::dev::JointTypeEnum& type)
+bool YarpOpenraveControlboard::getJointType(int axis, yarp::dev::JointTypeEnum& type)
 {
-    yTrace();
+    yCTrace(YORCB);
     if ((unsigned int)axis>axes) return false;
 
     OpenRAVE::RobotBase::JointPtr jointPtr = vectorOfJointPtr[axis];

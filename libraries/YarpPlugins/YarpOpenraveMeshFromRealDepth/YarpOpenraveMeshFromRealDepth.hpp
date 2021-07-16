@@ -47,12 +47,12 @@ public:
     { close(); }
 
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImpl.cpp -------
-    virtual bool open(yarp::os::Searchable & config) override;
-    virtual bool close() override;
+    bool open(yarp::os::Searchable & config) override;
+    bool close() override;
 
 protected:
     // ------- PeriodicThread declarations. Implementation in PeriodicThreadImpl.cpp -------
-    virtual void run() override;
+    void run() override;
 
 private:
     yarp::dev::PolyDriver sensorDevice;

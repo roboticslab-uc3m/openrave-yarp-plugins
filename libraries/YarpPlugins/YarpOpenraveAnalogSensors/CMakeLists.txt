@@ -14,17 +14,19 @@ if(NOT SKIP_YarpOpenraveAnalogSensors)
     link_directories(${OpenRAVE_LIBRARY_DIRS})
 
     yarp_add_plugin(YarpOpenraveAnalogSensors YarpOpenraveAnalogSensors.hpp
-                                          DeviceDriverImpl.cpp
-                                          ISixAxisForceTorqueSensorsImpl.cpp)
+                                              DeviceDriverImpl.cpp
+                                              ISixAxisForceTorqueSensorsImpl.cpp
+                                              LogComponent.hpp
+                                              LogComponent.cpp)
 
     set_target_properties(YarpOpenraveAnalogSensors PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
-                                                           LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+                                                               LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
     target_link_libraries(YarpOpenraveAnalogSensors YARP::YARP_os
-                                                YARP::YARP_dev
-                                                ${OpenRAVE_LIBRARIES}
-                                                Boost::boost
-                                                YarpOpenraveBase)
+                                                    YARP::YARP_dev
+                                                    ${OpenRAVE_LIBRARIES}
+                                                    Boost::boost
+                                                    YarpOpenraveBase)
 
     target_include_directories(YarpOpenraveAnalogSensors PRIVATE ${OpenRAVE_INCLUDE_DIRS})
 

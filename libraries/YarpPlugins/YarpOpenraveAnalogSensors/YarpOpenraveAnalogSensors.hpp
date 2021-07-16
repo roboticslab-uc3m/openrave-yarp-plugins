@@ -27,35 +27,28 @@ namespace roboticslab
  * @brief Implements the YARP_dev ISixAxisForceTorqueSensors, etc.
  * interface class member functions.
  */
-class YarpOpenraveAnalogSensors : YarpOpenraveBase, public yarp::dev::DeviceDriver, public yarp::dev::ISixAxisForceTorqueSensors
+class YarpOpenraveAnalogSensors : YarpOpenraveBase,
+                                  public yarp::dev::DeviceDriver,
+                                  public yarp::dev::ISixAxisForceTorqueSensors
 {
 public:
-
-    // Set the Thread Rate in the class constructor
-    YarpOpenraveAnalogSensors() {}
-
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImageImpl.cpp -------
-
-    virtual bool open(yarp::os::Searchable& config);
-    virtual bool close();
+    bool open(yarp::os::Searchable& config) override;
+    bool close() override;
 
     // ------- ISixAxisForceTorqueSensors declarations. Implementation in ISixAxisForceTorqueSensorsImpl.cpp -------
-
-    virtual size_t getNrOfSixAxisForceTorqueSensors() const override;
-    virtual yarp::dev::MAS_status getSixAxisForceTorqueSensorStatus(size_t sens_index) const override;
-    virtual bool getSixAxisForceTorqueSensorName(size_t sens_index, std::string &name) const override;
-    virtual bool getSixAxisForceTorqueSensorFrameName(size_t sens_index, std::string &frameName) const override;
-    virtual bool getSixAxisForceTorqueSensorMeasure(size_t sens_index, yarp::sig::Vector& out, double& timestamp) const override;
+    size_t getNrOfSixAxisForceTorqueSensors() const override;
+    yarp::dev::MAS_status getSixAxisForceTorqueSensorStatus(size_t sens_index) const override;
+    bool getSixAxisForceTorqueSensorName(size_t sens_index, std::string &name) const override;
+    bool getSixAxisForceTorqueSensorFrameName(size_t sens_index, std::string &frameName) const override;
+    bool getSixAxisForceTorqueSensorMeasure(size_t sens_index, yarp::sig::Vector& out, double& timestamp) const override;
 
 private:
-
-    // General Analog Sensors parameters //
-
     //OpenRAVE//
     std::vector<OpenRAVE::SensorBasePtr> vectorOfSensorPtrForForce6Ds;
     std::vector<boost::shared_ptr<OpenRAVE::SensorBase::Force6DSensorData>> vectorOfForce6DSensorDataPtr;
 };
 
-}  // namespace roboticslab
+} // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_ANALOG_SENSORS_HPP__
+#endif // __YARP_OPENRAVE_ANALOG_SENSORS_HPP__

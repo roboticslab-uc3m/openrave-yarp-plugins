@@ -4,8 +4,9 @@
 
 #include <yarp/os/LogStream.h>
 
-namespace roboticslab
-{
+#include "LogComponent.hpp"
+
+using namespace roboticslab;
 
 // ------------------ IFrameGrabberControls Related ----------------------------------------
 
@@ -53,7 +54,7 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
         modGeomDataPtr->gain = value;
         boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> constModGeomDataPtr(modGeomDataPtr);
         sensorBasePtr->SetSensorGeometry(constModGeomDataPtr);
-        yInfo() << "Gain set to" << value << "(no visual effect observed at time of writing)";
+        yCInfo(YORG) << "Gain set to" << value << "(no visual effect observed at time of writing)";
         return true;
     }
     else if(YARP_FEATURE_ZOOM == feature)
@@ -63,7 +64,7 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
         modGeomDataPtr->intrinsics.fy = value * origGeomDataPtr->height;
         boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> constModGeomDataPtr(modGeomDataPtr);
         sensorBasePtr->SetSensorGeometry(constModGeomDataPtr);
-        yInfo() << "Zoom set to" << value;
+        yCInfo(YORG) << "Zoom set to" << value;
         return true;
     }
 
@@ -120,32 +121,51 @@ bool YarpOpenraveGrabber::setActive(int feature, bool onoff)
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::getActive(int feature, bool *isActive) { return false; }
-
-// ----------------------------------------------------------------------------
-
-bool YarpOpenraveGrabber::hasAuto(int feature, bool *hasAuto) { return false; }
-
-// ----------------------------------------------------------------------------
-
-bool YarpOpenraveGrabber::hasManual(int feature, bool *hasManual) { return false; }
-
-// ----------------------------------------------------------------------------
-
-bool YarpOpenraveGrabber::hasOnePush(int feature, bool *hasOnePush) { return false; }
-
-// ----------------------------------------------------------------------------
-
-bool YarpOpenraveGrabber::setMode(int feature, FeatureMode mode) { return false; }
-
-// ----------------------------------------------------------------------------
-
-bool YarpOpenraveGrabber::getMode(int feature, FeatureMode *mode) { return false; }
-
-// ----------------------------------------------------------------------------
-
-bool YarpOpenraveGrabber::setOnePush(int feature) { return false; }
-
-// ----------------------------------------------------------------------------
-
+bool YarpOpenraveGrabber::getActive(int feature, bool *isActive)
+{
+    return false;
 }
+
+// ----------------------------------------------------------------------------
+
+bool YarpOpenraveGrabber::hasAuto(int feature, bool *hasAuto)
+{
+    return false;
+}
+
+// ----------------------------------------------------------------------------
+
+bool YarpOpenraveGrabber::hasManual(int feature, bool *hasManual)
+{
+    return false;
+}
+
+// ----------------------------------------------------------------------------
+
+bool YarpOpenraveGrabber::hasOnePush(int feature, bool *hasOnePush)
+{
+    return false;
+}
+
+// ----------------------------------------------------------------------------
+
+bool YarpOpenraveGrabber::setMode(int feature, FeatureMode mode)
+{
+    return false;
+}
+
+// ----------------------------------------------------------------------------
+
+bool YarpOpenraveGrabber::getMode(int feature, FeatureMode *mode)
+{
+    return false;
+}
+
+// ----------------------------------------------------------------------------
+
+bool YarpOpenraveGrabber::setOnePush(int feature)
+{
+    return false;
+}
+
+// ----------------------------------------------------------------------------

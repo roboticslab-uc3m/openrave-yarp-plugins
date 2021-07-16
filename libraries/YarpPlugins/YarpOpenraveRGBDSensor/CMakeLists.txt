@@ -15,7 +15,9 @@ if(NOT SKIP_YarpOpenraveRGBDSensor)
 
     yarp_add_plugin(YarpOpenraveRGBDSensor YarpOpenraveRGBDSensor.hpp
                                            DeviceDriverImpl.cpp
-                                           IRGBDSensorImpl.cpp)
+                                           IRGBDSensorImpl.cpp
+                                           LogComponent.hpp
+                                           LogComponent.cpp)
 
     set_target_properties(YarpOpenraveRGBDSensor PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                             LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

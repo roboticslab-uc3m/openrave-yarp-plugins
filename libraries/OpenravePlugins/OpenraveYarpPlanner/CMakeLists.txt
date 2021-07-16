@@ -5,26 +5,28 @@ option(ENABLE_OpenraveYarpPlanner "Enable/disable OpenraveYarpPlanner" ON)
 
 if(ENABLE_OpenraveYarpPlanner)
 
-include_directories(${OpenRAVE_INCLUDE_DIRS})
+    include_directories(${OpenRAVE_INCLUDE_DIRS})
 
-link_directories(${OpenRAVE_LIBRARY_DIRS})
+    link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-add_library(OpenraveYarpPlanner MODULE OpenraveYarpPlanner.cpp
-                                            OypPortReader.cpp
-                                            OpenraveYarpPlanner.hpp
-                                            OypPortReader.hpp)
+    add_library(OpenraveYarpPlanner MODULE OpenraveYarpPlanner.cpp
+                                           OypPortReader.cpp
+                                           OpenraveYarpPlanner.hpp
+                                           OypPortReader.hpp
+                                           LogComponent.hpp
+                                           LogComponent.cpp)
 
-set_target_properties(OpenraveYarpPlanner PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
-                                                          LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+    set_target_properties(OpenraveYarpPlanner PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
+                                                         LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-target_link_libraries(OpenraveYarpPlanner YARP::YARP_os
-                                               YARP::YARP_init
-                                               YARP::YARP_dev
-                                               ${OpenRAVE_LIBRARIES}
-                                               Boost::boost)
+    target_link_libraries(OpenraveYarpPlanner YARP::YARP_os
+                                              YARP::YARP_init
+                                              YARP::YARP_dev
+                                              ${OpenRAVE_LIBRARIES}
+                                              Boost::boost)
 
-include(InstallOpenravePlugin)
+    include(InstallOpenravePlugin)
 
-install_openrave_plugin(OpenraveYarpPlanner)
+    install_openrave_plugin(OpenraveYarpPlanner)
 
 endif()

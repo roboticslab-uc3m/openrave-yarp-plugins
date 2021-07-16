@@ -44,17 +44,11 @@ class YarpOpenraveGrabber : YarpOpenraveBase,
                             public yarp::dev::IRgbVisualParams
 {
 public:
-
-    // Set the Thread Rate in the class constructor
-    YarpOpenraveGrabber() {}
-
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImageImpl.cpp -------
-
-    virtual bool open(yarp::os::Searchable& config);
-    virtual bool close();
+    bool open(yarp::os::Searchable& config) override;
+    bool close() override;
 
     // ------- IFrameGrabberControls declarations. Implementation in IFrameGrabberControlsImpl.cpp -------
-
     bool getCameraDescription(CameraDescriptor *camera) override;
     bool hasFeature(int feature, bool *hasFeature) override;
     bool setFeature(int feature, double value) override;
@@ -72,26 +66,23 @@ public:
     bool setOnePush(int feature) override;
 
     // ------- IFrameGrabberImage declarations. Implementation in IFrameGrabberImageImpl.cpp -------
-
-    virtual bool getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& image);
-    virtual int height() const;
-    virtual int width() const;
+    bool getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& image) override;
+    int height() const override;
+    int width() const override;
 
     // ------- IRgbVisualParams declarations. Look at IVisualParams.h for documentation. Implementation in IFrameGrabberImageImpl.cpp -------
-
-    virtual int  getRgbHeight();
-    virtual int  getRgbWidth();
-    virtual bool getRgbSupportedConfigurations(yarp::sig::VectorOf<yarp::dev::CameraConfig> &configurations) { return true; }
-    virtual bool getRgbResolution(int &width, int &height) { return true; }
-    virtual bool setRgbResolution(int width, int height) { return true; }
-    virtual bool getRgbFOV(double &horizontalFov, double &verticalFov) { return true; }
-    virtual bool setRgbFOV(double horizontalFov, double verticalFov) { return true; }
-    virtual bool getRgbIntrinsicParam(yarp::os::Property &intrinsic) { return true; }
-    virtual bool getRgbMirroring(bool &mirror) { return true; }
-    virtual bool setRgbMirroring(bool mirror) { return true; }
+    int getRgbHeight() override;
+    int getRgbWidth() override;
+    bool getRgbSupportedConfigurations(yarp::sig::VectorOf<yarp::dev::CameraConfig> &configurations) override { return true; }
+    bool getRgbResolution(int &width, int &height) override { return true; }
+    bool setRgbResolution(int width, int height) override { return true; }
+    bool getRgbFOV(double &horizontalFov, double &verticalFov) override { return true; }
+    bool setRgbFOV(double horizontalFov, double verticalFov) override { return true; }
+    bool getRgbIntrinsicParam(yarp::os::Property &intrinsic) override { return true; }
+    bool getRgbMirroring(bool &mirror) override { return true; }
+    bool setRgbMirroring(bool mirror) override { return true; }
 
 private:
-
     // General Grabber parameters
     int _height, _width;
 
@@ -102,10 +93,8 @@ private:
 
     // YARP
     CameraDescriptor cameraDescriptor;
-
-    static const int NOT_SET;
 };
 
-}  // namespace roboticslab
+} // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_GRABBER_HPP__
+#endif // __YARP_OPENRAVE_GRABBER_HPP__

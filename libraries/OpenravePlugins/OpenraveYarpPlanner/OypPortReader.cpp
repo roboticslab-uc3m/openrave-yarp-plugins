@@ -7,8 +7,8 @@
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Vocab.h>
 
+#include "LogComponent.hpp"
 #include "OpenraveYarpPlanner.hpp"
-
 #include "OypPortReader.hpp"
 
 using namespace roboticslab;
@@ -35,9 +35,9 @@ bool OypPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os
     response.addVocab(VOCAB_FAILED);
 #endif
     std::stringstream ss;
-    ss << "expected type string but got wrong data type at " << index;
+    ss << "Expected type string but got wrong data type at " << index;
     response.addString(ss.str());
-    yError(ss.str().c_str(), index);
+    yCError(ORYP, ss.str().c_str(), index);
     return false;
 }
 
@@ -48,7 +48,7 @@ bool OypPortReader::tryToSetActiveManipulator(const std::string& robot, const st
     OpenRAVE::RobotBasePtr wantActiveRobotPtr = openraveYarpPlannerPtr->GetEnv()->GetRobot(robot);
     if(!wantActiveRobotPtr)
     {
-        yError() << "Could not find robot:" << robot;
+        yCError(ORYP) << "Could not find robot:" << robot;
 #if YARP_VERSION_MINOR >= 5
         response.addVocab32(VOCAB_FAILED);
 #else
@@ -63,7 +63,7 @@ bool OypPortReader::tryToSetActiveManipulator(const std::string& robot, const st
     }
     catch (const std::exception& ex)
     {
-        yError() << "Caught openrave_exception:" << ex.what();
+        yCError(ORYP) << "Caught openrave_exception:" << ex.what();
 #if YARP_VERSION_MINOR >= 5
         response.addVocab32(VOCAB_FAILED);
 #else
@@ -80,7 +80,7 @@ bool OypPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
     if (!request.read(in)) return false;
-    yDebug() << "Request:" << request.toString();
+    yCDebug(ORYP) << "Request:" << request.toString();
     yarp::os::ConnectionWriter *out = in.getWriter();
     if (out==NULL) return true;
 
@@ -116,7 +116,7 @@ bool OypPortReader::read(yarp::os::ConnectionReader& in)
             cmdin << value;
             cmdin << " ";
         }
-        yDebug() << "cmd:" << cmdin.str();
+        yCDebug(ORYP) << "cmd:" << cmdin.str();
 
         {
             OpenRAVE::EnvironmentMutex::scoped_lock lock(openraveYarpPlannerPtr->GetEnv()->GetMutex()); // lock environment
@@ -132,7 +132,7 @@ bool OypPortReader::read(yarp::os::ConnectionReader& in)
                 return true;
             }
         }
-        yDebug() << "res:" << cmdout.str();
+        yCDebug(ORYP) << "res:" << cmdout.str();
 
 #if YARP_VERSION_MINOR >= 5
         response.addVocab32(VOCAB_OK);
@@ -142,7 +142,7 @@ bool OypPortReader::read(yarp::os::ConnectionReader& in)
 
         OpenRAVE::TrajectoryBasePtr ptraj = RaveCreateTrajectory(openraveYarpPlannerPtr->GetEnv(),"");
         ptraj->deserialize(cmdout);
-        yDebug() << "Duration:" << ptraj->GetDuration();
+        yCDebug(ORYP) << "Duration:" << ptraj->GetDuration();
         for (double time=0.0; time < ptraj->GetDuration(); time+=0.01)
         {
            yarp::os::Bottle& waypointBottle = response.addList();
@@ -152,7 +152,7 @@ bool OypPortReader::read(yarp::os::ConnectionReader& in)
            std::vector< OpenRAVE::dReal > point;
            ptraj->Sample(point, time);
            size_t numJoints = (point.size() - 2) / 2;
-           auto && log = yDebug();
+           auto && log = yCDebug(ORYP);
            log << time; // cmd timestamp
 
            for(int i=0; i<point.size()-2; i++) // skip timestamp and iswaypoint

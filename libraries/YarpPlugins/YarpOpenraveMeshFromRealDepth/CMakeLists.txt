@@ -11,7 +11,9 @@ if(NOT SKIP_YarpOpenraveMeshFromRealDepth)
 
     yarp_add_plugin(YarpOpenraveMeshFromRealDepth YarpOpenraveMeshFromRealDepth.hpp
                                                   DeviceDriverImpl.cpp
-                                                  PeriodicThreadImpl.cpp)
+                                                  PeriodicThreadImpl.cpp
+                                                  LogComponent.hpp
+                                                  LogComponent.cpp)
 
     set_target_properties(YarpOpenraveMeshFromRealDepth PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                                    LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

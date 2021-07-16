@@ -12,8 +12,9 @@
 #include <yarp/os/Time.h>
 #include <yarp/sig/Image.h>
 
-namespace roboticslab
-{
+#include "LogComponent.hpp"
+
+using namespace roboticslab;
 
 // ------------------ IRGBDSensor Related ----------------------------------------
 
@@ -51,7 +52,7 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
 
     if(!rgbSensorBasePtr->GetSensorData(rgbSensorDataPtr))
     {
-        yDebug() << "RGB: GetSensorData() failed";
+        yCDebug(YORRS) << "RGB: GetSensorData() failed";
         return false;
     }
 
@@ -59,7 +60,7 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage &rgbImage, yarp::o
 
     if(0 == currentFrame.size())
     {
-        yDebug() << "RGB: currentFrame.size() == 0";
+        yCDebug(YORRS) << "RGB: currentFrame.size() == 0";
         return false;
     }
 
@@ -80,7 +81,7 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
 
     if(!depthSensorBasePtr->GetSensorData(depthSensorDataPtr))
     {
-        yDebug() << "Depth: GetSensorData() failed";
+        yCDebug(YORRS) << "Depth: GetSensorData() failed";
         return false;
     }
 
@@ -115,7 +116,7 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
         }
         else if (sensorRanges.size()==0)
         {
-            yWarning() << "sensorRanges.size() == 0";
+            yCWarning(YORRS) << "sensorRanges.size() == 0";
         }
         else
         {
@@ -153,12 +154,10 @@ bool YarpOpenraveRGBDSensor::getImages(yarp::sig::FlexImage &colorFrame, yarp::s
 
 yarp::dev::IRGBDSensor::RGBDSensor_status YarpOpenraveRGBDSensor::getSensorStatus()
 {
-    if ((!rgbReady)||(!depthReady))
+    if (!rgbReady || !depthReady)
         return RGBDSensor_status::RGBD_SENSOR_NOT_READY;
 
     return RGBDSensor_status::RGBD_SENSOR_OK_IN_USE;
 }
 
 // ----------------------------------------------------------------------------
-
-}

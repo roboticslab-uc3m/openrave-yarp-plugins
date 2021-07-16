@@ -4,8 +4,9 @@
 
 #include <yarp/os/LogStream.h>
 
-namespace roboticslab
-{
+#include "LogComponent.hpp"
+
+using namespace roboticslab;
 
 // ------------------ ISixAxisForceTorqueSensors Related ----------------------------------------
 
@@ -42,7 +43,7 @@ bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorMeasure(size_t sens_i
 {
     if(!vectorOfSensorPtrForForce6Ds[sens_index]->GetSensorData(vectorOfForce6DSensorDataPtr[sens_index]))
     {
-        yDebug() << "GetSensorData() failed";
+        yCDebug(YORAS) << "GetSensorData() failed";
         return false;
     }
 
@@ -57,5 +58,3 @@ bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorMeasure(size_t sens_i
 }
 
 // ----------------------------------------------------------------------------
-
-}

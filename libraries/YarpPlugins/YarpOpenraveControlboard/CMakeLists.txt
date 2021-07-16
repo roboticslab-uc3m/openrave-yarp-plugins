@@ -19,10 +19,11 @@ if(NOT SKIP_YarpOpenraveControlboard)
                                              IControlLimitsImpl.cpp
                                              IControlModeImpl.cpp
                                              IEncodersImpl.cpp
-                                             IEncodersTimedImpl.cpp
                                              IPositionControlImpl.cpp
                                              IPositionDirectImpl.cpp
-                                             IVelocityControlImpl.cpp)
+                                             IVelocityControlImpl.cpp
+                                             LogComponent.hpp
+                                             LogComponent.cpp)
 
     set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                               LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

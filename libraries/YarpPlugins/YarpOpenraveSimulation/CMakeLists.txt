@@ -14,7 +14,9 @@ if(NOT SKIP_YarpOpenraveSimulation)
 
     yarp_add_plugin(YarpOpenraveSimulation YarpOpenraveSimulation.hpp
                                            DeviceDriverImpl.cpp
-                                           ISimulationImpl.cpp)
+                                           ISimulationImpl.cpp
+                                           LogComponent.hpp
+                                           LogComponent.cpp)
 
     set_target_properties(YarpOpenraveSimulation PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                          LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

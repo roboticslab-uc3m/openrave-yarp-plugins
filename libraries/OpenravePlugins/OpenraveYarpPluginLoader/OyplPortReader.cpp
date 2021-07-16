@@ -7,8 +7,8 @@
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Vocab.h>
 
+#include "LogComponent.hpp"
 #include "OpenraveYarpPluginLoader.hpp"
-
 #include "OyplPortReader.hpp"
 
 using namespace roboticslab;
@@ -29,7 +29,7 @@ bool OyplPortReader::read(yarp::os::ConnectionReader& in)
 {
     yarp::os::Bottle request, response;
     if (!request.read(in)) return false;
-    yDebug() << "Request:" << request.toString();
+    yCDebug(ORYPL) << "Request:" << request.toString();
     yarp::os::ConnectionWriter *out = in.getWriter();
     if (out==NULL) return true;
 
@@ -50,7 +50,7 @@ bool OyplPortReader::read(yarp::os::ConnectionReader& in)
         {
             if(!request.get(i).isList())
             {
-                yError() << "Expected list at" << i;
+                yCError(ORYPL) << "Expected list at" << i;
 #if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_FAILED);
 #else
@@ -64,7 +64,7 @@ bool OyplPortReader::read(yarp::os::ConnectionReader& in)
             cmdStr.append(elem->toString());
             cmdStr.append(" ");
         }
-        yDebug() << cmdStr;
+        yCDebug(ORYPL) << cmdStr;
 
         std::stringstream sout;
         std::stringstream sinput(cmdStr);
@@ -95,7 +95,7 @@ bool OyplPortReader::read(yarp::os::ConnectionReader& in)
     {
         OpenRAVE::EnvironmentBasePtr penv = openraveYarpPluginLoaderPtr->GetEnv();
         yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
-        yDebug() << "penvValue:" << v.toString();
+        yCDebug(ORYPL) << "penvValue:" << v.toString();
         response.add(v); // penvValue.isBlob()
         return response.write(*out);
     }

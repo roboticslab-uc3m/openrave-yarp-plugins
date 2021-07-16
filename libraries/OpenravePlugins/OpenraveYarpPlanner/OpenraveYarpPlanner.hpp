@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __OPENRAVE_YARP_PLUGIN_LOADER_HPP__
-#define __OPENRAVE_YARP_PLUGIN_LOADER_HPP__
+#ifndef __OPENRAVE_YARP_PLANNER_HPP__
+#define __OPENRAVE_YARP_PLANNER_HPP__
 
 #include <yarp/os/Network.h>
 #include <yarp/os/RpcServer.h>
@@ -30,20 +30,18 @@ class OpenraveYarpPlanner : public OpenRAVE::ModuleBase
 {
 public:
     OpenraveYarpPlanner(OpenRAVE::EnvironmentBasePtr penv);
-    virtual ~OpenraveYarpPlanner();
-    virtual void Destroy();
-
-    int main(const std::string& cmd);
+    ~OpenraveYarpPlanner() override;
+    void Destroy() override;
+    int main(const std::string& cmd) override;
 
     bool Open(std::ostream& sout, std::istream& sinput);
 
 private:
     yarp::os::Network yarp;
-
     OypPortReader oypPortReader;
     yarp::os::RpcServer oypRpcServer;
 };
 
 } // namespace roboticslab
 
-#endif // __OPENRAVE_YARP_PLUGIN_LOADER_HPP__
+#endif // __OPENRAVE_YARP_PLANNER_HPP__
