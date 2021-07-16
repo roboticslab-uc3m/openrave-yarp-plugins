@@ -2,23 +2,36 @@
 
 #include "OpenraveYarpPluginLoaderClient.hpp"
 
+#include <yarp/conf/version.h>
+
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/Vocab.h>
 
-namespace roboticslab
-{
+using namespace roboticslab;
 
 /************************************************************************/
 
-const int OpenraveYarpPluginLoaderClient::DEFAULT_PERIOD_S = 1.0;
-const yarp::conf::vocab32_t OpenraveYarpPluginLoaderClient::VOCAB_OK = yarp::os::createVocab('o','k');
-const yarp::conf::vocab32_t OpenraveYarpPluginLoaderClient::VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
+constexpr auto DEFAULT_PERIOD_S = 1.0;
+#if YARP_VERSION_MINOR >= 5
+constexpr auto VOCAB_OK = yarp::os::createVocab32('o','k');
+constexpr auto VOCAB_FAILED = yarp::os::createVocab32('f','a','i','l');
+#else
+constexpr auto VOCAB_OK = yarp::os::createVocab('o','k');
+constexpr auto VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
+#endif
 
 /************************************************************************/
 
 OpenraveYarpPluginLoaderClient::OpenraveYarpPluginLoaderClient() : detectedFirst(false)
 {
+}
+
+/************************************************************************/
+
+double OpenraveYarpPluginLoaderClient::getPeriod()
+{
+    return DEFAULT_PERIOD_S;
 }
 
 /************************************************************************/
@@ -88,7 +101,11 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
     yDebug() << "cmd:" << cmd.toString();
     rpcClient.write(cmd, res);
 
+#if YARP_VERSION_MINOR >= 5
+    if(VOCAB_FAILED == res.get(0).asVocab32())
+#else
     if(VOCAB_FAILED == res.get(0).asVocab())
+#endif
     {
         yError() << "Client error:" << res.toString();
         return false;
@@ -211,5 +228,3 @@ void OyplCallbackPort::onRead(yarp::os::Bottle& b)
 }
 
 /************************************************************************/
-
-}  // namespace roboticslab

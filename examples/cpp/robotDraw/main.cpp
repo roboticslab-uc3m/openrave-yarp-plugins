@@ -27,6 +27,8 @@
 #include <string>
 #include <vector>
 
+#include <yarp/conf/version.h>
+
 #include <yarp/os/Bottle.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
@@ -40,12 +42,16 @@
 
 #include <ICartesianControl.h>
 
-#define DEFAULT_PREFIX "/robotDraw"
-#define DEFAULT_CARTESIAN_REMOTE "/asibotSim/CartesianControl"
-#define DEFAULT_WORLD_RESPONDER "/OpenraveYarpWorldRpcResponder"
-#define DEFAULT_HEIGHT 0.4;
+constexpr auto DEFAULT_PREFIX = "/robotDraw";
+constexpr auto DEFAULT_CARTESIAN_REMOTE = "/asibotSim/CartesianControl";
+constexpr auto DEFAULT_WORLD_RESPONDER = "/OpenraveYarpWorldRpcResponder";
+constexpr auto DEFAULT_HEIGHT = 0.4;;
 
-#define VOCAB_OK yarp::os::createVocab('o','k')
+#if YARP_VERSION_MINOR >= 5
+constexpr auto VOCAB_OK = yarp::os::createVocab32('o','k');
+#else
+constexpr auto VOCAB_OK = yarp::os::createVocab('o','k');
+#endif
 
 int main(int argc, char *argv[])
 {

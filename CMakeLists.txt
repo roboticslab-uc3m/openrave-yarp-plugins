@@ -2,7 +2,7 @@
 # Authors: Juan G. Victores and Raul Fernandez-Fernandez
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
-cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12)
 
 project(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS LANGUAGES CXX)
 
@@ -44,7 +44,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 find_package(YCM 0.11 REQUIRED)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost "${OpenRAVE_Boost_VERSION}" REQUIRED COMPONENTS thread)
-find_package(YARP 3.3 REQUIRED COMPONENTS os dev sig)
+find_package(YARP 3.4 REQUIRED COMPONENTS os dev sig)
 
 # Soft dependencies.
 find_package(ROBOTICSLAB_VISION QUIET)

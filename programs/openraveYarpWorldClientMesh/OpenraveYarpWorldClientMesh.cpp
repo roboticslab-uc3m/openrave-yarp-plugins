@@ -21,26 +21,35 @@
 
 #include <YarpCloudUtils.hpp>
 
-namespace
-{
-    constexpr auto VOCAB_OK = yarp::os::createVocab('o','k');
-    constexpr auto VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
-    constexpr auto PREFIX = "/OpenraveYarpWorldMesh";
-    constexpr auto MAX_Z = 1.5;
-    constexpr auto SIGMA_R = 0.1;
-    constexpr auto SIGMA_S = 50.0;
-    constexpr auto MAX_EDGE_LENGTH_A = 0.05;
-    constexpr auto TRIANGLE_PIXEL_SIZE = 10;
-}
+using namespace roboticslab;
 
-namespace roboticslab
-{
+constexpr auto DEFAULT_PERIOD_S = 1.0;
+#if YARP_VERSION_MINOR >= 5
+constexpr auto VOCAB_OK = yarp::os::createVocab32('o','k');
+constexpr auto VOCAB_FAILED = yarp::os::createVocab32('f','a','i','l');
+#else
+constexpr auto VOCAB_OK = yarp::os::createVocab('o','k');
+constexpr auto VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
+#endif
+constexpr auto PREFIX = "/OpenraveYarpWorldMesh";
+constexpr auto MAX_Z = 1.5;
+constexpr auto SIGMA_R = 0.1;
+constexpr auto SIGMA_S = 50.0;
+constexpr auto MAX_EDGE_LENGTH_A = 0.05;
+constexpr auto TRIANGLE_PIXEL_SIZE = 10;
 
 /************************************************************************/
 
 OpenraveYarpWorldClientMesh::OpenraveYarpWorldClientMesh()
     : detectedFirst(false)
 {}
+
+/************************************************************************/
+
+double OpenraveYarpWorldClientMesh::getPeriod()
+{
+    return DEFAULT_PERIOD_S;
+}
 
 /************************************************************************/
 
@@ -134,7 +143,6 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
         }
     }
 
-#if YARP_VERSION_MINOR >= 4
     yarp::sig::utils::PCL_ROI roi {0, 0, 0, 0};
 
     auto stepX = 1;
@@ -171,9 +179,6 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
     }
 
     auto cloud = yarp::sig::utils::depthToPC(depthImage, depthParams, roi, stepX, stepY);
-#else
-    auto cloud = yarp::sig::utils::depthToPC(depthImage, depthParams);
-#endif
 
     yarp::sig::VectorOf<yarp::os::Property> meshOptions {
         {
@@ -274,7 +279,11 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
         return false;
     }
 
+#if YARP_VERSION_MINOR >= 5
+    if (res.get(0).asVocab32() == VOCAB_FAILED)
+#else
     if (res.get(0).asVocab() == VOCAB_FAILED)
+#endif
     {
         yError() << res.toString();
         return false;
@@ -401,5 +410,3 @@ void OywCallbackPort::onRead(yarp::os::Bottle & b)
 }
 
 /************************************************************************/
-
-} // namespace roboticslab

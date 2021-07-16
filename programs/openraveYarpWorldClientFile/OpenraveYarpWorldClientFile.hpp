@@ -25,7 +25,7 @@ public:
     std::mutex availableIdsMutex;
     double lastTime;
 private:
-    virtual void onRead(yarp::os::Bottle& b) override;
+    void onRead(yarp::os::Bottle& b) override;
 };
 
 /**
@@ -35,7 +35,7 @@ class OpenraveYarpWorldClientFile : public yarp::os::RFModule
 {
 public:
     OpenraveYarpWorldClientFile();
-    bool configure(yarp::os::ResourceFinder &rf);
+    bool configure(yarp::os::ResourceFinder &rf) override;
 
 private:
     yarp::os::RpcClient rpcClient;
@@ -45,17 +45,9 @@ private:
     bool openedInAvailable();
     bool detectedFirst;
 
-    virtual double getPeriod() override
-    {
-        return DEFAULT_PERIOD_S;
-    }
-    virtual bool updateModule() override;
-    virtual bool close() override;
-
-
-    static const int DEFAULT_PERIOD_S;
-    static const yarp::conf::vocab32_t VOCAB_OK;
-    static const yarp::conf::vocab32_t VOCAB_FAILED;
+    double getPeriod() override;
+    bool updateModule() override;
+    bool close() override;
 };
 
 } // namespace roboticslab

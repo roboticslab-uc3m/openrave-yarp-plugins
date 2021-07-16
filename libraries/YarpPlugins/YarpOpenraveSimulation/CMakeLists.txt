@@ -10,10 +10,6 @@ yarp_prepare_plugin(YarpOpenraveSimulation
 
 if(NOT SKIP_YarpOpenraveSimulation)
 
-    if(NOT YARP_VERSION VERSION_GREATER_EQUAL 3.4)
-        set(CMAKE_INCLUDE_CURRENT_DIR TRUE) # yarp plugin builder needs this
-    endif()
-
     link_directories(${OpenRAVE_LIBRARY_DIRS})
 
     yarp_add_plugin(YarpOpenraveSimulation YarpOpenraveSimulation.hpp

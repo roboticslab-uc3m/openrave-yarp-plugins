@@ -47,15 +47,9 @@ private:
     bool openedInAvailable();
     bool detectedFirst;
 
-    virtual double getPeriod() override
-    {
-        return DEFAULT_PERIOD_S;
-    }
-
-    virtual bool updateModule() override;
-    virtual bool close() override;
-
-    static constexpr auto DEFAULT_PERIOD_S = 1.0;
+    double getPeriod() override;
+    bool updateModule() override;
+    bool close() override;
 };
 
 } // namespace roboticslab
