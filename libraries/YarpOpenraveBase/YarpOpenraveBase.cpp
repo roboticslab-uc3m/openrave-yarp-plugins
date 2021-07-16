@@ -24,7 +24,7 @@ constexpr auto NOT_SET = -1;
 
 // -------------------------------------------------------------------
 
-void SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
+void roboticslab::SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string& viewername)
 {
     OpenRAVE::ViewerBasePtr viewer = OpenRAVE::RaveCreateViewer(penv,viewername);
     assert(!!viewer);
