@@ -32,18 +32,16 @@ class YarpOpenraveRGBDSensor : YarpOpenraveBase,
                                public yarp::dev::IRGBDSensor
 {
 public:
-
     YarpOpenraveRGBDSensor() : rgb(true), rgbReady(false), depthReady(false) {}
 
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImageImpl.cpp -------
-
     bool open(yarp::os::Searchable& config) override;
     bool close() override;
 
     // ------- IRGBDSensor declarations. Implementation in IRGBDSensorImpl.cpp -------
     // IRgbVisualParams interface. Look at IVisualParams.h for documentation
-    int  getRgbHeight() override { return 0; }
-    int  getRgbWidth() override { return 0; }
+    int getRgbHeight() override { return 0; }
+    int getRgbWidth() override { return 0; }
     bool getRgbSupportedConfigurations(yarp::sig::VectorOf<yarp::dev::CameraConfig> &configurations) override { return false; }
     bool getRgbResolution(int &width, int &height) override { return false; }
     bool setRgbResolution(int width, int height) override { return false; }
@@ -76,7 +74,6 @@ public:
     RGBDSensor_status getSensorStatus() override;
 
 private:
-
     // General RGBDSensor parameters
     int rgbHeight, rgbWidth, depthHeight, depthWidth;
     bool rgb;
@@ -88,10 +85,8 @@ private:
     OpenRAVE::SensorBasePtr rgbSensorBasePtr;
     boost::shared_ptr<OpenRAVE::SensorBase::LaserSensorData> depthSensorDataPtr;
     boost::shared_ptr<OpenRAVE::SensorBase::CameraSensorData> rgbSensorDataPtr;
-
-    static const int NOT_SET;
 };
 
-}  // namespace roboticslab
+} // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_RGBDSENSOR_HPP__
+#endif // __YARP_OPENRAVE_RGBDSENSOR_HPP__

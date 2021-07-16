@@ -4,14 +4,15 @@
 
 #include <yarp/os/LogStream.h>
 
-namespace roboticslab
-{
+#include "LogComponent.hpp"
+
+using namespace roboticslab;
 
 // ------------------ ISimulation Related ----------------------------------------
 
 bool YarpOpenraveSimulation::step(double value)
 {
-    yTrace() << value;
+    yCTrace(YORS) << value;
     penv->StepSimulation(value);
     return true;
 }
@@ -20,7 +21,7 @@ bool YarpOpenraveSimulation::step(double value)
 
 bool YarpOpenraveSimulation::start(double value)
 {
-    yTrace() << value;
+    yCTrace(YORS) << value;
     penv->StartSimulation(value);
     return true;
 }
@@ -30,7 +31,7 @@ bool YarpOpenraveSimulation::start(double value)
 
 bool YarpOpenraveSimulation::stop()
 {
-    yTrace();
+    yCTrace(YORS);
     penv->StopSimulation();
     return true;
 }
@@ -39,12 +40,10 @@ bool YarpOpenraveSimulation::stop()
 
 bool YarpOpenraveSimulation::getSimulationRawPointerValue(yarp::os::Value& value)
 {
-    yTrace() << value.toString();
+    yCTrace(YORS) << value.toString();
     yarp::os::Value v(&penv, sizeof(OpenRAVE::EnvironmentBasePtr));
     value = v;
     return true;
 }
 
 // ----------------------------------------------------------------------------
-
-}

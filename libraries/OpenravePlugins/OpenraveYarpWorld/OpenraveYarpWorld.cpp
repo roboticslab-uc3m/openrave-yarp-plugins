@@ -7,24 +7,27 @@
 
 #include <yarp/os/LogStream.h>
 
+#include "LogComponent.hpp"
 #include "OpenraveYarpWorld.hpp"
+
+using namespace roboticslab;
 
 // -----------------------------------------------------------------------------
 
-roboticslab::OpenraveYarpWorld::OpenraveYarpWorld(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
+OpenraveYarpWorld::OpenraveYarpWorld(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
 {
     __description = "OpenraveYarpWorld plugin.";
     OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpWorld::Open, this,_1,_2),"opens OpenraveYarpWorld");
 
-    yInfo() << "Checking for yarp network...";
+    yCInfo(ORYW) << "Checking for yarp network...";
     if ( ! yarp.checkNetwork() )
-        yError() << "Found no yarp network (try running \"yarpserver &\")";
-    yInfo() << "Found yarp network";
+        yCError(ORYW) << "Found no yarp network (try running \"yarpserver &\")";
+    yCInfo(ORYW) << "Found yarp network";
 }
 
 // -----------------------------------------------------------------------------
 
-roboticslab::OpenraveYarpWorld::~OpenraveYarpWorld()
+OpenraveYarpWorld::~OpenraveYarpWorld()
 {
     oywRpcServer.interrupt();
     oywPeriodicWrite.interrupt();
@@ -35,7 +38,7 @@ roboticslab::OpenraveYarpWorld::~OpenraveYarpWorld()
 
 // -----------------------------------------------------------------------------
 
-void roboticslab::OpenraveYarpWorld::Destroy()
+void OpenraveYarpWorld::Destroy()
 {
 
     RAVELOG_INFO("module unloaded from environment\n");
@@ -43,7 +46,7 @@ void roboticslab::OpenraveYarpWorld::Destroy()
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::OpenraveYarpWorld::addWorldInfo(yarp::os::Bottle& info)
+bool OpenraveYarpWorld::addWorldInfo(yarp::os::Bottle& info)
 {
     //-- Robots
     std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
@@ -79,7 +82,7 @@ bool roboticslab::OpenraveYarpWorld::addWorldInfo(yarp::os::Bottle& info)
 
 // -----------------------------------------------------------------------------
 
-int roboticslab::OpenraveYarpWorld::main(const std::string& cmd)
+int OpenraveYarpWorld::main(const std::string& cmd)
 {
     RAVELOG_INFO("module initialized with \"%s\"\n", cmd.c_str());
     // hard-coding "open", note that actual Open enabled portName selection
@@ -92,12 +95,12 @@ int roboticslab::OpenraveYarpWorld::main(const std::string& cmd)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
+bool OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinput)
 {
-    yInfo() << "Checking for yarp network...";
+    yCInfo(ORYW) << "Checking for yarp network...";
     if ( ! yarp.checkNetwork() )
     {
-        yError() << "Found no yarp network (try running \"yarpserver &\")";
+        yCError(ORYW) << "Found no yarp network (try running \"yarpserver &\")";
         sout << "-1 ";
         return false;
     }
@@ -107,9 +110,9 @@ bool roboticslab::OpenraveYarpWorld::Open(std::ostream& sout, std::istream& sinp
     yarp::os::Property options;
     options.fromArguments(s.c_str());
 
-    yDebug() << "Config:" << options.toString();
+    yCDebug(ORYW) << "Config:" << options.toString();
 
-    yInfo() << "penv:" << GetEnv().get();
+    yCInfo(ORYW) << "penv:" << GetEnv().get();
     OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
     //-- PortReader and RpcServer
@@ -130,7 +133,7 @@ OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type
 {
     if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpworld" )
     {
-        return OpenRAVE::InterfaceBasePtr(new roboticslab::OpenraveYarpWorld(penv));
+        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpWorld(penv));
     }
     return OpenRAVE::InterfaceBasePtr();
 }

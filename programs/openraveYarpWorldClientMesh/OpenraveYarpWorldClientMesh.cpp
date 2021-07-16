@@ -4,6 +4,7 @@
 
 #include <yarp/conf/version.h>
 
+#include <yarp/os/LogComponent.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/PortablePair.h>
@@ -21,20 +22,24 @@
 
 #include <YarpCloudUtils.hpp>
 
-namespace
-{
-    constexpr auto VOCAB_OK = yarp::os::createVocab('o','k');
-    constexpr auto VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
-    constexpr auto PREFIX = "/OpenraveYarpWorldMesh";
-    constexpr auto MAX_Z = 1.5;
-    constexpr auto SIGMA_R = 0.1;
-    constexpr auto SIGMA_S = 50.0;
-    constexpr auto MAX_EDGE_LENGTH_A = 0.05;
-    constexpr auto TRIANGLE_PIXEL_SIZE = 10;
-}
+YARP_LOG_COMPONENT(ORYWCM, "rl.OpenraveYarpWorldClientMesh")
 
-namespace roboticslab
-{
+using namespace roboticslab;
+
+constexpr auto DEFAULT_PERIOD_S = 1.0;
+#if YARP_VERSION_MINOR >= 5
+constexpr auto VOCAB_OK = yarp::os::createVocab32('o','k');
+constexpr auto VOCAB_FAILED = yarp::os::createVocab32('f','a','i','l');
+#else
+constexpr auto VOCAB_OK = yarp::os::createVocab('o','k');
+constexpr auto VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
+#endif
+constexpr auto PREFIX = "/OpenraveYarpWorldMesh";
+constexpr auto MAX_Z = 1.5;
+constexpr auto SIGMA_R = 0.1;
+constexpr auto SIGMA_S = 50.0;
+constexpr auto MAX_EDGE_LENGTH_A = 0.05;
+constexpr auto TRIANGLE_PIXEL_SIZE = 10;
 
 /************************************************************************/
 
@@ -44,25 +49,32 @@ OpenraveYarpWorldClientMesh::OpenraveYarpWorldClientMesh()
 
 /************************************************************************/
 
+double OpenraveYarpWorldClientMesh::getPeriod()
+{
+    return DEFAULT_PERIOD_S;
+}
+
+/************************************************************************/
+
 bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 {
-    yDebug() << "config:" << rf.toString();
+    yCDebug(ORYWCM) << "Config:" << rf.toString();
 
     if (!rf.check("remote", "remote sensor port to connect to"))
     {
-        yError() << "missing --remote parameter";
+        yCError(ORYWCM) << "Missing --remote parameter";
         return false;
     }
 
     if (!rf.check("robot", "virtual robot name"))
     {
-        yError() << "missing --robot parameter";
+        yCError(ORYWCM) << "Missing --robot parameter";
         return false;
     }
 
     if (!rf.check("sensor", "virtual sensor name"))
     {
-        yError() << "missing --sensor parameter";
+        yCError(ORYWCM) << "Missing --sensor parameter";
         return false;
     }
 
@@ -87,7 +99,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
         if (!sensorDevice.isValid())
         {
-            yError() << "unable to connect to remote sensor";
+            yCError(ORYWCM) << "Unable to connect to remote sensor";
             return false;
         }
 
@@ -95,7 +107,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
         if (!sensorDevice.view(iRGBDSensor))
         {
-            yError() << "unable to view IRGBDSensor";
+            yCError(ORYWCM) << "Unable to view IRGBDSensor";
             return false;
         }
 
@@ -110,7 +122,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
         if (!iRGBDSensor->getRgbIntrinsicParam(intrinsic))
         {
-            yError() << "unable to retrieve depth intrinsic parameters";
+            yCError(ORYWCM) << "Unable to retrieve depth intrinsic parameters";
             return 1;
         }
 
@@ -126,7 +138,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
             }
             else if (n == 10)
             {
-                yError() << "unable to acquire depth frame";
+                yCError(ORYWCM) << "Unable to acquire depth frame";
                 return 1;
             }
 
@@ -134,7 +146,6 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
         }
     }
 
-#if YARP_VERSION_MINOR >= 4
     yarp::sig::utils::PCL_ROI roi {0, 0, 0, 0};
 
     auto stepX = 1;
@@ -146,7 +157,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
         if (b_roi.size() != 4)
         {
-            yError() << "--roi must be a list of 4 unsigned ints";
+            yCError(ORYWCM) << "--roi must be a list of 4 unsigned ints";
             return 1;
         }
 
@@ -162,7 +173,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
         if (b_step.size() != 2)
         {
-            yError() << "--step must be a list of 2 unsigned ints";
+            yCError(ORYWCM) << "--step must be a list of 2 unsigned ints";
             return 1;
         }
 
@@ -171,9 +182,6 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
     }
 
     auto cloud = yarp::sig::utils::depthToPC(depthImage, depthParams, roi, stepX, stepY);
-#else
-    auto cloud = yarp::sig::utils::depthToPC(depthImage, depthParams);
-#endif
 
     yarp::sig::VectorOf<yarp::os::Property> meshOptions {
         {
@@ -203,11 +211,11 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
     if (!YarpCloudUtils::meshFromCloud(cloud, meshVertices, meshIndices, meshOptions))
     {
-        yError() << "unable to construct surface mesh from depth frame";
+        yCError(ORYWCM) << "Unable to construct surface mesh from depth frame";
         return false;
     }
 
-    yInfo() << "got mesh of" << meshVertices.size() << "vertices and" << meshIndices.size() / 3 << "faces";
+    yCInfo(ORYWCM) << "Got mesh of" << meshVertices.size() << "vertices and" << meshIndices.size() / 3 << "faces";
 
     std::string rpcClientName(remote);
     rpcClientName.append(local);
@@ -215,13 +223,13 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
     if (!rpcClient.open(rpcClientName))
     {
-        yError() << "unable to open RPC client";
+        yCError(ORYWCM) << "Unable to open RPC client";
         return false;
     }
 
     if (!rpcClient.addOutput("/OpenraveYarpWorld/rpc:s"))
     {
-        yError() << "unable to connect to remote RPC server";
+        yCError(ORYWCM) << "Unable to connect to remote RPC server";
         return false;
     }
 
@@ -231,13 +239,13 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
     if (!callbackPort.open(callbackPortName))
     {
-        yError() << "unable to open local callback port";
+        yCError(ORYWCM) << "Unable to open local callback port";
         return false;
     }
 
     if (!yarp::os::Network::connect("/OpenraveYarpWorld/state:o", callbackPortName))
     {
-        yError() << "unable to connect to remote callback port";
+        yCError(ORYWCM) << "Unable to connect to remote callback port";
         return false;
     }
 
@@ -253,7 +261,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
     auto & vertices = cmd.addList();
     auto & indices = cmd.addList();
 
-    yDebug() << "command (redacted mesh):" << cmd.toString();
+    yCDebug(ORYWCM) << "Command (redacted mesh):" << cmd.toString();
 
     for (std::size_t i = 0; i < meshVertices.size(); i++)
     {
@@ -270,17 +278,21 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
     if (!rpcClient.write(cmd, res))
     {
-        yError() << "unable to send mesh";
+        yCError(ORYWCM) << "Unable to send mesh";
         return false;
     }
 
+#if YARP_VERSION_MINOR >= 5
+    if (res.get(0).asVocab32() == VOCAB_FAILED)
+#else
     if (res.get(0).asVocab() == VOCAB_FAILED)
+#endif
     {
-        yError() << res.toString();
+        yCError(ORYWCM) << res.toString();
         return false;
     }
 
-    yInfo() << res.toString();
+    yCInfo(ORYWCM) << res.toString();
 
     openedId = res.get(1).asString();
 
@@ -305,11 +317,11 @@ bool OpenraveYarpWorldClientMesh::openedInAvailable()
 
     if (!innerFound)
     {
-        yDebug() << "no";
+        yCDebug(ORYWCM) << "no";
         return false;
     }
 
-    yDebug() << "yes";
+    yCDebug(ORYWCM) << "yes";
     return true;
 }
 
@@ -319,7 +331,7 @@ bool OpenraveYarpWorldClientMesh::updateModule()
 {
     if (callbackPort.lastTime == -1)
     {
-        yDebug() << "wait for first read...";
+        yCDebug(ORYWCM) << "Wait for first read...";
         return true;
     }
 
@@ -330,13 +342,13 @@ bool OpenraveYarpWorldClientMesh::updateModule()
             detectedFirst = true;
         }
 
-        yDebug() << "waiting for detectedFirst...";
+        yCDebug(ORYWCM) << "Waiting for detectedFirst...";
         return true;
     }
 
     if (!openedInAvailable())
     {
-        yInfo() << "not available";
+        yCInfo(ORYWCM) << "not available";
         return false;
     }
 
@@ -344,7 +356,7 @@ bool OpenraveYarpWorldClientMesh::updateModule()
 
     if (deltaTime > DEFAULT_PERIOD_S * 2.0)
     {
-        yInfo() << "deltaTime > DEFAULT_PERIOD_S * 2.0";
+        yCInfo(ORYWCM) << "deltaTime > DEFAULT_PERIOD_S * 2.0";
         return false;
     }
 
@@ -361,7 +373,7 @@ bool OpenraveYarpWorldClientMesh::close()
     cmd.addString(openedId);
     rpcClient.write(cmd, res);
 
-    yInfo() << res.toString();
+    yCInfo(ORYWCM) << res.toString();
 
     callbackPort.disableCallback();
 
@@ -401,5 +413,3 @@ void OywCallbackPort::onRead(yarp::os::Bottle & b)
 }
 
 /************************************************************************/
-
-} // namespace roboticslab

@@ -9,19 +9,18 @@
 #include <yarp/os/Time.h>
 #include <yarp/os/Value.h>
 
+#include "LogComponent.hpp"
+
 using namespace roboticslab;
 
-namespace
-{
-    constexpr auto MAX_EDGE_LENGTH_A = 0.05;
-    constexpr auto TRIANGLE_PIXEL_SIZE = 10;
-}
+constexpr auto MAX_EDGE_LENGTH_A = 0.05;
+constexpr auto TRIANGLE_PIXEL_SIZE = 10;
 
 // -----------------------------------------------------------------------------
 
 bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
 {
-    yDebug() << "Config:" << config.toString();
+    yCDebug(YORMFRD) << "Config:" << config.toString();
 
     if (!configureEnvironment(config) || !configureOpenravePlugins(config) || !configureRobot(config))
     {
@@ -30,7 +29,7 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
 
     if (!config.check("depthSensorIndex", "depth sensor index"))
     {
-        yError() << "Missing mandatory --depthSensorIndex parameter";
+        yCError(YORMFRD) << "Missing mandatory --depthSensorIndex parameter";
         return false;
     }
 
@@ -39,7 +38,7 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
 
     if (depthSensorIndex < 0 || depthSensorIndex >= sensors.size())
     {
-        yError() << "Illegal depth sensor index, got" << sensors.size() << "attached sensors";
+        yCError(YORMFRD) << "Illegal depth sensor index, got" << sensors.size() << "attached sensors";
         return false;
     }
 
@@ -47,7 +46,7 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
 
     if (!config.check("remote", "remote sensor port prefix"))
     {
-        yError() << "Missing mandatory --remote parameter";
+        yCError(YORMFRD) << "Missing mandatory --remote parameter";
         return false;
     }
 
@@ -72,20 +71,19 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
 
     if (!iRGBDSensor->getDepthIntrinsicParam(depthIntrinsic))
     {
-        yError() << "Unable to retrieve depth intrinsic params";
+        yCError(YORMFRD) << "Unable to retrieve depth intrinsic params";
         return false;
     }
 
     depthIntrinsicParams.fromProperty(depthIntrinsic);
 
-#if YARP_VERSION_MINOR >= 4
     if (config.check("roi", "ROI of depth frame encoded as (minX maxX minY maxY)"))
     {
         auto b_roi = config.findGroup("roi").tail();
 
         if (b_roi.size() != 4)
         {
-            yError() << "--roi must be a list of 4 unsigned ints";
+            yCError(YORMFRD) << "--roi must be a list of 4 unsigned ints";
             return 1;
         }
 
@@ -101,14 +99,13 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
 
         if (b_step.size() != 2)
         {
-            yError() << "--step must be a list of 2 unsigned ints";
+            yCError(YORMFRD) << "--step must be a list of 2 unsigned ints";
             return 1;
         }
 
         stepX = b_step.get(0).asInt32();
         stepY = b_step.get(1).asInt32();
     }
-#endif
 
     meshOptions = {
         {

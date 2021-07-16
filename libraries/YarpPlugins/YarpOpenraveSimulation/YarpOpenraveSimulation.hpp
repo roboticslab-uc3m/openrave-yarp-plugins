@@ -27,33 +27,21 @@ namespace roboticslab
  * interface class member functions.
  */
 class YarpOpenraveSimulation : YarpOpenraveBase,
-                            public yarp::dev::DeviceDriver,
-                            public ISimulation
+                               public yarp::dev::DeviceDriver,
+                               public ISimulation
 {
 public:
-
-    YarpOpenraveSimulation() {}
-
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImageImpl.cpp -------
-
-    virtual bool open(yarp::os::Searchable& config);
-    virtual bool close();
+    bool open(yarp::os::Searchable& config) override;
+    bool close() override;
 
     // ------- ISimulation declarations. Implementation in ISimulationImpl.cpp -------
-
-    virtual bool step(double value);
-    virtual bool start(double value);
-    virtual bool stop();
-    bool getSimulationRawPointerValue(yarp::os::Value& value);
-
-private:
-
-    // General Simulation parameters
-
-    // OpenRAVE
-
+    bool step(double value) override;
+    bool start(double value) override;
+    bool stop() override;
+    bool getSimulationRawPointerValue(yarp::os::Value& value) override;
 };
 
-}  // namespace roboticslab
+} // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_SIMULATION_HPP__
+#endif // __YARP_OPENRAVE_SIMULATION_HPP__

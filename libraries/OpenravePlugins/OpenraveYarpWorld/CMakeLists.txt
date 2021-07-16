@@ -5,27 +5,29 @@ option(ENABLE_OpenraveYarpWorld "Enable/disable OpenraveYarpWorld" ON)
 
 if(ENABLE_OpenraveYarpWorld)
 
-include_directories(${OpenRAVE_INCLUDE_DIRS})
+    include_directories(${OpenRAVE_INCLUDE_DIRS})
 
-link_directories(${OpenRAVE_LIBRARY_DIRS})
+    link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-add_library(OpenraveYarpWorld MODULE OpenraveYarpWorld.cpp
-                                     OywPeriodicWrite.cpp
-                                     OywPortReader.cpp
-                                     OpenraveYarpWorld.hpp
-                                     OywPeriodicWrite.hpp
-                                     OywPortReader.hpp)
+    add_library(OpenraveYarpWorld MODULE OpenraveYarpWorld.cpp
+                                         OywPeriodicWrite.cpp
+                                         OywPortReader.cpp
+                                         OpenraveYarpWorld.hpp
+                                         OywPeriodicWrite.hpp
+                                         OywPortReader.hpp
+                                         LogComponent.hpp
+                                         LogComponent.cpp)
 
-set_target_properties(OpenraveYarpWorld PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
-                                                   LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+    set_target_properties(OpenraveYarpWorld PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
+                                                       LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
 
-target_link_libraries(OpenraveYarpWorld YARP::YARP_os
-                                        YARP::YARP_init
-                                        ${OpenRAVE_LIBRARIES}
-                                        Boost::boost)
+    target_link_libraries(OpenraveYarpWorld YARP::YARP_os
+                                            YARP::YARP_init
+                                            ${OpenRAVE_LIBRARIES}
+                                            Boost::boost)
 
-include(InstallOpenravePlugin)
+    include(InstallOpenravePlugin)
 
-install_openrave_plugin(OpenraveYarpWorld)
+    install_openrave_plugin(OpenraveYarpWorld)
 
 endif()

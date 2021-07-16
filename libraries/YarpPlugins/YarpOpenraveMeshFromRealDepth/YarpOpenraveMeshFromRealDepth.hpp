@@ -3,8 +3,6 @@
 #ifndef __YARP_OPENRAVE_MESH_FROM_REAL_DEPTH_HPP__
 #define __YARP_OPENRAVE_MESH_FROM_REAL_DEPTH_HPP__
 
-#include <yarp/conf/version.h>
-
 #include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Property.h>
 
@@ -13,9 +11,7 @@
 #include <yarp/dev/PolyDriver.h>
 
 #include <yarp/sig/IntrinsicParams.h>
-#if YARP_VERSION_MINOR >= 4
-# include <yarp/sig/PointCloudUtils.h>
-#endif
+#include <yarp/sig/PointCloudUtils.h>
 #include <yarp/sig/Vector.h>
 
 #include <openrave/openrave.h>
@@ -51,12 +47,12 @@ public:
     { close(); }
 
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImpl.cpp -------
-    virtual bool open(yarp::os::Searchable & config) override;
-    virtual bool close() override;
+    bool open(yarp::os::Searchable & config) override;
+    bool close() override;
 
 protected:
     // ------- PeriodicThread declarations. Implementation in PeriodicThreadImpl.cpp -------
-    virtual void run() override;
+    void run() override;
 
 private:
     yarp::dev::PolyDriver sensorDevice;
@@ -67,11 +63,9 @@ private:
     OpenRAVE::KinBodyPtr previousMesh {nullptr};
     OpenRAVE::RobotBase::AttachedSensorPtr depthSensor;
 
-#if YARP_VERSION_MINOR >= 4
     yarp::sig::utils::PCL_ROI roi;
     int stepX {1};
     int stepY {1};
-#endif
 };
 
 } // namespace roboticslab

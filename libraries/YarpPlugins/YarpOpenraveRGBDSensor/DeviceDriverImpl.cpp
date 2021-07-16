@@ -8,16 +8,17 @@
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
-namespace roboticslab
-{
+#include "LogComponent.hpp"
 
-const int YarpOpenraveRGBDSensor::NOT_SET = -1;
+using namespace roboticslab;
+
+constexpr auto NOT_SET = -1;
 
 // ------------------- DeviceDriver Related ------------------------------------
 
 bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
 {
-    yDebug() << "YarpOpenraveRGBDSensor config:" << config.toString();
+    yCDebug(YORRS) << "Config:" << config.toString();
 
     if ( ! configureEnvironment(config) )
         return false;
@@ -35,30 +36,30 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
 
     if (depthSensorIndex == NOT_SET)  // Must be checked before comparison  with size which may be unsigned.
     {
-        yError() << "depthSensorIndex" << depthSensorIndex << "== NOT_SET, not loading yarpPlugin";
+        yCError(YORRS) << "depthSensorIndex" << depthSensorIndex << "== NOT_SET, not loading yarpPlugin";
         return false;
     }
     else if((depthSensorIndex >= vectorOfSensorPtr.size()) || (depthSensorIndex < 0))
     {
-        yError("depthSensorIndex %d not in vectorOfSensorPtr of size() %zu, not loading yarpPlugin",depthSensorIndex,vectorOfSensorPtr.size());
+        yCError(YORRS, "depthSensorIndex %d not in vectorOfSensorPtr of size() %zu, not loading yarpPlugin",depthSensorIndex,vectorOfSensorPtr.size());
         return false;
     }
 
     if (rgbSensorIndex == NOT_SET)  // Must be checked before comparison  with size which may be unsigned.
     {
-        yWarning() << "rgbSensorIndex" << rgbSensorIndex << "== NOT_SET, special case, running with RGB disabled";
+        yCWarning(YORRS) << "rgbSensorIndex" << rgbSensorIndex << "== NOT_SET, special case, running with RGB disabled";
         rgb = false;
         rgbWidth = 0;
         rgbHeight = 0;
     }
     else if(rgbSensorIndex >= vectorOfSensorPtr.size())
     {
-        yError("rgbSensorIndex %d >= vectorOfSensorPtr.size() %zu, not loading yarpPlugin",rgbSensorIndex,vectorOfSensorPtr.size());
+        yCError(YORRS, "rgbSensorIndex %d >= vectorOfSensorPtr.size() %zu, not loading yarpPlugin",rgbSensorIndex,vectorOfSensorPtr.size());
         return false;
     }
     else if (rgbSensorIndex < 0)
     {
-        yError() << "rgbSensorIndex" << rgbSensorIndex << "< 0 (and not NOT_SET), not loading yarpPlugin";
+        yCError(YORRS) << "rgbSensorIndex" << rgbSensorIndex << "< 0 (and not NOT_SET), not loading yarpPlugin";
         return false;
     }
 
@@ -67,12 +68,12 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
 
     std::string depthName = depthSensorBasePtr->GetName();
 
-    yInfo() << "Depth sensor" << depthSensorIndex << "name:" << depthName;
+    yCInfo(YORRS) << "Depth sensor" << depthSensorIndex << "name:" << depthName;
 
     // printf("Depth sensor %d description: %s\n",depthSensorIndex,depthSensorBasePtr->GetDescription().c_str());
     if ( ! depthSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Laser) )
     {
-        yError() << "Depth sensor" << depthSensorIndex << "does not support ST_Laser";
+        yCError(YORRS) << "Depth sensor" << depthSensorIndex << "does not support ST_Laser";
         return false;
     }
 
@@ -88,12 +89,12 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     // Get pointer to sensed data
     depthSensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::LaserSensorData>(depthSensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Laser));
 
-    yInfo() << "Laser min_angle:" << depthGeomDataPtr->min_angle[0] << depthGeomDataPtr->min_angle[1];  // boost::array<dReal,2>
-    yInfo() << "Laser max_angle:" << depthGeomDataPtr->max_angle[0] << depthGeomDataPtr->max_angle[1];  // boost::array<dReal,2>
-    yInfo() << "Laser resolution:" << depthGeomDataPtr->resolution[0] << depthGeomDataPtr->resolution[1];  // boost::array<dReal,2>
-    yInfo() << "Laser min_range, max_range:" << depthGeomDataPtr->min_range << depthGeomDataPtr->max_range;
-    yInfo() << "Laser time_increment:" << depthGeomDataPtr->time_increment;
-    yInfo() << "Laser time_scan:" << depthGeomDataPtr->time_scan;
+    yCInfo(YORRS) << "Laser min_angle:" << depthGeomDataPtr->min_angle[0] << depthGeomDataPtr->min_angle[1];  // boost::array<dReal,2>
+    yCInfo(YORRS) << "Laser max_angle:" << depthGeomDataPtr->max_angle[0] << depthGeomDataPtr->max_angle[1];  // boost::array<dReal,2>
+    yCInfo(YORRS) << "Laser resolution:" << depthGeomDataPtr->resolution[0] << depthGeomDataPtr->resolution[1];  // boost::array<dReal,2>
+    yCInfo(YORRS) << "Laser min_range, max_range:" << depthGeomDataPtr->min_range << depthGeomDataPtr->max_range;
+    yCInfo(YORRS) << "Laser time_increment:" << depthGeomDataPtr->time_increment;
+    yCInfo(YORRS) << "Laser time_scan:" << depthGeomDataPtr->time_scan;
 
     depthHeight = 0;
     depthWidth = 0;
@@ -115,12 +116,12 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     rgbSensorBasePtr = vectorOfSensorPtr.at(rgbSensorIndex)->GetSensor();
 
     std::string rgbName = rgbSensorBasePtr->GetName();
-    yInfo() << "Rgb sensor" << rgbSensorIndex << "name:" << rgbName;
+    yCInfo(YORRS) << "Rgb sensor" << rgbSensorIndex << "name:" << rgbName;
     // printf("Rgb sensor %d description: %s\n",rgbSensorIndex,rgbSensorBasePtr->GetDescription().c_str());
 
     if ( ! rgbSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
     {
-        yError() << "Rgb sensor" << rgbSensorIndex << "does not support ST_Camera";
+        yCError(YORRS) << "Rgb sensor" << rgbSensorIndex << "does not support ST_Camera";
         return false;
     }
 
@@ -136,7 +137,7 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     // Get pointer to sensed data
     rgbSensorDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraSensorData>(rgbSensorBasePtr->CreateSensorData(OpenRAVE::SensorBase::ST_Camera));
 
-    yInfo("Rgb width: %d, height: %d",rgbGeomDataPtr->width,rgbGeomDataPtr->height);
+    yCInfo(YORRS, "Rgb width: %d, height: %d",rgbGeomDataPtr->width,rgbGeomDataPtr->height);
     rgbWidth = rgbGeomDataPtr->width;
     rgbHeight = rgbGeomDataPtr->height;
 
@@ -156,5 +157,3 @@ bool YarpOpenraveRGBDSensor::close()
 }
 
 // -----------------------------------------------------------------------------
-
-}  // namespace roboticslab

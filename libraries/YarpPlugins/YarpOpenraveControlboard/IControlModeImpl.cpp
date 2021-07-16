@@ -4,9 +4,13 @@
 
 #include <yarp/os/LogStream.h>
 
+#include "LogComponent.hpp"
+
+using namespace roboticslab;
+
 // ------------------- IControlMode Related ------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getControlMode(int j, int *mode)
+bool YarpOpenraveControlboard::getControlMode(int j, int *mode)
 {
     *mode = controlModes[j];
     return true;
@@ -15,7 +19,7 @@ bool roboticslab::YarpOpenraveControlboard::getControlMode(int j, int *mode)
 // -----------------------------------------------------------------------------
 
 
-bool roboticslab::YarpOpenraveControlboard::getControlModes(int *modes)
+bool YarpOpenraveControlboard::getControlModes(int *modes)
 {
     bool ok = true;
     for(unsigned int i=0; i < axes; i++)
@@ -25,9 +29,9 @@ bool roboticslab::YarpOpenraveControlboard::getControlModes(int *modes)
 
 // ---------------------- IControlMode2 Related  ---------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getControlModes(const int n_joint, const int *joints, int *modes)
+bool YarpOpenraveControlboard::getControlModes(const int n_joint, const int *joints, int *modes)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
 
     bool ok = true;
     for(unsigned int i=0; i < n_joint; i++)
@@ -37,9 +41,9 @@ bool roboticslab::YarpOpenraveControlboard::getControlModes(const int n_joint, c
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setControlMode(const int j, const int mode)
+bool YarpOpenraveControlboard::setControlMode(const int j, const int mode)
 {
-    yTrace() << j << mode;
+    yCTrace(YORCB) << j << mode;
 
     controlModes[j] = mode;
 
@@ -48,9 +52,9 @@ bool roboticslab::YarpOpenraveControlboard::setControlMode(const int j, const in
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setControlModes(const int n_joint, const int *joints, int *modes)
+bool YarpOpenraveControlboard::setControlModes(const int n_joint, const int *joints, int *modes)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
 
     bool ok = true;
     for(int j=0; j<n_joint; j++)
@@ -62,9 +66,9 @@ bool roboticslab::YarpOpenraveControlboard::setControlModes(const int n_joint, c
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setControlModes(int *modes)
+bool YarpOpenraveControlboard::setControlModes(int *modes)
 {
-    yTrace();
+    yCTrace(YORCB);
 
     bool ok = true;
     for(unsigned int i=0; i<axes; i++)

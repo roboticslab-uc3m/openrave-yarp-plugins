@@ -8,25 +8,29 @@
 
 #include <yarp/os/LogStream.h>
 
+#include "LogComponent.hpp"
+
+using namespace roboticslab;
+
 // ------------------- IPositionControl Related --------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getAxes(int *ax)
+bool YarpOpenraveControlboard::getAxes(int *ax)
 {
     *ax = axes;
-    yInfo() << "Reporting" << axes << "axes are present";
+    yCInfo(YORCB) << "Reporting" << axes << "axes are present";
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref)
+bool YarpOpenraveControlboard::positionMove(int j, double ref)
 {
-    yTrace() << j << ref;
+    yCTrace(YORCB) << j << ref;
 
     //-- Check if we are in position mode.
     if( controlModes[j] != VOCAB_CM_POSITION )
     {
-        yError() << "Will not positionMove() as joint" << j << "not in positionMode";
+        yCError(YORCB) << "Will not positionMove() as joint" << j << "not in positionMode";
         return false;
     }
 
@@ -38,7 +42,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref)
     //-- But do not move if no velocity
     if( refSpeeds[ j ] == 0 )
     {
-        yDebug("[%d] (refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true",j);
+        yCDebug(YORCB, "[%d] (refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true",j);
         return true;
     }
 
@@ -61,7 +65,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref)
         //std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
         //for(size_t i=0; i<activeDOFIndices.size(); i++)
         //{
-        //    yDebug("activeDOFIndices[%d]: %d",i,activeDOFIndices[i]);
+        //    yCDebug(YORCB, "activeDOFIndices[%d]: %d",i,activeDOFIndices[i]);
         //}
 
         //-- Could get the activeConfigurationSpecification from the robot, and modify it
@@ -105,7 +109,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref)
         //for (size_t i = 0; i < oneDofConfigurationSpecification._vgroups.size(); i++)
         //{
         //    OpenRAVE::ConfigurationSpecification::Group g = oneDofConfigurationSpecification._vgroups[i];
-        //    yDebug("[%d] %s, %d, %d, %s",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
+        //    yCDebug(YORCB, "[%d] %s, %d, %d, %s",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
         //}
 
         OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
@@ -116,7 +120,7 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref)
 
         OpenRAVE::dReal dofTime = std::abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
 
-        yDebug("[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
+        yCDebug(YORCB, "[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
@@ -142,9 +146,9 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(int j, double ref)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::positionMove(const double *refs)
+bool YarpOpenraveControlboard::positionMove(const double *refs)
 {
-    yTrace();;
+    yCTrace(YORCB);;
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= positionMove(i,refs[i]);
@@ -153,9 +157,9 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(const double *refs)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::relativeMove(int j, double delta)
+bool YarpOpenraveControlboard::relativeMove(int j, double delta)
 {
-    yTrace() << j << delta;
+    yCTrace(YORCB) << j << delta;
 
     double v = radToDegIfNotPrismatic(j, vectorOfJointPtr[j]->GetValue(0) );
 
@@ -164,9 +168,9 @@ bool roboticslab::YarpOpenraveControlboard::relativeMove(int j, double delta)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::relativeMove(const double *deltas)
+bool YarpOpenraveControlboard::relativeMove(const double *deltas)
 {
-    yTrace();
+    yCTrace(YORCB);
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= relativeMove(i,deltas[i]);
@@ -175,18 +179,18 @@ bool roboticslab::YarpOpenraveControlboard::relativeMove(const double *deltas)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::checkMotionDone(int j, bool *flag)
+bool YarpOpenraveControlboard::checkMotionDone(int j, bool *flag)
 {
-    yTrace() << j;
+    yCTrace(YORCB) << j;
     *flag = pcontrols[j]->IsDone();
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::checkMotionDone(bool *flag)
+bool YarpOpenraveControlboard::checkMotionDone(bool *flag)
 {
-    yTrace();
+    yCTrace(YORCB);
     bool done = true;
     for(unsigned int j=0;j<axes;j++)
     {
@@ -200,14 +204,14 @@ bool roboticslab::YarpOpenraveControlboard::checkMotionDone(bool *flag)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setRefSpeed(int j, double sp)
+bool YarpOpenraveControlboard::setRefSpeed(int j, double sp)
 {
-    yTrace() << j << sp;
+    yCTrace(YORCB) << j << sp;
     double min,max;
     getVelLimits( j, &min, &max );
     if( sp > max )
     {
-        yWarning() << "Setting" << sp << "refSpeed above" << max << "maxVelLimit, all joint" << j << "movements will be immediate";
+        yCWarning(YORCB) << "Setting" << sp << "refSpeed above" << max << "maxVelLimit, all joint" << j << "movements will be immediate";
     }
     refSpeeds[j] = sp;
     return true;
@@ -215,9 +219,9 @@ bool roboticslab::YarpOpenraveControlboard::setRefSpeed(int j, double sp)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const double *spds)
+bool YarpOpenraveControlboard::setRefSpeeds(const double *spds)
 {
-    yTrace();
+    yCTrace(YORCB);
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= setRefSpeed(i,spds[i]);
@@ -226,34 +230,34 @@ bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const double *spds)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setRefAcceleration(int j, double acc)
+bool YarpOpenraveControlboard::setRefAcceleration(int j, double acc)
 {
-    yError() << "setRefAcceleration() not implemented";
+    yCError(YORCB) << "setRefAcceleration() not implemented";
     return false;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const double *accs)
+bool YarpOpenraveControlboard::setRefAccelerations(const double *accs)
 {
-    yError() << "setRefAccelerations() not implemented";
+    yCError(YORCB) << "setRefAccelerations() not implemented";
     return false;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefSpeed(int j, double *ref)
+bool YarpOpenraveControlboard::getRefSpeed(int j, double *ref)
 {
-    yTrace() << j;
+    yCTrace(YORCB) << j;
     *ref = refSpeeds[j];
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(double *spds)
+bool YarpOpenraveControlboard::getRefSpeeds(double *spds)
 {
-    yTrace();
+    yCTrace(YORCB);
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= getRefSpeed(i,&spds[i]);
@@ -262,25 +266,25 @@ bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(double *spds)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefAcceleration(int j, double *acc)
+bool YarpOpenraveControlboard::getRefAcceleration(int j, double *acc)
 {
-    yError() << "getRefAcceleration() not implemented";
+    yCError(YORCB) << "getRefAcceleration() not implemented";
     return false;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(double *accs)
+bool YarpOpenraveControlboard::getRefAccelerations(double *accs)
 {
-    yError() << "getRefAccelerations() not implemented";
+    yCError(YORCB) << "getRefAccelerations() not implemented";
     return false;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::stop(int j)
+bool YarpOpenraveControlboard::stop(int j)
 {
-    yTrace() << j;
+    yCTrace(YORCB) << j;
     OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
     std::vector<OpenRAVE::dReal> tmp;
     tmp.push_back(dofCurrentRads);
@@ -290,9 +294,9 @@ bool roboticslab::YarpOpenraveControlboard::stop(int j)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::stop()
+bool YarpOpenraveControlboard::stop()
 {
-    yTrace();
+    yCTrace(YORCB);
     bool ok = true;
     for(unsigned int i=0;i<axes;i++)
         ok &= stop(i);
@@ -301,9 +305,9 @@ bool roboticslab::YarpOpenraveControlboard::stop()
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
+bool YarpOpenraveControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -314,9 +318,9 @@ bool roboticslab::YarpOpenraveControlboard::positionMove(const int n_joint, cons
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
+bool YarpOpenraveControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -327,9 +331,9 @@ bool roboticslab::YarpOpenraveControlboard::relativeMove(const int n_joint, cons
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flag)
+bool YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flag)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
     bool ok = true;
     bool done = true;
     for(int i=0;i<n_joint;i++)
@@ -344,9 +348,9 @@ bool roboticslab::YarpOpenraveControlboard::checkMotionDone(const int n_joint, c
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
+bool YarpOpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -357,9 +361,9 @@ bool roboticslab::YarpOpenraveControlboard::setRefSpeeds(const int n_joint, cons
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
+bool YarpOpenraveControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -370,9 +374,9 @@ bool roboticslab::YarpOpenraveControlboard::setRefAccelerations(const int n_join
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
+bool YarpOpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -383,9 +387,9 @@ bool roboticslab::YarpOpenraveControlboard::getRefSpeeds(const int n_joint, cons
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
+bool YarpOpenraveControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
     bool ok = true;
     for(int i=0;i<n_joint;i++)
     {
@@ -396,9 +400,9 @@ bool roboticslab::YarpOpenraveControlboard::getRefAccelerations(const int n_join
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::stop(const int n_joint, const int *joints)
+bool YarpOpenraveControlboard::stop(const int n_joint, const int *joints)
 {
-    yTrace() << n_joint;
+    yCTrace(YORCB) << n_joint;
     bool ok = true;
     for(unsigned int i=0;i<n_joint;i++)
         ok &= stop(joints[i]);
@@ -407,25 +411,25 @@ bool roboticslab::YarpOpenraveControlboard::stop(const int n_joint, const int *j
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getTargetPosition(const int joint, double *ref)
+bool YarpOpenraveControlboard::getTargetPosition(const int joint, double *ref)
 {
-    yError() << "getTargetPosition() not implemented";
+    yCError(YORCB) << "getTargetPosition() not implemented";
     return false;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getTargetPositions(double *refs)
+bool YarpOpenraveControlboard::getTargetPositions(double *refs)
 {
-    yError() << "getTargetPositions() not implemented";
+    yCError(YORCB) << "getTargetPositions() not implemented";
     return false;
 }
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::YarpOpenraveControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
+bool YarpOpenraveControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
 {
-    yError() << "getTargetPositions() not implemented";
+    yCError(YORCB) << "getTargetPositions() not implemented";
     return false;
 }
 

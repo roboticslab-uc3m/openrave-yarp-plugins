@@ -7,15 +7,13 @@ yarp_prepare_plugin(YarpOpenraveMeshFromRealDepth
 
 if(NOT SKIP_YarpOpenraveMeshFromRealDepth)
 
-    if(NOT YARP_VERSION VERSION_GREATER_EQUAL 3.4)
-        set(CMAKE_INCLUDE_CURRENT_DIR TRUE) # yarp plugin builder needs this
-    endif()
-
     link_directories(${OpenRAVE_LIBRARY_DIRS})
 
     yarp_add_plugin(YarpOpenraveMeshFromRealDepth YarpOpenraveMeshFromRealDepth.hpp
                                                   DeviceDriverImpl.cpp
-                                                  PeriodicThreadImpl.cpp)
+                                                  PeriodicThreadImpl.cpp
+                                                  LogComponent.hpp
+                                                  LogComponent.cpp)
 
     set_target_properties(YarpOpenraveMeshFromRealDepth PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                                    LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

@@ -26,7 +26,9 @@ namespace roboticslab
  * @brief Implements the YARP_dev DeviceDriver, and IRobotManager.
  * interface class member functions.
  */
-class YarpOpenraveRobotManager : YarpOpenraveBase, public yarp::dev::DeviceDriver, public asrob::IRobotManager
+class YarpOpenraveRobotManager : YarpOpenraveBase,
+                                 public yarp::dev::DeviceDriver,
+                                 public asrob::IRobotManager
 {
 public:
     //! Lists available translational representations.
@@ -36,32 +38,25 @@ public:
         FOUR_WHEEL_IDEALVELOCITYCONTROLLER
     };
 
-    YarpOpenraveRobotManager() {}
-
-
     // -------- DeviceDriver declarations. Implementation in DeviceDriverImpl.cpp --------
-
-    virtual bool open(yarp::os::Searchable& config);
-    virtual bool close();
+    bool open(yarp::os::Searchable& config) override;
+    bool close() override;
 
     // ------- IRobotManager declarations. Implementation in IRobotManagerImpl.cpp -------
-
-    virtual bool moveForward(double value);
-    virtual bool turnLeft(double value);
-    virtual bool stopMovement();
-    virtual bool tiltDown(double value);
-    virtual bool panLeft(double value);
-    virtual bool stopCameraMovement();
+    bool moveForward(double value) override;
+    bool turnLeft(double value) override;
+    bool stopMovement() override;
+    bool tiltDown(double value) override;
+    bool panLeft(double value) override;
+    bool stopCameraMovement() override;
 
 private:
-
     robot_mode mode;
 
     // OpenRAVE
     OpenRAVE::ControllerBasePtr pcontrol;
-
 };
 
-}  // namespace roboticslab
+} // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_ROBOT_MANAGER_HPP__
+#endif // __YARP_OPENRAVE_ROBOT_MANAGER_HPP__

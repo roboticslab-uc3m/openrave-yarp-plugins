@@ -12,6 +12,8 @@
 
 #include <YarpCloudUtils.hpp>
 
+#include "LogComponent.hpp"
+
 using namespace roboticslab;
 
 // -----------------------------------------------------------------------------
@@ -23,16 +25,12 @@ void YarpOpenraveMeshFromRealDepth::run()
 
     if (!iRGBDSensor->getDepthImage(depthImage))
     {
-        yWarning() << "No frame received!";
+        yCWarning(YORMFRD) << "No frame received!";
         return;
     }
 
     // Compute point cloud
-#if YARP_VERSION_MINOR >= 4
     yarp::sig::PointCloudXYZ cloud = yarp::sig::utils::depthToPC(depthImage, depthIntrinsicParams, roi, stepX, stepY);
-#else
-    yarp::sig::PointCloudXYZ cloud = yarp::sig::utils::depthToPC(depthImage, depthIntrinsicParams);
-#endif
 
     // Reconstruct surface mesh
     yarp::sig::PointCloudXYZ meshVertices;
@@ -40,7 +38,7 @@ void YarpOpenraveMeshFromRealDepth::run()
 
     if (!YarpCloudUtils::meshFromCloud(cloud, meshVertices, meshIndices, meshOptions))
     {
-        yError() << "Reconstruction failed!";
+        yCError(YORMFRD) << "Reconstruction failed!";
         yarp::os::PeriodicThread::askToStop();
         return;
     }

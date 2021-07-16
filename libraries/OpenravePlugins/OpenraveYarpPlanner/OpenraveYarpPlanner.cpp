@@ -9,19 +9,22 @@
 #include <yarp/os/Property.h>
 #include <yarp/os/ResourceFinder.h>
 
+#include "LogComponent.hpp"
 #include "OpenraveYarpPlanner.hpp"
+
+using namespace roboticslab;
 
 // -----------------------------------------------------------------------------
 
-roboticslab::OpenraveYarpPlanner::OpenraveYarpPlanner(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
+OpenraveYarpPlanner::OpenraveYarpPlanner(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
 {
     __description = "OpenraveYarpPlanner plugin.";
     OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPlanner::Open, this,_1,_2),"opens OpenraveYarpPlanner");
 
-    yInfo() << "Checking for yarp network...";
+    yCInfo(ORYP) << "Checking for yarp network...";
     if ( ! yarp.checkNetwork() )
-        yError() << "Found no yarp network (try running \"yarpserver &\")";
-    yInfo() << "Found yarp network";
+        yCError(ORYP) << "Found no yarp network (try running \"yarpserver &\")";
+    yCInfo(ORYP) << "Found yarp network";
 
     oypPortReader.setOpenraveYarpPlannerPtr(this);
     oypRpcServer.setReader(oypPortReader);
@@ -30,7 +33,7 @@ roboticslab::OpenraveYarpPlanner::OpenraveYarpPlanner(OpenRAVE::EnvironmentBaseP
 
 // -----------------------------------------------------------------------------
 
-roboticslab::OpenraveYarpPlanner::~OpenraveYarpPlanner()
+OpenraveYarpPlanner::~OpenraveYarpPlanner()
 {
     oypRpcServer.interrupt();
 
@@ -39,14 +42,14 @@ roboticslab::OpenraveYarpPlanner::~OpenraveYarpPlanner()
 
 // -----------------------------------------------------------------------------
 
-void roboticslab::OpenraveYarpPlanner::Destroy()
+void OpenraveYarpPlanner::Destroy()
 {
     RAVELOG_INFO("module unloaded from environment\n");
 }
 
 // -----------------------------------------------------------------------------
 
-int roboticslab::OpenraveYarpPlanner::main(const std::string& cmd)
+int OpenraveYarpPlanner::main(const std::string& cmd)
 {
     RAVELOG_INFO("module initialized with \"%s\"\n", cmd.c_str());
     // hard-coding "open"
@@ -59,12 +62,12 @@ int roboticslab::OpenraveYarpPlanner::main(const std::string& cmd)
 
 // -----------------------------------------------------------------------------
 
-bool roboticslab::OpenraveYarpPlanner::Open(std::ostream& sout, std::istream& sinput)
+bool OpenraveYarpPlanner::Open(std::ostream& sout, std::istream& sinput)
 {
-    yInfo() << "Checking for yarp network...";
+    yCInfo(ORYP) << "Checking for yarp network...";
     if ( ! yarp.checkNetwork() )
     {
-        yError() << "Found no yarp network (try running \"yarpserver &\")";
+        yCError(ORYP) << "Found no yarp network (try running \"yarpserver &\")";
         sout << "-1 ";
         return false;
     }
@@ -74,19 +77,18 @@ bool roboticslab::OpenraveYarpPlanner::Open(std::ostream& sout, std::istream& si
     yarp::os::Property options;
     options.fromArguments(s.c_str());
 
-    yDebug() << "Config:" << options.toString();
+    yCDebug(ORYP) << "Config:" << options.toString();
 
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
 {
     if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpplanner")
     {
-        return OpenRAVE::InterfaceBasePtr(new roboticslab::OpenraveYarpPlanner(penv));
+        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPlanner(penv));
     }
     return OpenRAVE::InterfaceBasePtr();
 }

@@ -42,6 +42,7 @@
 
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionWriter.h>
+#include <yarp/os/LogComponent.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/PeriodicThread.h>
@@ -52,23 +53,20 @@
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Value.h>
 
-#define NULL_JMC_MS 20
+YARP_LOG_COMPONENT(ORYFE, "rl.OpenraveYarpForceEstimator")
 
-#define OBJECT_1 "object"
-#define OBJECT_2 "TableKinBody"
+constexpr auto NULL_JMC_MS = 20;
 
-#define ERROR_GAIN 50.0
-#define ERROR_OFFSET 0.0
-#define DEFAULT_PORT_NAME "/openraveYarpForceEstimator/rpc:s"
-#define DEFAULT_WRINKLESIZE 4
+constexpr auto OBJECT_1 = "object";
+constexpr auto OBJECT_2 = "TableKinBody";
 
-//Square
+constexpr auto ERROR_GAIN = 50.0;
+constexpr auto ERROR_OFFSET = 0.0;
+constexpr auto DEFAULT_PORT_NAME = "/openraveYarpForceEstimator/rpc:s";
+constexpr auto DEFAULT_WRINKLESIZE = 4;
 
-//YARP_DECLARE_PLUGINS(yarpplugins)
-
-
-class DataProcessor : public yarp::os::PortReader {
-
+class DataProcessor : public yarp::os::PortReader
+{
 public:
     void setPsqIroned(std::vector<int>* psqIroned) {
         this->psqIroned = psqIroned;
@@ -84,17 +82,16 @@ public:
     }
 
 private:
-
     std::vector<int>* psqIroned;
     yarp::os::Semaphore* psqIronedSemaphore;
     float* pforceValue;
     yarp::os::Semaphore* pforceValueSemaphore;
 
-    virtual bool read(yarp::os::ConnectionReader& in)
+    bool read(yarp::os::ConnectionReader& in) override
     {
         yarp::os::Bottle request, response;
         if (!request.read(in)) return false;
-        yDebug() << "Request:" << request.toString();
+        yCDebug(ORYFE) << "Request:" << request.toString();
         yarp::os::ConnectionWriter *out = in.getWriter();
         if (out==NULL) return true;
 
@@ -137,42 +134,38 @@ private:
         response.addString("unknown command");
         return response.write(*out);
     }
-
 };
 
-class TeoSimRateThread : public yarp::os::PeriodicThread {
-     public:
+class TeoSimRateThread : public yarp::os::PeriodicThread
+{
+public:
+    // Set the Thread Rate in the class constructor
+    TeoSimRateThread() : yarp::os::PeriodicThread(NULL_JMC_MS * 0.001) {}  // In seconds
 
-        // Set the Thread Rate in the class constructor
-        TeoSimRateThread() : yarp::os::PeriodicThread(NULL_JMC_MS * 0.001) {}  // In seconds
+    /**
+     * Loop function. This is the thread itself.
+     */
+    void run() override;
 
-        /**
-         * Loop function. This is the thread itself.
-         */
-        void run();
+    // public... buahahaha
+    //KinBodyPtr pObject1;
+    //KinBodyPtr pObject2;
+    yarp::os::Port port;
+    // Not my fault :D
+    OpenRAVE::KinBodyPtr _objPtr;
+    OpenRAVE::KinBodyPtr _ironWrinkle;
 
-        // public... buahahaha
-        //KinBodyPtr pObject1;
-        //KinBodyPtr pObject2;
-        yarp::os::Port port;
-        // Not my fault :D
-        OpenRAVE::KinBodyPtr _objPtr;
-        OpenRAVE::KinBodyPtr _ironWrinkle;
+    std::vector<int> sqIroned;
+    yarp::os::Semaphore sqIronedSemaphore;
+    yarp::os::Semaphore forceValueSemaphore;
+    float forceValue;
 
-        std::vector<int> sqIroned;
-        yarp::os::Semaphore sqIronedSemaphore;
-        yarp::os::Semaphore forceValueSemaphore;
-        float forceValue;
-
-
-        // ------------------------------- Private -------------------------------------
-        private:
-
-        OpenRAVE::Transform T_base_object;
-
+private:
+    OpenRAVE::Transform T_base_object;
 };
 
-void TeoSimRateThread::run() {
+void TeoSimRateThread::run()
+{
     //printf("[TeoSimRateThread] run()\n");
 
     /*
@@ -207,8 +200,6 @@ void TeoSimRateThread::run() {
         forceValueSemaphore.post();
     }
 
-
-
     //double estimatedForceZ = fabs((ERROR_GAIN * (t2.trans.z - t1.trans.z) ) - ERROR_OFFSET);
     //yarp::os::Bottle out;
     //out.addFloat64(t1.trans.z);
@@ -230,7 +221,6 @@ void TeoSimRateThread::run() {
     //cout<<"Orientacion Y es: "<<T_base_object_oy<<endl;
     //cout<<"Orientacion Z es: "<<T_base_object_oz<<endl;
     //cout<<"Valor W es: "<<T_base_object_ow<<endl;
-
 
     //Update psqIroned to the new values
     for(int i=0; i<(sqIroned.size()); i++)
@@ -265,21 +255,21 @@ void TeoSimRateThread::run() {
         {
             _ironWrinkle->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.5, 0.5, 0.5));
         }
-
     }
-
 }
 
 class OpenraveYarpForceEstimator : public OpenRAVE::ModuleBase
 {
 public:
-    OpenraveYarpForceEstimator(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv) {
+    OpenraveYarpForceEstimator(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
+    {
         //YARP_REGISTER_PLUGINS(yarpplugins);
         __description = "OpenraveYarpForceEstimator plugin.";
         OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpForceEstimator::Open, this,_1,_2),"opens OpenraveYarpForceEstimator");
     }
 
-    virtual ~OpenraveYarpForceEstimator() {
+    ~OpenraveYarpForceEstimator() override
+    {
         //-- Note that we start on element 1, first elem was not via new!!
         for(size_t i=1;i<argv.size();i++)
         {
@@ -290,8 +280,8 @@ public:
         teoSimRateThread.port.close();
     }
 
-    virtual void Destroy() {
-
+    void Destroy() override
+    {
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
@@ -302,10 +292,10 @@ public:
 
     bool Open(std::ostream& sout, std::istream& sinput)
     {
-        yInfo() << "Checking for yarp network...";
+        yCInfo(ORYFE) << "Checking for yarp network...";
         if ( ! yarp.checkNetwork() )
         {
-            yError() << "Found no yarp network (try running \"yarpserver &\")";
+            yCError(ORYFE) << "Found no yarp network (try running \"yarpserver &\")";
             return false;
         }
 
@@ -328,13 +318,13 @@ public:
         yarp::os::Property options;
         options.fromCommand(argv.size(),argv.data());
 
-        yDebug() << "Config:" << options.toString();
+        yCDebug(ORYFE) << "Config:" << options.toString();
 
         std::string portName = options.check("name",yarp::os::Value(DEFAULT_PORT_NAME),"port name").asString();
-        yInfo() << "Port name:" << portName;
+        yCInfo(ORYFE) << "Port name:" << portName;
 
         int wrinkleSize = options.check("wrinkleSize",yarp::os::Value(DEFAULT_WRINKLESIZE),"wrinkle Size").asInt32();
-        yInfo() << "Wrinkle size:" << wrinkleSize;
+        yCInfo(ORYFE) << "Wrinkle size:" << wrinkleSize;
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
@@ -413,21 +403,22 @@ private:
 
     DataProcessor processor;
     yarp::os::RpcServer rpcServer;
-
-
 };
 
-OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv) {
+OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
+{
     if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpforceestimator" ) {
         return OpenRAVE::InterfaceBasePtr(new OpenraveYarpForceEstimator(penv));
     }
     return OpenRAVE::InterfaceBasePtr();
 }
 
-void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info) {
+void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
+{
     info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpForceEstimator");
 }
 
-OPENRAVE_PLUGIN_API void DestroyPlugin() {
+OPENRAVE_PLUGIN_API void DestroyPlugin()
+{
     RAVELOG_INFO("destroying plugin\n");
 }

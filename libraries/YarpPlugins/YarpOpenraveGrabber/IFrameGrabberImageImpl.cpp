@@ -8,8 +8,7 @@
 
 #include <yarp/sig/Image.h>
 
-namespace roboticslab
-{
+using namespace roboticslab;
 
 // ------------------ IFrameGrabberImage Related ----------------------------------------
 
@@ -77,5 +76,3 @@ int YarpOpenraveGrabber::getRgbWidth()
 }
 
 // ----------------------------------------------------------------------------
-
-}

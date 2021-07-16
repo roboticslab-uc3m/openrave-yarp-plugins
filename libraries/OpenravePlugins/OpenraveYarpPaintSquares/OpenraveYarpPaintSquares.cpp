@@ -42,6 +42,7 @@
 
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionWriter.h>
+#include <yarp/os/LogComponent.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/PeriodicThread.h>
@@ -51,30 +52,34 @@
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Value.h>
 
-#define DEFAULT_RATE_S 0.1
-#define DEFAULT_SQUARES 64
-#define DEFAULT_PORT_NAME "/openraveYarpPaintSquares/rpc:s"
+YARP_LOG_COMPONENT(ORYPS, "rl.OpenraveYarpPaintSquares")
 
-class DataProcessor : public yarp::os::PortReader {
+constexpr auto DEFAULT_RATE_S = 0.1;
+constexpr auto DEFAULT_SQUARES = 64;
+constexpr auto DEFAULT_PORT_NAME = "/openraveYarpPaintSquares/rpc:s";
 
+class DataProcessor : public yarp::os::PortReader
+{
 public:
-    void setPsqPainted(std::vector<int>* psqPainted) {
+    void setPsqPainted(std::vector<int>* psqPainted)
+    {
         this->psqPainted = psqPainted;
     }
-    void setPsqPaintedSemaphore(yarp::os::Semaphore* psqPaintedSemaphore) {
+
+    void setPsqPaintedSemaphore(yarp::os::Semaphore* psqPaintedSemaphore)
+    {
         this->psqPaintedSemaphore = psqPaintedSemaphore;
     }
 
 private:
-
     std::vector<int>* psqPainted;
     yarp::os::Semaphore* psqPaintedSemaphore;
 
-    virtual bool read(yarp::os::ConnectionReader& in)
+    bool read(yarp::os::ConnectionReader& in) override
     {
         yarp::os::Bottle request, response;
         if (!request.read(in)) return false;
-        yDebug() << "Request:" << request.toString();
+        yCDebug(ORYPS) << "Request:" << request.toString();
         yarp::os::ConnectionWriter *out = in.getWriter();
         if (out==NULL) return true;
 
@@ -110,19 +115,19 @@ private:
         response.addString("unknown command");
         return response.write(*out);
     }
-
-
 };
 
-class OpenraveYarpPaintSquares : public OpenRAVE::ModuleBase, public yarp::os::PeriodicThread
+class OpenraveYarpPaintSquares : public OpenRAVE::ModuleBase,
+                                 public yarp::os::PeriodicThread
 {
 public:
-    OpenraveYarpPaintSquares(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::PeriodicThread(DEFAULT_RATE_S) {
+    OpenraveYarpPaintSquares(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::PeriodicThread(DEFAULT_RATE_S)
+    {
         __description = "OpenraveYarpPaintSquares plugin.";
         OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens OpenraveYarpPaintSquares");
     }
 
-    virtual ~OpenraveYarpPaintSquares()
+    ~OpenraveYarpPaintSquares() override
     {
         //-- Note that we start on element 1, first elem was not via new!!
         for(size_t i=1;i<argv.size();i++)
@@ -134,8 +139,8 @@ public:
         rpcServer.close();
     }
 
-    virtual void Destroy() {
-
+    void Destroy() override
+    {
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
@@ -146,10 +151,10 @@ public:
 
     bool Open(std::ostream& sout, std::istream& sinput)
     {
-        yInfo() << "Checking for yarp network...";
+        yCInfo(ORYPS) << "Checking for yarp network...";
         if ( ! yarp.checkNetwork() )
         {
-            yError() << "Found no yarp network (try running \"yarpserver &\")";
+            yCError(ORYPS) << "Found no yarp network (try running \"yarpserver &\")";
             return false;
         }
 
@@ -172,13 +177,13 @@ public:
         yarp::os::Property options;
         options.fromCommand(argv.size(),argv.data());
 
-        yDebug() << "Config:" << options.toString();
+        yCDebug(ORYPS) << "Config:" << options.toString();
 
         std::string portName = options.check("name",yarp::os::Value(DEFAULT_PORT_NAME),"port name").asString();
-        yInfo() << "Port name:" << portName;
+        yCInfo(ORYPS) << "Port name:" << portName;
 
         int squares = options.check("squares",yarp::os::Value(DEFAULT_SQUARES),"number of squares").asInt32();
-        yInfo() << "Squares:" << squares;
+        yCInfo(ORYPS) << "Squares:" << squares;
 
         RAVELOG_INFO("penv: %p\n",GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
@@ -227,7 +232,7 @@ public:
         return true;
     }
 
-    virtual void run()
+    void run() override
     {
         //RAVELOG_INFO("thread\n");
 
@@ -385,21 +390,22 @@ private:
 
     //Brush colour
     int brushColour = 1; //Init to cyan colour as default.
-
-
 };
 
-OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv) {
+OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
+{
     if( type == OpenRAVE::PT_Module && interfacename == "openraveyarppaintsquares" ) {
         return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPaintSquares(penv));
     }
     return OpenRAVE::InterfaceBasePtr();
 }
 
-void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info) {
+void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
+{
     info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpPaintSquares");
 }
 
-OPENRAVE_PLUGIN_API void DestroyPlugin() {
+OPENRAVE_PLUGIN_API void DestroyPlugin()
+{
     RAVELOG_INFO("destroying plugin\n");
 }

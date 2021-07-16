@@ -4,7 +4,6 @@
 #define __OPEN_PORT_READER_HPP__
 
 #include <yarp/os/PortReader.h>
-#include <yarp/os/Vocab.h>
 
 namespace roboticslab
 {
@@ -22,10 +21,7 @@ public:
 private:
     OpenraveYarpPluginLoader* openraveYarpPluginLoaderPtr;
 
-    virtual bool read(yarp::os::ConnectionReader& in) override;
-
-    static const yarp::conf::vocab32_t VOCAB_OK;
-    static const yarp::conf::vocab32_t VOCAB_FAILED;
+    bool read(yarp::os::ConnectionReader& in) override;
 };
 
 } // namespace roboticslab
