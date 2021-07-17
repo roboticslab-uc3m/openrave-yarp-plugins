@@ -52,7 +52,10 @@
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Value.h>
 
-YARP_LOG_COMPONENT(ORYPS, "rl.OpenraveYarpPaintSquares")
+namespace
+{
+    YARP_LOG_COMPONENT(ORYPS, "rl.OpenraveYarpPaintSquares")
+}
 
 constexpr auto DEFAULT_RATE_S = 0.1;
 constexpr auto DEFAULT_SQUARES = 64;

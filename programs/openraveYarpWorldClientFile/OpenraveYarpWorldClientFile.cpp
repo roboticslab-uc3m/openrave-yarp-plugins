@@ -9,9 +9,12 @@
 #include <yarp/os/Network.h>
 #include <yarp/os/Vocab.h>
 
-YARP_LOG_COMPONENT(ORYWCF, "rl.OpenraveYarpWorldClientFile")
-
 using namespace roboticslab;
+
+namespace
+{
+    YARP_LOG_COMPONENT(ORYWCF, "rl.OpenraveYarpWorldClientFile")
+}
 
 /************************************************************************/
 

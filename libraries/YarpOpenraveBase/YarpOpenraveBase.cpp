@@ -16,9 +16,12 @@
 
 #include <boost/bind/bind.hpp>
 
-YARP_LOG_COMPONENT(YORB, "rl.YarpOpenraveBase")
-
 using namespace roboticslab;
+
+namespace
+{
+    YARP_LOG_COMPONENT(YORB, "rl.YarpOpenraveBase")
+}
 
 constexpr auto NOT_SET = -1;
 

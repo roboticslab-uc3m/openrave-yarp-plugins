@@ -53,7 +53,10 @@
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Value.h>
 
-YARP_LOG_COMPONENT(ORYFE, "rl.OpenraveYarpForceEstimator")
+namespace
+{
+    YARP_LOG_COMPONENT(ORYFE, "rl.OpenraveYarpForceEstimator")
+}
 
 constexpr auto NULL_JMC_MS = 20;
 

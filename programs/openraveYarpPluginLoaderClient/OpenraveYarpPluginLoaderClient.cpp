@@ -9,9 +9,12 @@
 #include <yarp/os/Network.h>
 #include <yarp/os/Vocab.h>
 
-YARP_LOG_COMPONENT(ORYPLC, "rl.OpenraveYarpPluginLoaderClient")
-
 using namespace roboticslab;
+
+namespace
+{
+    YARP_LOG_COMPONENT(ORYPLC, "rl.OpenraveYarpPluginLoaderClient")
+}
 
 /************************************************************************/
 

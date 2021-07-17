@@ -22,9 +22,12 @@
 
 #include <YarpCloudUtils.hpp>
 
-YARP_LOG_COMPONENT(ORYWCM, "rl.OpenraveYarpWorldClientMesh")
-
 using namespace roboticslab;
+
+namespace
+{
+    YARP_LOG_COMPONENT(ORYWCM, "rl.OpenraveYarpWorldClientMesh")
+}
 
 constexpr auto DEFAULT_PERIOD_S = 1.0;
 #if YARP_VERSION_MINOR >= 5
