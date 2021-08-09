@@ -3,6 +3,8 @@
 #include <algorithm> // std::equal
 #include <string>
 
+#include <openrave/config.h>
+
 #include <yarp/conf/version.h>
 
 #include <yarp/os/Bottle.h>
@@ -278,7 +280,11 @@ world draw 0/1 (radius r g b).");
                 else if (request.get(5).asInt32()==0)
                 {
                     yCInfo(ORYW) << "Object released";
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 13, 0)
                     openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Release(*objPtr); // robot was found at tryToSetActiveManipulator
+#else
+                    openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Release(objPtr); // robot was found at tryToSetActiveManipulator
+#endif
 #if YARP_VERSION_MINOR >= 5
                     response.addVocab32(VOCAB_OK);
 #else
