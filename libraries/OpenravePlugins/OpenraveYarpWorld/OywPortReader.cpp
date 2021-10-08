@@ -348,7 +348,11 @@ world draw 0/1 (radius r g b).");
                     OpenRAVE::KinBody::GeometryInfo scylInfo;
                     scylInfo._type = OpenRAVE::GeometryType::GT_Cylinder;
                     OpenRAVE::Transform pose(OpenRAVE::Vector(1,0,0,0),OpenRAVE::Vector(request.get(5).asFloat64(),request.get(6).asFloat64(),request.get(7).asFloat64()));
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 70, 0)
+                    scylInfo.SetTransform(pose);
+#else
                     scylInfo._t = pose;
+#endif
                     OpenRAVE::Vector volume;
                     volume.x = request.get(3).asFloat64();
                     volume.y = request.get(4).asFloat64();
@@ -543,7 +547,11 @@ world draw 0/1 (radius r g b).");
                 objKinBodyPtr->GetLinks()[0]->SetPrincipalMomentsOfInertia(inertia);
 
                 objKinBodyPtr->SetName(objName);
-                openraveYarpWorldPtr->GetEnv()->Add(objKinBodyPtr,true);
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
+                openraveYarpWorldPtr->GetEnv()->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
+#else
+                openraveYarpWorldPtr->GetEnv()->Add(objKinBodyPtr, true);
+#endif
                 if(!objIsStatic)
                 {
                     objKinBodyPtr->GetLinks()[0]->SetStatic(false);

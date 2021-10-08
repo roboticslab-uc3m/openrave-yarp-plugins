@@ -2,6 +2,8 @@
 
 #include <yarp/conf/version.h>
 
+#include <openrave/config.h>
+
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionReader.h>
 #include <yarp/os/LogStream.h>
@@ -103,7 +105,11 @@ bool OypPortReader::read(yarp::os::ConnectionReader& in)
         std::vector<int> manipulatorIDs = manipulatorPtr->GetArmIndices();
 
         OpenRAVE::ModuleBasePtr pbasemanip = RaveCreateModule(openraveYarpPlannerPtr->GetEnv(),"basemanipulation");
-        openraveYarpPlannerPtr->GetEnv()->Add(pbasemanip,true,request.get(1).asString()); // load the module
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
+        openraveYarpPlannerPtr->GetEnv()->Add(pbasemanip, OpenRAVE::IAM_AllowRenaming, request.get(1).asString()); // load the module
+#else
+        openraveYarpPlannerPtr->GetEnv()->Add(pbasemanip, true, request.get(1).asString()); // load the module
+#endif
 
         std::stringstream cmdin, cmdout;
         cmdin << "MoveManipulator outputtraj goal ";

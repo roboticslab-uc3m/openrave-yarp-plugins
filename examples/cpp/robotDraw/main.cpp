@@ -185,7 +185,11 @@ int main(int argc, char *argv[])
         yDebug() << "Got" << pointsIn.toString();
 
         pointsOut.clear();
+#if YARP_VERSION_MINOR >= 5
+        pointsOut.addVocab32(VOCAB_OK);
+#else
         pointsOut.addVocab(VOCAB_OK);
+#endif
         pointsRpcServer.reply(pointsOut);
 
         std::vector<double> aprox0(5);
