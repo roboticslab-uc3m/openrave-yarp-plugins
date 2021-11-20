@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <yarp/conf/version.h>
+
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
@@ -18,7 +20,9 @@ constexpr auto NOT_SET = -1;
 
 bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 {
+#if !defined(YARP_VERSION_COMPARE) // < 3.6.0
     yCDebug(YORG) << "Config:" << config.toString();
+#endif
 
     if ( ! configureEnvironment(config) )
         return false;

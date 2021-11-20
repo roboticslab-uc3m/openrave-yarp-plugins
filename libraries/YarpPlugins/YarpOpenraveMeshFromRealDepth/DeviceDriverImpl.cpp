@@ -20,7 +20,9 @@ constexpr auto TRIANGLE_PIXEL_SIZE = 10;
 
 bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
 {
+#if !defined(YARP_VERSION_COMPARE) // < 3.6.0
     yCDebug(YORMFRD) << "Config:" << config.toString();
+#endif
 
     if (!configureEnvironment(config) || !configureOpenravePlugins(config) || !configureRobot(config))
     {

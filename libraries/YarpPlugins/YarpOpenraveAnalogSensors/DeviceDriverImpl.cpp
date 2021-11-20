@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include <yarp/conf/version.h>
+
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
@@ -15,7 +17,9 @@ using namespace roboticslab;
 
 bool YarpOpenraveAnalogSensors::open(yarp::os::Searchable& config)
 {
+#if !defined(YARP_VERSION_COMPARE) // < 3.6.0
     yCDebug(YORAS) << "Config:" << config.toString();
+#endif
 
     if ( ! configureEnvironment(config) )
         return false;

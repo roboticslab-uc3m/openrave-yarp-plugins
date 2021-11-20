@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <yarp/conf/version.h>
+
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
@@ -16,7 +18,9 @@ using namespace roboticslab;
 
 bool YarpOpenraveSimulation::open(yarp::os::Searchable& config)
 {
+#if !defined(YARP_VERSION_COMPARE) // < 3.6.0
     yCDebug(YORS) << "YarpOpenraveSimulation config:" << config.toString();
+#endif
 
     if ( ! configureEnvironment(config) )
         return false;
