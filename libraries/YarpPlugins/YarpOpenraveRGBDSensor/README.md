@@ -34,9 +34,9 @@ Open another viewer for depth:
 yarpview --name /yarpview/depth/img:i
 ```
 
-Connect the viewer for depth (remove `udp+recv.portmonitor+type.dll+file.depthimage` if not available; change `/BarrettWAM` to `/ecroSim` for alternative):
+Connect the viewer for depth (remove `udp+recv.portmonitor+type.dll+file.depthimage_to_mono` if not available; change `/BarrettWAM` to `/ecroSim` for alternative):
 ```bash
-yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i udp+recv.portmonitor+type.dll+file.depthimage
+yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i udp+recv.portmonitor+type.dll+file.depthimage_to_mono
 ```
 
 ## Example 2 (no RGB)
@@ -52,7 +52,7 @@ Open a viewer for depth:
 yarpview --name /yarpview/depth/img:i
 ```
 
-Connect the viewer for depth (remove `udp+recv.portmonitor+type.dll+file.depthimage` if not available; change `/BarrettWAM` to `/ecroSim` for alternative):
+Connect the viewer for depth (remove `udp+recv.portmonitor+type.dll+file.depthimage_to_mono` if not available; change `/BarrettWAM` to `/ecroSim` for alternative):
 ```bash
-yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i udp+recv.portmonitor+type.dll+file.depthimage
+yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i udp+recv.portmonitor+type.dll+file.depthimage_to_mono
 ```
