@@ -2,7 +2,7 @@
 
 OpenRAVE plugins to interface OpenRAVE with YARP.
 
-Link to Doxygen generated documentation: https://roboticslab-uc3m.github.io/openrave-yarp-plugins
+Link to Doxygen generated documentation: https://robots.uc3m.es/openrave-yarp-plugins/
 
 ## Installation
 
@@ -53,7 +53,7 @@ The following commands explain how to use the openrave-yarp-plugins for collisio
 # new terminal to open the simulated robot
 python examples/python/openraveYarpPluginLoader-controlboard-allManipulators.py
 
-# new terminal to open the collision avoidance simulator 
+# new terminal to open the collision avoidance simulator
 # NOTE: Expect LONG wait to load the padding model
 python examples/python/openraveYarpPluginLoader-controlboard-collision-sim.py
 
@@ -81,7 +81,7 @@ openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave
 ```
 
 At the time of generating the `.pp` file, different parameters can be set. In our case, the most relevant parameters are the **padding**, the **maxHullVertices** and the **mergeThresholdPercent**. **padding** represents the distance from the real plane to the one generated. The last two are used to reduce the number of triangles generated in the model.
-  
+
 More options can be found [here](http://openrave.org/docs/0.8.0/openravepy/databases.convexdecomposition/).
 
 ```bash
@@ -92,4 +92,4 @@ openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave
 To convert the generated `.pp` file into an `.stl` file that can be used by other programs, [openrave-pp-to-stl.py](https://github.com/roboticslab-uc3m/openrave-tools/blob/master/openrave-pp-to-stl.py) ([perma](https://github.com/roboticslab-uc3m/openrave-tools/blob/bd078f6d64478ca3c1b911599df56b9dc6051797/openrave-pp-to-stl.py)) can be used.
 
 ## Similar and Related Projects
-- http://robots.uc3m.es/gitbook-installation-guides/install-openrave.html#similar-and-related-projects ([perma](https://github.com/roboticslab-uc3m/installation-guides/blob/f73a1a67cc258e7a61e317c4e845c7055af18f86/install-openrave.md#similar-and-related-projects))
+- https://robots.uc3m.es/installation-guides/install-openrave.html#similar-and-related-projects ([perma](https://github.com/roboticslab-uc3m/installation-guides/blob/f73a1a67cc258e7a61e317c4e845c7055af18f86/install-openrave.md#similar-and-related-projects))

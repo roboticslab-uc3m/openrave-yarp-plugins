@@ -6,7 +6,7 @@ yarp server
 ```
 
 # Notes on Invocation
-- RGB Disclaimer: Please read about [Offscreen Rendering (OpenRAVE RGB Cameras)](http://robots.uc3m.es/gitbook-installation-guides/install-openrave.html#offscreen-rendering-openrave-rgb-cameras) first.
+- RGB Disclaimer: Please read about [Offscreen Rendering (OpenRAVE RGB Cameras)](https://robots.uc3m.es/installation-guides/install-openrave.html#offscreen-rendering-openrave-rgb-cameras) first.
 - Depth Disclaimer: Make sure you use ODE as your Collision Checker (e.g. via `openrave --collison ode` or switching within the OpenRAVE GUI).
 - These examples use the `yarpdev` executable to load `YarpOpenraveRGBDSensor` directly. However, you can find more interesting examples loading `YarpOpenraveRGBDSensor` via `OpenraveYarpPluginLoader` at [../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravergbdsensor](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravergbdsensor).
 

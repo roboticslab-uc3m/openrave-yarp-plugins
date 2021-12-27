@@ -6,7 +6,7 @@ yarp server
 ```
 
 # Notes on Invocation
-- Disclaimer: Please read about [Offscreen Rendering (OpenRAVE RGB Cameras)](http://robots.uc3m.es/gitbook-installation-guides/install-openrave.html#offscreen-rendering-openrave-rgb-cameras) first.
+- Disclaimer: Please read about [Offscreen Rendering (OpenRAVE RGB Cameras)](https://robots.uc3m.es/installation-guides/install-openrave.html#offscreen-rendering-openrave-rgb-cameras) first.
 - These examples use the `yarpdev` executable to load `YarpOpenraveGrabber` directly. However, you can find more interesting examples loading `YarpOpenraveGrabber` via `OpenraveYarpPluginLoader` at [../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravegrabber](../../OpenravePlugins/OpenraveYarpPluginLoader#yarpopenravegrabber).
 
 ## Example 1
