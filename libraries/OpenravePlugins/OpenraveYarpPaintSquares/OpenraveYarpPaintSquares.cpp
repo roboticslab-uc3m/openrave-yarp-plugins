@@ -405,7 +405,7 @@ OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type
 
 void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
 {
-    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpPaintSquares");
+    info.interfacenames[OpenRAVE::PT_Module].emplace_back("OpenraveYarpPaintSquares");
 }
 
 OPENRAVE_PLUGIN_API void DestroyPlugin()

@@ -53,7 +53,7 @@ void YarpOpenraveMeshFromRealDepth::run()
     for (auto i = 0; i < meshVertices.size(); i++)
     {
         const auto & vertex = meshVertices(i);
-        raveMesh.vertices.push_back(OpenRAVE::Vector(vertex.x, vertex.y, vertex.z));
+        raveMesh.vertices.emplace_back(vertex.x, vertex.y, vertex.z);
     }
 
     std::copy(meshIndices.cbegin(), meshIndices.cend(), std::back_inserter(raveMesh.indices));

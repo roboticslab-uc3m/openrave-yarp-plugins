@@ -142,7 +142,7 @@ OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type
 
 void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
 {
-    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpWorld");
+    info.interfacenames[OpenRAVE::PT_Module].emplace_back("OpenraveYarpWorld");
 }
 
 // -----------------------------------------------------------------------------

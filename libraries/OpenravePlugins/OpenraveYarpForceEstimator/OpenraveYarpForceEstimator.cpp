@@ -418,7 +418,7 @@ OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type
 
 void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
 {
-    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpForceEstimator");
+    info.interfacenames[OpenRAVE::PT_Module].emplace_back("OpenraveYarpForceEstimator");
 }
 
 OPENRAVE_PLUGIN_API void DestroyPlugin()

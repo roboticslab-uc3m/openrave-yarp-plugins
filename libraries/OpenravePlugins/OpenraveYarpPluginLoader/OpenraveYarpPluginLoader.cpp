@@ -101,8 +101,7 @@ int OpenraveYarpPluginLoader::main(const std::string& cmd)
 
         if(tmp == "open")
         {
-            std::string openString("open");
-            openStrings.push_back(openString);
+            openStrings.emplace_back("open");
             currentMode = mode::open;
         }
         else if(tmp == "env")
@@ -453,7 +452,7 @@ OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type
 
 void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
 {
-    info.interfacenames[OpenRAVE::PT_Module].push_back("OpenraveYarpPluginLoader");
+    info.interfacenames[OpenRAVE::PT_Module].emplace_back("OpenraveYarpPluginLoader");
 }
 
 // -----------------------------------------------------------------------------
