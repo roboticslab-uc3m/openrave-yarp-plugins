@@ -7,7 +7,7 @@ yarp_prepare_plugin(YarpOpenraveGrabber
                     INCLUDE YarpOpenraveGrabber.hpp
                     DEFAULT ON
                     DEPENDS ENABLE_YarpOpenraveBase
-                    EXTRA_CONFIG WRAPPER=grabberDual)
+                    EXTRA_CONFIG WRAPPER=frameGrabber_nws_yarp)
 
 if(NOT SKIP_YarpOpenraveGrabber)
 

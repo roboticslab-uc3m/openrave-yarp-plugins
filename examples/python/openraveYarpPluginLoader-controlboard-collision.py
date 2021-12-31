@@ -14,13 +14,13 @@ try:
     env.Load('/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml')
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
-    print OpenraveYarpPluginLoader.SendCommand('open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 --collision')
+    print OpenraveYarpPluginLoader.SendCommand('open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 --collision')
 
     # Convex Decomposition
     teo_robot = env.GetRobots()[0]
     cdmodel = databases.convexdecomposition.ConvexDecompositionModel(teo_robot, padding=0.02)  # Else defaults to zero padding
 
-    if not cdmodel.load(): 
+    if not cdmodel.load():
         # If not already in the database. Generate:
         print 'ConvexDecomposition not found, generating...'
         cdmodel.generate(padding=0.02)  # Else defaults to 0.005 padding

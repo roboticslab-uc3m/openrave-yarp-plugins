@@ -5,8 +5,6 @@
 
 #include <openrave/config.h>
 
-#include <yarp/conf/version.h>
-
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionReader.h>
 #include <yarp/os/LogStream.h>
@@ -31,13 +29,8 @@ namespace
 
 // -----------------------------------------------------------------------------
 
-#if YARP_VERSION_MINOR >= 5
 constexpr auto VOCAB_OK = yarp::os::createVocab32('o','k');
 constexpr auto VOCAB_FAILED = yarp::os::createVocab32('f','a','i','l');
-#else
-constexpr auto VOCAB_OK = yarp::os::createVocab('o','k');
-constexpr auto VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
-#endif
 
 // -----------------------------------------------------------------------------
 
@@ -45,11 +38,7 @@ bool OywPortReader::checkIfString(yarp::os::Bottle& request, int index, yarp::os
 {
     if (request.get(index).isString())
         return true;
-#if YARP_VERSION_MINOR >= 5
     response.addVocab32(VOCAB_FAILED);
-#else
-    response.addVocab(VOCAB_FAILED);
-#endif
     std::stringstream ss;
     ss << "expected type string but got wrong data type at " << index;
     response.addString(ss.str());
@@ -65,11 +54,7 @@ bool OywPortReader::tryToSetActiveManipulator(const std::string& robot, const st
     if(!wantActiveRobotPtr)
     {
         yCError(ORYW) << "Could not find robot:" << robot;
-#if YARP_VERSION_MINOR >= 5
         response.addVocab32(VOCAB_FAILED);
-#else
-        response.addVocab(VOCAB_FAILED);
-#endif
         return false;
     }
 
@@ -80,11 +65,7 @@ bool OywPortReader::tryToSetActiveManipulator(const std::string& robot, const st
     catch (const std::exception& ex)
     {
         yCError(ORYW) << "Caught openrave_exception:" << ex.what();
-#if YARP_VERSION_MINOR >= 5
         response.addVocab32(VOCAB_FAILED);
-#else
-        response.addVocab(VOCAB_FAILED);
-#endif
         return false;
     }
     return true;
@@ -143,11 +124,7 @@ world draw 0/1 (radius r g b).");
                     openraveYarpWorldPtr->GetEnv()->Remove(objKinBodyPtrs[i]);
                 }
                 objKinBodyPtrs.clear();
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_OK);
-#else
-                response.addVocab(VOCAB_OK);
-#endif
             }
         }
         if (request.get(1).asString()=="del")
@@ -158,20 +135,12 @@ world draw 0/1 (radius r g b).");
             if(objPtr)
             {
                 openraveYarpWorldPtr->GetEnv()->Remove(objPtr);
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_OK);
-#else
-                response.addVocab(VOCAB_OK);
-#endif
             }
             else
             {
                 yCError(ORYW) << "Object" << request.get(2).asString() << "does not exist";
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_FAILED);
-#else
-                response.addVocab(VOCAB_FAILED);
-#endif
                 response.addString("object does not exist");
             }
         }
@@ -185,22 +154,14 @@ world draw 0/1 (radius r g b).");
             if(!fkRobotPtr)
             {
                 yCError(ORYW) << "Could not find robot:" << request.get(2).asString();
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_FAILED);
-#else
-                response.addVocab(VOCAB_FAILED);
-#endif
                 return response.write(*out);
             }
             OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = fkRobotPtr->GetManipulator(request.get(3).asString());
             if(!pRobotManip)
             {
                 yCError(ORYW) << "Could not find manipulator:" << request.get(3).asString();
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_FAILED);
-#else
-                response.addVocab(VOCAB_FAILED);
-#endif
                 return response.write(*out);
             }
             OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
@@ -215,11 +176,7 @@ world draw 0/1 (radius r g b).");
             trans.addFloat64(tcp.trans.x);
             trans.addFloat64(tcp.trans.y);
             trans.addFloat64(tcp.trans.z);
-#if YARP_VERSION_MINOR >= 5
             response.addVocab32(VOCAB_OK);
-#else
-            response.addVocab(VOCAB_OK);
-#endif
         }
         else if (request.get(1).asString()=="get")
         {
@@ -235,20 +192,12 @@ world draw 0/1 (radius r g b).");
                 trans.addFloat64(tr.x);
                 trans.addFloat64(tr.y);
                 trans.addFloat64(tr.z);
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_OK);
-#else
-                response.addVocab(VOCAB_OK);
-#endif
             }
             else // null pointer
             {
                 yCError(ORYW) << "Object" << request.get(3).asString() << "does not exist";
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_FAILED);
-#else
-                response.addVocab(VOCAB_FAILED);
-#endif
                 response.addString("object does not exist");
             }
         }
@@ -271,11 +220,7 @@ world draw 0/1 (radius r g b).");
                 {
                     yCInfo(ORYW) << "Object grabbed";
                     openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Grab(objPtr); // robot was found at tryToSetActiveManipulator
-#if YARP_VERSION_MINOR >= 5
                     response.addVocab32(VOCAB_OK);
-#else
-                    response.addVocab(VOCAB_OK);
-#endif
                 }
                 else if (request.get(5).asInt32()==0)
                 {
@@ -285,26 +230,14 @@ world draw 0/1 (radius r g b).");
 #else
                     openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Release(objPtr); // robot was found at tryToSetActiveManipulator
 #endif
-#if YARP_VERSION_MINOR >= 5
                     response.addVocab32(VOCAB_OK);
-#else
-                    response.addVocab(VOCAB_OK);
-#endif
                 }
-#if YARP_VERSION_MINOR >= 5
                 else response.addVocab32(VOCAB_FAILED);
-#else
-                else response.addVocab(VOCAB_FAILED);
-#endif
             }
             else
             {
                 yCWarning(ORYW) << "Object" << request.get(4).asString() << "does not exist";
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_FAILED);
-#else
-                response.addVocab(VOCAB_FAILED);
-#endif
             }
         }
         else if (request.get(1).asString()=="mk")
@@ -414,11 +347,7 @@ world draw 0/1 (radius r g b).");
                     if (!robotPtr)
                     {
                         yCError(ORYW) << "Could not find robot:" << request.get(3).asString();
-#if YARP_VERSION_MINOR >= 5
                         response.addVocab32(VOCAB_FAILED);
-#else
-                        response.addVocab(VOCAB_FAILED);
-#endif
                         return response.write(*out);
                     }
 
@@ -427,11 +356,7 @@ world draw 0/1 (radius r g b).");
                     if (!sensorPtr)
                     {
                         yCError(ORYW) << "Could not find sensor:" << request.get(4).asString();
-#if YARP_VERSION_MINOR >= 5
                         response.addVocab32(VOCAB_FAILED);
-#else
-                        response.addVocab(VOCAB_FAILED);
-#endif
                         return response.write(*out);
                     }
 
@@ -480,11 +405,7 @@ world draw 0/1 (radius r g b).");
                     if (fullFileName.empty())
                     {
                         yCError(ORYW) << "Could not find" << fileName << "file via yarp::os::ResourceFinder";
-#if YARP_VERSION_MINOR >= 5
                         response.addVocab32(VOCAB_FAILED);
-#else
-                        response.addVocab(VOCAB_FAILED);
-#endif
                         response.addString("could not load file");
                         return response.write(*out);
                     }
@@ -503,11 +424,7 @@ world draw 0/1 (radius r g b).");
                     if (!objKinBodyPtr)
                     {
                         yCError(ORYW) << "Could not load" << fullFileName << "file";
-#if YARP_VERSION_MINOR >= 5
                         response.addVocab32(VOCAB_FAILED);
-#else
-                        response.addVocab(VOCAB_FAILED);
-#endif
                         response.addString("could not load file");
                         return response.write(*out);
                     }
@@ -532,11 +449,7 @@ world draw 0/1 (radius r g b).");
                 }
                 else
                 {
-#if YARP_VERSION_MINOR >= 5
                     response.addVocab32(VOCAB_FAILED);
-#else
-                    response.addVocab(VOCAB_FAILED);
-#endif
                     return response.write(*out);
                 }
 
@@ -559,11 +472,7 @@ world draw 0/1 (radius r g b).");
                 objKinBodyPtrs.push_back(objKinBodyPtr);
 
                 yCInfo(ORYW) << "Created:" << objName;
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_OK);
-#else
-                response.addVocab(VOCAB_OK);
-#endif
                 response.addString(objName);
             } // the environment is not locked anymore
         }
@@ -575,11 +484,7 @@ world draw 0/1 (radius r g b).");
             if(!objPtr)
             {
                 yCError(ORYW) << "Object" << request.get(2).asString() << "does not exist";
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_FAILED);
-#else
-                response.addVocab(VOCAB_FAILED);
-#endif
                 response.addString("object does not exist");
                 return response.write(*out);
             }
@@ -588,11 +493,7 @@ world draw 0/1 (radius r g b).");
             T.trans.y = request.get(4).asFloat64();  // [m]
             T.trans.z = request.get(5).asFloat64();  // [m]
             objPtr->SetTransform(T);
-#if YARP_VERSION_MINOR >= 5
             response.addVocab32(VOCAB_OK);
-#else
-            response.addVocab(VOCAB_OK);
-#endif
         }
         else if (request.get(1).asString()=="draw")
         {
@@ -600,11 +501,7 @@ world draw 0/1 (radius r g b).");
             {
                 yCInfo(ORYW) << "Turning draw OFF";
                 robotDraw = 0;
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_OK);
-#else
-                response.addVocab(VOCAB_OK);
-#endif
             }
             else
             {
@@ -617,32 +514,20 @@ world draw 0/1 (radius r g b).");
                     drawG = request.get(5).asFloat64();
                     drawB = request.get(6).asFloat64();
                 }
-#if YARP_VERSION_MINOR >= 5
                 response.addVocab32(VOCAB_OK);
-#else
-                response.addVocab(VOCAB_OK);
-#endif
             }
 
         }
         else
         {
-#if YARP_VERSION_MINOR >= 5
             response.addVocab32(VOCAB_FAILED);
-#else
-            response.addVocab(VOCAB_FAILED);
-#endif
         }
         return response.write(*out);
     }
     else
     {
         yCError(ORYW) << "Command not understood, try 'help'";
-#if YARP_VERSION_MINOR >= 5
         response.addVocab32(VOCAB_FAILED);
-#else
-        response.addVocab(VOCAB_FAILED);
-#endif
         response.addString("Command not understood, try 'help'");
     }
     return response.write(*out);

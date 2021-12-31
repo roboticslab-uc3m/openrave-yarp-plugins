@@ -20,15 +20,15 @@ try:
         env.Load('/usr/local/share/robotDevastation-openrave-models/openrave/mapping_room.env.xml')
     else:
         env.Load('data/testwamcamera.env.xml')
-        
+
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
 
     if example == "asibot":
-        print OpenraveYarpPluginLoader.SendCommand('open --device grabberDual --subdevice YarpOpenraveGrabber --robotIndex 1 --sensorIndex 0')
+        print OpenraveYarpPluginLoader.SendCommand('open --device frameGrabber_nws_yarp --subdevice YarpOpenraveGrabber --robotIndex 1 --sensorIndex 0')
     elif example == "ecro":
-        print OpenraveYarpPluginLoader.SendCommand('open --device grabberDual --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 1')
+        print OpenraveYarpPluginLoader.SendCommand('open --device frameGrabber_nws_yarp --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 1')
     else:
-        print OpenraveYarpPluginLoader.SendCommand('open --device grabberDual --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 0')
+        print OpenraveYarpPluginLoader.SendCommand('open --device frameGrabber_nws_yarp --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 0')
 
     while 1:
         pass

@@ -2,8 +2,6 @@
 
 #include "OpenraveYarpWorldClientMesh.hpp"
 
-#include <yarp/conf/version.h>
-
 #include <yarp/os/LogComponent.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
@@ -30,13 +28,8 @@ namespace
 }
 
 constexpr auto DEFAULT_PERIOD_S = 1.0;
-#if YARP_VERSION_MINOR >= 5
 constexpr auto VOCAB_OK = yarp::os::createVocab32('o','k');
 constexpr auto VOCAB_FAILED = yarp::os::createVocab32('f','a','i','l');
-#else
-constexpr auto VOCAB_OK = yarp::os::createVocab('o','k');
-constexpr auto VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
-#endif
 constexpr auto PREFIX = "/OpenraveYarpWorldMesh";
 constexpr auto MAX_Z = 1.5;
 constexpr auto SIGMA_R = 0.1;
@@ -113,13 +106,6 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
             yCError(ORYWCM) << "Unable to view IRGBDSensor";
             return false;
         }
-
-#if YARP_VERSION_MINOR < 5
-        // Wait for the first few frames to arrive. We kept receiving invalid pixel codes
-        // from the depthCamera device if started straight away.
-        // https://github.com/roboticslab-uc3m/vision/issues/88
-        yarp::os::Time::delay(0.1);
-#endif
 
         yarp::os::Property intrinsic;
 
@@ -285,11 +271,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
         return false;
     }
 
-#if YARP_VERSION_MINOR >= 5
     if (res.get(0).asVocab32() == VOCAB_FAILED)
-#else
-    if (res.get(0).asVocab() == VOCAB_FAILED)
-#endif
     {
         yCError(ORYWCM) << res.toString();
         return false;

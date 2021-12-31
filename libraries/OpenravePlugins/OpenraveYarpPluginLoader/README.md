@@ -35,7 +35,7 @@ Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/Ya
 ### Example 1
 The [first example](../../YarpPlugins/YarpOpenraveControlboard#example-1) becomes (note that `name` and `view` parameters are no longer required):
 ```bash
-openrave --module OpenraveYarpPluginLoader "env data/lab1.env.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0"
+openrave --module OpenraveYarpPluginLoader "env data/lab1.env.xml open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0"
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-controlboard.py](../../../examples/python/openraveYarpPluginLoader-controlboard.py)
 
@@ -44,7 +44,7 @@ Then follow the commands of the [first example](../../YarpPlugins/YarpOpenraveCo
 ### Example 2
 Now you can even use `allRobots` and/or `allManipulators` (example using the environment loaded by OpenRAVE):
 ```bash
-openrave data/lab1.env.xml --module OpenraveYarpPluginLoader "open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --allRobots --allManipulators"
+openrave data/lab1.env.xml --module OpenraveYarpPluginLoader "open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --allRobots --allManipulators"
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-controlboard-allManipulators.py](../../../examples/python/openraveYarpPluginLoader-controlboard-allManipulators.py)
 
@@ -52,7 +52,7 @@ The equivalent Python script can be found at: [../../../examples/python/openrave
 We can also do funky commands like the following, with concatenated `env` and several `open` commands:
 ```bash
 # Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
-openrave --module OpenraveYarpPluginLoader "env openrave/teo/teo.robot.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
+openrave --module OpenraveYarpPluginLoader "env openrave/teo/teo.robot.xml open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
 ```
 
 
@@ -63,7 +63,7 @@ Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/Ya
 ### Example 1
 The [first example](../../YarpPlugins/YarpOpenraveGrabber#example-1) becomes (note that `name` and `view` parameters are no longer required, but here `viewer` is forced due to [#48](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/48#issuecomment-564939923)):
 ```bash
-openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device grabberDual --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 0" --viewer qtcoin
+openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device frameGrabber_nws_yarp --subdevice YarpOpenraveGrabber --robotIndex 0 --sensorIndex 0" --viewer qtcoin
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-grabber.py](../../../examples/python/openraveYarpPluginLoader-grabber.py)
 
@@ -77,7 +77,7 @@ Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/Ya
 ### Example 1
 The [first example](../../YarpPlugins/YarpOpenraveRGBDSensor#example-1) becomes (note that `name` and `view` parameters are no longer required, but here `viewer` and `collision` are forced due to [#48](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/48#issuecomment-564939923) and [#102](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues/102) respectively):
 ```bash
-openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 3" --viewer qtcoin --collision ode
+openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device rgbdSensor_nws_yarp --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 3" --viewer qtcoin --collision ode
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-rgbdsensor.py](../../../examples/python/openraveYarpPluginLoader-rgbdsensor.py)
 
@@ -102,5 +102,5 @@ Then follow the commands of the [first example](../../YarpPlugins/YarpOpenraveRo
 ## YarpOpenraveControlboard + YarpOpenraveRGBDSensor
 Here's a nice one-liner that enables both the commands of [YarpOpenraveControlboard](../../YarpPlugins/YarpOpenraveControlboard#example-1) and [YarpOpenraveRGBDSensor](../../YarpPlugins/YarpOpenraveRGBDSensor#example-1):
 ```bash
-openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device controlboardwrapper2 --subdevice YarpOpenraveControlboard --allRobots --allManipulators open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 3" --viewer qtcoin --collision ode
+openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --allRobots --allManipulators open --device rgbdSensor_nws_yarp --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 3" --viewer qtcoin --collision ode
 ```

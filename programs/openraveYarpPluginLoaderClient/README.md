@@ -14,5 +14,5 @@ openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml" --vi
 
 Terminal 3:
 ```bash
-openraveYarpPluginLoaderClient --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --depthSensorIndex 3
+openraveYarpPluginLoaderClient --device rgbdSensor_nws_yarp --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --depthSensorIndex 3
 ```

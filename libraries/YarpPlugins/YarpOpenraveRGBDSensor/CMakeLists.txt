@@ -7,7 +7,7 @@ yarp_prepare_plugin(YarpOpenraveRGBDSensor
                     INCLUDE YarpOpenraveRGBDSensor.hpp
                     DEFAULT ON
                     DEPENDS ENABLE_YarpOpenraveBase
-                    EXTRA_CONFIG WRAPPER=RGBDSensorWrapper)
+                    EXTRA_CONFIG WRAPPER=rgbdSensor_nws_yarp)
 
 if(NOT SKIP_YarpOpenraveRGBDSensor)
 

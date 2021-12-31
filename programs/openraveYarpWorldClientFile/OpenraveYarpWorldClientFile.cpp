@@ -2,8 +2,6 @@
 
 #include "OpenraveYarpWorldClientFile.hpp"
 
-#include <yarp/conf/version.h>
-
 #include <yarp/os/LogComponent.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
@@ -19,13 +17,8 @@ namespace
 /************************************************************************/
 
 constexpr auto DEFAULT_PERIOD_S = 1.0;
-#if YARP_VERSION_MINOR >= 5
 constexpr auto VOCAB_OK = yarp::os::createVocab32('o','k');
 constexpr auto VOCAB_FAILED = yarp::os::createVocab32('f','a','i','l');
-#else
-constexpr auto VOCAB_OK = yarp::os::createVocab('o','k');
-constexpr auto VOCAB_FAILED = yarp::os::createVocab('f','a','i','l');
-#endif
 
 /************************************************************************/
 
@@ -130,11 +123,7 @@ bool OpenraveYarpWorldClientFile::configure(yarp::os::ResourceFinder &rf)
     yCDebug(ORYWCF) << "cmd:" << cmd.toString();
     rpcClient.write(cmd, res);
 
-#if YARP_VERSION_MINOR >= 5
     if(VOCAB_FAILED == res.get(0).asVocab32())
-#else
-    if(VOCAB_FAILED == res.get(0).asVocab())
-#endif
     {
         yCError(ORYWCF) << "Client error:" << res.toString();
         return false;

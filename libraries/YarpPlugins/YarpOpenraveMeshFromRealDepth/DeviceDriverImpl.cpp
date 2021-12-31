@@ -6,7 +6,6 @@
 
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Property.h>
-#include <yarp/os/Time.h>
 #include <yarp/os/Value.h>
 
 #include "LogComponent.hpp"
@@ -127,13 +126,6 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
 
     double period = config.check("period", yarp::os::Value(DEFAULT_PERIOD), "frame acquisition period [s]").asFloat64();
     yarp::os::PeriodicThread::setPeriod(period);
-
-#if YARP_VERSION_MINOR < 5
-    // Wait for the first few frames to arrive. We kept receiving invalid pixel codes
-    // from the depthCamera device if started straight away.
-    // https://github.com/roboticslab-uc3m/vision/issues/88
-    yarp::os::Time::delay(0.1);
-#endif
 
     return yarp::os::PeriodicThread::start();
 }

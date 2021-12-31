@@ -7,7 +7,7 @@ yarp_prepare_plugin(YarpOpenraveControlboard
                     INCLUDE YarpOpenraveControlboard.hpp
                     DEFAULT ON
                     DEPENDS ENABLE_YarpOpenraveBase
-                    EXTRA_CONFIG WRAPPER=controlboardwrapper2)
+                    EXTRA_CONFIG WRAPPER=controlBoard_nws_yarp)
 
 if(NOT SKIP_YarpOpenraveControlboard)
 
