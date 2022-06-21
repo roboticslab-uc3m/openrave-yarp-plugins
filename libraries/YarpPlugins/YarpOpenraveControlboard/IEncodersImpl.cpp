@@ -14,8 +14,8 @@ using namespace roboticslab;
 bool YarpOpenraveControlboard::resetEncoder(int j)
 {
     yCTrace(YORCB) << j;
-    if ((unsigned int)j>axes) return false;
-    return setEncoder(j,0.0);
+    if ((unsigned int)j > axes) return false;
+    return setEncoder(j, 0.0);
   }
 
 // -----------------------------------------------------------------------------
@@ -24,7 +24,7 @@ bool YarpOpenraveControlboard::resetEncoders()
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
+    for (unsigned int i = 0; i < axes; i++)
         ok &= resetEncoder(i);
     return ok;
 }
@@ -43,8 +43,8 @@ bool YarpOpenraveControlboard::setEncoders(const double *vals)
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= setEncoder(i,vals[i]);
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= setEncoder(i, vals[i]);
     return ok;
 }
 
@@ -53,7 +53,7 @@ bool YarpOpenraveControlboard::setEncoders(const double *vals)
 bool YarpOpenraveControlboard::getEncoder(int j, double *v)
 {
     yCTrace(YORCB) << j;
-    *v = radToDegIfNotPrismatic(j, vectorOfJointPtr[j]->GetValue(0) );
+    *v = radToDegIfNotPrismatic(j, vectorOfJointPtr[j]->GetValue(0));
 
     return true;
 }
@@ -64,8 +64,8 @@ bool YarpOpenraveControlboard::getEncoders(double *encs)
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= getEncoder(i,&encs[i]);
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= getEncoder(i, &encs[i]);
     return ok;
 }
 
@@ -85,8 +85,8 @@ bool YarpOpenraveControlboard::getEncoderSpeeds(double *spds)
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= getEncoderSpeed(i,&spds[i]);
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= getEncoderSpeed(i, &spds[i]);
     return ok;
 }
 
@@ -112,8 +112,8 @@ bool YarpOpenraveControlboard::getEncodersTimed(double *encs, double *time)
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0; i < axes; i++)
-        ok &= getEncoderTimed(i,&(encs[i]),&(time[i]));
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= getEncoderTimed(i, &(encs[i]), &(time[i]));
     return ok;
 }
 

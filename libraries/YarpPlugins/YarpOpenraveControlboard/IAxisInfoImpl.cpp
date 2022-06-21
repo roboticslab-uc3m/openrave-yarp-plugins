@@ -13,7 +13,7 @@ using namespace roboticslab;
 bool YarpOpenraveControlboard::getAxisName(int axis, std::string& name)
 {
     yCTrace(YORCB);
-    if ((unsigned int)axis>axes) return false;
+    if ((unsigned int)axis > axes) return false;
     name = vectorOfJointPtr[axis]->GetName();
     return true;
 }
@@ -23,12 +23,13 @@ bool YarpOpenraveControlboard::getAxisName(int axis, std::string& name)
 bool YarpOpenraveControlboard::getJointType(int axis, yarp::dev::JointTypeEnum& type)
 {
     yCTrace(YORCB);
-    if ((unsigned int)axis>axes) return false;
+    if ((unsigned int)axis > axes) return false;
 
     OpenRAVE::RobotBase::JointPtr jointPtr = vectorOfJointPtr[axis];
-    if( jointPtr->IsRevolute(0) )
+
+    if (jointPtr->IsRevolute(0))
         type = yarp::dev::JointTypeEnum::VOCAB_JOINTTYPE_REVOLUTE;
-    else if( jointPtr->IsPrismatic(0) )
+    else if (jointPtr->IsPrismatic(0))
         type = yarp::dev::JointTypeEnum::VOCAB_JOINTTYPE_PRISMATIC;
     else
         type = yarp::dev::JointTypeEnum::VOCAB_JOINTTYPE_UNKNOWN;

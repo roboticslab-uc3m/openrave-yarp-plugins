@@ -23,8 +23,11 @@ bool YarpOpenraveGrabber::getCameraDescription(CameraDescriptor *camera)
 bool YarpOpenraveGrabber::hasFeature(int feature, bool *hasFeature)
 {
     *hasFeature = false;
-    if((YARP_FEATURE_GAIN == feature)||(YARP_FEATURE_ZOOM == feature))
+
+    if (YARP_FEATURE_GAIN == feature || YARP_FEATURE_ZOOM == feature)
+    {
         *hasFeature = true;
+    }
 
     return true;
 }
@@ -53,7 +56,7 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
     modGeomDataPtr->measurement_time = origGeomDataPtr->measurement_time;
     modGeomDataPtr->gain = origGeomDataPtr->gain;
 
-    if(YARP_FEATURE_GAIN == feature)
+    if (YARP_FEATURE_GAIN == feature)
     {
         modGeomDataPtr->gain = value;
         boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> constModGeomDataPtr(modGeomDataPtr);
@@ -61,7 +64,7 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
         yCInfo(YORG) << "Gain set to" << value << "(no visual effect observed at time of writing)";
         return true;
     }
-    else if(YARP_FEATURE_ZOOM == feature)
+    else if (YARP_FEATURE_ZOOM == feature)
     {
         modGeomDataPtr->intrinsics.focal_length = value;
         modGeomDataPtr->intrinsics.fx = value * origGeomDataPtr->width;
@@ -82,12 +85,12 @@ bool YarpOpenraveGrabber::getFeature(int feature, double *value)
 {
     boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
 
-    if(YARP_FEATURE_GAIN == feature)
+    if (YARP_FEATURE_GAIN == feature)
     {
         *value = geomDataPtr->gain;
         return true;
     }
-    else if(YARP_FEATURE_ZOOM == feature)
+    else if (YARP_FEATURE_ZOOM == feature)
     {
         *value = geomDataPtr->intrinsics.focal_length;
         return true;

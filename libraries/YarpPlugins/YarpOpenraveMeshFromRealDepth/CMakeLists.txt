@@ -28,8 +28,6 @@ if(NOT SKIP_YarpOpenraveMeshFromRealDepth)
 
     target_include_directories(YarpOpenraveMeshFromRealDepth PRIVATE ${OpenRAVE_INCLUDE_DIRS})
 
-    target_compile_features(YarpOpenraveMeshFromRealDepth PRIVATE cxx_std_14)
-
     yarp_install(TARGETS YarpOpenraveMeshFromRealDepth
                  LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
                  ARCHIVE DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_STATIC_PLUGINS_INSTALL_DIR}

@@ -17,7 +17,7 @@ bool YarpOpenraveControlboard::setPosition(int j, double ref)
     yCTrace(YORCB) << j << ref;
 
     //-- Check if we are in positionDirect mode.
-    if( controlModes[j] != VOCAB_CM_POSITION_DIRECT )
+    if (controlModes[j] != VOCAB_CM_POSITION_DIRECT)
     {
         yCError(YORCB) << "Will not setPosition() as joint" << j << "not in positionDirect mode";
         return false;
@@ -26,7 +26,7 @@ bool YarpOpenraveControlboard::setPosition(int j, double ref)
     OpenRAVE::dReal dofTargetRads = degToRadIfNotPrismatic(j, ref);  // ref comes in exposed
 
     //-- Store the targets
-    manipulatorTargetRads[ j ] = dofTargetRads;
+    manipulatorTargetRads[j] = dofTargetRads;
 
     //-- Perform immediate movement (thread safe?)
     std::vector<OpenRAVE::dReal> tmp;
@@ -42,9 +42,9 @@ bool YarpOpenraveControlboard::setPositions(const int n_joint, const int *joints
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
-    for(int i=0;i<n_joint;i++)
+    for (int i = 0; i < n_joint; i++)
     {
-        ok &= setPosition(joints[i],refs[i]);
+        ok &= setPosition(joints[i], refs[i]);
     }
     return ok;
 }
@@ -55,8 +55,8 @@ bool YarpOpenraveControlboard::setPositions(const double *refs)
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= setPosition(i,refs[i]);
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= setPosition(i, refs[i]);
     return ok;
 }
 
@@ -67,13 +67,13 @@ bool YarpOpenraveControlboard::getRefPosition(const int joint, double *ref)
     yCTrace(YORCB) << joint;
 
     //-- Check if we are in positionDirect mode.
-    if( controlModes[joint] != VOCAB_CM_POSITION_DIRECT )
+    if (controlModes[joint] != VOCAB_CM_POSITION_DIRECT)
     {
         yCError(YORCB) << "Not in positionDirect mode at joint" << joint;
         return false;
     }
 
-    *ref = radToDegIfNotPrismatic(joint, manipulatorTargetRads[ joint ]);
+    *ref = radToDegIfNotPrismatic(joint, manipulatorTargetRads[joint]);
     return true;
 }
 
@@ -83,8 +83,8 @@ bool YarpOpenraveControlboard::getRefPositions(double *refs)
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= getRefPosition(i,&refs[i]);
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= getRefPosition(i, &refs[i]);
     return ok;
 }
 
@@ -94,9 +94,9 @@ bool YarpOpenraveControlboard::getRefPositions(const int n_joint, const int *joi
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
-    for(int i=0;i<n_joint;i++)
+    for (int i = 0; i < n_joint; i++)
     {
-        ok &= getRefPosition(joints[i],&refs[i]);
+        ok &= getRefPosition(joints[i], &refs[i]);
     }
     return ok;
 }

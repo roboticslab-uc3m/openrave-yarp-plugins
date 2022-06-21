@@ -1,20 +1,10 @@
-# Copyright: Universidad Carlos III de Madrid (C) 2016;
-# Authors: Juan G. Victores and Raul Fernandez-Fernandez
-# CopyPolicy: Released under the terms of the GNU GPL v2.0.
-
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.16)
 
 project(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS LANGUAGES CXX)
 
 # C/C++ compile flags.
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
     add_compile_options(-fno-strict-aliasing -Wall)
-endif()
-
-# Add suffix for debug libraries.
-if(MSVC)
-    message(STATUS "Running on windows")
-    set(CMAKE_DEBUG_POSTFIX "d")
 endif()
 
 # Let the user specify a configuration (only single-config generators).
@@ -44,7 +34,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 find_package(YCM 0.11 REQUIRED)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost "${OpenRAVE_Boost_VERSION}" REQUIRED COMPONENTS thread)
-find_package(YARP 3.5 REQUIRED COMPONENTS os dev sig)
+find_package(YARP 3.6 REQUIRED COMPONENTS os dev sig)
 
 # Soft dependencies.
 find_package(ROBOTICSLAB_VISION QUIET)

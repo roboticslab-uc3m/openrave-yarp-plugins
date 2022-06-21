@@ -2,14 +2,13 @@ option(ENABLE_openraveYarpPluginLoaderClient "Enable/disable openraveYarpPluginL
 
 if(ENABLE_openraveYarpPluginLoaderClient)
 
-add_executable(openraveYarpPluginLoaderClient main.cpp
-                                              OpenraveYarpPluginLoaderClient.cpp
-                                              OpenraveYarpPluginLoaderClient.hpp)
+        add_executable(openraveYarpPluginLoaderClient main.cpp
+                                                      OpenraveYarpPluginLoaderClient.cpp
+                                                      OpenraveYarpPluginLoaderClient.hpp)
 
-target_link_libraries(openraveYarpPluginLoaderClient YARP::YARP_os
-                                                     YARP::YARP_init)
+        target_link_libraries(openraveYarpPluginLoaderClient YARP::YARP_os
+                                                             YARP::YARP_init)
 
-install(TARGETS openraveYarpPluginLoaderClient
-        DESTINATION ${CMAKE_INSTALL_BINDIR})
+        install(TARGETS openraveYarpPluginLoaderClient)
 
 endif()

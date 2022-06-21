@@ -153,8 +153,8 @@ private:
      */
     inline double degToRadIfNotPrismatic(int j, double deg)
     {
-        if( (vectorOfJointPtr[j])->IsPrismatic(0) ) return deg;
-        else return degToRad(deg);  //  revolute, circular
+        if (vectorOfJointPtr[j]->IsPrismatic(0)) return deg;
+        else return degToRad(deg); // revolute, circular
     }
 
     /**
@@ -165,11 +165,11 @@ private:
      */
     inline double radToDegIfNotPrismatic(int j, double rad)
     {
-        if( (vectorOfJointPtr[j])->IsPrismatic(0) ) return rad;
-        else return radToDeg(rad);  //  revolute, circular
+        if (vectorOfJointPtr[j]->IsPrismatic(0)) return rad;
+        else return radToDeg(rad); // revolute, circular
     }
 };
 
-}  // namespace roboticslab
+} // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_CONTROLBOARD_HPP__
+#endif // __YARP_OPENRAVE_CONTROLBOARD_HPP__

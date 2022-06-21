@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-#include <yarp/conf/version.h>
-
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
@@ -20,17 +18,13 @@ constexpr auto NOT_SET = -1;
 
 bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 {
-#if !defined(YARP_VERSION_COMPARE) // < 3.6.0
-    yCDebug(YORG) << "Config:" << config.toString();
-#endif
-
-    if ( ! configureEnvironment(config) )
+    if (!configureEnvironment(config))
         return false;
 
-    if ( ! configureOpenravePlugins(config) )
+    if (!configureOpenravePlugins(config))
         return false;
 
-    if ( ! configureRobot(config) )
+    if (!configureRobot(config))
         return false;
 
     int sensorIndex = config.check("sensorIndex",yarp::os::Value(NOT_SET),"sensor index").asInt32();
@@ -40,8 +34,10 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
         yCError(YORG) << "sensorIndex" << sensorIndex << "== NOT_SET, not loading yarpPlugin";
         return false;
     }
+
     std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
-    if( (sensorIndex >= vectorOfSensorPtr.size()) || (sensorIndex < 0) )
+
+    if (sensorIndex >= vectorOfSensorPtr.size() || sensorIndex < 0)
     {
         yCError(YORG, "sensorIndex %d not within vectorOfSensorPtr of size() %zu, not loading yarpPlugin",sensorIndex,vectorOfSensorPtr.size());
         return false;
@@ -57,7 +53,7 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 
     // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
 
-    if ( ! sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
+    if (!sensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera))
     {
         yCError(YORG) << "Sensor" << sensorIndex << "does not support ST_Camera";
         return false;

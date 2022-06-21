@@ -1,6 +1,3 @@
-# Copyright: (C) 2013 Universidad Carlos III de Madrid
-# Author: Juan G. Victores
-
 yarp_prepare_plugin(YarpOpenraveGrabber
                     CATEGORY device
                     TYPE roboticslab::YarpOpenraveGrabber

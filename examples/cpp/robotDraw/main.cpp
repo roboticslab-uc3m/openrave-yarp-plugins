@@ -51,7 +51,6 @@ int main(int argc, char *argv[])
 
     yInfo("Run \"%s --help\" for options", argv[0]);
     yInfo("%s checking for yarp network...", argv[0]);
-    std::fflush(stdout);
 
     if (!yarp::os::Network::checkNetwork())
     {

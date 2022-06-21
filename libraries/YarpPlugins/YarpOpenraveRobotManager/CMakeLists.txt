@@ -1,6 +1,3 @@
-# Copyright: (C) 2013 Universidad Carlos III de Madrid
-# Author: Juan G. Victores
-
 if(NOT ASROB_YARP_DEVICES_FOUND AND (NOT DEFINED ENABLE_YarpOpenraveRobotManager OR ENABLE_YarpOpenraveRobotManager))
     message(WARNING "ASROB_YARP_DEVICES package not found, disabling YarpOpenraveRobotManager")
 endif()

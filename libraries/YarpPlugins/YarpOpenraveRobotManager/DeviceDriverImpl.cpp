@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-#include <yarp/conf/version.h>
-
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
@@ -18,17 +16,13 @@ using namespace roboticslab;
 
 bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
 {
-#if !defined(YARP_VERSION_COMPARE) // < 3.6.0
-    yCDebug(YORRM) << "Config:" << config.toString();
-#endif
-
-    if ( ! configureEnvironment(config) )
+    if (!configureEnvironment(config))
         return false;
 
-    if ( ! configureOpenravePlugins(config) )
+    if (!configureOpenravePlugins(config))
         return false;
 
-    if ( ! configureRobot(config) )
+    if (!configureRobot(config))
         return false;
 
     std::string modeStr = config.check("mode",yarp::os::Value("transform"),"robot mode: '4wd'|'transform'").asString();
@@ -50,35 +44,30 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
     yCDebug(YORRM) << "Found --mode parameter:" << modeStr;
 
     //-- Create the controller, make sure to lock environment!
+    switch (OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); mode)
     {
-        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
+    case TRANSFORM_IDEALCONTROLLER:
+    {
+        pcontrol = OpenRAVE::RaveCreateController(penv, "idealcontroller"); // idealcontroller, odevelocity, idealvelocitycontroller
+        probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X | OpenRAVE::DOF_Y | OpenRAVE::DOF_RotationAxis, OpenRAVE::Vector(0, 0, 1));
+        probot->SetController(pcontrol, std::vector<int>(), OpenRAVE::DOF_X | OpenRAVE::DOF_Y | OpenRAVE::DOF_RotationAxis);
+        break;
+    }
+    case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
+    {
+        pcontrol = OpenRAVE::RaveCreateController(penv, "idealvelocitycontroller"); // idealcontroller, odevelocity, idealvelocitycontroller
+        std::vector<int> dofindices(probot->GetDOF()); // Note: GetDOF vs GetActiveDOF
 
-        switch (mode)
+        for (int i = 0; i < dofindices.size(); ++i)
         {
-        case TRANSFORM_IDEALCONTROLLER:
-        {
-            pcontrol = OpenRAVE::RaveCreateController(penv,"idealcontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
-            probot->SetActiveDOFs(std::vector<int>(), OpenRAVE::DOF_X|OpenRAVE::DOF_Y|OpenRAVE::DOF_RotationAxis,OpenRAVE::Vector(0,0,1));
-
-            probot->SetController(pcontrol,std::vector<int>(),OpenRAVE::DOF_X|OpenRAVE::DOF_Y|OpenRAVE::DOF_RotationAxis);
-            break;
-        }
-        case FOUR_WHEEL_IDEALVELOCITYCONTROLLER:
-        {
-            pcontrol = OpenRAVE::RaveCreateController(penv,"idealvelocitycontroller");  // idealcontroller, odevelocity, idealvelocitycontroller
-            std::vector<int> dofindices( probot->GetDOF() );  // Note: GetDOF vs GetActiveDOF
-            for(int i = 0; i < dofindices.size(); ++i)
-            {
-                dofindices[i] = i;
-            }
-
-            probot->SetController(pcontrol,dofindices,0);
-            break;
-        }
-        default:
-            return false;
+            dofindices[i] = i;
         }
 
+        probot->SetController(pcontrol, dofindices, 0);
+        break;
+    }
+    default:
+        return false;
     }
 
     penv->StopSimulation();

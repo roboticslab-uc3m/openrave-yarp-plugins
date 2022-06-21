@@ -1,7 +1,3 @@
-# Copyright: (C) 2016 Universidad Carlos III de Madrid
-# Author: Juan G. Victores, Raul Fernandez-Fernandez
-# CopyPolicy: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
-
 # Device interface target.
 add_library(SimulationInterfaces INTERFACE)
 
@@ -9,9 +5,8 @@ add_library(SimulationInterfaces INTERFACE)
 target_include_directories(SimulationInterfaces INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                                                 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-# Install interface headers.
-install(FILES ISimulation.hpp
-              DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+# Register interface headers.
+set_property(TARGET SimulationInterfaces PROPERTY PUBLIC_HEADER ISimulation.hpp)
 
 # Register export set.
 install(TARGETS SimulationInterfaces

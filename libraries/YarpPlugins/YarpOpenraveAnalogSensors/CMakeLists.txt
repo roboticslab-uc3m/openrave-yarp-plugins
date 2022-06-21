@@ -1,6 +1,3 @@
-# Copyright: (C) 2019 Universidad Carlos III de Madrid
-# Author: Juan G. Victores
-
 yarp_prepare_plugin(YarpOpenraveAnalogSensors
                     CATEGORY device
                     TYPE roboticslab::YarpOpenraveAnalogSensors

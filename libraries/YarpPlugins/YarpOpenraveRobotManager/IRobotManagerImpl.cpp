@@ -43,7 +43,6 @@ bool YarpOpenraveRobotManager::moveForward(double value)
         //OpenRAVE::Vector H_0_dst_axisAngle = OpenRAVE::geometry::axisAngleFromQuat(H_0_dst.rot);
         //yCDebug(YORRM, "H_0_dst_aa: %f %f %f %f", H_0_dst_axisAngle.x, H_0_dst_axisAngle.y, H_0_dst_axisAngle.z, H_0_dst_axisAngle.w);
 
-
         //-- Our own ConfigurationSpecification
         //Alternative: OpenRAVE::ConfigurationSpecification sc = OpenRAVE::RaveGetAffineConfigurationSpecification(OpenRAVE::DOF_X);
         OpenRAVE::ConfigurationSpecification configurationSpecification;

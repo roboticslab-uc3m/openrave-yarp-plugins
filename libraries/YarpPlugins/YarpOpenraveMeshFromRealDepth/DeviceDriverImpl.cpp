@@ -2,8 +2,6 @@
 
 #include "YarpOpenraveMeshFromRealDepth.hpp"
 
-#include <yarp/conf/version.h>
-
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/Value.h>
@@ -19,10 +17,6 @@ constexpr auto TRIANGLE_PIXEL_SIZE = 10;
 
 bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
 {
-#if !defined(YARP_VERSION_COMPARE) // < 3.6.0
-    yCDebug(YORMFRD) << "Config:" << config.toString();
-#endif
-
     if (!configureEnvironment(config) || !configureOpenravePlugins(config) || !configureRobot(config))
     {
         return false;

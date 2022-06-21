@@ -46,7 +46,7 @@ public:
      */
     virtual bool getSimulationRawPointerValue(yarp::os::Value& value) = 0;
 
-    virtual ~ISimulation() {}
+    virtual ~ISimulation() = default;
 };
 
 }

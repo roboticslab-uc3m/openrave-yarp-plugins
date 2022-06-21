@@ -17,8 +17,7 @@ if(ENABLE_openraveYarpWorldClientMesh)
                                                       YARP::YARP_sig
                                                       ROBOTICSLAB::YarpCloudUtils)
 
-    install(TARGETS openraveYarpWorldClientMesh
-            DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(TARGETS openraveYarpWorldClientMesh)
 
 else()
 

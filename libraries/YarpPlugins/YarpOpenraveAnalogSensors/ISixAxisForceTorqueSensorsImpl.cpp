@@ -41,7 +41,7 @@ bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorFrameName(size_t sens
 
 bool YarpOpenraveAnalogSensors::getSixAxisForceTorqueSensorMeasure(size_t sens_index, yarp::sig::Vector& out, double& timestamp) const
 {
-    if(!vectorOfSensorPtrForForce6Ds[sens_index]->GetSensorData(vectorOfForce6DSensorDataPtr[sens_index]))
+    if (!vectorOfSensorPtrForForce6Ds[sens_index]->GetSensorData(vectorOfForce6DSensorDataPtr[sens_index]))
     {
         yCDebug(YORAS) << "GetSensorData() failed";
         return false;

@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-#include <yarp/conf/version.h>
-
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
@@ -20,21 +18,17 @@ constexpr auto NOT_SET = -1;
 
 bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
 {
-#if !defined(YARP_VERSION_COMPARE) // < 3.6.0
-    yCDebug(YORRS) << "Config:" << config.toString();
-#endif
-
-    if ( ! configureEnvironment(config) )
+    if (!configureEnvironment(config))
         return false;
 
-    if ( ! configureOpenravePlugins(config) )
+    if (!configureOpenravePlugins(config))
         return false;
 
-    if ( ! configureRobot(config) )
+    if (!configureRobot(config))
         return false;
 
-    int depthSensorIndex = config.check("depthSensorIndex",yarp::os::Value(NOT_SET),"depth sensor index").asInt32();
-    int rgbSensorIndex = config.check("rgbSensorIndex",yarp::os::Value(NOT_SET),"RGB sensor index").asInt32();
+    int depthSensorIndex = config.check("depthSensorIndex", yarp::os::Value(NOT_SET),"depth sensor index").asInt32();
+    int rgbSensorIndex = config.check("rgbSensorIndex", yarp::os::Value(NOT_SET),"RGB sensor index").asInt32();
 
     std::vector<OpenRAVE::RobotBase::AttachedSensorPtr> vectorOfSensorPtr = probot->GetAttachedSensors();
 
@@ -43,7 +37,7 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
         yCError(YORRS) << "depthSensorIndex" << depthSensorIndex << "== NOT_SET, not loading yarpPlugin";
         return false;
     }
-    else if((depthSensorIndex >= vectorOfSensorPtr.size()) || (depthSensorIndex < 0))
+    else if (depthSensorIndex >= vectorOfSensorPtr.size() || depthSensorIndex < 0)
     {
         yCError(YORRS, "depthSensorIndex %d not in vectorOfSensorPtr of size() %zu, not loading yarpPlugin",depthSensorIndex,vectorOfSensorPtr.size());
         return false;
@@ -56,7 +50,7 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
         rgbWidth = 0;
         rgbHeight = 0;
     }
-    else if(rgbSensorIndex >= vectorOfSensorPtr.size())
+    else if (rgbSensorIndex >= vectorOfSensorPtr.size())
     {
         yCError(YORRS, "rgbSensorIndex %d >= vectorOfSensorPtr.size() %zu, not loading yarpPlugin",rgbSensorIndex,vectorOfSensorPtr.size());
         return false;
@@ -75,7 +69,7 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     yCInfo(YORRS) << "Depth sensor" << depthSensorIndex << "name:" << depthName;
 
     // printf("Depth sensor %d description: %s\n",depthSensorIndex,depthSensorBasePtr->GetDescription().c_str());
-    if ( ! depthSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Laser) )
+    if (!depthSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Laser))
     {
         yCError(YORRS) << "Depth sensor" << depthSensorIndex << "does not support ST_Laser";
         return false;
@@ -106,7 +100,7 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     depthReady = true;
 
     //-- RGB sensor
-    if(!rgb) //-- treat special no RGB case
+    if (!rgb) //-- treat special no RGB case
     {
         rgbSensorBasePtr = nullptr;
         rgbReady = true;
@@ -123,7 +117,7 @@ bool YarpOpenraveRGBDSensor::open(yarp::os::Searchable& config)
     yCInfo(YORRS) << "Rgb sensor" << rgbSensorIndex << "name:" << rgbName;
     // printf("Rgb sensor %d description: %s\n",rgbSensorIndex,rgbSensorBasePtr->GetDescription().c_str());
 
-    if ( ! rgbSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera) )
+    if (!rgbSensorBasePtr->Supports(OpenRAVE::SensorBase::ST_Camera))
     {
         yCError(YORRS) << "Rgb sensor" << rgbSensorIndex << "does not support ST_Camera";
         return false;

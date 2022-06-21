@@ -22,8 +22,8 @@ bool YarpOpenraveControlboard::getControlMode(int j, int *mode)
 bool YarpOpenraveControlboard::getControlModes(int *modes)
 {
     bool ok = true;
-    for(unsigned int i=0; i < axes; i++)
-        ok &= getControlMode(i,&(modes[i]));
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= getControlMode(i, &(modes[i]));
     return ok;
 }
 
@@ -34,8 +34,8 @@ bool YarpOpenraveControlboard::getControlModes(const int n_joint, const int *joi
     yCTrace(YORCB) << n_joint;
 
     bool ok = true;
-    for(unsigned int i=0; i < n_joint; i++)
-        ok &= getControlMode(joints[i],&modes[i]);
+    for (unsigned int i = 0; i < n_joint; i++)
+        ok &= getControlMode(joints[i], &modes[i]);
     return ok;
 }
 
@@ -57,9 +57,9 @@ bool YarpOpenraveControlboard::setControlModes(const int n_joint, const int *joi
     yCTrace(YORCB) << n_joint;
 
     bool ok = true;
-    for(int j=0; j<n_joint; j++)
+    for (int j = 0; j < n_joint; j++)
     {
-        ok &= this->setControlMode(joints[j],modes[j]);
+        ok &= this->setControlMode(joints[j], modes[j]);
     }
     return ok;
 }
@@ -71,8 +71,8 @@ bool YarpOpenraveControlboard::setControlModes(int *modes)
     yCTrace(YORCB);
 
     bool ok = true;
-    for(unsigned int i=0; i<axes; i++)
-        ok &= setControlMode(i,modes[i]);
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= setControlMode(i, modes[i]);
     return ok;
 }
 

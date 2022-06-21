@@ -2,14 +2,13 @@ option(ENABLE_openraveYarpWorldClientFile "Enable/disable openraveYarpWorldClien
 
 if(ENABLE_openraveYarpWorldClientFile)
 
-add_executable(openraveYarpWorldClientFile main.cpp
-                                           OpenraveYarpWorldClientFile.cpp
-                                           OpenraveYarpWorldClientFile.hpp)
+        add_executable(openraveYarpWorldClientFile main.cpp
+                                                   OpenraveYarpWorldClientFile.cpp
+                                                   OpenraveYarpWorldClientFile.hpp)
 
-target_link_libraries(openraveYarpWorldClientFile YARP::YARP_os
-                                                  YARP::YARP_init)
+        target_link_libraries(openraveYarpWorldClientFile YARP::YARP_os
+                                                          YARP::YARP_init)
 
-install(TARGETS openraveYarpWorldClientFile
-        DESTINATION ${CMAKE_INSTALL_BINDIR})
+        install(TARGETS openraveYarpWorldClientFile)
 
 endif()

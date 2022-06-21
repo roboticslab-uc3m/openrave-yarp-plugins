@@ -17,7 +17,8 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
     sensorBasePtr->GetSensorData(sensorDataPtr);
 
     std::vector<uint8_t> currentFrame = sensorDataPtr->vimagedata;
-    if(0 == currentFrame.size())
+
+    if (currentFrame.empty())
     {
         return false;
     }
@@ -27,7 +28,7 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
 
     //-- So the safe way seems to be using an intermediate image and making a copy.
     yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
-    tmpImage.setExternal(currentFrame.data(),_width,_height);
+    tmpImage.setExternal(currentFrame.data(), _width, _height);
     image.copy(tmpImage);
 
     //-- Here's the old inefficient pixel-by-pixel copy in case efficient code ever stops working.

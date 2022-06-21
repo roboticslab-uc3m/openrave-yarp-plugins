@@ -28,21 +28,21 @@ bool YarpOpenraveControlboard::positionMove(int j, double ref)
     yCTrace(YORCB) << j << ref;
 
     //-- Check if we are in position mode.
-    if( controlModes[j] != VOCAB_CM_POSITION )
+    if (controlModes[j] != VOCAB_CM_POSITION)
     {
         yCError(YORCB) << "Will not positionMove() as joint" << j << "not in positionMode";
         return false;
     }
 
-    OpenRAVE::dReal dofTargetRads = degToRadIfNotPrismatic(j, ref);  // ref comes in exposed
+    OpenRAVE::dReal dofTargetRads = degToRadIfNotPrismatic(j, ref); // ref comes in exposed
 
     //-- Store the targets
-    manipulatorTargetRads[ j ] = dofTargetRads;
+    manipulatorTargetRads[j] = dofTargetRads;
 
     //-- But do not move if no velocity
-    if( refSpeeds[ j ] == 0 )
+    if (refSpeeds[j] == 0)
     {
-        yCDebug(YORCB, "[%d] (refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true",j);
+        yCDebug(YORCB, "[%d] (refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true", j);
         return true;
     }
 
@@ -51,9 +51,10 @@ bool YarpOpenraveControlboard::positionMove(int j, double ref)
 
         //-- Check and do immediate movement if appropriate.
         //-- In fact, OpenRAVE would actually do the extra-fast movement but warn at all times.
-        double min,max;
-        getVelLimits( j, &min, &max );
-        if( refSpeeds[ j ] > max )
+        double min, max;
+        getVelLimits(j, &min, &max);
+
+        if (refSpeeds[j] > max)
         {
             std::vector<OpenRAVE::dReal> tmp;
             tmp.push_back(dofTargetRads);
@@ -81,7 +82,7 @@ bool YarpOpenraveControlboard::positionMove(int j, double ref)
         joint_valuesName.append(robotName);
         joint_valuesName.append(" ");
         std::stringstream ss;
-        ss << manipulatorIDs[ j ];
+        ss << manipulatorIDs[j];
         joint_valuesName.append(ss.str());
         joint_values.name = joint_valuesName;
         joint_values.offset = 0;
@@ -92,17 +93,17 @@ bool YarpOpenraveControlboard::positionMove(int j, double ref)
         //-- Add a required deltatime group
         //-- Perhaps also could be done via: int timeoffset = spec.AddDeltaTimeGroup();
         OpenRAVE::ConfigurationSpecification::Group deltatime;
-        deltatime.name="deltatime";
-        deltatime.offset=1;
-        deltatime.dof=1;
-        deltatime.interpolation="";
+        deltatime.name = "deltatime";
+        deltatime.offset = 1;
+        deltatime.dof = 1;
+        deltatime.interpolation = "";
         oneDofConfigurationSpecification.AddGroup(deltatime);
 
         OpenRAVE::ConfigurationSpecification::Group iswaypoint;
-        iswaypoint.name="iswaypoint";
-        iswaypoint.offset=2;
-        iswaypoint.dof=1;
-        iswaypoint.interpolation="next";
+        iswaypoint.name = "iswaypoint";
+        iswaypoint.offset = 2;
+        iswaypoint.dof = 1;
+        iswaypoint.interpolation = "next";
         oneDofConfigurationSpecification.AddGroup(iswaypoint);
 
         //-- Console output of the manually adjusted ConfigurationSpecification
@@ -118,27 +119,26 @@ bool YarpOpenraveControlboard::positionMove(int j, double ref)
 
         OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
 
-        OpenRAVE::dReal dofTime = std::abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,refSpeeds[j]) ) ); // Time in seconds
+        OpenRAVE::dReal dofTime = std::abs(( dofTargetRads - dofCurrentRads ) / degToRadIfNotPrismatic(j, refSpeeds[j])); // Time in seconds
 
-        yCDebug(YORCB, "[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]",j,ref,radToDegIfNotPrismatic(j,dofCurrentRads),refSpeeds[ j ],dofTime);
+        yCDebug(YORCB, "[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]", j, ref,radToDegIfNotPrismatic(j, dofCurrentRads), refSpeeds[j], dofTime);
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
         dofCurrentFull[0] = dofCurrentRads;  // joint_values
         dofCurrentFull[1] = 0;           // deltatime
         dofCurrentFull[2] = 1;           // iswaypoint
-        ptraj->Insert(0,dofCurrentFull);
+        ptraj->Insert(0, dofCurrentFull);
 
         //-- ptraj[1] with position targets, with: 1 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofTargetFull(3);
         dofTargetFull[0] = dofTargetRads;  // joint_values
         dofTargetFull[1] = dofTime;    // deltatime
         dofTargetFull[2] = 1;          // iswaypoint
-        ptraj->Insert(1,dofTargetFull);
+        ptraj->Insert(1, dofTargetFull);
 
         //-- SetPath makes the controller perform the trajectory
         pcontrols[j]->SetPath(ptraj);
-
     }
 
     return true;
@@ -148,10 +148,10 @@ bool YarpOpenraveControlboard::positionMove(int j, double ref)
 
 bool YarpOpenraveControlboard::positionMove(const double *refs)
 {
-    yCTrace(YORCB);;
+    yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= positionMove(i,refs[i]);
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= positionMove(i, refs[i]);
     return ok;
 }
 
@@ -163,7 +163,7 @@ bool YarpOpenraveControlboard::relativeMove(int j, double delta)
 
     double v = radToDegIfNotPrismatic(j, vectorOfJointPtr[j]->GetValue(0) );
 
-    return positionMove(j, v+delta);
+    return positionMove(j, v + delta);
 }
 
 // -----------------------------------------------------------------------------
@@ -172,8 +172,8 @@ bool YarpOpenraveControlboard::relativeMove(const double *deltas)
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= relativeMove(i,deltas[i]);
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= relativeMove(i, deltas[i]);
     return ok;
 }
 
@@ -192,10 +192,10 @@ bool YarpOpenraveControlboard::checkMotionDone(bool *flag)
 {
     yCTrace(YORCB);
     bool done = true;
-    for(unsigned int j=0;j<axes;j++)
+    for (unsigned int j = 0; j < axes; j++)
     {
         bool tmpDone;
-        checkMotionDone(j,&tmpDone);
+        checkMotionDone(j, &tmpDone);
         done &= tmpDone;
     }
     *flag = done;
@@ -207,12 +207,14 @@ bool YarpOpenraveControlboard::checkMotionDone(bool *flag)
 bool YarpOpenraveControlboard::setRefSpeed(int j, double sp)
 {
     yCTrace(YORCB) << j << sp;
-    double min,max;
-    getVelLimits( j, &min, &max );
-    if( sp > max )
+    double min, max;
+    getVelLimits(j, &min, &max);
+
+    if (sp > max)
     {
         yCWarning(YORCB) << "Setting" << sp << "refSpeed above" << max << "maxVelLimit, all joint" << j << "movements will be immediate";
     }
+
     refSpeeds[j] = sp;
     return true;
 }
@@ -223,8 +225,8 @@ bool YarpOpenraveControlboard::setRefSpeeds(const double *spds)
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= setRefSpeed(i,spds[i]);
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= setRefSpeed(i, spds[i]);
     return ok;
 }
 
@@ -259,8 +261,8 @@ bool YarpOpenraveControlboard::getRefSpeeds(double *spds)
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= getRefSpeed(i,&spds[i]);
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= getRefSpeed(i, &spds[i]);
     return ok;
 }
 
@@ -298,7 +300,7 @@ bool YarpOpenraveControlboard::stop()
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
+    for (unsigned int i = 0; i < axes; i++)
         ok &= stop(i);
     return ok;
 }
@@ -309,9 +311,9 @@ bool YarpOpenraveControlboard::positionMove(const int n_joint, const int *joints
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
-    for(int i=0;i<n_joint;i++)
+    for (int i = 0; i < n_joint; i++)
     {
-        ok &= positionMove(joints[i],refs[i]);
+        ok &= positionMove(joints[i], refs[i]);
     }
     return ok;
 }
@@ -322,9 +324,9 @@ bool YarpOpenraveControlboard::relativeMove(const int n_joint, const int *joints
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
-    for(int i=0;i<n_joint;i++)
+    for (int i = 0; i < n_joint; i++)
     {
-        ok &= relativeMove(joints[i],deltas[i]);
+        ok &= relativeMove(joints[i], deltas[i]);
     }
     return ok;
 }
@@ -336,10 +338,10 @@ bool YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int *joi
     yCTrace(YORCB) << n_joint;
     bool ok = true;
     bool done = true;
-    for(int i=0;i<n_joint;i++)
+    for (int i = 0; i < n_joint; i++)
     {
         bool tmpDone;
-        ok &= checkMotionDone(joints[i],&tmpDone);
+        ok &= checkMotionDone(joints[i], &tmpDone);
         done &= tmpDone;
     }
     *flag = done;
@@ -352,9 +354,9 @@ bool YarpOpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
-    for(int i=0;i<n_joint;i++)
+    for (int i = 0; i < n_joint; i++)
     {
-        ok &= setRefSpeed(joints[i],spds[i]);
+        ok &= setRefSpeed(joints[i], spds[i]);
     }
     return ok;
 }
@@ -365,9 +367,9 @@ bool YarpOpenraveControlboard::setRefAccelerations(const int n_joint, const int 
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
-    for(int i=0;i<n_joint;i++)
+    for (int i = 0; i < n_joint; i++)
     {
-        ok &= setRefAcceleration(joints[i],accs[i]);
+        ok &= setRefAcceleration(joints[i], accs[i]);
     }
     return ok;
 }
@@ -378,9 +380,9 @@ bool YarpOpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
-    for(int i=0;i<n_joint;i++)
+    for (int i = 0; i < n_joint; i++)
     {
-        ok &= getRefSpeed(joints[i],&spds[i]);
+        ok &= getRefSpeed(joints[i], &spds[i]);
     }
     return ok;
 }
@@ -391,9 +393,9 @@ bool YarpOpenraveControlboard::getRefAccelerations(const int n_joint, const int 
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
-    for(int i=0;i<n_joint;i++)
+    for (int i = 0; i < n_joint; i++)
     {
-        ok &= getRefAcceleration(joints[i],&accs[i]);
+        ok &= getRefAcceleration(joints[i], &accs[i]);
     }
     return ok;
 }
@@ -404,7 +406,7 @@ bool YarpOpenraveControlboard::stop(const int n_joint, const int *joints)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
-    for(unsigned int i=0;i<n_joint;i++)
+    for (unsigned int i = 0; i < n_joint; i++)
         ok &= stop(joints[i]);
     return ok;
 }

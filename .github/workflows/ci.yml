@@ -19,7 +19,7 @@ jobs:
     outputs:
       should_skip: ${{steps.skip_check.outputs.should_skip}}
     steps:
-    - uses: fkirc/skip-duplicate-actions@master
+    - uses: fkirc/skip-duplicate-actions@v4
       id: skip_check
       with:
         cancel_others: 'true'
@@ -35,8 +35,8 @@ jobs:
       matrix:
         os: [ubuntu-18.04, ubuntu-20.04]
         robotology:
-        - { yarp: yarp-3.5, ycm: ycm-0.13, cmake: 3.12.x }
-        - { yarp: yarp-3.6, ycm: ycm-0.13, cmake: 3.16.x }
+        - { yarp: yarp-3.6, ycm: ycm-0.14, cmake: 3.16.x }
+        - { yarp: yarp-3.7, ycm: ycm-0.14, cmake: 3.16.x }
         - { yarp: master, ycm: master, cmake: 3.16.x }
         compiler:
         - { cc: gcc, cxx: g++ }
@@ -48,48 +48,48 @@ jobs:
 
     steps:
     - name: Check out openrave-yarp-plugins
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Check out YCM
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: robotology/ycm
         ref: ${{matrix.robotology.ycm}}
         path: .deps/ycm
 
     - name: Check out YARP
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: robotology/yarp
         ref: ${{matrix.robotology.yarp}}
         path: .deps/yarp
 
     - name: Check out RapidJSON
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Tencent/rapidjson
         path: .deps/rapidjson
 
     - name: Check out OpenRAVE
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: rdiankov/openrave
         path: .deps/openrave
 
     - name: Check out asrob-uc3m/yarp-devices
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: asrob-uc3m/yarp-devices
         path: .deps/yarp-devices
 
     - name: Check out roboticslab-uc3m/vision
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: roboticslab-uc3m/vision
         path: .deps/vision
 
     - name: Check out roboticslab-uc3m/kinematics-dynamics
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: roboticslab-uc3m/kinematics-dynamics
         path: .deps/kinematics-dynamics
@@ -98,78 +98,70 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -qq ccache libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libboost-date-time-dev libxml2-dev libpcl-dev
 
     - name: Set up CMake
-      uses: jwlawson/actions-setup-cmake@v1.7
+      uses: jwlawson/actions-setup-cmake@v1
       with:
         cmake-version: ${{matrix.robotology.cmake}}
 
     - name: Set up Ccache
-      uses: hendrikmuhs/ccache-action@v1
+      uses: hendrikmuhs/ccache-action@v1.2
       with:
         key: ${{matrix.os}}-${{matrix.robotology.yarp}}-${{matrix.compiler.cc}}
 
-    - name: Create build trees
-      run: cmake -E make_directory build .deps/ycm/build .deps/yarp/build .deps/rapidjson/build .deps/openrave/build .deps/yarp-devices/build .deps/vision/build .deps/kinematics-dynamics/build
-
     - name: Set environment variables
-      run: echo "CMAKE_COMPILER=-DCMAKE_C_COMPILER=${{matrix.compiler.cc}} -DCMAKE_CXX_COMPILER=${{matrix.compiler.cxx}}" >> $GITHUB_ENV
+      run: |
+        echo "CC=${{matrix.compiler.cc}}" >> $GITHUB_ENV
+        echo "CXX=${{matrix.compiler.cxx}}" >> $GITHUB_ENV
 
     - name: Build YCM
-      working-directory: ${{github.workspace}}/.deps/ycm/build
       run: |
-        cmake ..
-        cmake --build .
-        sudo cmake --build . --target install
+        cmake -S .deps/ycm -B .deps/ycm/build
+        cmake --build .deps/ycm/build
+        sudo cmake --install .deps/ycm/build
 
     - name: Build YARP
-      working-directory: ${{github.workspace}}/.deps/yarp/build
       run: |
-        cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER -DSKIP_ACE=ON -DYARP_DISABLE_VERSION_SOURCE=ON
-        cmake --build . --parallel
-        sudo cmake --build . --target install
+        cmake -S .deps/yarp -B .deps/yarp/build $CMAKE_CCACHE_LAUNCHER -DSKIP_ACE=ON -DYARP_DISABLE_VERSION_SOURCE=ON
+        cmake --build .deps/yarp/build --parallel
+        sudo cmake --install .deps/yarp/build
 
     - name: Build RapidJSON
-      working-directory: ${{github.workspace}}/.deps/rapidjson/build
       run: |
-        cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER -DRAPIDJSON_BUILD_DOC=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_TESTS=OFF
-        cmake --build . --parallel
-        sudo cmake --build . --target install
+        cmake -S .deps/rapidjson -B .deps/rapidjson/build $CMAKE_CCACHE_LAUNCHER -DRAPIDJSON_BUILD_DOC=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_TESTS=OFF
+        cmake --build .deps/rapidjson/build --parallel
+        sudo cmake --install .deps/rapidjson/build
 
     - name: Build OpenRAVE
-      working-directory: ${{github.workspace}}/.deps/openrave/build
       run: |
-        CFLAGS=-w CXXFLAGS=-w cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER -DOPT_VIDEORECORDING=OFF -DOPT_PLUGINS=OFF -DOPT_PYTHON=OFF -DOPT_COLLADA=OFF -DOPT_CBINDINGS=OFF
-        cmake --build . --parallel
-        sudo cmake --build . --target install
+        CFLAGS=-w CXXFLAGS=-w cmake -S .deps/openrave -B .deps/openrave/build $CMAKE_CCACHE_LAUNCHER -DOPT_VIDEORECORDING=OFF -DOPT_PLUGINS=OFF -DOPT_PYTHON=OFF -DOPT_COLLADA=OFF -DOPT_CBINDINGS=OFF
+        cmake --build .deps/openrave/build --parallel
+        sudo cmake --install .deps/openrave/build
 
     - name: Build asrob-uc3m/yarp-devices
-      working-directory: ${{github.workspace}}/.deps/yarp-devices/build
       run: |
-        cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER
-        cmake --build . --parallel
-        sudo cmake --build . --target install
+        cmake -S .deps/yarp-devices -B .deps/yarp-devices/build $CMAKE_CCACHE_LAUNCHER
+        cmake --build .deps/yarp-devices/build --parallel
+        sudo cmake --install .deps/yarp-devices/build
 
     - name: Build roboticslab-uc3m/vision
-      working-directory: ${{github.workspace}}/.deps/vision/build
       run: |
-        cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER
-        cmake --build . --parallel
-        sudo cmake --build . --target install
+        cmake -S .deps/vision -B .deps/vision/build $CMAKE_CCACHE_LAUNCHER
+        cmake --build .deps/vision/build --parallel
+        sudo cmake --install .deps/vision/build
 
     - name: Build roboticslab-uc3m/kinematics-dynamics
-      working-directory: ${{github.workspace}}/.deps/kinematics-dynamics/build
       run: |
-        cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER
-        cmake --build . --parallel
-        sudo cmake --build . --target install
+        cmake -S .deps/kinematics-dynamics -B .deps/kinematics-dynamics/build $CMAKE_CCACHE_LAUNCHER
+        cmake --build .deps/kinematics-dynamics/build --parallel
+        sudo cmake --install .deps/kinematics-dynamics/build
 
-    - name: Build openrave-yarp-plugins
-      working-directory: ${{github.workspace}}/build
-      run: |
-        cmake .. $CMAKE_COMPILER $CMAKE_CCACHE_LAUNCHER -DENABLE_examples=ON
-        cmake --build .
-        sudo cmake --build . --target install
-        sudo ldconfig
+    - name: Configure openrave-yarp-plugins
+      run: cmake -S . -B build $CMAKE_CCACHE_LAUNCHER -DENABLE_examples=ON
+
+    - name: Compile openrave-yarp-plugins
+      run: cmake --build build
+
+    - name: Install openrave-yarp-plugins
+      run: sudo cmake --install build && sudo ldconfig
 
     - name: Uninstall openrave-yarp-plugins
-      working-directory: ${{github.workspace}}/build
-      run: sudo cmake --build . --target uninstall
+      run: sudo cmake --build build --target uninstall

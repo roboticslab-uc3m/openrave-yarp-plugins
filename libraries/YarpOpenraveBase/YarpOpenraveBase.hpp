@@ -48,6 +48,6 @@ protected:
     boost::thread_group openraveThreads;
 };
 
-}  // namespace roboticslab
+} // namespace roboticslab
 
-#endif  // __YARP_OPENRAVE_BASE_HPP__
+#endif // __YARP_OPENRAVE_BASE_HPP__

@@ -19,7 +19,7 @@ bool YarpOpenraveControlboard::velocityMove(int j, double sp)
     yCTrace(YORCB) << j << sp;
 
     //-- Check if we are in position mode.
-    if( controlModes[j] != VOCAB_CM_VELOCITY )
+    if (controlModes[j] != VOCAB_CM_VELOCITY)
     {
         yCError(YORCB) << "Will not velocityMove() as joint" << j << "not in velocityMode";
         return false;
@@ -28,7 +28,7 @@ bool YarpOpenraveControlboard::velocityMove(int j, double sp)
     //-- Code from getLimits
     std::vector<OpenRAVE::dReal> vLowerLimit;
     std::vector<OpenRAVE::dReal> vUpperLimit;
-    vectorOfJointPtr[j]->GetLimits(vLowerLimit,vUpperLimit);
+    vectorOfJointPtr[j]->GetLimits(vLowerLimit, vUpperLimit);
 
     //-- Our joints always have ony 1 DoF, therefore safe to use only [0].
     //double min = radToDegIfNotPrismatic(j,vLowerLimit[0]);
@@ -38,13 +38,14 @@ bool YarpOpenraveControlboard::velocityMove(int j, double sp)
 
     OpenRAVE::dReal dofTargetRads;
     double tol = 0.0001;
-    if( sp > 0+tol )
+
+    if (sp > 0 + tol)
         dofTargetRads = max;
-    else if ( sp < 0-tol )
+    else if (sp < 0 - tol)
         dofTargetRads = min;
     else
     {
-        this->stop(j);
+        stop(j);
         return true;
     }
 
@@ -53,11 +54,12 @@ bool YarpOpenraveControlboard::velocityMove(int j, double sp)
 
         //-- Check and do immediate movement if appropriate.
         //-- In fact, OpenRAVE would actually do the extra-fast movement but warn at all times.
-        double velMin,velMax;
-        this->getVelLimits( j, &velMin, &velMax );
-        if( sp > velMax )
+        double velMin, velMax;
+        getVelLimits(j, &velMin, &velMax);
+
+        if (sp > velMax)
         {
-            yCWarning(YORCB, "Command exceeds joint speed limits (%f > %f))",sp,velMax);
+            yCWarning(YORCB, "Command exceeds joint speed limits (%f > %f))", sp, velMax);
             return true;
         }
 
@@ -81,7 +83,7 @@ bool YarpOpenraveControlboard::velocityMove(int j, double sp)
         joint_valuesName.append(robotName);
         joint_valuesName.append(" ");
         std::stringstream ss;
-        ss << manipulatorIDs[ j ];
+        ss << manipulatorIDs[j];
         joint_valuesName.append(ss.str());
         joint_values.name = joint_valuesName;
         joint_values.offset = 0;
@@ -92,17 +94,17 @@ bool YarpOpenraveControlboard::velocityMove(int j, double sp)
         //-- Add a required deltatime group
         //-- Perhaps also could be done via: int timeoffset = spec.AddDeltaTimeGroup();
         OpenRAVE::ConfigurationSpecification::Group deltatime;
-        deltatime.name="deltatime";
-        deltatime.offset=1;
-        deltatime.dof=1;
-        deltatime.interpolation="";
+        deltatime.name = "deltatime";
+        deltatime.offset = 1;
+        deltatime.dof = 1;
+        deltatime.interpolation = "";
         oneDofConfigurationSpecification.AddGroup(deltatime);
 
         OpenRAVE::ConfigurationSpecification::Group iswaypoint;
-        iswaypoint.name="iswaypoint";
-        iswaypoint.offset=2;
-        iswaypoint.dof=1;
-        iswaypoint.interpolation="next";
+        iswaypoint.name = "iswaypoint";
+        iswaypoint.offset = 2;
+        iswaypoint.dof = 1;
+        iswaypoint.interpolation = "next";
         oneDofConfigurationSpecification.AddGroup(iswaypoint);
 
         //-- Console output of the manually adjusted ConfigurationSpecification
@@ -112,29 +114,29 @@ bool YarpOpenraveControlboard::velocityMove(int j, double sp)
         //    yCDebug(YORCB, "[%d] %s, %d, %d, %s",i,g.name.c_str(), g.offset, g.dof, g.interpolation.c_str());
         //}
 
-        OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv,"");
+        OpenRAVE::TrajectoryBasePtr ptraj = OpenRAVE::RaveCreateTrajectory(penv, "");
 
         ptraj->Init(oneDofConfigurationSpecification);
 
         OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
 
-        OpenRAVE::dReal dofTime = std::abs( ( dofTargetRads - dofCurrentRads ) / ( degToRadIfNotPrismatic(j,sp) ) ); // Time in seconds
+        OpenRAVE::dReal dofTime = std::abs((dofTargetRads - dofCurrentRads) / degToRadIfNotPrismatic(j, sp)); // Time in seconds
 
-        yCDebug(YORCB, "[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]",j,radToDegIfNotPrismatic(j,dofTargetRads),radToDegIfNotPrismatic(j,dofCurrentRads),sp,dofTime);
+        yCDebug(YORCB, "[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]", j, radToDegIfNotPrismatic(j, dofTargetRads), radToDegIfNotPrismatic(j, dofCurrentRads), sp, dofTime);
 
         //-- ptraj[0] with positions it has now, with: 0 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofCurrentFull(3);
         dofCurrentFull[0] = dofCurrentRads;  // joint_values
         dofCurrentFull[1] = 0;           // deltatime
         dofCurrentFull[2] = 1;           // iswaypoint
-        ptraj->Insert(0,dofCurrentFull);
+        ptraj->Insert(0, dofCurrentFull);
 
         //-- ptraj[1] with position targets, with: 1 deltatime, 1 iswaypoint
         std::vector<OpenRAVE::dReal> dofTargetFull(3);
         dofTargetFull[0] = dofTargetRads;  // joint_values
         dofTargetFull[1] = dofTime;    // deltatime
         dofTargetFull[2] = 1;          // iswaypoint
-        ptraj->Insert(1,dofTargetFull);
+        ptraj->Insert(1, dofTargetFull);
 
         //-- SetPath makes the controller perform the trajectory
         pcontrols[j]->SetPath(ptraj);
@@ -150,8 +152,8 @@ bool YarpOpenraveControlboard::velocityMove(const double *sp)
 {
     yCTrace(YORCB);
     bool ok = true;
-    for(unsigned int i=0;i<axes;i++)
-        ok &= velocityMove(i,sp[i]);
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= velocityMove(i, sp[i]);
     return ok;
 }
 
@@ -161,8 +163,8 @@ bool YarpOpenraveControlboard::velocityMove(const int n_joint, const int *joints
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
-    for(int i=0;i<n_joint;i++)
-        ok &= velocityMove(joints[i],spds[i]);
+    for (int i = 0; i < n_joint; i++)
+        ok &= velocityMove(joints[i], spds[i]);
     return ok;
 }
 

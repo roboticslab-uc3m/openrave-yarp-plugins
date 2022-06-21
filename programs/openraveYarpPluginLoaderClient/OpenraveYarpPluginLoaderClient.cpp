@@ -39,7 +39,7 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
 {
     yCDebug(ORYPLC) << "Config:" << rf.toString();
 
-    if(rf.check("help"))
+    if (rf.check("help"))
     {
         yCInfo(ORYPLC) << "OpenraveYarpPluginLoaderClient options:";
         yCInfo(ORYPLC) << "\t--help (this help)\t--from [file.ini]\t--context [path]";
@@ -51,11 +51,12 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
     openOptions.unput("from");
     yCDebug(ORYPLC) << "openOptions:" << openOptions.toString();
 
-    if(!openOptions.check("device"))
+    if (!openOptions.check("device"))
     {
         yCError(ORYPLC) << "Missing device parameter";
         return false;
     }
+
     std::string deviceName = openOptions.find("device").asString();
 
     //-- RpcClient
@@ -63,12 +64,14 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
     rpcClientName.append(deviceName);
     rpcClientName.append("/");
     rpcClientName.append("OpenraveYarpPluginLoader/rpc:c");
-    if(!rpcClient.open(rpcClientName))
+
+    if (!rpcClient.open(rpcClientName))
     {
         yCError(ORYPLC) << "!rpcClient.open";
         return false;
     }
-    if(!rpcClient.addOutput("/OpenraveYarpPluginLoader/rpc:s"))
+
+    if (!rpcClient.addOutput("/OpenraveYarpPluginLoader/rpc:s"))
     {
         yCError(ORYPLC) << "RpcServer \"/OpenraveYarpPluginLoader/rpc:s\" not found";
         return false;
@@ -79,16 +82,19 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
     callbackPortName.append(deviceName);
     callbackPortName.append("/");
     callbackPortName.append("OpenraveYarpPluginLoader/state:i");
-    if(!callbackPort.open(callbackPortName))
+
+    if (!callbackPort.open(callbackPortName))
     {
         yCError(ORYPLC) << "!callbackPort.open";
         return false;
     }
-    if(!yarp::os::Network::connect("/OpenraveYarpPluginLoader/state:o",callbackPortName))
+
+    if (!yarp::os::Network::connect("/OpenraveYarpPluginLoader/state:o", callbackPortName))
     {
         yCError(ORYPLC) << "Unable to connect to state port";
         return false;
     }
+
     callbackPort.useCallback();
 
     yarp::os::Bottle openOptionsBottle;
@@ -100,7 +106,7 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
     yCDebug(ORYPLC) << "cmd:" << cmd.toString();
     rpcClient.write(cmd, res);
 
-    if(VOCAB_FAILED == res.get(0).asVocab32())
+    if (VOCAB_FAILED == res.get(0).asVocab32())
     {
         yCError(ORYPLC) << "Client error:" << res.toString();
         return false;
@@ -108,7 +114,7 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
 
     yCInfo(ORYPLC) << "Client success:" << res.toString();
 
-    for(size_t i=1; i<res.size(); i++)
+    for (size_t i = 1; i < res.size(); i++)
         openedIds.push_back(res.get(i).asInt32());
 
     return true;
@@ -119,24 +125,28 @@ bool OpenraveYarpPluginLoaderClient::configure(yarp::os::ResourceFinder &rf)
 bool OpenraveYarpPluginLoaderClient::openedInAvailable()
 {
     callbackPort.availableIdsMutex.lock();
-    for(size_t openedIdx=0; openedIdx<openedIds.size(); openedIdx++)
+
+    for (size_t openedIdx = 0; openedIdx < openedIds.size(); openedIdx++)
     {
         bool innerFound = false;
-        for(size_t i=0; i<callbackPort.availableIds.size(); i++)
+
+        for (size_t i = 0; i < callbackPort.availableIds.size(); i++)
         {
-            if(openedIds[openedIdx] == callbackPort.availableIds[i])
+            if (openedIds[openedIdx] == callbackPort.availableIds[i])
             {
                 innerFound = true;
                 break;
             }
         }
-        if(!innerFound)
+
+        if (!innerFound)
         {
             callbackPort.availableIdsMutex.unlock();
             yCDebug(ORYPLC) << "Open not available";
             return false;
         }
     }
+
     callbackPort.availableIdsMutex.unlock();
     yCDebug(ORYPLC) << "Open available";
     return true;
@@ -146,30 +156,32 @@ bool OpenraveYarpPluginLoaderClient::openedInAvailable()
 
 bool OpenraveYarpPluginLoaderClient::updateModule()
 {
-    if(-1 == callbackPort.lastTime)
+    if (callbackPort.lastTime == -1)
     {
         yCDebug(ORYPLC) << "Waiting for first read...";
         return true;
     }
 
-    if(!detectedFirst)
+    if (!detectedFirst)
     {
-        if(openedInAvailable())
+        if (openedInAvailable())
         {
             detectedFirst = true;
         }
+
         yCDebug(ORYPLC) << "Waiting for detectedFirst...";
         return true;
     }
 
-    if(!openedInAvailable())
+    if (!openedInAvailable())
     {
         yCInfo(ORYPLC) << "!openedInAvailable()";
         return false;
     }
 
     double deltaTime = yarp::os::Time::now() - callbackPort.lastTime;
-    if(deltaTime > DEFAULT_PERIOD_S * 2.0)
+
+    if (deltaTime > DEFAULT_PERIOD_S * 2.0)
     {
         yCInfo(ORYPLC) << "deltaTime > DEFAULT_PERIOD_S * 2.0";
         return false;
@@ -184,7 +196,7 @@ bool OpenraveYarpPluginLoaderClient::close()
 {
     yarp::os::Bottle cmd, res;
     cmd.addString("close");
-    for(size_t i=0; i<openedIds.size(); i++)
+    for (size_t i = 0; i < openedIds.size(); i++)
         cmd.addInt32(openedIds[i]);
     rpcClient.write(cmd, res);
 
@@ -213,11 +225,13 @@ void OyplCallbackPort::onRead(yarp::os::Bottle& b)
 {
     availableIdsMutex.lock();
     availableIds.clear();
-    for(size_t i=0; i<b.size(); i++)
+
+    for (size_t i = 0; i < b.size(); i++)
     {
         yarp::os::Bottle* elems = b.get(i).asList();
         availableIds.push_back(elems->get(0).asInt32());
     }
+
     availableIdsMutex.unlock();
     lastTime = yarp::os::Time::now();
 }

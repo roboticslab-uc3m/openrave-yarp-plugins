@@ -51,13 +51,13 @@ bool YarpOpenraveControlboard::setVelLimits(int axis, double min, double max)
 {
     yCWarning(YORCB) << "min not used, upstream hard-coded to -(max)";
 
-    if( max < refSpeeds[ axis ] )
+    if (max < refSpeeds[axis])
     {
-        yCWarning(YORCB) << "Setting" << max << "maxVelLimit below" << refSpeeds[axis] <<"refSpeed, all joint" << axis << "movements will be immediate";
+        yCWarning(YORCB) << "Setting" << max << "maxVelLimit below" << refSpeeds[axis] << "refSpeed, all joint" << axis << "movements will be immediate";
     }
 
     std::vector<OpenRAVE::dReal> vUpperLimitVel;
-    vUpperLimitVel.push_back( degToRadIfNotPrismatic(axis,max) );
+    vUpperLimitVel.push_back(degToRadIfNotPrismatic(axis, max));
 
     vectorOfJointPtr[axis]->SetVelocityLimits(vUpperLimitVel);
 
@@ -68,9 +68,9 @@ bool YarpOpenraveControlboard::setVelLimits(int axis, double min, double max)
 
 bool YarpOpenraveControlboard::getVelLimits(int axis, double *min, double *max)
 {
-    std::pair<OpenRAVE::dReal, OpenRAVE::dReal> velLimits = vectorOfJointPtr[axis]->GetVelocityLimit();
-    *min = radToDegIfNotPrismatic(axis, velLimits.first);  // This lower limit is in fact hard-coded upstream to -(max).
-    *max = radToDegIfNotPrismatic(axis, velLimits.second);
+    auto [_min, _max] = vectorOfJointPtr[axis]->GetVelocityLimit();
+    *min = radToDegIfNotPrismatic(axis, _min); // This lower limit is in fact hard-coded upstream to -(max).
+    *max = radToDegIfNotPrismatic(axis, _max);
 
     return true;
 }
