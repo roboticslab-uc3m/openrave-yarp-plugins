@@ -121,37 +121,37 @@ jobs:
     - name: Build YARP
       run: |
         cmake -S .deps/yarp -B .deps/yarp/build $CMAKE_CCACHE_LAUNCHER -DSKIP_ACE=ON -DYARP_DISABLE_VERSION_SOURCE=ON
-        cmake --build .deps/yarp/build --parallel
+        cmake --build .deps/yarp/build
         sudo cmake --install .deps/yarp/build
 
     - name: Build RapidJSON
       run: |
         cmake -S .deps/rapidjson -B .deps/rapidjson/build $CMAKE_CCACHE_LAUNCHER -DRAPIDJSON_BUILD_DOC=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_TESTS=OFF
-        cmake --build .deps/rapidjson/build --parallel
+        cmake --build .deps/rapidjson/build
         sudo cmake --install .deps/rapidjson/build
 
     - name: Build OpenRAVE
       run: |
         CFLAGS=-w CXXFLAGS=-w cmake -S .deps/openrave -B .deps/openrave/build $CMAKE_CCACHE_LAUNCHER -DOPT_VIDEORECORDING=OFF -DOPT_PLUGINS=OFF -DOPT_PYTHON=OFF -DOPT_COLLADA=OFF -DOPT_CBINDINGS=OFF
-        cmake --build .deps/openrave/build --parallel
+        cmake --build .deps/openrave/build
         sudo cmake --install .deps/openrave/build
 
     - name: Build asrob-uc3m/yarp-devices
       run: |
         cmake -S .deps/yarp-devices -B .deps/yarp-devices/build $CMAKE_CCACHE_LAUNCHER
-        cmake --build .deps/yarp-devices/build --parallel
+        cmake --build .deps/yarp-devices/build
         sudo cmake --install .deps/yarp-devices/build
 
     - name: Build roboticslab-uc3m/vision
       run: |
         cmake -S .deps/vision -B .deps/vision/build $CMAKE_CCACHE_LAUNCHER
-        cmake --build .deps/vision/build --parallel
+        cmake --build .deps/vision/build
         sudo cmake --install .deps/vision/build
 
     - name: Build roboticslab-uc3m/kinematics-dynamics
       run: |
         cmake -S .deps/kinematics-dynamics -B .deps/kinematics-dynamics/build $CMAKE_CCACHE_LAUNCHER
-        cmake --build .deps/kinematics-dynamics/build --parallel
+        cmake --build .deps/kinematics-dynamics/build
         sudo cmake --install .deps/kinematics-dynamics/build
 
     - name: Configure openrave-yarp-plugins
