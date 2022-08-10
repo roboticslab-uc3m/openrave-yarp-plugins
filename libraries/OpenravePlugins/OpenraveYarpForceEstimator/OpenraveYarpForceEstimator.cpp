@@ -266,7 +266,7 @@ class OpenraveYarpForceEstimator : public OpenRAVE::ModuleBase
 public:
     OpenraveYarpForceEstimator(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
     {
-        //YARP_REGISTER_PLUGINS(yarpplugins);
+        using namespace boost::placeholders;
         __description = "OpenraveYarpForceEstimator plugin.";
         OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpForceEstimator::Open, this,_1,_2),"opens OpenraveYarpForceEstimator");
     }

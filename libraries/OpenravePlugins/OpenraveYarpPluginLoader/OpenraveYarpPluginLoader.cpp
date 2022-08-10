@@ -18,6 +18,7 @@ using namespace roboticslab;
 
 OpenraveYarpPluginLoader::OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
 {
+    using namespace boost::placeholders;
     __description = "OpenraveYarpPluginLoader plugin.";
     OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPluginLoader::Open, this,_1,_2),"opens OpenraveYarpPluginLoader");
     OpenRAVE::InterfaceBase::RegisterCommand("getPenv",boost::bind(&OpenraveYarpPluginLoader::GetPenv, this,_1,_2),"Gets a pointer to the environment");
