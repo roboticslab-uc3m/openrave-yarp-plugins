@@ -126,6 +126,7 @@ class OpenraveYarpPaintSquares : public OpenRAVE::ModuleBase,
 public:
     OpenraveYarpPaintSquares(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv), yarp::os::PeriodicThread(DEFAULT_RATE_S)
     {
+        using namespace boost::placeholders;
         __description = "OpenraveYarpPaintSquares plugin.";
         OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpPaintSquares::Open, this,_1,_2),"opens OpenraveYarpPaintSquares");
     }

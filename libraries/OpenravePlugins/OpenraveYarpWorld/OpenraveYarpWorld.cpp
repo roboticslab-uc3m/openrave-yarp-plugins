@@ -16,6 +16,7 @@ using namespace roboticslab;
 
 OpenraveYarpWorld::OpenraveYarpWorld(OpenRAVE::EnvironmentBasePtr penv) : OpenRAVE::ModuleBase(penv)
 {
+    using namespace boost::placeholders;
     __description = "OpenraveYarpWorld plugin.";
     OpenRAVE::InterfaceBase::RegisterCommand("open",boost::bind(&OpenraveYarpWorld::Open, this,_1,_2),"opens OpenraveYarpWorld");
 
