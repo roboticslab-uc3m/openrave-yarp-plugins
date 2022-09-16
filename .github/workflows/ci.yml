@@ -144,7 +144,7 @@ jobs:
 
     - name: Build roboticslab-uc3m/vision
       run: |
-        cmake -S .deps/vision -B .deps/vision/build $CMAKE_CCACHE_LAUNCHER
+        cmake -S .deps/vision -B .deps/vision/build $CMAKE_CCACHE_LAUNCHER -DDOWNLOAD_MODELS=OFF
         cmake --build .deps/vision/build
         sudo cmake --install .deps/vision/build
 
