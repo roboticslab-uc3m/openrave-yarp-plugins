@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include <openrave/config.h>
+
 #include <yarp/os/LogStream.h>
 
 #include "LogComponent.hpp"
@@ -47,7 +49,11 @@ bool YarpOpenraveControlboard::positionMove(int j, double ref)
     }
 
     {
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
+        OpenRAVE::EnvironmentLock lock(penv->GetMutex()); // lock environment
+#else
         OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
+#endif
 
         //-- Check and do immediate movement if appropriate.
         //-- In fact, OpenRAVE would actually do the extra-fast movement but warn at all times.

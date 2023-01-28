@@ -59,7 +59,11 @@ void YarpOpenraveMeshFromRealDepth::run()
     std::copy(meshIndices.cbegin(), meshIndices.cend(), std::back_inserter(raveMesh.indices));
 
     // Paint the mesh
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
+    OpenRAVE::EnvironmentLock lock(penv->GetMutex());
+#else
     OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex());
+#endif
     OpenRAVE::KinBodyPtr meshKinBodyPtr = OpenRAVE::RaveCreateKinBody(penv, "");
     meshKinBodyPtr->SetName("mesh");
     meshKinBodyPtr->InitFromTrimesh(raveMesh, true);

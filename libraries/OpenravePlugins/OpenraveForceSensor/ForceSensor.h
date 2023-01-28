@@ -54,7 +54,7 @@ public:
     /************************************************************************/
     ForceSensor(EnvironmentBasePtr penv);
     virtual ~ForceSensor(){};
-    
+
     //Sensor Interface
     virtual bool Init(const string& args);
     virtual void Reset(int options);
@@ -63,7 +63,7 @@ public:
     virtual SensorDataPtr CreateSensorData(SensorType type);
     virtual bool GetSensorData(SensorDataPtr psensordata);
     virtual void SetTransform(const Transform& trans);
-#if OPENRAVE_VERSION >= 0x001902 // 0.25.2
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 25, 2)
     virtual const Transform& GetTransform();
 #else
     virtual Transform GetTransform();
@@ -121,7 +121,7 @@ protected:
      boost::shared_ptr<ForceSensorGeomData> _geom;
 
      KinBody::LinkConstPtr _sensorLink;
-     //This doesn't seem to do anything at this point. 
+     //This doesn't seem to do anything at this point.
      KinBody::JointConstPtr _sensorJoint;
 
      mutable boost::mutex _mutexdata;

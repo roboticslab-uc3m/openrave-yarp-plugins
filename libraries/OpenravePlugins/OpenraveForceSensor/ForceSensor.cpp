@@ -148,7 +148,7 @@ bool ForceSensor::SimulationStep(OpenRAVE::dReal fTimeElapsed){
         GetEnv()->GetPhysicsEngine()->GetLinkForceTorque( _sensorLink, force,torque );
         data.force = force;
         data.torque = torque;
-        
+
         _movingsum.force-=_history.back().force;
         _movingsum.torque-=_history.back().torque;
         _history.push_front(data);
@@ -157,7 +157,7 @@ bool ForceSensor::SimulationStep(OpenRAVE::dReal fTimeElapsed){
         _movingsum.torque+=data.torque;
     }
     return true;
-    
+
 };
 
 SensorBase::SensorGeometryConstPtr ForceSensor::GetSensorGeometry(SensorType type){
@@ -195,7 +195,7 @@ void ForceSensor::SetTransform(const Transform& trans){
     _trans = trans;
 }
 
-#if OPENRAVE_VERSION >= 0x001902 // 0.25.2
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 25, 2)
 const Transform& ForceSensor::GetTransform() {
 #else
 Transform ForceSensor::GetTransform() {
@@ -220,7 +220,7 @@ bool ForceSensor::SetHistoryLength(std::ostream& os, std::istream& is){
 }
 
 bool ForceSensor::GetHistory(std::ostream& os, std::istream& is){
-    
+
     //TODO:Lock this? could change halfway through..
     for (size_t i = 0; i < _history.size();++i){
         os << _timestamps[i] << " ";

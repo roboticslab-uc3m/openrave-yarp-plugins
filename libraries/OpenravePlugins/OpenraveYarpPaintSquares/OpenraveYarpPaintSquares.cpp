@@ -35,6 +35,7 @@
 #include <string>
 #include <vector>
 
+#include <openrave/config.h>
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
 
@@ -222,7 +223,11 @@ public:
         std::cout << "Robot 0: " << robots.at(0)->GetName() << std::endl;  // default: teo
         OpenRAVE::RobotBasePtr probot = robots.at(0);
         probot->SetActiveManipulator("rightArm");
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 101, 0)
+        probot->Grab(_objPtr, rapidjson::Value());
+#else
         probot->Grab(_objPtr);
+#endif
 
         sqPainted.resize(squares);
 

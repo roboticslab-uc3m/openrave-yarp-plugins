@@ -106,7 +106,11 @@ bool OypPortReader::read(yarp::os::ConnectionReader& in)
         yCDebug(ORYP) << "cmd:" << cmdin.str();
 
         {
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
+            OpenRAVE::EnvironmentLock lock(openraveYarpPlannerPtr->GetEnv()->GetMutex()); // lock environment
+#else
             OpenRAVE::EnvironmentMutex::scoped_lock lock(openraveYarpPlannerPtr->GetEnv()->GetMutex()); // lock environment
+#endif
 
             if( !pbasemanip->SendCommand(cmdout,cmdin) )
             {

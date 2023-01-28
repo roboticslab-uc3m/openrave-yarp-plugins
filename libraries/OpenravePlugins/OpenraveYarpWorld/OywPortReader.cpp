@@ -219,7 +219,11 @@ world draw 0/1 (radius r g b).");
                 if (request.get(5).asInt32()==1)
                 {
                     yCInfo(ORYW) << "Object grabbed";
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 101, 0)
+                    openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Grab(objPtr, rapidjson::Value()); // robot was found at tryToSetActiveManipulator
+#else
                     openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Grab(objPtr); // robot was found at tryToSetActiveManipulator
+#endif
                     response.addVocab32(VOCAB_OK);
                 }
                 else if (request.get(5).asInt32()==0)
@@ -246,7 +250,11 @@ world draw 0/1 (radius r g b).");
                 return response.write(*out);
             {
                 // lock the environment!
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
+                OpenRAVE::EnvironmentLock lock(openraveYarpWorldPtr->GetEnv()->GetMutex());
+#else
                 OpenRAVE::EnvironmentMutex::scoped_lock lock(openraveYarpWorldPtr->GetEnv()->GetMutex());
+#endif
                 OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(openraveYarpWorldPtr->GetEnv(),"");
 
                 std::string objName;
