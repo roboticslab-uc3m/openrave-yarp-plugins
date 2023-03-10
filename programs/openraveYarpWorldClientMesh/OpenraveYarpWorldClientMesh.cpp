@@ -288,7 +288,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
 bool OpenraveYarpWorldClientMesh::openedInAvailable()
 {
-    std::lock_guard<std::mutex> lock(callbackPort.availableIdsMutex);
+    std::lock_guard lock(callbackPort.availableIdsMutex);
     bool innerFound = false;
 
     for (std::size_t i = 0; i < callbackPort.availableIds.size(); i++)
@@ -381,7 +381,7 @@ OywCallbackPort::OywCallbackPort()
 
 void OywCallbackPort::onRead(yarp::os::Bottle & b)
 {
-    std::lock_guard<std::mutex> lock(availableIdsMutex);
+    std::lock_guard lock(availableIdsMutex);
     availableIds.clear();
 
     for (std::size_t i = 0; i < b.size(); i++)

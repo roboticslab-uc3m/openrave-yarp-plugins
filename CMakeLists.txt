@@ -34,7 +34,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 find_package(YCM 0.11 REQUIRED)
 find_package(OpenRAVE REQUIRED)
 find_package(Boost "${OpenRAVE_Boost_VERSION}" REQUIRED COMPONENTS thread)
-find_package(YARP 3.6 REQUIRED COMPONENTS os dev sig)
+find_package(YARP 3.7 REQUIRED COMPONENTS os dev sig)
 
 # Soft dependencies.
 find_package(ROBOTICSLAB_VISION QUIET)
