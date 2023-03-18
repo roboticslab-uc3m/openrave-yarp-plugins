@@ -178,6 +178,8 @@ OPENRAVE_PLUGIN_API RavePlugin * CreatePlugin() {
     return new OpenraveYarpWorldPlugin();
 }
 #else // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+#include <openrave/plugin.h>
+
 OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type,
                                                     const std::string & interfacename,
                                                     std::istream & sinput,

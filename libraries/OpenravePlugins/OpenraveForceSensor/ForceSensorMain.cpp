@@ -39,6 +39,8 @@ OPENRAVE_PLUGIN_API RavePlugin * CreatePlugin() {
     return new OpenraveYarpForceSensorPlugin();
 }
 #else // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+#include <openrave/plugin.h>
+
 // called to create a new plugin
 static boost::shared_ptr<void> s_RegisteredReader;
 

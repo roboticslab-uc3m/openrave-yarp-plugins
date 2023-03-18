@@ -7,7 +7,9 @@
 #include <yarp/os/RpcServer.h>
 
 #include <openrave/openrave.h>
-#include <openrave/plugin.h>
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+# include <openrave/plugin.h>
+#endif
 
 #include "OywPortReader.hpp"
 #include "OywPeriodicWrite.hpp"

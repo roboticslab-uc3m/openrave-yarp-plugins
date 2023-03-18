@@ -8,7 +8,9 @@
 #define FORCESENSOR_H_
 
 #include <rave/rave.h>
-#include <openrave/plugin.h>
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+# include <openrave/plugin.h>
+#endif
 #include <boost/bind.hpp>
 #include <boost/circular_buffer.hpp>
 
