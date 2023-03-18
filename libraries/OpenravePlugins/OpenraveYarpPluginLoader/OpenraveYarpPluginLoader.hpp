@@ -9,6 +9,7 @@
 #include <yarp/dev/PolyDriver.h>
 
 #include <openrave/openrave.h>
+#include <openrave/plugin.h>
 
 #include "OyplPortReader.hpp"
 #include "OyplPeriodicWrite.hpp"
@@ -18,8 +19,7 @@ namespace roboticslab
 
 /**
  * @ingroup OpenravePlugins
- * \defgroup OpenraveYarpPluginLoader
- *
+ * @defgroup OpenraveYarpPluginLoader
  * @brief Contains roboticslab::OpenraveYarpPluginLoader.
  */
 
@@ -31,19 +31,19 @@ class OpenraveYarpPluginLoader : public OpenRAVE::ModuleBase
 {
 public:
     OpenraveYarpPluginLoader(OpenRAVE::EnvironmentBasePtr penv);
-    virtual ~OpenraveYarpPluginLoader();
-    virtual void Destroy();
+    ~OpenraveYarpPluginLoader() override;
+    virtual void Destroy() override;
 
-    bool addYarpPluginsLists(yarp::os::Bottle& info);
-    int main(const std::string& cmd);
+    bool addYarpPluginsLists(yarp::os::Bottle & info);
+    int main(const std::string& cmd) override;
 
-    bool Open(std::ostream& sout, std::istream& sinput);
-    bool GetPenv(std::ostream& sout, std::istream& sinput);
+    bool Open(std::ostream& sout, std::istream & sinput);
+    bool GetPenv(std::ostream & sout, std::istream & sinput);
     bool close(const int i);
 
 private:
     yarp::os::Network yarp;
-    std::vector<yarp::dev::PolyDriver*> yarpPlugins;
+    std::vector<yarp::dev::PolyDriver *> yarpPlugins;
     std::vector<yarp::os::Property> yarpPluginsProperties;
 
     OyplPortReader oyplPortReader;
@@ -51,6 +51,24 @@ private:
 
     OyplPeriodicWrite oyplPeriodicWrite;
 };
+
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+/**
+ * @ingroup OpenraveYarpPluginLoader
+ * @brief OpenraveYarpPluginLoader plugin.
+ */
+class OpenraveYarpPluginLoaderPlugin : public RavePlugin
+{
+public:
+    OpenRAVE::InterfaceBasePtr CreateInterface(OpenRAVE::InterfaceType type,
+                                               const std::string & interfacename,
+                                               std::istream & sinput,
+                                               OpenRAVE::EnvironmentBasePtr penv) override;
+
+    const InterfaceMap & GetInterfaces() const override;
+    const std::string & GetPluginName() const override;
+};
+#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 
 } // namespace roboticslab
 

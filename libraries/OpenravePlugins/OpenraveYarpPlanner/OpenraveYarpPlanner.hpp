@@ -9,6 +9,7 @@
 #include <yarp/dev/PolyDriver.h>
 
 #include <openrave/openrave.h>
+#include <openrave/plugin.h>
 
 #include "OypPortReader.hpp"
 
@@ -17,8 +18,7 @@ namespace roboticslab
 
 /**
  * @ingroup OpenravePlugins
- * \defgroup OpenraveYarpPlanner
- *
+ * @defgroup OpenraveYarpPlanner
  * @brief Contains roboticslab::OpenraveYarpPlanner.
  */
 
@@ -32,15 +32,33 @@ public:
     OpenraveYarpPlanner(OpenRAVE::EnvironmentBasePtr penv);
     ~OpenraveYarpPlanner() override;
     void Destroy() override;
-    int main(const std::string& cmd) override;
+    int main(const std::string & cmd) override;
 
-    bool Open(std::ostream& sout, std::istream& sinput);
+    bool Open(std::ostream & sout, std::istream & sinput);
 
 private:
     yarp::os::Network yarp;
     OypPortReader oypPortReader;
     yarp::os::RpcServer oypRpcServer;
 };
+
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+/**
+ * @ingroup OpenraveYarpPlanner
+ * @brief OpenraveYarpPlanner plugin.
+ */
+class OpenraveYarpPlannerPlugin : public RavePlugin
+{
+public:
+    OpenRAVE::InterfaceBasePtr CreateInterface(OpenRAVE::InterfaceType type,
+                                               const std::string & interfacename,
+                                               std::istream & sinput,
+                                               OpenRAVE::EnvironmentBasePtr penv) override;
+
+    const InterfaceMap & GetInterfaces() const override;
+    const std::string & GetPluginName() const override;
+};
+#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 
 } // namespace roboticslab
 

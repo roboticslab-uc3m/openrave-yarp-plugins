@@ -1,16 +1,14 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include <openrave/openrave.h>
-#include <openrave/plugin.h>
+#include "OpenraveYarpPlanner.hpp"
 
 #include <boost/bind/bind.hpp>
-
+#include <openrave/openrave.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/ResourceFinder.h>
 
 #include "LogComponent.hpp"
-#include "OpenraveYarpPlanner.hpp"
 
 using namespace roboticslab;
 
@@ -85,18 +83,61 @@ bool OpenraveYarpPlanner::Open(std::ostream& sout, std::istream& sinput)
 
 // -----------------------------------------------------------------------------
 
-OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+OpenRAVE::InterfaceBasePtr OpenraveYarpPlannerPlugin::CreateInterface(OpenRAVE::InterfaceType type,
+                                                                      const std::string & interfacename,
+                                                                      std::istream & sinput,
+                                                                      OpenRAVE::EnvironmentBasePtr penv)
 {
-    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpplanner")
+    if (type == OpenRAVE::PT_Module && interfacename == "openraveyarpplanner")
     {
         return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPlanner(penv));
     }
+
     return OpenRAVE::InterfaceBasePtr();
 }
 
 // -----------------------------------------------------------------------------
 
-void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
+const RavePlugin::InterfaceMap & OpenraveYarpPlannerPlugin::GetInterfaces() const
+{
+    static const RavePlugin::InterfaceMap interfaces = {
+        {OpenRAVE::PT_Module, {"OpenraveYarpPlanner"}},
+    };
+
+    return interfaces;
+}
+
+// -----------------------------------------------------------------------------
+
+const std::string & OpenraveYarpPlannerPlugin::GetPluginName() const
+{
+    static const std::string pluginName = "OpenraveYarpPlannerPlugin";
+    return pluginName;
+}
+
+// -----------------------------------------------------------------------------
+
+OPENRAVE_PLUGIN_API RavePlugin * CreatePlugin() {
+    return new OpenraveYarpPlannerPlugin();
+}
+#else // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type,
+                                                    const std::string & interfacename,
+                                                    std::istream & sinput,
+                                                    OpenRAVE::EnvironmentBasePtr penv)
+{
+    if (type == OpenRAVE::PT_Module && interfacename == "openraveyarpplanner")
+    {
+        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPlanner(penv));
+    }
+
+    return OpenRAVE::InterfaceBasePtr();
+}
+
+// -----------------------------------------------------------------------------
+
+void GetPluginAttributesValidated(OpenRAVE::PLUGININFO & info)
 {
     info.interfacenames[OpenRAVE::PT_Module].emplace_back("OpenraveYarpPlanner");
 }
@@ -107,5 +148,6 @@ OPENRAVE_PLUGIN_API void DestroyPlugin()
 {
     RAVELOG_INFO("destroying plugin\n");
 }
+#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 
 // -----------------------------------------------------------------------------

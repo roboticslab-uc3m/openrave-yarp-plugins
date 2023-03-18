@@ -401,11 +401,55 @@ private:
     int brushColour = 1; //Init to cyan colour as default.
 };
 
-OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+class OpenraveYarpPaintSquaresPlugin : public RavePlugin
 {
-    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarppaintsquares" ) {
+public:
+    OpenRAVE::InterfaceBasePtr CreateInterface(OpenRAVE::InterfaceType type,
+                                               const std::string & interfacename,
+                                               std::istream & sinput,
+                                               OpenRAVE::EnvironmentBasePtr penv) override
+    {
+        if (type == OpenRAVE::PT_Module && interfacename == "openraveyarppaintsquares")
+        {
+            return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPaintSquares(penv));
+        }
+
+        return OpenRAVE::InterfaceBasePtr();
+    }
+
+    const InterfaceMap & GetInterfaces() const override
+    {
+        static const RavePlugin::InterfaceMap interfaces = {
+            {OpenRAVE::PT_Module, {"OpenraveYarpPaintSquares"}},
+        };
+
+        return interfaces;
+    }
+
+    const std::string & GetPluginName() const override
+    {
+        static const std::string pluginName = "OpenraveYarpPaintSquaresPlugin";
+        return pluginName;
+    }
+};
+
+// -----------------------------------------------------------------------------
+
+OPENRAVE_PLUGIN_API RavePlugin * CreatePlugin() {
+    return new OpenraveYarpPaintSquaresPlugin();
+}
+#else // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type,
+                                                    const std::string & interfacename,
+                                                    std::istream & sinput,
+                                                    OpenRAVE::EnvironmentBasePtr penv)
+{
+    if (type == OpenRAVE::PT_Module && interfacename == "openraveyarppaintsquares")
+    {
         return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPaintSquares(penv));
     }
+
     return OpenRAVE::InterfaceBasePtr();
 }
 
@@ -418,3 +462,4 @@ OPENRAVE_PLUGIN_API void DestroyPlugin()
 {
     RAVELOG_INFO("destroying plugin\n");
 }
+#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)

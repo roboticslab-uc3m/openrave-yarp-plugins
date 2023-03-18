@@ -8,6 +8,7 @@
 #define FORCESENSOR_H_
 
 #include <rave/rave.h>
+#include <openrave/plugin.h>
 #include <boost/bind.hpp>
 #include <boost/circular_buffer.hpp>
 
@@ -131,5 +132,19 @@ protected:
 
      friend class ForceSensorXMLReader;
 };
+
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+class OpenraveYarpForceSensorPlugin : public RavePlugin
+{
+public:
+    OpenRAVE::InterfaceBasePtr CreateInterface(OpenRAVE::InterfaceType type,
+                                               const std::string & interfacename,
+                                               std::istream & sinput,
+                                               OpenRAVE::EnvironmentBasePtr penv) override;
+
+    const InterfaceMap & GetInterfaces() const override;
+    const std::string & GetPluginName() const override;
+};
+#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 
 #endif
