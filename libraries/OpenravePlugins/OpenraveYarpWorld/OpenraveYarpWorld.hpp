@@ -7,6 +7,9 @@
 #include <yarp/os/RpcServer.h>
 
 #include <openrave/openrave.h>
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+# include <openrave/plugin.h>
+#endif
 
 #include "OywPortReader.hpp"
 #include "OywPeriodicWrite.hpp"
@@ -16,8 +19,7 @@ namespace roboticslab
 
 /**
  * @ingroup OpenravePlugins
- * \defgroup OpenraveYarpWorld
- *
+ * @defgroup OpenraveYarpWorld
  * @brief Contains roboticslab::OpenraveYarpWorld.
  */
 
@@ -28,16 +30,15 @@ namespace roboticslab
 class OpenraveYarpWorld : public OpenRAVE::ModuleBase
 {
 public:
-
     OpenraveYarpWorld(OpenRAVE::EnvironmentBasePtr penv);
 
-    virtual ~OpenraveYarpWorld();
-    virtual void Destroy();
+    ~OpenraveYarpWorld() override;
+    virtual void Destroy() override;
 
-    bool addWorldInfo(yarp::os::Bottle& info);
-    int main(const std::string& cmd);
+    bool addWorldInfo(yarp::os::Bottle & info);
+    int main(const std::string & cmd) override;
 
-    bool Open(std::ostream& sout, std::istream& sinput);
+    bool Open(std::ostream & sout, std::istream & sinput);
 
 private:
     yarp::os::Network yarp;
@@ -47,6 +48,24 @@ private:
 
     OywPeriodicWrite oywPeriodicWrite;
 };
+
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+/**
+ * @ingroup OpenraveYarpWorld
+ * @brief OpenraveYarpWorld plugin.
+ */
+class OpenraveYarpWorldPlugin : public RavePlugin
+{
+public:
+    OpenRAVE::InterfaceBasePtr CreateInterface(OpenRAVE::InterfaceType type,
+                                               const std::string & interfacename,
+                                               std::istream & sinput,
+                                               OpenRAVE::EnvironmentBasePtr penv) override;
+
+    const InterfaceMap & GetInterfaces() const override;
+    const std::string & GetPluginName() const override;
+};
+#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 
 } // namespace roboticslab
 

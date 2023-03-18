@@ -1,16 +1,15 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include <openrave/openrave.h>
-#include <openrave/plugin.h>
+#include "OpenraveYarpPluginLoader.hpp"
 
 #include <boost/bind/bind.hpp>
-
+#include <openrave/openrave.h>
+#include <openrave/plugin.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/ResourceFinder.h>
 
 #include "LogComponent.hpp"
-#include "OpenraveYarpPluginLoader.hpp"
 
 using namespace roboticslab;
 
@@ -439,19 +438,63 @@ bool OpenraveYarpPluginLoader::close(const int i)
 
 // -----------------------------------------------------------------------------
 
-
-OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+OpenRAVE::InterfaceBasePtr OpenraveYarpPluginLoaderPlugin::CreateInterface(OpenRAVE::InterfaceType type,
+                                                                           const std::string & interfacename,
+                                                                           std::istream & sinput,
+                                                                           OpenRAVE::EnvironmentBasePtr penv)
 {
-    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarppluginloader")
+    if (type == OpenRAVE::PT_Module && interfacename == "openraveyarppluginloader")
     {
         return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPluginLoader(penv));
     }
+
     return OpenRAVE::InterfaceBasePtr();
 }
 
 // -----------------------------------------------------------------------------
 
-void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
+const RavePlugin::InterfaceMap & OpenraveYarpPluginLoaderPlugin::GetInterfaces() const
+{
+    static const RavePlugin::InterfaceMap interfaces = {
+        {OpenRAVE::PT_Module, {"OpenraveYarpPluginLoader"}},
+    };
+
+    return interfaces;
+}
+
+// -----------------------------------------------------------------------------
+
+const std::string & OpenraveYarpPluginLoaderPlugin::GetPluginName() const
+{
+    static const std::string pluginName = "OpenraveYarpPluginLoader";
+    return pluginName;
+}
+
+// -----------------------------------------------------------------------------
+
+OPENRAVE_PLUGIN_API RavePlugin * CreatePlugin() {
+    return new OpenraveYarpPluginLoaderPlugin();
+}
+#else // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+#include <openrave/plugin.h>
+
+OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type,
+                                                    const std::string & interfacename,
+                                                    std::istream & sinput,
+                                                    OpenRAVE::EnvironmentBasePtr penv)
+{
+    if (type == OpenRAVE::PT_Module && interfacename == "openraveyarppluginloader")
+    {
+        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPluginLoader(penv));
+    }
+
+    return OpenRAVE::InterfaceBasePtr();
+}
+
+// -----------------------------------------------------------------------------
+
+void GetPluginAttributesValidated(OpenRAVE::PLUGININFO & info)
 {
     info.interfacenames[OpenRAVE::PT_Module].emplace_back("OpenraveYarpPluginLoader");
 }
@@ -462,5 +505,6 @@ OPENRAVE_PLUGIN_API void DestroyPlugin()
 {
     RAVELOG_INFO("destroying plugin\n");
 }
+#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 
 // -----------------------------------------------------------------------------

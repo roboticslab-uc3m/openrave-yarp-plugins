@@ -413,15 +413,59 @@ private:
     yarp::os::RpcServer rpcServer;
 };
 
-OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type, const std::string& interfacename, std::istream& sinput, OpenRAVE::EnvironmentBasePtr penv)
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+class OpenraveYarpForceEstimatorPlugin : public RavePlugin
 {
-    if( type == OpenRAVE::PT_Module && interfacename == "openraveyarpforceestimator" ) {
+public:
+    OpenRAVE::InterfaceBasePtr CreateInterface(OpenRAVE::InterfaceType type,
+                                               const std::string & interfacename,
+                                               std::istream & sinput,
+                                               OpenRAVE::EnvironmentBasePtr penv) override
+    {
+        if (type == OpenRAVE::PT_Module && interfacename == "openraveyarpforceestimator")
+        {
+            return OpenRAVE::InterfaceBasePtr(new OpenraveYarpForceEstimator(penv));
+        }
+
+        return OpenRAVE::InterfaceBasePtr();
+    }
+
+    const InterfaceMap & GetInterfaces() const override
+    {
+        static const RavePlugin::InterfaceMap interfaces = {
+            {OpenRAVE::PT_Module, {"OpenraveYarpForceEstimator"}},
+        };
+
+        return interfaces;
+    }
+
+    const std::string & GetPluginName() const override
+    {
+        static const std::string pluginName = "OpenraveYarpForceEstimatorPlugin";
+        return pluginName;
+    }
+};
+
+// -----------------------------------------------------------------------------
+
+OPENRAVE_PLUGIN_API RavePlugin * CreatePlugin() {
+    return new OpenraveYarpForceEstimatorPlugin();
+}
+#else // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
+OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type,
+                                                    const std::string & interfacename,
+                                                    std::istream & sinput,
+                                                    OpenRAVE::EnvironmentBasePtr penv)
+{
+    if (type == OpenRAVE::PT_Module && interfacename == "openraveyarpforceestimator")
+    {
         return OpenRAVE::InterfaceBasePtr(new OpenraveYarpForceEstimator(penv));
     }
+
     return OpenRAVE::InterfaceBasePtr();
 }
 
-void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
+void GetPluginAttributesValidated(OpenRAVE::PLUGININFO & info)
 {
     info.interfacenames[OpenRAVE::PT_Module].emplace_back("OpenraveYarpForceEstimator");
 }
@@ -430,3 +474,4 @@ OPENRAVE_PLUGIN_API void DestroyPlugin()
 {
     RAVELOG_INFO("destroying plugin\n");
 }
+#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
