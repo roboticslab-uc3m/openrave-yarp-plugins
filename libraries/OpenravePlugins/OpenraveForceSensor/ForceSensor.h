@@ -7,7 +7,7 @@
 #ifndef FORCESENSOR_H_
 #define FORCESENSOR_H_
 
-#include <rave/rave.h>
+#include <openrave/openrave.h>
 #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 # include <openrave/plugin.h>
 #endif
