@@ -1,5 +1,7 @@
 #include "ForceSensor.h"
 
+#include <boost/bind/bind.hpp>
+
 using namespace OpenRAVE;
 
 #define FOREACH(it, v) for(typeof((v).begin()) it = (v).begin(); it != (v).end(); (it)++)
@@ -71,6 +73,7 @@ ForceSensor::ForceSensor(EnvironmentBasePtr penv) : SensorBase(penv)
     _bPower = false;
     _bRenderData = false;
     _firstStep = true;
+    using namespace boost::placeholders;
     RegisterCommand("histlen",boost::bind(&ForceSensor::SetHistoryLength,this,_1,_2),
                 "Format: histlen len\n Assign a history depth in solver steps to the internal circular buffer. Note that this should not be done online");
     RegisterCommand("gethist",boost::bind(&ForceSensor::GetHistory,this,_1,_2),
