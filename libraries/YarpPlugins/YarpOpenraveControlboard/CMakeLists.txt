@@ -8,8 +8,6 @@ yarp_prepare_plugin(YarpOpenraveControlboard
 
 if(NOT SKIP_YarpOpenraveControlboard)
 
-    link_directories(${OpenRAVE_LIBRARY_DIRS})
-
     yarp_add_plugin(YarpOpenraveControlboard YarpOpenraveControlboard.hpp
                                              DeviceDriverImpl.cpp
                                              IAxisInfoImpl.cpp
@@ -22,16 +20,23 @@ if(NOT SKIP_YarpOpenraveControlboard)
                                              LogComponent.hpp
                                              LogComponent.cpp)
 
-    set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
-                                                              LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
-
     target_link_libraries(YarpOpenraveControlboard YARP::YARP_os
                                                    YARP::YARP_dev
-                                                   ${OpenRAVE_LIBRARIES}
                                                    Boost::boost
                                                    YarpOpenraveBase)
 
-    target_include_directories(YarpOpenraveControlboard PRIVATE ${OpenRAVE_INCLUDE_DIRS})
+    if(OpenRAVE_VERSION VERSION_GREATER_EQUAL 0.114)
+        target_link_libraries(YarpOpenraveControlboard OpenRAVE::libopenrave)
+    else()
+        link_directories(${OpenRAVE_LIBRARY_DIRS})
+
+        target_link_libraries(YarpOpenraveControlboard PUBLIC ${OpenRAVE_LIBRARIES})
+
+        set_target_properties(YarpOpenraveControlboard PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
+                                                                  LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+
+        target_include_directories(YarpOpenraveControlboard PRIVATE ${OpenRAVE_INCLUDE_DIRS})
+    endif()
 
     yarp_install(TARGETS YarpOpenraveControlboard
                  LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
