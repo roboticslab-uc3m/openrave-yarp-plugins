@@ -131,7 +131,7 @@ jobs:
 
     - name: Build OpenRAVE
       run: |
-        CFLAGS=-w CXXFLAGS=-w cmake -S .deps/openrave -B .deps/openrave/build $CMAKE_CCACHE_LAUNCHER -DOPT_VIDEORECORDING=OFF -DOPT_PLUGINS=OFF -DOPT_PYTHON=OFF -DOPT_COLLADA=OFF -DOPT_CBINDINGS=OFF -DOPT_MSGPACK=OFF
+        CFLAGS=-w CXXFLAGS=-w cmake -S .deps/openrave -B .deps/openrave/build $CMAKE_CCACHE_LAUNCHER -DOPT_VIDEORECORDING=OFF -DOPT_PLUGINS=OFF -DOPT_PYTHON=OFF -DOPT_PYTHON3=OFF -DOPT_COLLADA=OFF -DOPT_CBINDINGS=OFF -DOPT_MSGPACK=OFF
         cmake --build .deps/openrave/build
         sudo cmake --install .deps/openrave/build
 
