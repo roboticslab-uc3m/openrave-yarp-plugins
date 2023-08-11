@@ -94,7 +94,7 @@ jobs:
         path: .deps/kinematics-dynamics
 
     - name: Install dependencies via apt
-      run: sudo apt-get update && sudo apt-get install -qq ccache libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libboost-date-time-dev libxml2-dev libpcl-dev
+      run: sudo apt-get update && sudo apt-get install -qq ccache libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libboost-date-time-dev libxml2-dev libpcl-dev swig
 
     - name: Set up CMake
       uses: jwlawson/actions-setup-cmake@v1
@@ -154,7 +154,7 @@ jobs:
         sudo cmake --install .deps/kinematics-dynamics/build
 
     - name: Configure openrave-yarp-plugins
-      run: cmake -S . -B build $CMAKE_CCACHE_LAUNCHER -DENABLE_examples=ON
+      run: cmake -S . -B build $CMAKE_CCACHE_LAUNCHER -DCREATE_BINDINGS_PYTHON=ON -DENABLE_examples=ON
 
     - name: Compile openrave-yarp-plugins
       run: cmake --build build

@@ -1,9 +1,9 @@
-// Copyright: 
-// Author: 
-// CopyPolicy: 
+// Copyright:
+// Author:
+// CopyPolicy:
 
 //////////////////////////////////////////////////////////////////////////
-// 
+//
 // This is a configuration file to explain ROBOT_DEVASTATION_ROBOTS to SWIG
 //
 // SWIG, for the most part, understands ROBOT_DEVASTATION_ROBOTS auto-magically.
@@ -23,20 +23,11 @@
 #include "ISimulation.hpp"
 %}
 
-/* See https://github.com/robotology/yarp/pull/1696 */
-#if SWIG_VERSION >= 0x030011 && !defined(SWIGCSHARP)
-    %define VOCAB(x1,x2,x3,x4) x4*16777216+x3*65536+x2*256+x1
-    %enddef
-#elif defined(SWIGCSHARP)
-    %define VOCAB(x1,x2,x3,x4) 0
-    %enddef
-#endif
-
 /* Parse the header file to generate wrappers */
 %include "ISimulation.hpp"
 
 %{
-#include <yarp/dev/all.h>
+#include <yarp/dev/PolyDriver.h>
 roboticslab::ISimulation *viewISimulation(yarp::dev::PolyDriver& d)
 {
     roboticslab::ISimulation *result;

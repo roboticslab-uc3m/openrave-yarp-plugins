@@ -12,6 +12,9 @@ set_property(TARGET SimulationInterfaces PROPERTY PUBLIC_HEADER ISimulation.hpp)
 install(TARGETS SimulationInterfaces
         EXPORT ROBOTICSLAB_OPENRAVE_YARP_PLUGINS)
 
+# Create alias target.
+add_library(ROBOTICSLAB::SimulationInterfaces ALIAS SimulationInterfaces)
+
 # YARP devices.
 add_subdirectory(YarpOpenraveAnalogSensors)
 add_subdirectory(YarpOpenraveControlboard)

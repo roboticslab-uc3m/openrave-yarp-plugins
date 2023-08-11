@@ -39,6 +39,7 @@ find_package(YARP 3.7 REQUIRED COMPONENTS os dev sig)
 # Soft dependencies.
 find_package(ROBOTICSLAB_VISION QUIET)
 find_package(ASROB_YARP_DEVICES QUIET)
+find_package(SWIG 3.0.12 QUIET)
 find_package(Doxygen QUIET)
 
 # Always build YARP devices as MODULE libraries.
@@ -55,16 +56,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 
-# Enabling coverage.
-option(ENABLE_coverage "Choose if you want to enable coverage collection" OFF)
-
-if(ENABLE_coverage)
-    # List supported compilers.
-    if(CMAKE_COMPILER_IS_GNUCXX)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-    endif()
-endif()
-
 # Create targets if specific requirements are satisfied.
 include(CMakeDependentOption)
 
@@ -72,6 +63,7 @@ include(CMakeDependentOption)
 add_subdirectory(libraries)
 add_subdirectory(programs)
 add_subdirectory(share)
+add_subdirectory(bindings)
 add_subdirectory(doc)
 add_subdirectory(examples/cpp)
 
