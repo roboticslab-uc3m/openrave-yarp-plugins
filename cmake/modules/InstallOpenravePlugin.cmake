@@ -1,8 +1,6 @@
 include_guard(GLOBAL)
 
 macro(install_openrave_plugin target)
-    find_package(OpenRAVE REQUIRED)
-
     execute_process(COMMAND "${OpenRAVE_ROOT_DIR}/bin/openrave-config" --prefix --plugins-dir
                     OUTPUT_VARIABLE _openrave_config_cmd_output
                     OUTPUT_STRIP_TRAILING_WHITESPACE
