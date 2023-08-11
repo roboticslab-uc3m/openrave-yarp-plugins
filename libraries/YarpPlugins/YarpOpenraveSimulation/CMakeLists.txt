@@ -7,24 +7,29 @@ yarp_prepare_plugin(YarpOpenraveSimulation
 
 if(NOT SKIP_YarpOpenraveSimulation)
 
-    link_directories(${OpenRAVE_LIBRARY_DIRS})
-
     yarp_add_plugin(YarpOpenraveSimulation YarpOpenraveSimulation.hpp
                                            DeviceDriverImpl.cpp
                                            ISimulationImpl.cpp
                                            LogComponent.hpp
                                            LogComponent.cpp)
 
-    set_target_properties(YarpOpenraveSimulation PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
-                                                         LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
-
     target_link_libraries(YarpOpenraveSimulation YARP::YARP_os
                                                  YARP::YARP_dev
-                                                 ${OpenRAVE_LIBRARIES}
                                                  Boost::boost
                                                  YarpOpenraveBase)
 
-    target_include_directories(YarpOpenraveSimulation PRIVATE ${OpenRAVE_INCLUDE_DIRS})
+    if(OpenRAVE_VERSION VERSION_GREATER_EQUAL 0.114)
+        target_link_libraries(YarpOpenraveSimulation OpenRAVE::libopenrave)
+    else()
+        link_directories(${OpenRAVE_LIBRARY_DIRS})
+
+        target_link_libraries(YarpOpenraveSimulation PUBLIC ${OpenRAVE_LIBRARIES})
+
+        set_target_properties(YarpOpenraveSimulation PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
+                                                                LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+
+        target_include_directories(YarpOpenraveSimulation PRIVATE ${OpenRAVE_INCLUDE_DIRS})
+    endif()
 
     yarp_install(TARGETS YarpOpenraveSimulation
                  LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}
