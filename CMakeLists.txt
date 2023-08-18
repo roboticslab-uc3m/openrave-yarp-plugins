@@ -2,11 +2,6 @@ cmake_minimum_required(VERSION 3.16)
 
 project(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS LANGUAGES CXX)
 
-# C/C++ compile flags.
-if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-    add_compile_options(-fno-strict-aliasing -Wall)
-endif()
-
 # Let the user specify a configuration (only single-config generators).
 if(NOT CMAKE_CONFIGURATION_TYPES)
     # Possible values.
