@@ -5,15 +5,15 @@ import yarp
 yarp.Network.init()
 yarp.Network.setLocalMode(True)
 
-# Create (Controlboard + environment + OpenraveYarpPluginLoader + viewer)
-controlboardOptions = yarp.Property()
-controlboardOptions.put('device','YarpOpenraveControlboard')
-controlboardOptions.put('robotIndex',0)
-controlboardOptions.put('manipulatorIndex',0)
-controlboardOptions.put('env','data/testwamcamera.env.xml')
-controlboardOptions.put('orPlugin','OpenraveYarpPluginLoader')
-controlboardOptions.put('view',1)
-controlboardDevice = yarp.PolyDriver(controlboardOptions)
+# Create (ControlBoard + environment + OpenraveYarpPluginLoader + viewer)
+controlBoardOptions = yarp.Property()
+controlBoardOptions.put('device','YarpOpenraveControlBoard')
+controlBoardOptions.put('robotIndex',0)
+controlBoardOptions.put('manipulatorIndex',0)
+controlBoardOptions.put('env','data/testwamcamera.env.xml')
+controlBoardOptions.put('orPlugin','OpenraveYarpPluginLoader')
+controlBoardOptions.put('view',1)
+controlBoardDevice = yarp.PolyDriver(controlBoardOptions)
 
 # Connect to OpenraveYarpPluginLoader and obtain environment pointer (penv)
 rpcClient = yarp.RpcClient()
@@ -35,7 +35,7 @@ grabberOptions.put('sensorIndex',0)
 grabberDevice = yarp.PolyDriver(grabberOptions)
 
 # View specific interfaces
-pos = controlboardDevice.viewIPositionControl()
+pos = controlBoardDevice.viewIPositionControl()
 controls = grabberDevice.viewIFrameGrabberControls()
 grabber = grabberDevice.viewIFrameGrabberImage()
 

@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveControlboard.hpp"
+#include "YarpOpenraveControlBoard.hpp"
 
 #include <yarp/os/LogStream.h>
 
@@ -10,7 +10,7 @@ using namespace roboticslab;
 
 // ------------------- IControlMode Related ------------------------------------
 
-bool YarpOpenraveControlboard::getControlMode(int j, int *mode)
+bool YarpOpenraveControlBoard::getControlMode(int j, int *mode)
 {
     *mode = controlModes[j];
     return true;
@@ -19,7 +19,7 @@ bool YarpOpenraveControlboard::getControlMode(int j, int *mode)
 // -----------------------------------------------------------------------------
 
 
-bool YarpOpenraveControlboard::getControlModes(int *modes)
+bool YarpOpenraveControlBoard::getControlModes(int *modes)
 {
     bool ok = true;
     for (unsigned int i = 0; i < axes; i++)
@@ -29,7 +29,7 @@ bool YarpOpenraveControlboard::getControlModes(int *modes)
 
 // ---------------------- IControlMode2 Related  ---------------------------------
 
-bool YarpOpenraveControlboard::getControlModes(const int n_joint, const int *joints, int *modes)
+bool YarpOpenraveControlBoard::getControlModes(const int n_joint, const int *joints, int *modes)
 {
     yCTrace(YORCB) << n_joint;
 
@@ -41,7 +41,7 @@ bool YarpOpenraveControlboard::getControlModes(const int n_joint, const int *joi
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setControlMode(const int j, const int mode)
+bool YarpOpenraveControlBoard::setControlMode(const int j, const int mode)
 {
     yCTrace(YORCB) << j << mode;
 
@@ -52,7 +52,7 @@ bool YarpOpenraveControlboard::setControlMode(const int j, const int mode)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setControlModes(const int n_joint, const int *joints, int *modes)
+bool YarpOpenraveControlBoard::setControlModes(const int n_joint, const int *joints, int *modes)
 {
     yCTrace(YORCB) << n_joint;
 
@@ -66,7 +66,7 @@ bool YarpOpenraveControlboard::setControlModes(const int n_joint, const int *joi
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setControlModes(int *modes)
+bool YarpOpenraveControlBoard::setControlModes(int *modes)
 {
     yCTrace(YORCB);
 

@@ -1,7 +1,7 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#ifndef __YARP_OPENRAVE_CONTROLBOARD_HPP__
-#define __YARP_OPENRAVE_CONTROLBOARD_HPP__
+#ifndef __YARP_OPENRAVE_CONTROL_BOARD_HPP__
+#define __YARP_OPENRAVE_CONTROL_BOARD_HPP__
 
 #include <vector>
 #include <yarp/dev/ControlBoardInterfaces.h>
@@ -15,17 +15,17 @@ namespace roboticslab
 
 /**
  * @ingroup YarpPlugins
- * \defgroup YarpOpenraveControlboard
+ * \defgroup YarpOpenraveControlBoard
  *
- * @brief Contains roboticslab::YarpOpenraveControlboard.
+ * @brief Contains roboticslab::YarpOpenraveControlBoard.
  */
 
 /**
- * @ingroup YarpOpenraveControlboard
+ * @ingroup YarpOpenraveControlBoard
  * @brief Implements the YARP_dev IPositionControl, IVelocityControl, IEncodersTimed, etc.
  * interface class member functions.
  */
-class YarpOpenraveControlboard : YarpOpenraveBase,
+class YarpOpenraveControlBoard : YarpOpenraveBase,
                                  public yarp::dev::DeviceDriver,
                                  public yarp::dev::IAxisInfo,
                                  public yarp::dev::IControlLimits,
@@ -172,4 +172,4 @@ private:
 
 } // namespace roboticslab
 
-#endif // __YARP_OPENRAVE_CONTROLBOARD_HPP__
+#endif // __YARP_OPENRAVE_CONTROL_BOARD_HPP__

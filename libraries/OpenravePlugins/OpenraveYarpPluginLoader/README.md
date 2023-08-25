@@ -28,23 +28,23 @@ The equivalent Python script can be found at: [../../../examples/python/openrave
 Then follow the commands of the [first example](../../YarpPlugins/YarpOpenraveAnalogSensors#example-1).
 
 
-## YarpOpenraveControlboard
+## YarpOpenraveControlBoard
 
-Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/YarpOpenraveControlboard](../../YarpPlugins/YarpOpenraveControlboard#yarpopenravecontrolboard).
+Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/YarpOpenraveControlBoard](../../YarpPlugins/YarpOpenraveControlBoard#yarpopenravecontrolboard).
 
 ### Example 1
-The [first example](../../YarpPlugins/YarpOpenraveControlboard#example-1) becomes (note that `name` and `view` parameters are no longer required):
+The [first example](../../YarpPlugins/YarpOpenraveControlBoard#example-1) becomes (note that `name` and `view` parameters are no longer required):
 ```bash
-openrave --module OpenraveYarpPluginLoader "env data/lab1.env.xml open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0"
+openrave --module OpenraveYarpPluginLoader "env data/lab1.env.xml open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --robotIndex 0 --manipulatorIndex 0"
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-controlboard.py](../../../examples/python/openraveYarpPluginLoader-controlboard.py)
 
-Then follow the commands of the [first example](../../YarpPlugins/YarpOpenraveControlboard#example-1).
+Then follow the commands of the [first example](../../YarpPlugins/YarpOpenraveControlBoard#example-1).
 
 ### Example 2
 Now you can even use `allRobots` and/or `allManipulators` (example using the environment loaded by OpenRAVE):
 ```bash
-openrave data/lab1.env.xml --module OpenraveYarpPluginLoader "open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --allRobots --allManipulators"
+openrave data/lab1.env.xml --module OpenraveYarpPluginLoader "open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --allRobots --allManipulators"
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-controlboard-allManipulators.py](../../../examples/python/openraveYarpPluginLoader-controlboard-allManipulators.py)
 
@@ -52,7 +52,7 @@ The equivalent Python script can be found at: [../../../examples/python/openrave
 We can also do funky commands like the following, with concatenated `env` and several `open` commands:
 ```bash
 # Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
-openrave --module OpenraveYarpPluginLoader "env openrave/teo/teo.robot.xml open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2"
+openrave --module OpenraveYarpPluginLoader "env openrave/teo/teo.robot.xml open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --robotIndex 0 --manipulatorIndex 0 open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --robotIndex 0 --manipulatorIndex 2"
 ```
 
 
@@ -99,8 +99,8 @@ The equivalent Python script can be found at: [../../../examples/python/openrave
 Then follow the commands of the [first example](../../YarpPlugins/YarpOpenraveRobotManager#example-1).
 
 
-## YarpOpenraveControlboard + YarpOpenraveRGBDSensor
-Here's a nice one-liner that enables both the commands of [YarpOpenraveControlboard](../../YarpPlugins/YarpOpenraveControlboard#example-1) and [YarpOpenraveRGBDSensor](../../YarpPlugins/YarpOpenraveRGBDSensor#example-1):
+## YarpOpenraveControlBoard + YarpOpenraveRGBDSensor
+Here's a nice one-liner that enables both the commands of [YarpOpenraveControlBoard](../../YarpPlugins/YarpOpenraveControlBoard#example-1) and [YarpOpenraveRGBDSensor](../../YarpPlugins/YarpOpenraveRGBDSensor#example-1):
 ```bash
-openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --allRobots --allManipulators open --device rgbdSensor_nws_yarp --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 3" --viewer qtcoin --collision ode
+openrave --module OpenraveYarpPluginLoader "env data/testwamcamera.env.xml open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --allRobots --allManipulators open --device rgbdSensor_nws_yarp --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --rgbSensorIndex 0 --depthSensorIndex 3" --viewer qtcoin --collision ode
 ```

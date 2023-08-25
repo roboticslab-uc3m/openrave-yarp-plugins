@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveControlboard.hpp"
+#include "YarpOpenraveControlBoard.hpp"
 
 #include <cstddef> // std::size_t
 
@@ -24,7 +24,7 @@ constexpr auto NOT_SET = -1;
 
 // ------------------- DeviceDriver Related ------------------------------------
 
-bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
+bool YarpOpenraveControlBoard::open(yarp::os::Searchable& config)
 {
     if (!configureEnvironment(config))
         return false;
@@ -150,7 +150,7 @@ bool YarpOpenraveControlboard::open(yarp::os::Searchable& config)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::close()
+bool YarpOpenraveControlBoard::close()
 {
     return true;
 }

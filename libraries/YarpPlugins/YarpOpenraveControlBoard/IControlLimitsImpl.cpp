@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveControlboard.hpp"
+#include "YarpOpenraveControlBoard.hpp"
 
 #include <utility> // std::pair
 #include <vector>
@@ -13,7 +13,7 @@ using namespace roboticslab;
 
 // ------------------- IControlLimits Related ------------------------------------
 
-bool YarpOpenraveControlboard::setLimits(int axis, double min, double max)
+bool YarpOpenraveControlBoard::setLimits(int axis, double min, double max)
 {
     std::vector<OpenRAVE::dReal> vLowerLimit;
     std::vector<OpenRAVE::dReal> vUpperLimit;
@@ -29,7 +29,7 @@ bool YarpOpenraveControlboard::setLimits(int axis, double min, double max)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getLimits(int axis, double *min, double *max)
+bool YarpOpenraveControlBoard::getLimits(int axis, double *min, double *max)
 {
     //-- At least via RPC, YARP already protects for out-of-bound queries.
 
@@ -47,7 +47,7 @@ bool YarpOpenraveControlboard::getLimits(int axis, double *min, double *max)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setVelLimits(int axis, double min, double max)
+bool YarpOpenraveControlBoard::setVelLimits(int axis, double min, double max)
 {
     yCWarning(YORCB) << "min not used, upstream hard-coded to -(max)";
 
@@ -66,7 +66,7 @@ bool YarpOpenraveControlboard::setVelLimits(int axis, double min, double max)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getVelLimits(int axis, double *min, double *max)
+bool YarpOpenraveControlBoard::getVelLimits(int axis, double *min, double *max)
 {
     auto [_min, _max] = vectorOfJointPtr[axis]->GetVelocityLimit();
     *min = radToDegIfNotPrismatic(axis, _min); // This lower limit is in fact hard-coded upstream to -(max).

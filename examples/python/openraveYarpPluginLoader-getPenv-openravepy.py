@@ -20,13 +20,13 @@ try:
     penvStr = OpenraveYarpPluginLoader.SendCommand('getPenv')
     penvNameValueStr = '(penv {' + penvStr + '})'
 
-    # Controlboard using penv
-    controlboardOptions = yarp.Property()
-    controlboardOptions.fromString(penvNameValueStr) # put('penv',penvValue)
-    controlboardOptions.put('device','YarpOpenraveControlboard')
-    controlboardOptions.put('robotIndex',0)
-    controlboardOptions.put('manipulatorIndex',0)
-    controlboardDevice = yarp.PolyDriver(controlboardOptions)
+    # ControlBoard using penv
+    controlBoardOptions = yarp.Property()
+    controlBoardOptions.fromString(penvNameValueStr) # put('penv',penvValue)
+    controlBoardOptions.put('device','YarpOpenraveControlBoard')
+    controlBoardOptions.put('robotIndex',0)
+    controlBoardOptions.put('manipulatorIndex',0)
+    controlBoardDevice = yarp.PolyDriver(controlBoardOptions)
 
     # Create Grabber using penv
     grabberOptions = yarp.Property()
@@ -37,7 +37,7 @@ try:
     grabberDevice = yarp.PolyDriver(grabberOptions)
 
     # View specific interfaces
-    pos = controlboardDevice.viewIPositionControl()
+    pos = controlBoardDevice.viewIPositionControl()
     controls = grabberDevice.viewIFrameGrabberControls()
     grabber = grabberDevice.viewIFrameGrabberImage()
 

@@ -19,9 +19,9 @@ try:
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
 
-    print OpenraveYarpPluginLoader.SendCommand('open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2 --genRefSpeed 999999')  # rightArm is maniplator 2
+    print OpenraveYarpPluginLoader.SendCommand('open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --robotIndex 0 --manipulatorIndex 2 --genRefSpeed 999999')  # rightArm is maniplator 2
 
-    print OpenraveYarpPluginLoader.SendCommand('open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 0 --genRefSpeed 999999')  # trunk is manipulator 0
+    print OpenraveYarpPluginLoader.SendCommand('open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --robotIndex 0 --manipulatorIndex 0 --genRefSpeed 999999')  # trunk is manipulator 0
 
     OpenraveYarpForceEstimator = RaveCreateModule(env,'OpenraveYarpForceEstimator')
     print OpenraveYarpForceEstimator.SendCommand('open --wrinkleSize 4')

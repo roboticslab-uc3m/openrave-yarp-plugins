@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveControlboard.hpp"
+#include "YarpOpenraveControlBoard.hpp"
 
 #include <sstream>
 #include <string>
@@ -16,7 +16,7 @@ using namespace roboticslab;
 
 // ------------------- IPositionControl Related --------------------------------
 
-bool YarpOpenraveControlboard::getAxes(int *ax)
+bool YarpOpenraveControlBoard::getAxes(int *ax)
 {
     *ax = axes;
     yCInfo(YORCB) << "Reporting" << axes << "axes are present";
@@ -25,7 +25,7 @@ bool YarpOpenraveControlboard::getAxes(int *ax)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::positionMove(int j, double ref)
+bool YarpOpenraveControlBoard::positionMove(int j, double ref)
 {
     yCTrace(YORCB) << j << ref;
 
@@ -152,7 +152,7 @@ bool YarpOpenraveControlboard::positionMove(int j, double ref)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::positionMove(const double *refs)
+bool YarpOpenraveControlBoard::positionMove(const double *refs)
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -163,7 +163,7 @@ bool YarpOpenraveControlboard::positionMove(const double *refs)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::relativeMove(int j, double delta)
+bool YarpOpenraveControlBoard::relativeMove(int j, double delta)
 {
     yCTrace(YORCB) << j << delta;
 
@@ -174,7 +174,7 @@ bool YarpOpenraveControlboard::relativeMove(int j, double delta)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::relativeMove(const double *deltas)
+bool YarpOpenraveControlBoard::relativeMove(const double *deltas)
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -185,7 +185,7 @@ bool YarpOpenraveControlboard::relativeMove(const double *deltas)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::checkMotionDone(int j, bool *flag)
+bool YarpOpenraveControlBoard::checkMotionDone(int j, bool *flag)
 {
     yCTrace(YORCB) << j;
     *flag = pcontrols[j]->IsDone();
@@ -194,7 +194,7 @@ bool YarpOpenraveControlboard::checkMotionDone(int j, bool *flag)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::checkMotionDone(bool *flag)
+bool YarpOpenraveControlBoard::checkMotionDone(bool *flag)
 {
     yCTrace(YORCB);
     bool done = true;
@@ -210,7 +210,7 @@ bool YarpOpenraveControlboard::checkMotionDone(bool *flag)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setRefSpeed(int j, double sp)
+bool YarpOpenraveControlBoard::setRefSpeed(int j, double sp)
 {
     yCTrace(YORCB) << j << sp;
     double min, max;
@@ -227,7 +227,7 @@ bool YarpOpenraveControlboard::setRefSpeed(int j, double sp)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setRefSpeeds(const double *spds)
+bool YarpOpenraveControlBoard::setRefSpeeds(const double *spds)
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -238,7 +238,7 @@ bool YarpOpenraveControlboard::setRefSpeeds(const double *spds)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setRefAcceleration(int j, double acc)
+bool YarpOpenraveControlBoard::setRefAcceleration(int j, double acc)
 {
     yCError(YORCB) << "setRefAcceleration() not implemented";
     return false;
@@ -246,7 +246,7 @@ bool YarpOpenraveControlboard::setRefAcceleration(int j, double acc)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setRefAccelerations(const double *accs)
+bool YarpOpenraveControlBoard::setRefAccelerations(const double *accs)
 {
     yCError(YORCB) << "setRefAccelerations() not implemented";
     return false;
@@ -254,7 +254,7 @@ bool YarpOpenraveControlboard::setRefAccelerations(const double *accs)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefSpeed(int j, double *ref)
+bool YarpOpenraveControlBoard::getRefSpeed(int j, double *ref)
 {
     yCTrace(YORCB) << j;
     *ref = refSpeeds[j];
@@ -263,7 +263,7 @@ bool YarpOpenraveControlboard::getRefSpeed(int j, double *ref)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefSpeeds(double *spds)
+bool YarpOpenraveControlBoard::getRefSpeeds(double *spds)
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -274,7 +274,7 @@ bool YarpOpenraveControlboard::getRefSpeeds(double *spds)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefAcceleration(int j, double *acc)
+bool YarpOpenraveControlBoard::getRefAcceleration(int j, double *acc)
 {
     yCError(YORCB) << "getRefAcceleration() not implemented";
     return false;
@@ -282,7 +282,7 @@ bool YarpOpenraveControlboard::getRefAcceleration(int j, double *acc)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefAccelerations(double *accs)
+bool YarpOpenraveControlBoard::getRefAccelerations(double *accs)
 {
     yCError(YORCB) << "getRefAccelerations() not implemented";
     return false;
@@ -290,7 +290,7 @@ bool YarpOpenraveControlboard::getRefAccelerations(double *accs)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::stop(int j)
+bool YarpOpenraveControlBoard::stop(int j)
 {
     yCTrace(YORCB) << j;
     OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
@@ -302,7 +302,7 @@ bool YarpOpenraveControlboard::stop(int j)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::stop()
+bool YarpOpenraveControlBoard::stop()
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -313,7 +313,7 @@ bool YarpOpenraveControlboard::stop()
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::positionMove(const int n_joint, const int *joints, const double *refs)
+bool YarpOpenraveControlBoard::positionMove(const int n_joint, const int *joints, const double *refs)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
@@ -326,7 +326,7 @@ bool YarpOpenraveControlboard::positionMove(const int n_joint, const int *joints
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::relativeMove(const int n_joint, const int *joints, const double *deltas)
+bool YarpOpenraveControlBoard::relativeMove(const int n_joint, const int *joints, const double *deltas)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
@@ -339,7 +339,7 @@ bool YarpOpenraveControlboard::relativeMove(const int n_joint, const int *joints
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int *joints, bool *flag)
+bool YarpOpenraveControlBoard::checkMotionDone(const int n_joint, const int *joints, bool *flag)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
@@ -356,7 +356,7 @@ bool YarpOpenraveControlboard::checkMotionDone(const int n_joint, const int *joi
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
+bool YarpOpenraveControlBoard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
@@ -369,7 +369,7 @@ bool YarpOpenraveControlboard::setRefSpeeds(const int n_joint, const int *joints
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
+bool YarpOpenraveControlBoard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
@@ -382,7 +382,7 @@ bool YarpOpenraveControlboard::setRefAccelerations(const int n_joint, const int 
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
+bool YarpOpenraveControlBoard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
@@ -395,7 +395,7 @@ bool YarpOpenraveControlboard::getRefSpeeds(const int n_joint, const int *joints
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
+bool YarpOpenraveControlBoard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
@@ -408,7 +408,7 @@ bool YarpOpenraveControlboard::getRefAccelerations(const int n_joint, const int 
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::stop(const int n_joint, const int *joints)
+bool YarpOpenraveControlBoard::stop(const int n_joint, const int *joints)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
@@ -419,7 +419,7 @@ bool YarpOpenraveControlboard::stop(const int n_joint, const int *joints)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getTargetPosition(const int joint, double *ref)
+bool YarpOpenraveControlBoard::getTargetPosition(const int joint, double *ref)
 {
     yCError(YORCB) << "getTargetPosition() not implemented";
     return false;
@@ -427,7 +427,7 @@ bool YarpOpenraveControlboard::getTargetPosition(const int joint, double *ref)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getTargetPositions(double *refs)
+bool YarpOpenraveControlBoard::getTargetPositions(double *refs)
 {
     yCError(YORCB) << "getTargetPositions() not implemented";
     return false;
@@ -435,7 +435,7 @@ bool YarpOpenraveControlboard::getTargetPositions(double *refs)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getTargetPositions(const int n_joint, const int *joints, double *refs)
+bool YarpOpenraveControlBoard::getTargetPositions(const int n_joint, const int *joints, double *refs)
 {
     yCError(YORCB) << "getTargetPositions() not implemented";
     return false;

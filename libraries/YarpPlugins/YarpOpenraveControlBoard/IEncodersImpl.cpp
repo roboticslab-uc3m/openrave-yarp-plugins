@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveControlboard.hpp"
+#include "YarpOpenraveControlBoard.hpp"
 
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Time.h>
@@ -11,7 +11,7 @@ using namespace roboticslab;
 
 // ------------------ IEncoders Related -----------------------------------------
 
-bool YarpOpenraveControlboard::resetEncoder(int j)
+bool YarpOpenraveControlBoard::resetEncoder(int j)
 {
     yCTrace(YORCB) << j;
     if ((unsigned int)j > axes) return false;
@@ -20,7 +20,7 @@ bool YarpOpenraveControlboard::resetEncoder(int j)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::resetEncoders()
+bool YarpOpenraveControlBoard::resetEncoders()
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -31,7 +31,7 @@ bool YarpOpenraveControlboard::resetEncoders()
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setEncoder(int j, double val)
+bool YarpOpenraveControlBoard::setEncoder(int j, double val)
 {
     yCTrace(YORCB) << j << val;
     return true;
@@ -39,7 +39,7 @@ bool YarpOpenraveControlboard::setEncoder(int j, double val)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setEncoders(const double *vals)
+bool YarpOpenraveControlBoard::setEncoders(const double *vals)
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -50,7 +50,7 @@ bool YarpOpenraveControlboard::setEncoders(const double *vals)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getEncoder(int j, double *v)
+bool YarpOpenraveControlBoard::getEncoder(int j, double *v)
 {
     yCTrace(YORCB) << j;
     *v = radToDegIfNotPrismatic(j, vectorOfJointPtr[j]->GetValue(0));
@@ -60,7 +60,7 @@ bool YarpOpenraveControlboard::getEncoder(int j, double *v)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getEncoders(double *encs)
+bool YarpOpenraveControlBoard::getEncoders(double *encs)
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -71,7 +71,7 @@ bool YarpOpenraveControlboard::getEncoders(double *encs)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getEncoderSpeed(int j, double *sp)
+bool YarpOpenraveControlBoard::getEncoderSpeed(int j, double *sp)
 {
     yCTrace(YORCB) << j;
     // Make it easy, give the current reference speed.
@@ -81,7 +81,7 @@ bool YarpOpenraveControlboard::getEncoderSpeed(int j, double *sp)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getEncoderSpeeds(double *spds)
+bool YarpOpenraveControlBoard::getEncoderSpeeds(double *spds)
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -92,7 +92,7 @@ bool YarpOpenraveControlboard::getEncoderSpeeds(double *spds)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getEncoderAcceleration(int j, double *spds)
+bool YarpOpenraveControlBoard::getEncoderAcceleration(int j, double *spds)
 {
     yCError(YORCB) << "getEncoderAcceleration() not implemented";
     return false;
@@ -100,7 +100,7 @@ bool YarpOpenraveControlboard::getEncoderAcceleration(int j, double *spds)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getEncoderAccelerations(double *accs)
+bool YarpOpenraveControlBoard::getEncoderAccelerations(double *accs)
 {
     //yCError(YORCB) << "getEncoderAccelerations() not implemented"; // too verbose
     return false;
@@ -108,7 +108,7 @@ bool YarpOpenraveControlboard::getEncoderAccelerations(double *accs)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getEncodersTimed(double *encs, double *time)
+bool YarpOpenraveControlBoard::getEncodersTimed(double *encs, double *time)
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -119,7 +119,7 @@ bool YarpOpenraveControlboard::getEncodersTimed(double *encs, double *time)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getEncoderTimed(int j, double *encs, double *time)
+bool YarpOpenraveControlBoard::getEncoderTimed(int j, double *encs, double *time)
 {
     yCTrace(YORCB) << j;
 

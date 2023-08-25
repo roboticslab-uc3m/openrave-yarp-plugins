@@ -17,7 +17,7 @@ try:
     env.Load('/usr/local/share/xgnitive/contexts/models/teo_cgda_iros.env.xml')  # assumes XGNITIVE installed
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
-    print OpenraveYarpPluginLoader.SendCommand('open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlboard --robotIndex 0 --manipulatorIndex 2 --genRefSpeed 999999')  # rightArm is maniplator 2
+    print OpenraveYarpPluginLoader.SendCommand('open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --robotIndex 0 --manipulatorIndex 2 --genRefSpeed 999999')  # rightArm is maniplator 2
 
     OpenraveYarpPaintSquares = RaveCreateModule(env,'OpenraveYarpPaintSquares')
     print OpenraveYarpPaintSquares.SendCommand('open --squares 64')

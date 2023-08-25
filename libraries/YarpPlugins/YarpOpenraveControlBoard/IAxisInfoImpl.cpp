@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveControlboard.hpp"
+#include "YarpOpenraveControlBoard.hpp"
 
 #include <yarp/os/LogStream.h>
 
@@ -10,7 +10,7 @@ using namespace roboticslab;
 
 // ------------------ IAxisInfo Related -----------------------------------------
 
-bool YarpOpenraveControlboard::getAxisName(int axis, std::string& name)
+bool YarpOpenraveControlBoard::getAxisName(int axis, std::string& name)
 {
     yCTrace(YORCB);
     if ((unsigned int)axis > axes) return false;
@@ -20,7 +20,7 @@ bool YarpOpenraveControlboard::getAxisName(int axis, std::string& name)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getJointType(int axis, yarp::dev::JointTypeEnum& type)
+bool YarpOpenraveControlBoard::getJointType(int axis, yarp::dev::JointTypeEnum& type)
 {
     yCTrace(YORCB);
     if ((unsigned int)axis > axes) return false;

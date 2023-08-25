@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveControlboard.hpp"
+#include "YarpOpenraveControlBoard.hpp"
 
 #include <vector>
 
@@ -12,7 +12,7 @@ using namespace roboticslab;
 
 // ------------------- IPositionDirect Related --------------------------------
 
-bool YarpOpenraveControlboard::setPosition(int j, double ref)
+bool YarpOpenraveControlBoard::setPosition(int j, double ref)
 {
     yCTrace(YORCB) << j << ref;
 
@@ -38,7 +38,7 @@ bool YarpOpenraveControlboard::setPosition(int j, double ref)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setPositions(const int n_joint, const int *joints, const double *refs)
+bool YarpOpenraveControlBoard::setPositions(const int n_joint, const int *joints, const double *refs)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
@@ -51,7 +51,7 @@ bool YarpOpenraveControlboard::setPositions(const int n_joint, const int *joints
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::setPositions(const double *refs)
+bool YarpOpenraveControlBoard::setPositions(const double *refs)
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -62,7 +62,7 @@ bool YarpOpenraveControlboard::setPositions(const double *refs)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefPosition(const int joint, double *ref)
+bool YarpOpenraveControlBoard::getRefPosition(const int joint, double *ref)
 {
     yCTrace(YORCB) << joint;
 
@@ -79,7 +79,7 @@ bool YarpOpenraveControlboard::getRefPosition(const int joint, double *ref)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefPositions(double *refs)
+bool YarpOpenraveControlBoard::getRefPositions(double *refs)
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -90,7 +90,7 @@ bool YarpOpenraveControlboard::getRefPositions(double *refs)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefPositions(const int n_joint, const int *joints, double *refs)
+bool YarpOpenraveControlBoard::getRefPositions(const int n_joint, const int *joints, double *refs)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;

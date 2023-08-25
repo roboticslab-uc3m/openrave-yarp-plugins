@@ -18,13 +18,13 @@ simulation = roboticslab_openrave_yarp_plugins.viewISimulation(simulationDevice)
 penvValue = yarp.Value()
 simulation.getSimulationRawPointerValue(penvValue)
 
-# Create Controlboard + using penv
-controlboardOptions = yarp.Property()
-controlboardOptions.put('penv',penvValue)
-controlboardOptions.put('device','YarpOpenraveControlboard')
-controlboardOptions.put('robotIndex',0)
-controlboardOptions.put('manipulatorIndex',0)
-controlboardDevice = yarp.PolyDriver(controlboardOptions)
+# Create ControlBoard + using penv
+controlBoardOptions = yarp.Property()
+controlBoardOptions.put('penv',penvValue)
+controlBoardOptions.put('device','YarpOpenraveControlBoard')
+controlBoardOptions.put('robotIndex',0)
+controlBoardOptions.put('manipulatorIndex',0)
+controlBoardDevice = yarp.PolyDriver(controlBoardOptions)
 
 # Create Grabber using penv
 grabberOptions = yarp.Property()
@@ -35,7 +35,7 @@ grabberOptions.put('sensorIndex',0)
 grabberDevice = yarp.PolyDriver(grabberOptions)
 
 # View specific interfaces
-pos = controlboardDevice.viewIPositionControl()
+pos = controlBoardDevice.viewIPositionControl()
 controls = grabberDevice.viewIFrameGrabberControls()
 grabber = grabberDevice.viewIFrameGrabberImage()
 

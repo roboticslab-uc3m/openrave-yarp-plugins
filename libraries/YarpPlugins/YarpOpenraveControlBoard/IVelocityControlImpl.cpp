@@ -1,6 +1,6 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include "YarpOpenraveControlboard.hpp"
+#include "YarpOpenraveControlBoard.hpp"
 
 #include <sstream>
 #include <string>
@@ -16,7 +16,7 @@ using namespace roboticslab;
 
 // ------------------ IVelocity Related ----------------------------------------
 
-bool YarpOpenraveControlboard::velocityMove(int j, double sp)
+bool YarpOpenraveControlBoard::velocityMove(int j, double sp)
 {
     yCTrace(YORCB) << j << sp;
 
@@ -154,7 +154,7 @@ bool YarpOpenraveControlboard::velocityMove(int j, double sp)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::velocityMove(const double *sp)
+bool YarpOpenraveControlBoard::velocityMove(const double *sp)
 {
     yCTrace(YORCB);
     bool ok = true;
@@ -165,7 +165,7 @@ bool YarpOpenraveControlboard::velocityMove(const double *sp)
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::velocityMove(const int n_joint, const int *joints, const double *spds)
+bool YarpOpenraveControlBoard::velocityMove(const int n_joint, const int *joints, const double *spds)
 {
     yCTrace(YORCB) << n_joint;
     bool ok = true;
@@ -176,7 +176,7 @@ bool YarpOpenraveControlboard::velocityMove(const int n_joint, const int *joints
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefVelocity(const int joint, double *vel)
+bool YarpOpenraveControlBoard::getRefVelocity(const int joint, double *vel)
 {
     yCError(YORCB) << "getRefVelocity() not implemented";
     return false;
@@ -184,7 +184,7 @@ bool YarpOpenraveControlboard::getRefVelocity(const int joint, double *vel)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefVelocities(double *vels)
+bool YarpOpenraveControlBoard::getRefVelocities(double *vels)
 {
     yCError(YORCB) << "getRefVelocities() not implemented";
     return false;
@@ -192,7 +192,7 @@ bool YarpOpenraveControlboard::getRefVelocities(double *vels)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlboard::getRefVelocities(const int n_joint, const int *joints, double *vels)
+bool YarpOpenraveControlBoard::getRefVelocities(const int n_joint, const int *joints, double *vels)
 {
     yCError(YORCB) << "getRefVelocities() not implemented";
     return false;
