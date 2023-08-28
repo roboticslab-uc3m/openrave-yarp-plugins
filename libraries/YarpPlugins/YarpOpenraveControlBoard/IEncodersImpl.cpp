@@ -94,16 +94,21 @@ bool YarpOpenraveControlBoard::getEncoderSpeeds(double *spds)
 
 bool YarpOpenraveControlBoard::getEncoderAcceleration(int j, double *spds)
 {
-    yCError(YORCB) << "getEncoderAcceleration() not implemented";
-    return false;
+    yCTrace(YORCB) << j;
+    // Make it easy, give the current reference acceleration.
+    *spds = 0;  // begins to look like we should use semaphores.
+    return true;
 }
 
 // -----------------------------------------------------------------------------
 
 bool YarpOpenraveControlBoard::getEncoderAccelerations(double *accs)
 {
-    //yCError(YORCB) << "getEncoderAccelerations() not implemented"; // too verbose
-    return false;
+    yCTrace(YORCB);
+    bool ok = true;
+    for (unsigned int i = 0; i < axes; i++)
+        ok &= getEncoderAcceleration(i, &accs[i]);
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
