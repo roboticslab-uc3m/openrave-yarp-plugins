@@ -160,10 +160,16 @@ public:
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
-    /*int main(const string& cmd) {
-        RAVELOG_INFO("module initialized cmd; %s\n", cmd.c_str());
+    int main(const std::string& cmd)
+    {
+        RAVELOG_INFO("module initialized with \"%s\"\n", cmd.c_str());
+        // hard-coding "open"
+        std::istringstream sinput("open");
+        std::ostringstream sout;
+        if( ! OpenRAVE::InterfaceBase::SendCommand(sout,sinput) )
+            return 1;
         return 0;
-    }*/
+    }
 
     bool Open(std::ostream &sout, std::istream &sinput)
     {
