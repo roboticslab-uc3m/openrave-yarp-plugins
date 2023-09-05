@@ -133,7 +133,7 @@ public:
         __description = "OpenraveYarpIroning plugin.";
         OpenRAVE::InterfaceBase::RegisterCommand("open", boost::bind(&OpenraveYarpIroning::Open, this, _1, _2), "opens OpenraveYarpIroning");
 
-        yCInfo(ORYPS) << "Checking for yarp network...";
+        yCInfo(ORYPS) << "Checking for yarp network... (1)";
 
         if (!yarp.checkNetwork())
         {
@@ -167,7 +167,7 @@ public:
 
     bool Open(std::ostream &sout, std::istream &sinput)
     {
-        yCInfo(ORYPS) << "Checking for yarp network...";
+        yCInfo(ORYPS) << "Checking for yarp network... (2)";
         if (!yarp.checkNetwork())
         {
             yCError(ORYPS) << "Found no yarp network (try running \"yarpserver &\")";
