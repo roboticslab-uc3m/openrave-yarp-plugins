@@ -281,8 +281,6 @@ private:
     OpenRAVE::KinBodyPtr _objPtr;
     OpenRAVE::KinBodyPtr _wall;
 
-    // Brush colour
-    int brushColour = 1; // Init to cyan colour as default.
 };
 
 #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
