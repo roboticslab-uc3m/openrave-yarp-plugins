@@ -138,12 +138,34 @@ public:
         probot->SetActiveManipulator("rightArm");
 
         {
-// lock the environment!
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
-    OpenRAVE::EnvironmentLock lock(_penv->GetMutex());
-#else
-    OpenRAVE::EnvironmentMutex::scoped_lock lock(_penv->GetMutex());
-#endif
+            // lock the environment!
+            #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
+                OpenRAVE::EnvironmentLock lock(_penv->GetMutex());
+            #else
+                OpenRAVE::EnvironmentMutex::scoped_lock lock(_penv->GetMutex());
+            #endif
+
+            OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
+            unsigned int sboxIdx = 0;
+            std::vector<OpenRAVE::AABB> boxes(1);
+            boxes[0].extents = OpenRAVE::Vector(0.2, 0.3, 0.01);
+            boxes[0].pos = OpenRAVE::Vector(.8, 0, 0.01);
+            objKinBodyPtr->InitFromBoxes(boxes,true);
+            std::string objName("sbox_");
+            std::ostringstream s;
+            s << sboxIdx;
+            objName.append(s.str());
+            objKinBodyPtr->SetName(objName);
+
+            #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
+                _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
+            #else
+                _penv->Add(objKinBodyPtr, true);
+            #endif
+            _objKinBodyPtrs.push_back(objKinBodyPtr);
+
+
+
         }
 
 
@@ -287,15 +309,12 @@ private:
 
     yarp::os::Network yarp;
 
-    std::vector<int> sqPainted;
-    yarp::os::Semaphore sqPaintedSemaphore;
-
     OpenRAVE::EnvironmentBasePtr _penv;
+    std::vector<OpenRAVE::KinBodyPtr> _objKinBodyPtrs;
 
     OpenRAVE::Transform T_base_object;
     OpenRAVE::KinBodyPtr _objPtr;
     OpenRAVE::KinBodyPtr _wall;
-
 };
 
 #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
