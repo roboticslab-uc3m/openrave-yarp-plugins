@@ -194,28 +194,7 @@ public:
         {
             std::fprintf(stderr, "error: object \"wall\" does not exist.\n");
         }
-        std::printf("sucess: object \"wall\" exists.\n");
-
-        _palete_magenta = penv->GetKinBody("palete-magenta");
-        if (!_palete_magenta)
-        {
-            std::fprintf(stderr, "error: object \"palete-magenta\" does not exist.\n");
-        }
-        std::printf("sucess: object \"palete-magenta\" exists.\n");
-
-        _palete_yellow = penv->GetKinBody("palete-yellow");
-        if (!_palete_yellow)
-        {
-            std::fprintf(stderr, "error: object \"palete-yellow\" does not exist.\n");
-        }
-        std::printf("sucess: object \"palete-yellow\" exists.\n");
-
-        _palete_cyan = penv->GetKinBody("palete-cyan");
-        if (!_palete_cyan)
-        {
-            std::fprintf(stderr, "error: object \"palete-cyan\" does not exist.\n");
-        }
-        std::printf("sucess: object \"palete-cyan\" exists.\n");*/
+        std::printf("sucess: object \"wall\" exists.\n");*/
 
         std::vector<OpenRAVE::RobotBasePtr> robots;
         penv->GetRobots(robots);
@@ -253,36 +232,36 @@ public:
 
         // Create new object in the scene "palete" to change brush colours.
 
-        OpenRAVE::Transform pos_palete_magenta = _palete_magenta->GetLink("palete-magenta")->GetGeometry(0)->GetTransform();
+        /*OpenRAVE::Transform pos_palete_magenta = _palete_magenta->GetLink("palete-magenta")->GetGeometry(0)->GetTransform();
         OpenRAVE::Transform pos_palete_yellow = _palete_yellow->GetLink("palete-yellow")->GetGeometry(0)->GetTransform();
-        OpenRAVE::Transform pos_palete_cyan = _palete_cyan->GetLink("palete-cyan")->GetGeometry(0)->GetTransform();
+        OpenRAVE::Transform pos_palete_cyan = _palete_cyan->GetLink("palete-cyan")->GetGeometry(0)->GetTransform();*/
 
         // std::cout<<"Base x obj : "<<T_base_object_x<<std::endl;
         // std::cout<<"Base y obj : "<<T_base_object_y<<std::endl;
         // std::cout<<"Base z obj : "<<T_base_object_z<<std::endl;
 
-        double pos_cyan_x = pos_palete_cyan.trans.x;
+        /*double pos_cyan_x = pos_palete_cyan.trans.x;
         double pos_cyan_y = pos_palete_cyan.trans.y;
         double pos_cyan_z = pos_palete_cyan.trans.z;
-        double dist_cyan = std::sqrt(std::pow(T_base_object_x - pos_cyan_x, 2) + std::pow(T_base_object_y - pos_cyan_y, 2) + std::pow(T_base_object_z - pos_cyan_z, 2));
+        double dist_cyan = std::sqrt(std::pow(T_base_object_x - pos_cyan_x, 2) + std::pow(T_base_object_y - pos_cyan_y, 2) + std::pow(T_base_object_z - pos_cyan_z, 2));*/
 
         // std::cout<<"Pos x obj azul: "<<pos_cyan_x<<std::endl;
         // std::cout<<"Pos y obj azul: "<<pos_cyan_y<<std::endl;
         // std::cout<<"Pos z obj azul: "<<pos_cyan_z<<std::endl;
 
-        double pos_yellow_x = pos_palete_yellow.trans.x;
+        /*double pos_yellow_x = pos_palete_yellow.trans.x;
         double pos_yellow_y = pos_palete_yellow.trans.y;
         double pos_yellow_z = pos_palete_yellow.trans.z;
-        double dist_yellow = std::sqrt(std::pow(T_base_object_x - pos_yellow_x, 2) + std::pow(T_base_object_y - pos_yellow_y, 2) + std::pow(T_base_object_z - pos_yellow_z, 2));
+        double dist_yellow = std::sqrt(std::pow(T_base_object_x - pos_yellow_x, 2) + std::pow(T_base_object_y - pos_yellow_y, 2) + std::pow(T_base_object_z - pos_yellow_z, 2));*/
 
         // std::cout<<"Pos x obj yellow: "<<pos_yellow_x<<std::endl;
         // std::cout<<"Pos y obj verde: "<<pos_yellow_y<<std::endl;
         // std::cout<<"Pos z obj verde: "<<pos_yellow_z<<std::endl;
 
-        double pos_magenta_x = pos_palete_magenta.trans.x;
+        /*double pos_magenta_x = pos_palete_magenta.trans.x;
         double pos_magenta_y = pos_palete_magenta.trans.y;
         double pos_magenta_z = pos_palete_magenta.trans.z;
-        double dist_magenta = std::sqrt(std::pow(T_base_object_x - pos_magenta_x, 2) + std::pow(T_base_object_y - pos_magenta_y, 2) + std::pow(T_base_object_z - pos_magenta_z, 2));
+        double dist_magenta = std::sqrt(std::pow(T_base_object_x - pos_magenta_x, 2) + std::pow(T_base_object_y - pos_magenta_y, 2) + std::pow(T_base_object_z - pos_magenta_z, 2));*/
 
         // std::cout<<"Pos x obj rojo: "<<pos_magenta_x<<std::endl;
         // std::cout<<"Pos y obj rojo: "<<pos_magenta_y<<std::endl;
@@ -293,17 +272,17 @@ public:
         // std::cout<<"La distancia a rojo es: "<<dist_magenta<<std::endl;
 
         // Choose the closer one
-        if (dist_cyan < dist_magenta && dist_cyan < dist_yellow && dist_cyan < 0.13)
+        /*if (dist_cyan < dist_magenta && dist_cyan < dist_yellow && dist_cyan < 0.13)
             brushColour = 1;
         if (dist_yellow < dist_magenta && dist_yellow < dist_cyan && dist_yellow < 0.13)
             brushColour = 2;
         if (dist_magenta < dist_yellow && dist_magenta < dist_cyan && dist_magenta < 0.13)
             brushColour = 3;
 
-        std::cout << "El color con el que estoy pintando es: " << brushColour << std::endl;
+        std::cout << "El color con el que estoy pintando es: " << brushColour << std::endl;*/
 
         // Update psqpainted to the new values
-        for (int i = 0; i < (sqPainted.size()); i++)
+        /*for (int i = 0; i < (sqPainted.size()); i++)
         {
             std::stringstream ss;
             ss << "square" << i;
@@ -357,7 +336,7 @@ public:
             {
                 _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.5, 0.5, 0.5));
             }
-        }
+        }*/
     }
 
 private:
@@ -373,9 +352,6 @@ private:
     OpenRAVE::Transform T_base_object;
     OpenRAVE::KinBodyPtr _objPtr;
     OpenRAVE::KinBodyPtr _wall;
-    OpenRAVE::KinBodyPtr _palete_magenta;
-    OpenRAVE::KinBodyPtr _palete_yellow;
-    OpenRAVE::KinBodyPtr _palete_cyan;
 
     // Brush colour
     int brushColour = 1; // Init to cyan colour as default.
