@@ -14,14 +14,11 @@
 #include <boost/bind/bind.hpp>
 
 #include <yarp/os/Bottle.h>
-#include <yarp/os/ConnectionWriter.h>
 #include <yarp/os/LogComponent.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/PeriodicThread.h>
-#include <yarp/os/PortReader.h>
 #include <yarp/os/Property.h>
-#include <yarp/os/RpcServer.h>
 #include <yarp/os/Semaphore.h>
 #include <yarp/os/Value.h>
 
@@ -32,68 +29,6 @@ namespace
 
 constexpr auto DEFAULT_RATE_S = 0.1;
 constexpr auto DEFAULT_SQUARES = 64;
-constexpr auto DEFAULT_PORT_NAME = "/openraveYarpIroning/rpc:s";
-
-class DataProcessor : public yarp::os::PortReader
-{
-public:
-    void setPsqPainted(std::vector<int> *psqPainted)
-    {
-        this->psqPainted = psqPainted;
-    }
-
-    void setPsqPaintedSemaphore(yarp::os::Semaphore *psqPaintedSemaphore)
-    {
-        this->psqPaintedSemaphore = psqPaintedSemaphore;
-    }
-
-private:
-    std::vector<int> *psqPainted;
-    yarp::os::Semaphore *psqPaintedSemaphore;
-
-    bool read(yarp::os::ConnectionReader &in) override
-    {
-        yarp::os::Bottle request, response;
-        if (!request.read(in))
-            return false;
-        yCDebug(ORYPS) << "Request:" << request.toString();
-        yarp::os::ConnectionWriter *out = in.getWriter();
-        if (out == NULL)
-            return true;
-
-        //--
-        if (request.get(0).asString() == "get")
-        {
-            psqPaintedSemaphore->wait();
-            for (int i = 0; i < psqPainted->size(); i++)
-                response.addInt32(psqPainted->operator[](i));
-            psqPaintedSemaphore->post();
-            return response.write(*out);
-        }
-        else if (request.get(0).asString() == "paint")
-        {
-
-            psqPaintedSemaphore->wait();
-            for (int i = 0; i < psqPainted->size(); i++)
-                psqPainted->operator[](i) |= request.get(i + 1).asInt32(); // logic OR
-            psqPaintedSemaphore->post();
-            response.addString("ok");
-            return response.write(*out);
-        }
-        else if (request.get(0).asString() == "reset")
-        {
-            psqPaintedSemaphore->wait();
-            for (int i = 0; i < psqPainted->size(); i++)
-                psqPainted->operator[](i) = 0;
-            psqPaintedSemaphore->post();
-            response.addString("ok");
-            return response.write(*out);
-        }
-
-        response.addString("unknown command");
-        return response.write(*out);
-    }
-};
 
 class OpenraveYarpIroning : public OpenRAVE::ModuleBase,
                             public yarp::os::PeriodicThread
@@ -123,8 +58,6 @@ public:
             delete[] argv[i];
             argv[i] = 0;
         }
-
-        rpcServer.close();
     }
 
     void Destroy() override
@@ -173,9 +106,6 @@ public:
 
         yCDebug(ORYPS) << "Config:" << options.toString();
 
-        std::string portName = options.check("name", yarp::os::Value(DEFAULT_PORT_NAME), "port name").asString();
-        yCInfo(ORYPS) << "Port name:" << portName;
-
         int squares = options.check("squares", yarp::os::Value(DEFAULT_SQUARES), "number of squares").asInt32();
         yCInfo(ORYPS) << "Squares:" << squares;
 
@@ -198,8 +128,13 @@ public:
 
         std::vector<OpenRAVE::RobotBasePtr> robots;
         penv->GetRobots(robots);
-        yCInfo(ORYPS) << "Robot 0: " << robots.at(0)->GetName(); // default: teo
-        OpenRAVE::RobotBasePtr probot = robots.at(0);
+        if(robots.size()==0)
+        {
+            yCError(ORYPS) << "No robot yet"; // default: teo
+            return false;
+        }
+        OpenRAVE::RobotBasePtr probot = robots[0];
+        yCInfo(ORYPS) << "Robot 0: " << probot->GetName(); // default: teo
         probot->SetActiveManipulator("rightArm");
 /*
 #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 101, 0)
@@ -343,8 +278,6 @@ private:
     std::vector<const char *> argv;
 
     yarp::os::Network yarp;
-    yarp::os::RpcServer rpcServer;
-    DataProcessor processor;
 
     std::vector<int> sqPainted;
     yarp::os::Semaphore sqPaintedSemaphore;
