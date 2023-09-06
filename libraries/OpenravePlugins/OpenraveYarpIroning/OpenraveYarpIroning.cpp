@@ -109,17 +109,17 @@ public:
         int squares = options.check("squares", yarp::os::Value(DEFAULT_SQUARES), "number of squares").asInt32();
         yCInfo(ORYPS) << "Squares:" << squares;
 
-        RAVELOG_INFO("penv: %p\n", GetEnv().get());
-        OpenRAVE::EnvironmentBasePtr penv = GetEnv();
+        _penv = GetEnv();
+        RAVELOG_INFO("penv: %p\n", _penv.get());
 
-        /*_objPtr = penv->GetKinBody("object");
+        /*_objPtr = _penv->GetKinBody("object");
         if (!_objPtr)
         {
             std::fprintf(stderr, "error: object \"object\" does not exist.\n");
         }
         std::printf("sucess: object \"object\" exists.\n");
 
-        _wall = penv->GetKinBody("wall");
+        _wall = _penv->GetKinBody("wall");
         if (!_wall)
         {
             std::fprintf(stderr, "error: object \"wall\" does not exist.\n");
@@ -127,7 +127,7 @@ public:
         std::printf("sucess: object \"wall\" exists.\n");*/
 
         std::vector<OpenRAVE::RobotBasePtr> robots;
-        penv->GetRobots(robots);
+        _penv->GetRobots(robots);
         if(robots.size()==0)
         {
             yCError(ORYPS) << "No robot yet"; // default: teo
@@ -276,6 +276,8 @@ private:
 
     std::vector<int> sqPainted;
     yarp::os::Semaphore sqPaintedSemaphore;
+
+    OpenRAVE::EnvironmentBasePtr _penv;
 
     OpenRAVE::Transform T_base_object;
     OpenRAVE::KinBodyPtr _objPtr;
