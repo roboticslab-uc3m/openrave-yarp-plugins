@@ -145,11 +145,6 @@ public:
 
         sqPainted.resize(squares);
 
-        processor.setPsqPainted(&sqPainted);
-        processor.setPsqPaintedSemaphore(&sqPaintedSemaphore);
-        rpcServer.setReader(processor);
-        rpcServer.open(portName);
-
         this->start(); // start yarp::os::PeriodicThread (calls run periodically)
 */
         return true;
