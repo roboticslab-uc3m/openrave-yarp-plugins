@@ -136,6 +136,19 @@ public:
         OpenRAVE::RobotBasePtr probot = robots[0];
         yCInfo(ORYPS) << "Robot 0: " << probot->GetName(); // default: teo
         probot->SetActiveManipulator("rightArm");
+
+        {
+// lock the environment!
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
+    OpenRAVE::EnvironmentLock lock(_penv->GetMutex());
+#else
+    OpenRAVE::EnvironmentMutex::scoped_lock lock(_penv->GetMutex());
+#endif
+        }
+
+
+
+
 /*
 #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 101, 0)
         probot->Grab(_objPtr, rapidjson::Value());
