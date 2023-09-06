@@ -219,9 +219,10 @@ public:
 
         std::vector<OpenRAVE::RobotBasePtr> robots;
         penv->GetRobots(robots);
-        std::cout << "Robot 0: " << robots.at(0)->GetName() << std::endl; // default: teo
+        yCInfo(ORYPS) << "Robot 0: " << robots.at(0)->GetName(); // default: teo
         OpenRAVE::RobotBasePtr probot = robots.at(0);
         probot->SetActiveManipulator("rightArm");
+/*
 #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 101, 0)
         probot->Grab(_objPtr, rapidjson::Value());
 #else
@@ -236,7 +237,7 @@ public:
         rpcServer.open(portName);
 
         this->start(); // start yarp::os::PeriodicThread (calls run periodically)
-
+*/
         return true;
     }
 
