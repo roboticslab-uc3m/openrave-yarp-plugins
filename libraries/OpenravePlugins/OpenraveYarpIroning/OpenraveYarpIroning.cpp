@@ -1,31 +1,3 @@
-/**
- * thanks Rosen Diankov
-   Every plugin contains a bunch of openrave interfaces, the plugincpp plugin creates a simple OpenRAVE::ModuleBase interface named \b mymodule.
-   Inside programs, load the plugin using the RaveLoadPlugin, and then create the module the plugin offers using
-   \verbatim
-   m=RaveCreateModule(env,"mymodule");
-   \endverbatim
-   To test things through the command line, do:
-   \verbatim
-   openrave --loadplugin libplugincpp.so --module mymodule "my args"
-   \endverbatim
-   This will load liboplugincpp.so and startup module "mymodule". From plugincpp, notice that mymodule
-   supports some "commands". These are in-process string-based calls invoked through
-   interface->SendCommand function.
-   If you are using octave or matlab, then can communicate with openrave through tcp/ip, check out: http://openrave.programmingvision.com/wiki/index.php/OctaveMATLAB
-   Most openrave users use python to dynamically interact with openrave. For example:
-   \verbatim
-   openrave.py -i  --loadplugin libplugincpp.so data/lab1.env.xml
-   \endverbatim
-   drops into the python promp with the plugin loaded and a scene loaded. Then it is possible to execute the following python commands to create the interface and call a command:
-   \verbatim
-   m=RaveCreateModule(env,'mymodule')
-   env.Add(m,true,'my args')
-   m.SendCommand('numbodies')
-   \endverbatim
-   <b>Full Example Code:</b>
- */
-
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -210,45 +182,40 @@ public:
         RAVELOG_INFO("penv: %p\n", GetEnv().get());
         OpenRAVE::EnvironmentBasePtr penv = GetEnv();
 
-        _objPtr = penv->GetKinBody("object");
+        /*_objPtr = penv->GetKinBody("object");
         if (!_objPtr)
         {
             std::fprintf(stderr, "error: object \"object\" does not exist.\n");
         }
-        else
-            std::printf("sucess: object \"object\" exists.\n");
+        std::printf("sucess: object \"object\" exists.\n");
 
         _wall = penv->GetKinBody("wall");
         if (!_wall)
         {
             std::fprintf(stderr, "error: object \"wall\" does not exist.\n");
         }
-        else
-            std::printf("sucess: object \"wall\" exists.\n");
+        std::printf("sucess: object \"wall\" exists.\n");
 
         _palete_magenta = penv->GetKinBody("palete-magenta");
         if (!_palete_magenta)
         {
             std::fprintf(stderr, "error: object \"palete-magenta\" does not exist.\n");
         }
-        else
-            std::printf("sucess: object \"palete-magenta\" exists.\n");
+        std::printf("sucess: object \"palete-magenta\" exists.\n");
 
         _palete_yellow = penv->GetKinBody("palete-yellow");
         if (!_palete_yellow)
         {
             std::fprintf(stderr, "error: object \"palete-yellow\" does not exist.\n");
         }
-        else
-            std::printf("sucess: object \"palete-yellow\" exists.\n");
+        std::printf("sucess: object \"palete-yellow\" exists.\n");
 
         _palete_cyan = penv->GetKinBody("palete-cyan");
         if (!_palete_cyan)
         {
             std::fprintf(stderr, "error: object \"palete-cyan\" does not exist.\n");
         }
-        else
-            std::printf("sucess: object \"palete-cyan\" exists.\n");
+        std::printf("sucess: object \"palete-cyan\" exists.\n");*/
 
         std::vector<OpenRAVE::RobotBasePtr> robots;
         penv->GetRobots(robots);
