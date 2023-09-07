@@ -29,7 +29,7 @@ namespace
 
 constexpr auto DEFAULT_RATE_S = 0.1;
 constexpr auto DEFAULT_SQUARES_X = 3;
-constexpr auto DEFAULT_SQUARES_Y = 2;
+constexpr auto DEFAULT_SQUARES_Y = 3;
 
 class OpenraveYarpIroning : public OpenRAVE::ModuleBase,
                             public yarp::os::PeriodicThread
@@ -149,27 +149,30 @@ public:
             #endif
 
             double tableX = 0.4;
+            double tableY = 0.4;
             for(unsigned int sboxIdxX = 0; sboxIdxX<squaresX; sboxIdxX++)
             {
-                unsigned int sboxIdxY = 0;
-                OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
-                std::vector<OpenRAVE::AABB> boxes(1);
-                boxes[0].extents = OpenRAVE::Vector(tableX/(2.0*squaresX), 0.3, 0.01);
-                boxes[0].pos = OpenRAVE::Vector(0.6+(0.5+sboxIdxX)*tableX/squaresX, 0, 0.01);
-                objKinBodyPtr->InitFromBoxes(boxes,true);
-                std::string objName("sbox_");
-                std::ostringstream s;
-                s << sboxIdxX;
-                s << "_";
-                s << sboxIdxY;
-                objName.append(s.str());
-                objKinBodyPtr->SetName(objName);
-                #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
-                    _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
-                #else
-                    _penv->Add(objKinBodyPtr, true);
-                #endif
-                _objKinBodyPtrs.push_back(objKinBodyPtr);
+                for(unsigned int sboxIdxY = 0; sboxIdxY<squaresY; sboxIdxY++)
+                {
+                    OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
+                    std::vector<OpenRAVE::AABB> boxes(1);
+                    boxes[0].extents = OpenRAVE::Vector(tableX/(2.0*squaresX), tableY/(2.0*squaresY), 0.01);
+                    boxes[0].pos = OpenRAVE::Vector(0.6+(0.5+sboxIdxX)*tableX/squaresX, -(tableY/2.0)+(0.5+sboxIdxY)*tableY/squaresY, 0.01);
+                    objKinBodyPtr->InitFromBoxes(boxes,true);
+                    std::string objName("sbox_");
+                    std::ostringstream s;
+                    s << sboxIdxX;
+                    s << "_";
+                    s << sboxIdxY;
+                    objName.append(s.str());
+                    objKinBodyPtr->SetName(objName);
+                    #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
+                        _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
+                    #else
+                        _penv->Add(objKinBodyPtr, true);
+                    #endif
+                    _objKinBodyPtrs.push_back(objKinBodyPtr);
+                }
             }
 
         }
