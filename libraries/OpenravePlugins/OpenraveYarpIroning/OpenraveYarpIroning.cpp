@@ -28,7 +28,8 @@ namespace
 }
 
 constexpr auto DEFAULT_RATE_S = 0.1;
-constexpr auto DEFAULT_SQUARES = 64;
+constexpr auto DEFAULT_SQUARES_X = 3;
+constexpr auto DEFAULT_SQUARES_Y = 2;
 
 class OpenraveYarpIroning : public OpenRAVE::ModuleBase,
                             public yarp::os::PeriodicThread
@@ -106,8 +107,10 @@ public:
 
         yCDebug(ORYPS) << "Config:" << options.toString();
 
-        int squares = options.check("squares", yarp::os::Value(DEFAULT_SQUARES), "number of squares").asInt32();
-        yCInfo(ORYPS) << "Squares:" << squares;
+        unsigned int squaresX = options.check("squaresX", yarp::os::Value(DEFAULT_SQUARES_X), "number of squares on X").asInt32();
+        yCInfo(ORYPS) << "Squares X:" << squaresX;
+        unsigned int squaresY = options.check("squaresY", yarp::os::Value(DEFAULT_SQUARES_Y), "number of squares on Y").asInt32();
+        yCInfo(ORYPS) << "Squares Y:" << squaresY;
 
         _penv = GetEnv();
         RAVELOG_INFO("penv: %p\n", _penv.get());
@@ -145,26 +148,29 @@ public:
                 OpenRAVE::EnvironmentMutex::scoped_lock lock(_penv->GetMutex());
             #endif
 
-            OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
-            unsigned int sboxIdx = 0;
-            std::vector<OpenRAVE::AABB> boxes(1);
-            boxes[0].extents = OpenRAVE::Vector(0.2, 0.3, 0.01);
-            boxes[0].pos = OpenRAVE::Vector(.8, 0, 0.01);
-            objKinBodyPtr->InitFromBoxes(boxes,true);
-            std::string objName("sbox_");
-            std::ostringstream s;
-            s << sboxIdx;
-            objName.append(s.str());
-            objKinBodyPtr->SetName(objName);
-
-            #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
-                _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
-            #else
-                _penv->Add(objKinBodyPtr, true);
-            #endif
-            _objKinBodyPtrs.push_back(objKinBodyPtr);
-
-
+            double tableX = 0.4;
+            for(unsigned int sboxIdxX = 0; sboxIdxX<squaresX; sboxIdxX++)
+            {
+                unsigned int sboxIdxY = 0;
+                OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
+                std::vector<OpenRAVE::AABB> boxes(1);
+                boxes[0].extents = OpenRAVE::Vector(tableX/(2.0*squaresX), 0.3, 0.01);
+                boxes[0].pos = OpenRAVE::Vector(0.6+(0.5+sboxIdxX)*tableX/squaresX, 0, 0.01);
+                objKinBodyPtr->InitFromBoxes(boxes,true);
+                std::string objName("sbox_");
+                std::ostringstream s;
+                s << sboxIdxX;
+                s << "_";
+                s << sboxIdxY;
+                objName.append(s.str());
+                objKinBodyPtr->SetName(objName);
+                #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
+                    _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
+                #else
+                    _penv->Add(objKinBodyPtr, true);
+                #endif
+                _objKinBodyPtrs.push_back(objKinBodyPtr);
+            }
 
         }
 
