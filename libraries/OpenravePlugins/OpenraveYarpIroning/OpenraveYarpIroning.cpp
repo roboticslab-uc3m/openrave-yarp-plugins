@@ -118,16 +118,10 @@ public:
         /*_objPtr = _penv->GetKinBody("object");
         if (!_objPtr)
         {
-            std::fprintf(stderr, "error: object \"object\" does not exist.\n");
+            yCError(ORYPS) << "error: object \"object\" does not exist.";
+            return false;
         }
-        std::printf("sucess: object \"object\" exists.\n");
-
-        _wall = _penv->GetKinBody("wall");
-        if (!_wall)
-        {
-            std::fprintf(stderr, "error: object \"wall\" does not exist.\n");
-        }
-        std::printf("sucess: object \"wall\" exists.\n");*/
+        std::printf("sucess: object \"object\" exists.\n");*/
 
         std::vector<OpenRAVE::RobotBasePtr> robots;
         _penv->GetRobots(robots);
@@ -139,6 +133,16 @@ public:
         OpenRAVE::RobotBasePtr probot = robots[0];
         yCInfo(ORYPS) << "Robot 0: " << probot->GetName(); // default: teo
         probot->SetActiveManipulator("rightArm");
+        OpenRAVE::RobotBase::ManipulatorPtr pRobotManip = probot->GetManipulator("rightArm");
+
+        OpenRAVE::Transform ee = pRobotManip->GetEndEffector()->GetTransform();
+        OpenRAVE::Transform tool;
+        //tool.trans = Vector(0.0,0.0,1.3);
+        tool.rot = OpenRAVE::geometry::quatFromAxisAngle(OpenRAVE::Vector(0,0,0)); //-- Converts an axis-angle rotation into a quaternion.
+        tool.rot = ee.rot;
+        OpenRAVE::Transform tcp = ee * tool;
+        //Transform tcp = ee;
+        yCInfo(ORYPS) << "TCP at" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
 
         {
             // lock the environment!
