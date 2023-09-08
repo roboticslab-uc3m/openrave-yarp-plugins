@@ -135,15 +135,6 @@ public:
         probot->SetActiveManipulator("rightArm");
         _pRobotManip = probot->GetManipulator("rightArm");
 
-        OpenRAVE::Transform ee = _pRobotManip->GetEndEffector()->GetTransform();
-        OpenRAVE::Transform tool;
-        //tool.trans = Vector(0.0,0.0,1.3);
-        tool.rot = OpenRAVE::geometry::quatFromAxisAngle(OpenRAVE::Vector(0,0,0)); //-- Converts an axis-angle rotation into a quaternion.
-        tool.rot = ee.rot;
-        OpenRAVE::Transform tcp = ee * tool;
-        //Transform tcp = ee;
-        yCInfo(ORYPS) << "TCP at" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
-
         {
             // lock the environment!
             #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
@@ -197,7 +188,16 @@ public:
 
     void run() override
     {
-        yCInfo(ORYPS) << "thread";
+        //yCInfo(ORYPS) << "thread";
+
+        OpenRAVE::Transform ee = _pRobotManip->GetEndEffector()->GetTransform();
+        OpenRAVE::Transform tool;
+        //tool.trans = Vector(0.0,0.0,1.3);
+        tool.rot = OpenRAVE::geometry::quatFromAxisAngle(OpenRAVE::Vector(0,0,0)); //-- Converts an axis-angle rotation into a quaternion.
+        tool.rot = ee.rot;
+        OpenRAVE::Transform tcp = ee * tool;
+        //Transform tcp = ee;
+        yCInfo(ORYPS) << "TCP at" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
 
         // Get new object (pen) position
         /*T_base_object = _objPtr->GetTransform();
