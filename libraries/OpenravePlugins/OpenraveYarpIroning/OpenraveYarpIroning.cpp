@@ -181,9 +181,6 @@ public:
 
         }
 
-
-
-
 /*
 #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 101, 0)
         probot->Grab(_objPtr, rapidjson::Value());
@@ -192,21 +189,21 @@ public:
 #endif
 
         sqPainted.resize(squares);
-
-        this->start(); // start yarp::os::PeriodicThread (calls run periodically)
 */
+        this->start(); // start yarp::os::PeriodicThread (calls run periodically)
+
         return true;
     }
 
     void run() override
     {
-        // RAVELOG_INFO("thread\n");
+        yCInfo(ORYPS) << "thread";
 
         // Get new object (pen) position
-        T_base_object = _objPtr->GetTransform();
+        /*T_base_object = _objPtr->GetTransform();
         double T_base_object_x = T_base_object.trans.x;
         double T_base_object_y = T_base_object.trans.y;
-        double T_base_object_z = T_base_object.trans.z;
+        double T_base_object_z = T_base_object.trans.z;*/
 
         // Create new object in the scene "palete" to change brush colours.
 
