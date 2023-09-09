@@ -66,13 +66,13 @@ public:
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
-    int main(const std::string& cmd)
+    int main(const std::string &cmd)
     {
         RAVELOG_INFO("module initialized with \"%s\"\n", cmd.c_str());
         // hard-coding "open"
         std::istringstream sinput("open");
         std::ostringstream sout;
-        if( ! OpenRAVE::InterfaceBase::SendCommand(sout,sinput) )
+        if (!OpenRAVE::InterfaceBase::SendCommand(sout, sinput))
             return 1;
         return 0;
     }
@@ -125,7 +125,7 @@ public:
 
         std::vector<OpenRAVE::RobotBasePtr> robots;
         _penv->GetRobots(robots);
-        if(robots.size()==0)
+        if (robots.size() == 0)
         {
             yCError(ORYPS) << "No robot yet"; // default: teo
             return false;
@@ -136,24 +136,24 @@ public:
         _pRobotManip = probot->GetManipulator("rightArm");
 
         {
-            // lock the environment!
-            #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
-                OpenRAVE::EnvironmentLock lock(_penv->GetMutex());
-            #else
-                OpenRAVE::EnvironmentMutex::scoped_lock lock(_penv->GetMutex());
-            #endif
+// lock the environment!
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
+            OpenRAVE::EnvironmentLock lock(_penv->GetMutex());
+#else
+            OpenRAVE::EnvironmentMutex::scoped_lock lock(_penv->GetMutex());
+#endif
 
             double tableX = 0.4;
             double tableY = 0.4;
-            for(unsigned int sboxIdxX = 0; sboxIdxX<squaresX; sboxIdxX++)
+            for (unsigned int sboxIdxX = 0; sboxIdxX < squaresX; sboxIdxX++)
             {
-                for(unsigned int sboxIdxY = 0; sboxIdxY<squaresY; sboxIdxY++)
+                for (unsigned int sboxIdxY = 0; sboxIdxY < squaresY; sboxIdxY++)
                 {
                     OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
                     std::vector<OpenRAVE::AABB> boxes(1);
-                    boxes[0].extents = OpenRAVE::Vector(tableX/(2.0*squaresX), tableY/(2.0*squaresY), 0.01);
-                    boxes[0].pos = OpenRAVE::Vector(0.6+(0.5+sboxIdxX)*tableX/squaresX, -(tableY/2.0)+(0.5+sboxIdxY)*tableY/squaresY, 0.01);
-                    objKinBodyPtr->InitFromBoxes(boxes,true);
+                    boxes[0].extents = OpenRAVE::Vector(tableX / (2.0 * squaresX), tableY / (2.0 * squaresY), 0.01);
+                    boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / squaresX, -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / squaresY, 0.01);
+                    objKinBodyPtr->InitFromBoxes(boxes, true);
                     std::string objName("sbox_");
                     std::ostringstream s;
                     s << sboxIdxX;
@@ -161,15 +161,34 @@ public:
                     s << sboxIdxY;
                     objName.append(s.str());
                     objKinBodyPtr->SetName(objName);
-                    #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
-                        _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
-                    #else
-                        _penv->Add(objKinBodyPtr, true);
-                    #endif
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
+                    _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
+#else
+                    _penv->Add(objKinBodyPtr, true);
+#endif
                     _objKinBodyPtrs.push_back(objKinBodyPtr);
                 }
             }
         }
+
+        /*OpenRAVE::KinBodyPtr eeKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
+        OpenRAVE::Transform ee = _pRobotManip->GetEndEffector()->GetTransform();
+        OpenRAVE::Transform tool;
+        tool.trans = OpenRAVE::Vector(0.0,0.0,-0.3);
+        tool.rot = OpenRAVE::geometry::quatFromAxisAngle(OpenRAVE::Vector(0,0,0)); //-- Converts an axis-angle rotation into a quaternion.
+        tool.rot = ee.rot;
+        OpenRAVE::Transform tcp = ee * tool;
+        std::vector<OpenRAVE::AABB> boxes(1);
+        boxes[0].extents = OpenRAVE::Vector(0.01, 0.01, 0.01);
+        boxes[0].pos = OpenRAVE::Vector(tcp.trans.x, tcp.trans.y, tcp.trans.z);
+        eeKinBodyPtr->InitFromBoxes(boxes,true);
+        std::string objName("myee");
+        eeKinBodyPtr->SetName(objName);
+        #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
+            _penv->Add(eeKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
+        #else
+            _penv->Add(eeKinBodyPtr, true);
+        #endif*/
 
         this->start(); // start yarp::os::PeriodicThread (calls run periodically)
 
@@ -178,25 +197,25 @@ public:
 
     void run() override
     {
-        //yCInfo(ORYPS) << "thread";
+        // yCInfo(ORYPS) << "thread";
 
         OpenRAVE::Transform ee = _pRobotManip->GetEndEffector()->GetTransform();
         OpenRAVE::Transform tool;
-        //tool.trans = Vector(0.0,0.0,1.3);
-        tool.rot = OpenRAVE::geometry::quatFromAxisAngle(OpenRAVE::Vector(0,0,0)); //-- Converts an axis-angle rotation into a quaternion.
+        tool.trans = OpenRAVE::Vector(0.0, 0.0, -0.3);
+        tool.rot = OpenRAVE::geometry::quatFromAxisAngle(OpenRAVE::Vector(0, 0, 0)); //-- Converts an axis-angle rotation into a quaternion.
         tool.rot = ee.rot;
         OpenRAVE::Transform tcp = ee * tool;
-        //Transform tcp = ee;
-        //yCInfo(ORYPS) << "TCP at" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
+        // Transform tcp = ee;
+        // yCInfo(ORYPS) << "TCP at" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
 
-        for(unsigned int objKinBodyIdx = 0; objKinBodyIdx<_objKinBodyPtrs.size(); objKinBodyIdx++)
+        for (unsigned int objKinBodyIdx = 0; objKinBodyIdx < _objKinBodyPtrs.size(); objKinBodyIdx++)
         {
-            //yCInfo(ORYPS) << _objKinBodyPtrs[objKinBodyIdx]->GetName();
+            // yCInfo(ORYPS) << _objKinBodyPtrs[objKinBodyIdx]->GetName();
             OpenRAVE::Transform T_base_object = _objKinBodyPtrs[objKinBodyIdx]->GetLinks()[0]->GetGeometry(0)->GetTransform();
-            //yCInfo(ORYPS) << T_base_object.trans.x << T_base_object.trans.y << T_base_object.trans.z << "| TCP" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
+            // yCInfo(ORYPS) << T_base_object.trans.x << T_base_object.trans.y << T_base_object.trans.z << "| TCP" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
             double dist = std::sqrt(std::pow(T_base_object.trans.x - tcp.trans.x, 2) + std::pow(T_base_object.trans.y - tcp.trans.y, 2) + std::pow(T_base_object.trans.z - tcp.trans.z, 2));
 
-            if(dist < 0.1)
+            if (dist < 0.1)
             {
                 yCInfo(ORYPS) << "Erase" << _objKinBodyPtrs[objKinBodyIdx]->GetName();
                 _penv->Remove(_objKinBodyPtrs[objKinBodyIdx]);
@@ -213,7 +232,6 @@ private:
     OpenRAVE::EnvironmentBasePtr _penv;
     std::vector<OpenRAVE::KinBodyPtr> _objKinBodyPtrs;
     OpenRAVE::RobotBase::ManipulatorPtr _pRobotManip;
-
 };
 
 #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
