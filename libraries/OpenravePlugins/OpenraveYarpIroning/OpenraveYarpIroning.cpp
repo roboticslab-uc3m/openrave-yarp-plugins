@@ -169,18 +169,8 @@ public:
                     _objKinBodyPtrs.push_back(objKinBodyPtr);
                 }
             }
-
         }
 
-/*
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 101, 0)
-        probot->Grab(_objPtr, rapidjson::Value());
-#else
-        probot->Grab(_objPtr);
-#endif
-
-        sqPainted.resize(squares);
-*/
         this->start(); // start yarp::os::PeriodicThread (calls run periodically)
 
         return true;
@@ -209,63 +199,6 @@ public:
             if(objKinBodyIdx == 0)
                 yCInfo(ORYPS) << dist;
         }
-
-        // Update psqpainted to the new values
-        /*for (int i = 0; i < (sqPainted.size()); i++)
-        {
-            std::stringstream ss;
-            ss << "square" << i;
-            OpenRAVE::Transform pos_square = _wall->GetLink(ss.str())->GetGeometry(0)->GetTransform();
-
-            double pos_square_x = pos_square.trans.x;
-            double pos_square_y = pos_square.trans.y;
-            double pos_square_z = pos_square.trans.z;
-            double dist = std::sqrt(std::pow(T_base_object_x - pos_square_x, 2) + std::pow(T_base_object_y - pos_square_y, 2) + std::pow(T_base_object_z - pos_square_z, 2));
-
-            if (dist < 0.01 && brushColour == 1) // Paint cyan
-            {
-                sqPaintedSemaphore.wait();
-                sqPainted[i] = 1;
-                sqPaintedSemaphore.post();
-                std::cout << "He pintado AZUL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " << std::endl;
-            }
-            else if (dist < 0.01 && brushColour == 2) // Paint yellow
-            {
-                sqPaintedSemaphore.wait();
-                sqPainted[i] = 2;
-                sqPaintedSemaphore.post();
-                std::cout << "He pintado VERDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " << std::endl;
-            }
-
-            else if (dist < 0.01 && brushColour == 3) // Paint magenta
-            {
-                sqPaintedSemaphore.wait();
-                sqPainted[i] = 3;
-                sqPaintedSemaphore.post();
-                std::cout << "He pintado ROJO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " << std::endl;
-            }
-
-            sqPaintedSemaphore.wait();
-            int sqPaintedValue = sqPainted[i];
-            sqPaintedSemaphore.post();
-
-            if (sqPaintedValue == 1) // cyan
-            {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.0, 1.0, 1.0));
-            }
-            else if (sqPaintedValue == 2) // yellow
-            {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(1.0, 1.0, 0.0));
-            }
-            else if (sqPaintedValue == 3) // magenta
-            {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(1.0, 0.0, 0.4));
-            }
-            else
-            {
-                _wall->GetLink(ss.str())->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.5, 0.5, 0.5));
-            }
-        }*/
     }
 
 private:
