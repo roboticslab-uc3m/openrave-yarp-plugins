@@ -28,8 +28,8 @@ namespace
 }
 
 constexpr auto DEFAULT_RATE_S = 0.1;
-constexpr auto DEFAULT_SQUARES_X = 3;
-constexpr auto DEFAULT_SQUARES_Y = 3;
+constexpr auto DEFAULT_SQUARES_X = 8;
+constexpr auto DEFAULT_SQUARES_Y = 10;
 
 class OpenraveYarpIroning : public OpenRAVE::ModuleBase,
                             public yarp::os::PeriodicThread
@@ -215,7 +215,7 @@ public:
             // yCInfo(ORYPS) << T_base_object.trans.x << T_base_object.trans.y << T_base_object.trans.z << "| TCP" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
             double dist = std::sqrt(std::pow(T_base_object.trans.x - tcp.trans.x, 2) + std::pow(T_base_object.trans.y - tcp.trans.y, 2) + std::pow(T_base_object.trans.z - tcp.trans.z, 2));
 
-            if (dist < 0.1)
+            if (dist < 0.05)
             {
                 yCInfo(ORYPS) << "Erase" << _objKinBodyPtrs[objKinBodyIdx]->GetName();
                 _penv->Remove(_objKinBodyPtrs[objKinBodyIdx]);
