@@ -196,8 +196,12 @@ public:
             //yCInfo(ORYPS) << T_base_object.trans.x << T_base_object.trans.y << T_base_object.trans.z << "| TCP" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
             double dist = std::sqrt(std::pow(T_base_object.trans.x - tcp.trans.x, 2) + std::pow(T_base_object.trans.y - tcp.trans.y, 2) + std::pow(T_base_object.trans.z - tcp.trans.z, 2));
 
-            if(objKinBodyIdx == 0)
-                yCInfo(ORYPS) << dist;
+            if(dist < 0.1)
+            {
+                yCInfo(ORYPS) << "Erase" << _objKinBodyPtrs[objKinBodyIdx]->GetName();
+                _penv->Remove(_objKinBodyPtrs[objKinBodyIdx]);
+                _objKinBodyPtrs.erase(_objKinBodyPtrs.begin() + objKinBodyIdx);
+            }
         }
     }
 
