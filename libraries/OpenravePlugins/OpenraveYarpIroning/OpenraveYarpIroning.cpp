@@ -199,17 +199,15 @@ public:
         //Transform tcp = ee;
         //yCInfo(ORYPS) << "TCP at" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
 
-        for(unsigned int objKinBodyIdx = 1; objKinBodyIdx<2; objKinBodyIdx++)
+        for(unsigned int objKinBodyIdx = 0; objKinBodyIdx<_objKinBodyPtrs.size(); objKinBodyIdx++)
         {
-            yCInfo(ORYPS) << _objKinBodyPtrs[objKinBodyIdx]->GetName();
-            //yCInfo(ORYPS) << _objKinBodyPtrs[objKinBodyIdx]->GetLinks().size(); // 1
-            OpenRAVE::KinBody::LinkPtr objLinkPtr = _objKinBodyPtrs[objKinBodyIdx]->GetLinks()[0];
-            OpenRAVE::Transform t = objLinkPtr->GetGeometry(0)->GetTransform();
-            yCInfo(ORYPS) << t.trans.x << t.trans.y << t.trans.z << "| TCP" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
-            //double dist = std::sqrt(std::pow(T_base_object.trans.x - tcp.trans.x, 2) + std::pow(T_base_object.trans.y - tcp.trans.y, 2) + std::pow(T_base_object.trans.z - tcp.trans.z, 2));
+            //yCInfo(ORYPS) << _objKinBodyPtrs[objKinBodyIdx]->GetName();
+            OpenRAVE::Transform T_base_object = _objKinBodyPtrs[objKinBodyIdx]->GetLinks()[0]->GetGeometry(0)->GetTransform();
+            //yCInfo(ORYPS) << T_base_object.trans.x << T_base_object.trans.y << T_base_object.trans.z << "| TCP" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
+            double dist = std::sqrt(std::pow(T_base_object.trans.x - tcp.trans.x, 2) + std::pow(T_base_object.trans.y - tcp.trans.y, 2) + std::pow(T_base_object.trans.z - tcp.trans.z, 2));
 
-            //if(objKinBodyIdx == 0)
-            //    yCInfo(ORYPS) << T_base_object.trans.x << T_base_object.trans.y << T_base_object.trans.z << "| TCP" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
+            if(objKinBodyIdx == 0)
+                yCInfo(ORYPS) << dist;
         }
 
         // Update psqpainted to the new values
