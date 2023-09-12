@@ -1,31 +1,3 @@
-/**
- * thanks Rosen Diankov
-   Every plugin contains a bunch of openrave interfaces, the plugincpp plugin creates a simple OpenRAVE::ModuleBase interface named \b mymodule.
-   Inside programs, load the plugin using the RaveLoadPlugin, and then create the module the plugin offers using
-   \verbatim
-   m=RaveCreateModule(env,"mymodule");
-   \endverbatim
-   To test things through the command line, do:
-   \verbatim
-   openrave --loadplugin libplugincpp.so --module mymodule "my args"
-   \endverbatim
-   This will load liboplugincpp.so and startup module "mymodule". From plugincpp, notice that mymodule
-   supports some "commands". These are in-process string-based calls invoked through
-   interface->SendCommand function.
-   If you are using octave or matlab, then can communicate with openrave through tcp/ip, check out: http://openrave.programmingvision.com/wiki/index.php/OctaveMATLAB
-   Most openrave users use python to dynamically interact with openrave. For example:
-   \verbatim
-   openrave.py -i  --loadplugin libplugincpp.so data/lab1.env.xml
-   \endverbatim
-   drops into the python promp with the plugin loaded and a scene loaded. Then it is possible to execute the following python commands to create the interface and call a command:
-   \verbatim
-   m=RaveCreateModule(env,'mymodule')
-   env.Add(m,true,'my args')
-   m.SendCommand('numbodies')
-   \endverbatim
-   <b>Full Example Code:</b>
- */
-
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -149,10 +121,16 @@ public:
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
-    /*int main(const string& cmd) {
-        RAVELOG_INFO("module initialized cmd; %s\n", cmd.c_str());
+    int main(const std::string &cmd)
+    {
+        RAVELOG_INFO("module initialized with \"%s\"\n", cmd.c_str());
+        // hard-coding "open"
+        std::istringstream sinput("open");
+        std::ostringstream sout;
+        if (!OpenRAVE::InterfaceBase::SendCommand(sout, sinput))
+            return 1;
         return 0;
-    }*/
+    }
 
     bool Open(std::ostream& sout, std::istream& sinput)
     {
