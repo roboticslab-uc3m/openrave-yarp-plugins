@@ -190,6 +190,10 @@ public:
                         s << sboxIdxY;
                         objName.append(s.str());
                         objKinBodyPtr->SetName(objName);
+                        if(intMap[sboxIdxX][sboxIdxY]==2)
+                            objKinBodyPtr->GetLinks()[0]->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.0, 0.0, 1.0));
+                        else
+                            objKinBodyPtr->GetLinks()[0]->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(1.0, 1.0, 1.0));
     #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
                         _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
     #else
