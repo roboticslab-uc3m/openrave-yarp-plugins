@@ -30,6 +30,7 @@ namespace
 constexpr auto DEFAULT_RATE_S = 0.1;
 constexpr auto DEFAULT_SQUARES_X = 8;
 constexpr auto DEFAULT_SQUARES_Y = 10;
+constexpr auto DEFAULT_IN_FILE_STR = "/home/yo/repos/roboticslab-uc3m/alma-playground/ironing/assets/map1.csv";
 
 class OpenraveYarpIroning : public OpenRAVE::ModuleBase,
                             public yarp::os::PeriodicThread
@@ -111,6 +112,8 @@ public:
         yCInfo(ORYPS) << "Squares X:" << squaresX;
         unsigned int squaresY = options.check("squaresY", yarp::os::Value(DEFAULT_SQUARES_Y), "number of squares on Y").asInt32();
         yCInfo(ORYPS) << "Squares Y:" << squaresY;
+        std::string inFileStr = options.check("inFileStr", yarp::os::Value(DEFAULT_IN_FILE_STR), "input file").asString();
+        yCInfo(ORYPS) << "Input file:" << inFileStr;
 
         _penv = GetEnv();
         RAVELOG_INFO("penv: %p\n", _penv.get());
