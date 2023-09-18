@@ -115,6 +115,22 @@ public:
         std::string inFileStr = options.check("inFileStr", yarp::os::Value(DEFAULT_IN_FILE_STR), "input file").asString();
         yCInfo(ORYPS) << "Input file:" << inFileStr;
 
+        file.open(inFileStr.c_str());
+        if (!file.is_open())
+        {
+            printf("Not able to open file: %s\n", inFileStr.c_str());
+            return false;
+        }
+        printf("Opened file: %s\n", inFileStr.c_str());
+        std::vector<int> intsOnFileLine;
+        while (this->parseFileLine(intsOnFileLine))
+        {
+            if (intsOnFileLine.size() == 0)
+                continue;
+            intMap.push_back(intsOnFileLine);
+        }
+        this->dump();
+
         _penv = GetEnv();
         RAVELOG_INFO("penv: %p\n", _penv.get());
 
@@ -155,7 +171,7 @@ public:
                     OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
                     std::vector<OpenRAVE::AABB> boxes(1);
                     boxes[0].extents = OpenRAVE::Vector(tableX / (2.0 * squaresX), tableY / (2.0 * squaresY), 0.01);
-                    boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / squaresX, -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / squaresY, 0.01);
+                    boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / squaresX, -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / squaresY, 0.01-0.1);
                     objKinBodyPtr->InitFromBoxes(boxes, true);
                     std::string objName("sbox_");
                     std::ostringstream s;
@@ -235,6 +251,44 @@ private:
     OpenRAVE::EnvironmentBasePtr _penv;
     std::vector<OpenRAVE::KinBodyPtr> _objKinBodyPtrs;
     OpenRAVE::RobotBase::ManipulatorPtr _pRobotManip;
+
+    std::ifstream file;
+    std::vector<std::vector<int>> intMap;
+
+    bool parseFileLine(std::vector<int> &intsOnFileLine)
+    {
+        intsOnFileLine.clear();
+
+        if (file.eof())
+            return false;
+
+        std::string csv;
+        getline(file, csv);
+        std::istringstream buffer(csv);
+        std::string token;
+        int d;
+
+        while (std::getline(buffer, token, ','))
+        {
+            std::istringstream ss(token);
+            ss >> d;
+            intsOnFileLine.push_back(d);
+        }
+
+        return true;
+    }
+
+    void dump()
+    {
+        for (int i = 0; i < intMap.size(); i++)
+        {
+            for (int j = 0; j < intMap[0].size(); j++)
+            {
+                printf("%d ", intMap[i][j]);
+            }
+            printf("\n");
+        }
+    }
 };
 
 #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
