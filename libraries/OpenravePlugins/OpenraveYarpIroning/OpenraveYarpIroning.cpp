@@ -28,8 +28,8 @@ namespace
 }
 
 constexpr auto DEFAULT_RATE_S = 0.1;
-constexpr auto DEFAULT_SQUARES_X = 8;
-constexpr auto DEFAULT_SQUARES_Y = 10;
+constexpr auto DEFAULT_IN_FILE_STR = "/home/yo/repos/roboticslab-uc3m/alma-playground/ironing/assets/map1.csv";
+constexpr auto DEFAULT_TOLERANCE = 0.025;
 
 class OpenraveYarpIroning : public OpenRAVE::ModuleBase,
                             public yarp::os::PeriodicThread
@@ -107,10 +107,27 @@ public:
 
         yCDebug(ORYPS) << "Config:" << options.toString();
 
-        unsigned int squaresX = options.check("squaresX", yarp::os::Value(DEFAULT_SQUARES_X), "number of squares on X").asInt32();
-        yCInfo(ORYPS) << "Squares X:" << squaresX;
-        unsigned int squaresY = options.check("squaresY", yarp::os::Value(DEFAULT_SQUARES_Y), "number of squares on Y").asInt32();
-        yCInfo(ORYPS) << "Squares Y:" << squaresY;
+        std::string inFileStr = options.check("inFileStr", yarp::os::Value(DEFAULT_IN_FILE_STR), "input file").asString();
+        yCInfo(ORYPS) << "Input file:" << inFileStr;
+
+        file.open(inFileStr.c_str());
+        if (!file.is_open())
+        {
+            printf("Not able to open file: %s\n", inFileStr.c_str());
+            return false;
+        }
+        printf("Opened file: %s\n", inFileStr.c_str());
+        std::vector<std::vector<int>> preIntMap;
+        std::vector<int> intsOnFileLine;
+        while (this->parseFileLine(intsOnFileLine))
+        {
+            if (intsOnFileLine.size() == 0)
+                continue;
+            preIntMap.push_back(intsOnFileLine);
+        }
+        intMap = transpose(preIntMap);
+
+        this->dump();
 
         _penv = GetEnv();
         RAVELOG_INFO("penv: %p\n", _penv.get());
@@ -145,28 +162,62 @@ public:
 
             double tableX = 0.4;
             double tableY = 0.4;
-            for (unsigned int sboxIdxX = 0; sboxIdxX < squaresX; sboxIdxX++)
+            //-- layer 1
+            for (unsigned int sboxIdxX = 0; sboxIdxX < intMap.size(); sboxIdxX++)
             {
-                for (unsigned int sboxIdxY = 0; sboxIdxY < squaresY; sboxIdxY++)
+                for (unsigned int sboxIdxY = 0; sboxIdxY < intMap[0].size(); sboxIdxY++)
                 {
-                    OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
-                    std::vector<OpenRAVE::AABB> boxes(1);
-                    boxes[0].extents = OpenRAVE::Vector(tableX / (2.0 * squaresX), tableY / (2.0 * squaresY), 0.01);
-                    boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / squaresX, -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / squaresY, 0.01);
-                    objKinBodyPtr->InitFromBoxes(boxes, true);
-                    std::string objName("sbox_");
-                    std::ostringstream s;
-                    s << sboxIdxX;
-                    s << "_";
-                    s << sboxIdxY;
-                    objName.append(s.str());
-                    objKinBodyPtr->SetName(objName);
+                    if ((intMap[sboxIdxX][sboxIdxY] == 1) || (intMap[sboxIdxX][sboxIdxY] == 2))
+                    {
+                        OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
+                        std::vector<OpenRAVE::AABB> boxes(1);
+                        boxes[0].extents = OpenRAVE::Vector(tableX / (2.0 * intMap.size()), tableY / (2.0 * intMap[0].size()), 0.005);
+                        boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / intMap.size(), -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / intMap[0].size(), 0.005 - 0.1);
+                        objKinBodyPtr->InitFromBoxes(boxes, true);
+                        std::string objName("shirt_");
+                        std::ostringstream s;
+                        s << sboxIdxX;
+                        s << "_";
+                        s << sboxIdxY;
+                        objName.append(s.str());
+                        objKinBodyPtr->SetName(objName);
+                        objKinBodyPtr->GetLinks()[0]->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(1.0, 1.0, 1.0));
 #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
-                    _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
+                        _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
 #else
-                    _penv->Add(objKinBodyPtr, true);
+                        _penv->Add(objKinBodyPtr, true);
 #endif
-                    _objKinBodyPtrs.push_back(objKinBodyPtr);
+                        _objKinBodyPtrs.push_back(objKinBodyPtr);
+                    }
+                }
+            }
+            //-- layer 2
+            for (unsigned int sboxIdxX = 0; sboxIdxX < intMap.size(); sboxIdxX++)
+            {
+                for (unsigned int sboxIdxY = 0; sboxIdxY < intMap[0].size(); sboxIdxY++)
+                {
+                    if (intMap[sboxIdxX][sboxIdxY] == 2)
+                    {
+                        OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
+                        std::vector<OpenRAVE::AABB> boxes(1);
+                        boxes[0].extents = OpenRAVE::Vector(tableX / (2.0 * intMap.size()), tableY / (2.0 * intMap[0].size()), 0.005);
+                        boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / intMap.size(), -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / intMap[0].size(), 0.015 - 0.1);
+                        objKinBodyPtr->InitFromBoxes(boxes, true);
+                        std::string objName("wrinkle_");
+                        std::ostringstream s;
+                        s << sboxIdxX;
+                        s << "_";
+                        s << sboxIdxY;
+                        objName.append(s.str());
+                        objKinBodyPtr->SetName(objName);
+                        objKinBodyPtr->GetLinks()[0]->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.0, 0.0, 1.0));
+#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
+                        _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
+#else
+                        _penv->Add(objKinBodyPtr, true);
+#endif
+                        _objKinBodyPtrs.push_back(objKinBodyPtr);
+                    }
                 }
             }
         }
@@ -215,11 +266,14 @@ public:
             // yCInfo(ORYPS) << T_base_object.trans.x << T_base_object.trans.y << T_base_object.trans.z << "| TCP" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
             double dist = std::sqrt(std::pow(T_base_object.trans.x - tcp.trans.x, 2) + std::pow(T_base_object.trans.y - tcp.trans.y, 2) + std::pow(T_base_object.trans.z - tcp.trans.z, 2));
 
-            if (dist < 0.05)
+            if (dist < DEFAULT_TOLERANCE)
             {
-                yCInfo(ORYPS) << "Erase" << _objKinBodyPtrs[objKinBodyIdx]->GetName();
-                _penv->Remove(_objKinBodyPtrs[objKinBodyIdx]);
-                _objKinBodyPtrs.erase(_objKinBodyPtrs.begin() + objKinBodyIdx);
+                yCInfo(ORYPS) << "Touched" << _objKinBodyPtrs[objKinBodyIdx]->GetName();
+                if (_objKinBodyPtrs[objKinBodyIdx]->GetName().find("wrinkle") != std::string::npos) {
+                    _penv->Remove(_objKinBodyPtrs[objKinBodyIdx]);
+                    _objKinBodyPtrs.erase(_objKinBodyPtrs.begin() + objKinBodyIdx);
+                    yCInfo(ORYPS) << "Erased" << _objKinBodyPtrs[objKinBodyIdx]->GetName();
+                }
             }
         }
     }
@@ -232,6 +286,57 @@ private:
     OpenRAVE::EnvironmentBasePtr _penv;
     std::vector<OpenRAVE::KinBodyPtr> _objKinBodyPtrs;
     OpenRAVE::RobotBase::ManipulatorPtr _pRobotManip;
+
+    std::ifstream file;
+    std::vector<std::vector<int>> intMap;
+
+    bool parseFileLine(std::vector<int> &intsOnFileLine)
+    {
+        intsOnFileLine.clear();
+
+        if (file.eof())
+            return false;
+
+        std::string csv;
+        getline(file, csv);
+        std::istringstream buffer(csv);
+        std::string token;
+        int d;
+
+        while (std::getline(buffer, token, ','))
+        {
+            std::istringstream ss(token);
+            ss >> d;
+            intsOnFileLine.push_back(d);
+        }
+
+        return true;
+    }
+
+    void dump()
+    {
+        for (int i = 0; i < intMap.size(); i++)
+        {
+            for (int j = 0; j < intMap[0].size(); j++)
+            {
+                printf("%d ", intMap[i][j]);
+            }
+            printf("\n");
+        }
+    }
+
+    std::vector<std::vector<int>> transpose(const std::vector<std::vector<int>> data)
+    {
+        // this assumes that all inner vectors have the same size and
+        // allocates space for the complete result in advance
+        std::vector<std::vector<int>> result(data[0].size(), std::vector<int>(data.size()));
+        for (std::vector<int>::size_type i = 0; i < data[0].size(); i++)
+            for (std::vector<int>::size_type j = 0; j < data.size(); j++)
+            {
+                result[i][j] = data[j][i];
+            }
+        return result;
+    }
 };
 
 #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
