@@ -116,13 +116,16 @@ public:
             return false;
         }
         printf("Opened file: %s\n", inFileStr.c_str());
+        std::vector<std::vector<int>> preIntMap;
         std::vector<int> intsOnFileLine;
         while (this->parseFileLine(intsOnFileLine))
         {
             if (intsOnFileLine.size() == 0)
                 continue;
-            intMap.push_back(intsOnFileLine);
+            preIntMap.push_back(intsOnFileLine);
         }
+        intMap = transpose(preIntMap);
+
         this->dump();
 
         _penv = GetEnv();
@@ -316,6 +319,19 @@ private:
             }
             printf("\n");
         }
+    }
+
+    std::vector<std::vector<int>> transpose(const std::vector<std::vector<int>> data)
+    {
+        // this assumes that all inner vectors have the same size and
+        // allocates space for the complete result in advance
+        std::vector<std::vector<int>> result(data[0].size(), std::vector<int>(data.size()));
+        for (std::vector<int>::size_type i = 0; i < data[0].size(); i++)
+            for (std::vector<int>::size_type j = 0; j < data.size(); j++)
+            {
+                result[i][j] = data[j][i];
+            }
+        return result;
     }
 };
 
