@@ -29,6 +29,7 @@ namespace
 
 constexpr auto DEFAULT_RATE_S = 0.1;
 constexpr auto DEFAULT_IN_FILE_STR = "/home/yo/repos/roboticslab-uc3m/alma-playground/ironing/assets/map1.csv";
+constexpr auto DEFAULT_TOLERANCE = 0.025;
 
 class OpenraveYarpIroning : public OpenRAVE::ModuleBase,
                             public yarp::os::PeriodicThread
@@ -173,7 +174,7 @@ public:
                         boxes[0].extents = OpenRAVE::Vector(tableX / (2.0 * intMap.size()), tableY / (2.0 * intMap[0].size()), 0.005);
                         boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / intMap.size(), -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / intMap[0].size(), 0.005 - 0.1);
                         objKinBodyPtr->InitFromBoxes(boxes, true);
-                        std::string objName("sbox_w_");
+                        std::string objName("shirt_");
                         std::ostringstream s;
                         s << sboxIdxX;
                         s << "_";
@@ -202,7 +203,7 @@ public:
                         boxes[0].extents = OpenRAVE::Vector(tableX / (2.0 * intMap.size()), tableY / (2.0 * intMap[0].size()), 0.005);
                         boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / intMap.size(), -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / intMap[0].size(), 0.015 - 0.1);
                         objKinBodyPtr->InitFromBoxes(boxes, true);
-                        std::string objName("sbox_");
+                        std::string objName("wrinkle_");
                         std::ostringstream s;
                         s << sboxIdxX;
                         s << "_";
@@ -265,11 +266,14 @@ public:
             // yCInfo(ORYPS) << T_base_object.trans.x << T_base_object.trans.y << T_base_object.trans.z << "| TCP" << tcp.trans.x << tcp.trans.y << tcp.trans.z;
             double dist = std::sqrt(std::pow(T_base_object.trans.x - tcp.trans.x, 2) + std::pow(T_base_object.trans.y - tcp.trans.y, 2) + std::pow(T_base_object.trans.z - tcp.trans.z, 2));
 
-            if (dist < 0.05)
+            if (dist < DEFAULT_TOLERANCE)
             {
-                yCInfo(ORYPS) << "Erase" << _objKinBodyPtrs[objKinBodyIdx]->GetName();
-                _penv->Remove(_objKinBodyPtrs[objKinBodyIdx]);
-                _objKinBodyPtrs.erase(_objKinBodyPtrs.begin() + objKinBodyIdx);
+                yCInfo(ORYPS) << "Touched" << _objKinBodyPtrs[objKinBodyIdx]->GetName();
+                if (_objKinBodyPtrs[objKinBodyIdx]->GetName().find("wrinkle") != std::string::npos) {
+                    _penv->Remove(_objKinBodyPtrs[objKinBodyIdx]);
+                    _objKinBodyPtrs.erase(_objKinBodyPtrs.begin() + objKinBodyIdx);
+                    yCInfo(ORYPS) << "Erased" << _objKinBodyPtrs[objKinBodyIdx]->GetName();
+                }
             }
         }
     }
