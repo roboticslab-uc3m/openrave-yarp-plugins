@@ -28,8 +28,6 @@ namespace
 }
 
 constexpr auto DEFAULT_RATE_S = 0.1;
-constexpr auto DEFAULT_SQUARES_X = 8;
-constexpr auto DEFAULT_SQUARES_Y = 10;
 constexpr auto DEFAULT_IN_FILE_STR = "/home/yo/repos/roboticslab-uc3m/alma-playground/ironing/assets/map1.csv";
 
 class OpenraveYarpIroning : public OpenRAVE::ModuleBase,
@@ -108,10 +106,6 @@ public:
 
         yCDebug(ORYPS) << "Config:" << options.toString();
 
-        unsigned int squaresX = options.check("squaresX", yarp::os::Value(DEFAULT_SQUARES_X), "number of squares on X").asInt32();
-        yCInfo(ORYPS) << "Squares X:" << squaresX;
-        unsigned int squaresY = options.check("squaresY", yarp::os::Value(DEFAULT_SQUARES_Y), "number of squares on Y").asInt32();
-        yCInfo(ORYPS) << "Squares Y:" << squaresY;
         std::string inFileStr = options.check("inFileStr", yarp::os::Value(DEFAULT_IN_FILE_STR), "input file").asString();
         yCInfo(ORYPS) << "Input file:" << inFileStr;
 
@@ -165,16 +159,16 @@ public:
             double tableX = 0.4;
             double tableY = 0.4;
             //-- layer 1
-            for (unsigned int sboxIdxX = 0; sboxIdxX < squaresX; sboxIdxX++)
+            for (unsigned int sboxIdxX = 0; sboxIdxX < intMap.size(); sboxIdxX++)
             {
-                for (unsigned int sboxIdxY = 0; sboxIdxY < squaresY; sboxIdxY++)
+                for (unsigned int sboxIdxY = 0; sboxIdxY < intMap[0].size(); sboxIdxY++)
                 {
                     if ((intMap[sboxIdxX][sboxIdxY] == 1) || (intMap[sboxIdxX][sboxIdxY] == 2))
                     {
                         OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
                         std::vector<OpenRAVE::AABB> boxes(1);
-                        boxes[0].extents = OpenRAVE::Vector(tableX / (2.0 * squaresX), tableY / (2.0 * squaresY), 0.005);
-                        boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / squaresX, -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / squaresY, 0.005 - 0.1);
+                        boxes[0].extents = OpenRAVE::Vector(tableX / (2.0 * intMap.size()), tableY / (2.0 * intMap[0].size()), 0.005);
+                        boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / intMap.size(), -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / intMap[0].size(), 0.005 - 0.1);
                         objKinBodyPtr->InitFromBoxes(boxes, true);
                         std::string objName("sbox_w_");
                         std::ostringstream s;
@@ -194,16 +188,16 @@ public:
                 }
             }
             //-- layer 2
-            for (unsigned int sboxIdxX = 0; sboxIdxX < squaresX; sboxIdxX++)
+            for (unsigned int sboxIdxX = 0; sboxIdxX < intMap.size(); sboxIdxX++)
             {
-                for (unsigned int sboxIdxY = 0; sboxIdxY < squaresY; sboxIdxY++)
+                for (unsigned int sboxIdxY = 0; sboxIdxY < intMap[0].size(); sboxIdxY++)
                 {
                     if (intMap[sboxIdxX][sboxIdxY] == 2)
                     {
                         OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(_penv, "");
                         std::vector<OpenRAVE::AABB> boxes(1);
-                        boxes[0].extents = OpenRAVE::Vector(tableX / (2.0 * squaresX), tableY / (2.0 * squaresY), 0.005);
-                        boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / squaresX, -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / squaresY, 0.015 - 0.1);
+                        boxes[0].extents = OpenRAVE::Vector(tableX / (2.0 * intMap.size()), tableY / (2.0 * intMap[0].size()), 0.005);
+                        boxes[0].pos = OpenRAVE::Vector(0.6 + (0.5 + sboxIdxX) * tableX / intMap.size(), -(tableY / 2.0) + (0.5 + sboxIdxY) * tableY / intMap[0].size(), 0.015 - 0.1);
                         objKinBodyPtr->InitFromBoxes(boxes, true);
                         std::string objName("sbox_");
                         std::ostringstream s;
