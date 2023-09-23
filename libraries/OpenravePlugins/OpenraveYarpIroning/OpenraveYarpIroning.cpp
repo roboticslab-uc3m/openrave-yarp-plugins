@@ -268,7 +268,7 @@ public:
 
             if (dist < DEFAULT_TOLERANCE)
             {
-                yCInfo(ORYPS) << "Touched" << _objKinBodyPtrs[objKinBodyIdx]->GetName();
+                //yCInfo(ORYPS) << "Touched" << _objKinBodyPtrs[objKinBodyIdx]->GetName();
                 if (_objKinBodyPtrs[objKinBodyIdx]->GetName().find("wrinkle") != std::string::npos) {
                     _penv->Remove(_objKinBodyPtrs[objKinBodyIdx]);
                     _objKinBodyPtrs.erase(_objKinBodyPtrs.begin() + objKinBodyIdx);
