@@ -8,10 +8,66 @@
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/ResourceFinder.h>
+#include <yarp/dev/WrapperSingle.h>
 
 #include "LogComponent.hpp"
 
 using namespace roboticslab;
+
+// -----------------------------------------------------------------------------
+
+namespace
+{
+    bool tryOpenDevice(yarp::os::Property & options, std::vector<yarp::dev::PolyDriver *> & drivers)
+    {
+        auto * driver = new yarp::dev::PolyDriver;
+        drivers.push_back(driver);
+
+        if (options.check("wrap"))
+        {
+            yCInfo(ORYPL) << "Requested subdevice wrapping mode";
+            return driver->open(options);
+        }
+
+        yarp::os::Property mainOptions(options);
+        mainOptions.unput("subdevice");
+
+        yarp::os::Property subOptions(options);
+        subOptions.put("device", options.find("subdevice"));
+        subOptions.unput("subdevice");
+
+        if (!driver->open(mainOptions))
+        {
+            yCError(ORYPL) << "Could not open main device";
+            return false;
+        }
+
+        yarp::dev::WrapperSingle * wrapper = nullptr;
+
+        if (!driver->view(wrapper))
+        {
+            yCError(ORYPL) << "Could not view WrapperSingle";
+            return false;
+        }
+
+        auto * subDriver = new yarp::dev::PolyDriver;
+        drivers.push_back(subDriver);
+
+        if (!subDriver->open(subOptions))
+        {
+            yCError(ORYPL) << "Could not open subdevice";
+            return false;
+        }
+
+        if (!wrapper->attach(subDriver))
+        {
+            yCError(ORYPL) << "Could not attach subdevice";
+            return false;
+        }
+
+        return true;
+    }
+}
 
 // -----------------------------------------------------------------------------
 
@@ -134,7 +190,7 @@ int OpenraveYarpPluginLoader::main(const std::string& cmd)
         {
             yCDebug(ORYPL) << "Could not load" << envString << "environment, attempting via yarp::os::ResourceFinder";
 
-            yarp::os::ResourceFinder rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
+            yarp::os::ResourceFinder & rf = yarp::os::ResourceFinder::getResourceFinderSingleton();
             std::string fullEnvString = rf.findFileByName(envString);
 
             if ( !GetEnv()->Load(fullEnvString.c_str()) )
@@ -232,6 +288,13 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
         return true;
     }
 
+    if( ! options.check("device") || ! options.check("subdevice") )
+    {
+        yCError(ORYPL) << "Missing mandatory --device or --subdevice parameters";
+        sout << "-1 ";
+        return false;
+    }
+
     //-- Iterate through robots
     for(int i=0;i<robotIndices.size();i++)
     {
@@ -250,8 +313,7 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
         }
         options.put("robotIndex",robotIndex);
 
-        std::string robotName("/");
-        robotName += vectorOfRobotPtr[ robotIndex ]->GetName();
+        std::string robotName = vectorOfRobotPtr[ robotIndex ]->GetName();
 
         //-- Fill manipulatorIndices from: manipulatorIndex/manipulatorIndices/allManipulators
         //-- Fill sensorIndices from: sensorIndex/sensorIndices/allSensors
@@ -300,13 +362,23 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
 
             if( ! options.check("forceName") )
             {
-                options.put("name",robotName);
+                if( options.check("ros") )
+                {
+                    options.put("node_name","/"+robotName+"/node"); // ROS only
+                    options.put("topic_name","/"+robotName+"/topic"); // ROS only
+                }
+                else if( options.check("ros2") )
+                {
+                    options.put("node_name",robotName+"/node"); // ROS2 only
+                    options.put("topic_name","/"+robotName+"/topic"); // ROS2 only
+                }
+                else
+                {
+                    options.put("name","/"+robotName); // YARP only
+                }
             }
 
-            yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
-            yarpPlugin->open(options);
-
-            if( ! yarpPlugin->isValid() )
+            if( ! tryOpenDevice(options, yarpPlugins) )
             {
                 yCError(ORYPL) << "Yarp plugin not valid";
                 sout << "-1 ";
@@ -314,7 +386,6 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
             }
             yCInfo(ORYPL) << "Valid yarp plugin with id" << yarpPluginsProperties.size();
 
-            yarpPlugins.push_back(yarpPlugin);
             yarpPluginsProperties.push_back(options);
             sout << yarpPluginsProperties.size()-1;
             sout << " ";
@@ -344,13 +415,23 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
 
             if( ! options.check("forceName") )
             {
-                options.put("name",manipulatorName);
+                if( options.check("ros") )
+                {
+                    options.put("node_name","/"+manipulatorName+"/node"); // ROS only
+                    options.put("topic_name","/"+manipulatorName+"/topic"); // ROS only
+                }
+                else if( options.check("ros2") )
+                {
+                    options.put("node_name",manipulatorName+"/node"); // ROS2 only
+                    options.put("topic_name","/"+manipulatorName+"/topic"); // ROS2 only
+                }
+                else
+                {
+                    options.put("name","/"+manipulatorName); // YARP only
+                }
             }
 
-            yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
-            yarpPlugin->open(options);
-
-            if( ! yarpPlugin->isValid() )
+            if( ! tryOpenDevice(options, yarpPlugins) )
             {
                 yCError(ORYPL) << "Yarp plugin not valid";
                 sout << "-1 ";
@@ -358,7 +439,6 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
             }
             yCInfo(ORYPL) << "Valid yarp plugin with id" << yarpPluginsProperties.size();
 
-            yarpPlugins.push_back(yarpPlugin);
             yarpPluginsProperties.push_back(options);
             sout << yarpPluginsProperties.size()-1;
             sout << " ";
@@ -388,13 +468,23 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
 
             if( ! options.check("forceName") )
             {
-                options.put("name",sensorName);
+                if( options.check("ros") )
+                {
+                    options.put("node_name","/"+sensorName+"/node"); // ROS only
+                    options.put("topic_name","/"+sensorName+"/topic"); // ROS only
+                }
+                else if( options.check("ros2") )
+                {
+                    options.put("node_name",sensorName+"/node"); // ROS2 only
+                    options.put("topic_name","/"+sensorName+"/topic"); // ROS2 only
+                }
+                else
+                {
+                    options.put("name","/"+sensorName); // YARP only
+                }
             }
 
-            yarp::dev::PolyDriver* yarpPlugin = new yarp::dev::PolyDriver;
-            yarpPlugin->open(options);
-
-            if( ! yarpPlugin->isValid() )
+            if( ! tryOpenDevice(options, yarpPlugins) )
             {
                 yCError(ORYPL) << "Yarp plugin not valid";
                 sout << "-1 ";
@@ -402,7 +492,6 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
             }
             yCInfo(ORYPL) << "Valid yarp plugin with id" << yarpPluginsProperties.size();
 
-            yarpPlugins.push_back(yarpPlugin);
             yarpPluginsProperties.push_back(options);
             sout << yarpPluginsProperties.size()-1;
             sout << " ";
