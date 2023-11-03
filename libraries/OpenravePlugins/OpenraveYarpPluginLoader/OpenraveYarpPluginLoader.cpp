@@ -2,6 +2,8 @@
 
 #include "OpenraveYarpPluginLoader.hpp"
 
+#include <algorithm> // std::replace
+
 #include <boost/bind/bind.hpp>
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
@@ -66,6 +68,27 @@ namespace
         }
 
         return true;
+    }
+
+    void setPortNames(yarp::os::Property & options, const std::string & name)
+    {
+        if (options.check("ros"))
+        {
+            options.put("node_name", "/" + name + "/node"); // ROS only
+            options.put("topic_name", "/" + name + "/topic"); // ROS only
+        }
+        else if (options.check("ros2"))
+        {
+            std::string nodeName = name;
+            std::replace(nodeName.begin(), nodeName.end(), '/', '_'); // only alphanumerics and underscores allowed
+            options.put("node_name", nodeName); // ROS2 only
+            options.put("topic_name", "/" + name); // ROS2 only
+            options.put("msgs_name", "/" + name); // ROS2 only (control board-specific)
+        }
+        else
+        {
+            options.put("name", "/" + name); // YARP only
+        }
     }
 }
 
@@ -362,20 +385,7 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
 
             if( ! options.check("forceName") )
             {
-                if( options.check("ros") )
-                {
-                    options.put("node_name","/"+robotName+"/node"); // ROS only
-                    options.put("topic_name","/"+robotName+"/topic"); // ROS only
-                }
-                else if( options.check("ros2") )
-                {
-                    options.put("node_name",robotName+"/node"); // ROS2 only
-                    options.put("topic_name","/"+robotName+"/topic"); // ROS2 only
-                }
-                else
-                {
-                    options.put("name","/"+robotName); // YARP only
-                }
+                setPortNames(options, robotName);
             }
 
             if( ! tryOpenDevice(options, yarpPlugins) )
@@ -415,20 +425,7 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
 
             if( ! options.check("forceName") )
             {
-                if( options.check("ros") )
-                {
-                    options.put("node_name","/"+manipulatorName+"/node"); // ROS only
-                    options.put("topic_name","/"+manipulatorName+"/topic"); // ROS only
-                }
-                else if( options.check("ros2") )
-                {
-                    options.put("node_name",manipulatorName+"/node"); // ROS2 only
-                    options.put("topic_name","/"+manipulatorName+"/topic"); // ROS2 only
-                }
-                else
-                {
-                    options.put("name","/"+manipulatorName); // YARP only
-                }
+                setPortNames(options, manipulatorName);
             }
 
             if( ! tryOpenDevice(options, yarpPlugins) )
@@ -468,20 +465,7 @@ bool OpenraveYarpPluginLoader::Open(std::ostream& sout, std::istream& sinput)
 
             if( ! options.check("forceName") )
             {
-                if( options.check("ros") )
-                {
-                    options.put("node_name","/"+sensorName+"/node"); // ROS only
-                    options.put("topic_name","/"+sensorName+"/topic"); // ROS only
-                }
-                else if( options.check("ros2") )
-                {
-                    options.put("node_name",sensorName+"/node"); // ROS2 only
-                    options.put("topic_name","/"+sensorName+"/topic"); // ROS2 only
-                }
-                else
-                {
-                    options.put("name","/"+sensorName); // YARP only
-                }
+                setPortNames(options, sensorName);
             }
 
             if( ! tryOpenDevice(options, yarpPlugins) )
