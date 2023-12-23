@@ -48,47 +48,47 @@ jobs:
 
     steps:
     - name: Check out openrave-yarp-plugins
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Check out YCM
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: robotology/ycm
         path: .deps/ycm
 
     - name: Check out YARP
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: robotology/yarp
         ref: ${{matrix.robotology.yarp}}
         path: .deps/yarp
 
     - name: Check out RapidJSON
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Tencent/rapidjson
         path: .deps/rapidjson
 
     - name: Check out OpenRAVE
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: rdiankov/openrave
         path: .deps/openrave
 
     - name: Check out asrob-uc3m/yarp-devices
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: asrob-uc3m/yarp-devices
         path: .deps/yarp-devices
 
     - name: Check out roboticslab-uc3m/vision
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: roboticslab-uc3m/vision
         path: .deps/vision
 
     - name: Check out roboticslab-uc3m/kinematics-dynamics
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: roboticslab-uc3m/kinematics-dynamics
         path: .deps/kinematics-dynamics
@@ -131,7 +131,7 @@ jobs:
 
     - name: Build OpenRAVE
       run: |
-        CFLAGS=-w CXXFLAGS=-w cmake -S .deps/openrave -B .deps/openrave/build $CMAKE_CCACHE_LAUNCHER -DOPT_VIDEORECORDING=OFF -DOPT_PLUGINS=OFF -DOPT_PYTHON=OFF -DOPT_PYTHON3=OFF -DOPT_COLLADA=OFF -DOPT_CBINDINGS=OFF -DOPT_MSGPACK=OFF
+        CFLAGS=-w CXXFLAGS=-w cmake -S .deps/openrave -B .deps/openrave/build $CMAKE_CCACHE_LAUNCHER -DOPT_VIDEORECORDING=OFF -DOPT_PLUGINS=OFF -DOPT_PYTHON=OFF -DOPT_PYTHON3=OFF -DOPT_COLLADA=OFF -DOPT_CBINDINGS=OFF -DOPT_MSGPACK=OFF -DOPT_ENCRYPTION=OFF
         cmake --build .deps/openrave/build
         sudo cmake --install .deps/openrave/build
 
