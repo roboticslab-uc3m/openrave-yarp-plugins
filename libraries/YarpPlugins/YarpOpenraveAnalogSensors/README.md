@@ -3,7 +3,7 @@
 
 ## Requirements
 Depends on:
-- [YARP 3.3+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-yarp.md)
+- [YARP 3.3+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-yarp.md)
 
 ## Usage
 First open a:
