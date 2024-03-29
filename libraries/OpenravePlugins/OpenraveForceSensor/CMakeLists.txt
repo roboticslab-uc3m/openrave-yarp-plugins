@@ -16,7 +16,7 @@ if(ENABLE_OpenraveForceSensor)
     else()
         link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-        target_link_libraries(OpenraveForceSensor PUBLIC ${OpenRAVE_LIBRARIES})
+        target_link_libraries(OpenraveForceSensor ${OpenRAVE_LIBRARIES})
 
         set_target_properties(OpenraveForceSensor PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                              LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

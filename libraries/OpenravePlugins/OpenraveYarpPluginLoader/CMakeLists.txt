@@ -21,7 +21,7 @@ if(ENABLE_OpenraveYarpPluginLoader)
     else()
         link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-        target_link_libraries(OpenraveYarpPluginLoader PUBLIC ${OpenRAVE_LIBRARIES})
+        target_link_libraries(OpenraveYarpPluginLoader ${OpenRAVE_LIBRARIES})
 
         set_target_properties(OpenraveYarpPluginLoader PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                                   LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

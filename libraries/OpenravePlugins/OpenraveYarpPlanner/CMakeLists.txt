@@ -19,7 +19,7 @@ if(ENABLE_OpenraveYarpPlanner)
     else()
         link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-        target_link_libraries(OpenraveYarpPlanner PUBLIC ${OpenRAVE_LIBRARIES})
+        target_link_libraries(OpenraveYarpPlanner ${OpenRAVE_LIBRARIES})
 
         set_target_properties(OpenraveYarpPlanner PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                              LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

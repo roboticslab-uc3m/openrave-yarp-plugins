@@ -24,7 +24,7 @@ if(NOT SKIP_YarpOpenraveAnalogSensors)
     else()
         link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-        target_link_libraries(YarpOpenraveAnalogSensors PUBLIC ${OpenRAVE_LIBRARIES})
+        target_link_libraries(YarpOpenraveAnalogSensors ${OpenRAVE_LIBRARIES})
 
         set_target_properties(YarpOpenraveAnalogSensors PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                                    LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

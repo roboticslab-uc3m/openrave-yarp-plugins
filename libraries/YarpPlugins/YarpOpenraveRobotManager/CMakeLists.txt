@@ -28,7 +28,7 @@ if(NOT SKIP_YarpOpenraveRobotManager)
     else()
         link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-        target_link_libraries(YarpOpenraveRobotManager PUBLIC ${OpenRAVE_LIBRARIES})
+        target_link_libraries(YarpOpenraveRobotManager ${OpenRAVE_LIBRARIES})
 
         set_target_properties(YarpOpenraveRobotManager PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                                   LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

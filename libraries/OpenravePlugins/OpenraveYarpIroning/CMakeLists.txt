@@ -13,7 +13,7 @@ if(ENABLE_OpenraveYarpIroning)
     else()
         link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-        target_link_libraries(OpenraveYarpIroning PUBLIC ${OpenRAVE_LIBRARIES})
+        target_link_libraries(OpenraveYarpIroning ${OpenRAVE_LIBRARIES})
 
         set_target_properties(OpenraveYarpIroning PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                                   LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

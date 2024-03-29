@@ -30,7 +30,7 @@ if(NOT SKIP_YarpOpenraveControlBoard)
     else()
         link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-        target_link_libraries(YarpOpenraveControlBoard PUBLIC ${OpenRAVE_LIBRARIES})
+        target_link_libraries(YarpOpenraveControlBoard ${OpenRAVE_LIBRARIES})
 
         set_target_properties(YarpOpenraveControlBoard PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                                   LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

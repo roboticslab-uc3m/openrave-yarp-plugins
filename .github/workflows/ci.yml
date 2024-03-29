@@ -35,9 +35,9 @@ jobs:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
         robotology:
-        - { yarp: yarp-3.7, cmake: 3.16.x }
         - { yarp: yarp-3.8, cmake: 3.16.x }
-        - { yarp: master, cmake: 3.16.x }
+        - { yarp: yarp-3.9, cmake: 3.16.x }
+        - { yarp: master, cmake: 3.19.x }
         compiler:
         - { cc: gcc, cxx: g++ }
         - { cc: clang, cxx: clang++ }
@@ -97,7 +97,7 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -qq ccache libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libboost-date-time-dev libxml2-dev libpcl-dev swig
 
     - name: Set up CMake
-      uses: jwlawson/actions-setup-cmake@v1
+      uses: jwlawson/actions-setup-cmake@v2
       with:
         cmake-version: ${{matrix.robotology.cmake}}
 

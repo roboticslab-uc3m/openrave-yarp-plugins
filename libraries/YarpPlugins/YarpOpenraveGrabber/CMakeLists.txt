@@ -25,7 +25,7 @@ if(NOT SKIP_YarpOpenraveGrabber)
     else()
         link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-        target_link_libraries(YarpOpenraveGrabber PUBLIC ${OpenRAVE_LIBRARIES})
+        target_link_libraries(YarpOpenraveGrabber ${OpenRAVE_LIBRARIES})
 
         set_target_properties(YarpOpenraveGrabber PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                              LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

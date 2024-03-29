@@ -13,7 +13,7 @@ if(ENABLE_OpenraveYarpPaintSquares)
     else()
         link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-        target_link_libraries(OpenraveYarpPaintSquares PUBLIC ${OpenRAVE_LIBRARIES})
+        target_link_libraries(OpenraveYarpPaintSquares ${OpenRAVE_LIBRARIES})
 
         set_target_properties(OpenraveYarpPaintSquares PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                                   LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")

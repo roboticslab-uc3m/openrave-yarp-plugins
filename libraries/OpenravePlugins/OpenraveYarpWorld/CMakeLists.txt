@@ -21,7 +21,7 @@ if(ENABLE_OpenraveYarpWorld)
     else()
         link_directories(${OpenRAVE_LIBRARY_DIRS})
 
-        target_link_libraries(OpenraveYarpWorld PUBLIC ${OpenRAVE_LIBRARIES})
+        target_link_libraries(OpenraveYarpWorld ${OpenRAVE_LIBRARIES})
 
         set_target_properties(OpenraveYarpWorld PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
                                                            LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
