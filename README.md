@@ -25,9 +25,7 @@ Installation instructions for installing from source can be found [here](doc/ope
 
 ## Status
 
-[![CI (Linux)](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/workflows/Continuous%20Integration/badge.svg)](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/actions)
-
-[![Coverage Status](https://coveralls.io/repos/roboticslab-uc3m/openrave-yarp-plugins/badge.svg)](https://coveralls.io/r/roboticslab-uc3m/openrave-yarp-plugins)
+[![Continuous Integration](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/actions/workflows/ci.yml/badge.svg)](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/actions/workflows/ci.yml)
 
 [![Issues](https://img.shields.io/github/issues/roboticslab-uc3m/openrave-yarp-plugins.svg?label=Issues)](https://github.com/roboticslab-uc3m/openrave-yarp-plugins/issues)
 
