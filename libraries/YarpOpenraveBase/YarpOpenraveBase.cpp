@@ -7,8 +7,6 @@
 #include <sstream>
 #include <vector>
 
-#include <openrave/config.h>
-
 #include <yarp/os/Bottle.h>
 #include <yarp/os/LogComponent.h>
 #include <yarp/os/LogStream.h>
@@ -35,11 +33,7 @@ void roboticslab::SetViewer(OpenRAVE::EnvironmentBasePtr penv, const std::string
     assert(!!viewer);
 
     // attach it to the environment:
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
     penv->Add(viewer, OpenRAVE::IAM_StrictNameChecking);
-#else
-    penv->AddViewer(viewer);
-#endif
 
     // finally you call the viewer's infinite loop (this is why you need a separate thread):
     viewer->main(true);
@@ -158,11 +152,7 @@ bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
         }
 
         OpenRAVE::ModuleBasePtr pModule = OpenRAVE::RaveCreateModule(penv, orPluginAndModuleName); // create the module
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
         penv->Add(pModule, OpenRAVE::IAM_AllowRenaming); // load the module, calls main and also enables good destroy.
-#else
-        penv->Add(pModule, true); // load the module, calls main and also enables good destroy.
-#endif
         std::stringstream cmdin,cmdout;
         cmdin << "open";
         // RAVELOG_INFO("%s\n",cmdin.str().c_str());
@@ -216,11 +206,8 @@ bool YarpOpenraveBase::configureOpenravePlugins(yarp::os::Searchable& config)
 
             //-- Load module from plugin
             OpenRAVE::ModuleBasePtr pModule = OpenRAVE::RaveCreateModule(penv,orModuleName); // create the module
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
             penv->Add(pModule, OpenRAVE::IAM_AllowRenaming); // load the module, calls main and also enables good destroy.
-#else
-            penv->Add(pModule, true); // load the module, calls main and also enables good destroy.
-#endif
+
             //-- Send command if exist
             if (orPlugin->check("commands"))
             {

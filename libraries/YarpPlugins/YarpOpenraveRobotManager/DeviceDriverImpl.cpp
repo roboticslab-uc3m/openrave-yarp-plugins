@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-#include <openrave/config.h>
-
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
@@ -46,11 +44,7 @@ bool YarpOpenraveRobotManager::open(yarp::os::Searchable& config)
     yCDebug(YORRM) << "Found --mode parameter:" << modeStr;
 
     //-- Create the controller, make sure to lock environment!
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
     switch (OpenRAVE::EnvironmentLock lock(penv->GetMutex()); mode)
-#else
-    switch (OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); mode)
-#endif
     {
     case TRANSFORM_IDEALCONTROLLER:
     {

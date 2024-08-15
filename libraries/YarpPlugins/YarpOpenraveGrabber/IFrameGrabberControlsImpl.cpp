@@ -2,8 +2,6 @@
 
 #include "YarpOpenraveGrabber.hpp"
 
-#include <openrave/config.h>
-
 #include <yarp/os/LogStream.h>
 
 #include "LogComponent.hpp"
@@ -49,9 +47,6 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
     modGeomDataPtr->intrinsics = origGeomDataPtr->intrinsics;
     modGeomDataPtr->width = origGeomDataPtr->width;
     modGeomDataPtr->height = origGeomDataPtr->height;
-#if OPENRAVE_VERSION < OPENRAVE_VERSION_COMBINED(0, 69, 0)
-    modGeomDataPtr->sensor_reference = origGeomDataPtr->sensor_reference;
-#endif
     modGeomDataPtr->target_region = origGeomDataPtr->target_region;
     modGeomDataPtr->measurement_time = origGeomDataPtr->measurement_time;
     modGeomDataPtr->gain = origGeomDataPtr->gain;

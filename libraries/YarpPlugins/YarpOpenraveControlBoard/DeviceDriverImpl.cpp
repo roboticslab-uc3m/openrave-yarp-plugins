@@ -8,8 +8,6 @@
 #include <string>
 #include <vector>
 
-#include <openrave/config.h>
-
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Value.h>
 
@@ -68,11 +66,7 @@ bool YarpOpenraveControlBoard::open(yarp::os::Searchable& config)
 
     //-- Create the controller, make sure to lock environment!
     {
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
         OpenRAVE::EnvironmentLock lock(penv->GetMutex()); // lock environment
-#else
-        OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex()); // lock environment
-#endif
 
         std::vector<int> activeDOFIndices = probot->GetActiveDOFIndices();
         //--- Console output robot active DOF

@@ -1,7 +1,5 @@
 // -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
 
-#include <openrave/config.h>
-
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionReader.h>
 #include <yarp/os/LogStream.h>
@@ -86,11 +84,7 @@ bool OypPortReader::read(yarp::os::ConnectionReader& in)
         std::vector<int> manipulatorIDs = manipulatorPtr->GetArmIndices();
 
         OpenRAVE::ModuleBasePtr pbasemanip = RaveCreateModule(openraveYarpPlannerPtr->GetEnv(),"basemanipulation");
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
         openraveYarpPlannerPtr->GetEnv()->Add(pbasemanip, OpenRAVE::IAM_AllowRenaming, request.get(1).asString()); // load the module
-#else
-        openraveYarpPlannerPtr->GetEnv()->Add(pbasemanip, true, request.get(1).asString()); // load the module
-#endif
 
         std::stringstream cmdin, cmdout;
         cmdin << "MoveManipulator outputtraj goal ";
@@ -106,11 +100,7 @@ bool OypPortReader::read(yarp::os::ConnectionReader& in)
         yCDebug(ORYP) << "cmd:" << cmdin.str();
 
         {
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
             OpenRAVE::EnvironmentLock lock(openraveYarpPlannerPtr->GetEnv()->GetMutex()); // lock environment
-#else
-            OpenRAVE::EnvironmentMutex::scoped_lock lock(openraveYarpPlannerPtr->GetEnv()->GetMutex()); // lock environment
-#endif
 
             if( !pbasemanip->SendCommand(cmdout,cmdin) )
             {

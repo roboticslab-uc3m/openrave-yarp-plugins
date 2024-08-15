@@ -198,11 +198,7 @@ void ForceSensor::SetTransform(const Transform& trans){
     _trans = trans;
 }
 
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 25, 2)
 const Transform& ForceSensor::GetTransform() {
-#else
-Transform ForceSensor::GetTransform() {
-#endif
     return _trans;
 };
 
@@ -236,4 +232,3 @@ bool ForceSensor::GetHistory(std::ostream& os, std::istream& is){
     }
     return true;
 }
-

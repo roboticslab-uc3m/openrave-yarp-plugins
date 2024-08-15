@@ -3,7 +3,6 @@
 #include "OpenraveYarpWorld.hpp"
 
 #include <boost/bind/bind.hpp>
-#include <openrave/openrave.h>
 #include <yarp/os/LogStream.h>
 
 #include "LogComponent.hpp"
@@ -139,7 +138,6 @@ bool OpenraveYarpWorld::Open(std::ostream & sout, std::istream & sinput)
 
 // -----------------------------------------------------------------------------
 
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 OpenRAVE::InterfaceBasePtr OpenraveYarpWorldPlugin::CreateInterface(OpenRAVE::InterfaceType type,
                                                                     const std::string & interfacename,
                                                                     std::istream & sinput,
@@ -177,35 +175,5 @@ const std::string & OpenraveYarpWorldPlugin::GetPluginName() const
 OPENRAVE_PLUGIN_API RavePlugin * CreatePlugin() {
     return new OpenraveYarpWorldPlugin();
 }
-#else // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
-#include <openrave/plugin.h>
-
-OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type,
-                                                    const std::string & interfacename,
-                                                    std::istream & sinput,
-                                                    OpenRAVE::EnvironmentBasePtr penv)
-{
-    if (type == OpenRAVE::PT_Module && interfacename == "openraveyarpworld")
-    {
-        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpWorld(penv));
-    }
-
-    return OpenRAVE::InterfaceBasePtr();
-}
-
-// -----------------------------------------------------------------------------
-
-void GetPluginAttributesValidated(OpenRAVE::PLUGININFO & info)
-{
-    info.interfacenames[OpenRAVE::PT_Module].emplace_back("OpenraveYarpWorld");
-}
-
-// -----------------------------------------------------------------------------
-
-OPENRAVE_PLUGIN_API void DestroyPlugin()
-{
-    RAVELOG_INFO("destroying plugin\n");
-}
-#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 
 // -----------------------------------------------------------------------------

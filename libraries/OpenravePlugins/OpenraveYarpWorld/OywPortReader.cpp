@@ -3,8 +3,6 @@
 #include <algorithm> // std::equal
 #include <string>
 
-#include <openrave/config.h>
-
 #include <yarp/os/Bottle.h>
 #include <yarp/os/ConnectionReader.h>
 #include <yarp/os/LogStream.h>
@@ -219,21 +217,13 @@ world draw 0/1 (radius r g b).");
                 if (request.get(5).asInt32()==1)
                 {
                     yCInfo(ORYW) << "Object grabbed";
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 101, 0)
                     openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Grab(objPtr, rapidjson::Value()); // robot was found at tryToSetActiveManipulator
-#else
-                    openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Grab(objPtr); // robot was found at tryToSetActiveManipulator
-#endif
                     response.addVocab32(VOCAB_OK);
                 }
                 else if (request.get(5).asInt32()==0)
                 {
                     yCInfo(ORYW) << "Object released";
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 13, 0)
                     openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Release(*objPtr); // robot was found at tryToSetActiveManipulator
-#else
-                    openraveYarpWorldPtr->GetEnv()->GetRobot(request.get(2).asString())->Release(objPtr); // robot was found at tryToSetActiveManipulator
-#endif
                     response.addVocab32(VOCAB_OK);
                 }
                 else response.addVocab32(VOCAB_FAILED);
@@ -250,11 +240,7 @@ world draw 0/1 (radius r g b).");
                 return response.write(*out);
             {
                 // lock the environment!
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
                 OpenRAVE::EnvironmentLock lock(openraveYarpWorldPtr->GetEnv()->GetMutex());
-#else
-                OpenRAVE::EnvironmentMutex::scoped_lock lock(openraveYarpWorldPtr->GetEnv()->GetMutex());
-#endif
                 OpenRAVE::KinBodyPtr objKinBodyPtr = OpenRAVE::RaveCreateKinBody(openraveYarpWorldPtr->GetEnv(),"");
 
                 std::string objName;
@@ -289,11 +275,7 @@ world draw 0/1 (radius r g b).");
                     OpenRAVE::KinBody::GeometryInfo scylInfo;
                     scylInfo._type = OpenRAVE::GeometryType::GT_Cylinder;
                     OpenRAVE::Transform pose(OpenRAVE::Vector(1,0,0,0),OpenRAVE::Vector(request.get(5).asFloat64(),request.get(6).asFloat64(),request.get(7).asFloat64()));
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 70, 0)
                     scylInfo.SetTransform(pose);
-#else
-                    scylInfo._t = pose;
-#endif
                     OpenRAVE::Vector volume;
                     volume.x = request.get(3).asFloat64();
                     volume.y = request.get(4).asFloat64();
@@ -468,11 +450,7 @@ world draw 0/1 (radius r g b).");
                 objKinBodyPtr->GetLinks()[0]->SetPrincipalMomentsOfInertia(inertia);
 
                 objKinBodyPtr->SetName(objName);
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
                 openraveYarpWorldPtr->GetEnv()->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
-#else
-                openraveYarpWorldPtr->GetEnv()->Add(objKinBodyPtr, true);
-#endif
                 if(!objIsStatic)
                 {
                     objKinBodyPtr->GetLinks()[0]->SetStatic(false);

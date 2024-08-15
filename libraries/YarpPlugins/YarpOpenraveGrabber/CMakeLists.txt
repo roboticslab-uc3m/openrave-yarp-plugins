@@ -17,21 +17,9 @@ if(NOT SKIP_YarpOpenraveGrabber)
 
     target_link_libraries(YarpOpenraveGrabber YARP::YARP_os
                                               YARP::YARP_dev
+                                              OpenRAVE::libopenrave
                                               Boost::boost
                                               YarpOpenraveBase)
-
-    if(OpenRAVE_VERSION VERSION_GREATER_EQUAL 0.114)
-        target_link_libraries(YarpOpenraveGrabber OpenRAVE::libopenrave)
-    else()
-        link_directories(${OpenRAVE_LIBRARY_DIRS})
-
-        target_link_libraries(YarpOpenraveGrabber ${OpenRAVE_LIBRARIES})
-
-        set_target_properties(YarpOpenraveGrabber PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
-                                                             LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
-
-        target_include_directories(YarpOpenraveGrabber PRIVATE ${OpenRAVE_INCLUDE_DIRS})
-    endif()
 
     yarp_install(TARGETS YarpOpenraveGrabber
                  LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}

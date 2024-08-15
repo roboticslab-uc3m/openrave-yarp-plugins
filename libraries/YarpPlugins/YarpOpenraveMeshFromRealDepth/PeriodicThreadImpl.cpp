@@ -7,8 +7,6 @@
 #include <algorithm> // std::copy
 #include <iterator> // std::back_inserter
 
-#include <openrave/config.h>
-
 #include <yarp/os/LogStream.h>
 #include <yarp/sig/PointCloudUtils.h>
 
@@ -59,11 +57,7 @@ void YarpOpenraveMeshFromRealDepth::run()
     std::copy(meshIndices.cbegin(), meshIndices.cend(), std::back_inserter(raveMesh.indices));
 
     // Paint the mesh
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
     OpenRAVE::EnvironmentLock lock(penv->GetMutex());
-#else
-    OpenRAVE::EnvironmentMutex::scoped_lock lock(penv->GetMutex());
-#endif
     OpenRAVE::KinBodyPtr meshKinBodyPtr = OpenRAVE::RaveCreateKinBody(penv, "");
     meshKinBodyPtr->SetName("mesh");
     meshKinBodyPtr->InitFromTrimesh(raveMesh, true);
@@ -74,11 +68,7 @@ void YarpOpenraveMeshFromRealDepth::run()
         penv->Remove(previousMesh);
     }
 
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
     penv->Add(meshKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
-#else
-    penv->Add(meshKinBodyPtr, true);
-#endif
     previousMesh = meshKinBodyPtr;
 }
 

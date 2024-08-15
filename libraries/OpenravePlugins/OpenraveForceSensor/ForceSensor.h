@@ -8,9 +8,7 @@
 #define FORCESENSOR_H_
 
 #include <openrave/openrave.h>
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
-# include <openrave/plugin.h>
-#endif
+#include <openrave/plugin.h>
 #include <boost/bind.hpp>
 #include <boost/circular_buffer.hpp>
 
@@ -66,11 +64,7 @@ public:
     virtual SensorDataPtr CreateSensorData(SensorType type);
     virtual bool GetSensorData(SensorDataPtr psensordata);
     virtual void SetTransform(const Transform& trans);
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 25, 2)
     virtual const Transform& GetTransform();
-#else
-    virtual Transform GetTransform();
-#endif
     bool SetHistoryLength(std::ostream& os, std::istream& is);
     bool SetFilter(std::ostream& os, std::istream& is);
     bool GetHistory(std::ostream& os, std::istream& is);
@@ -135,7 +129,6 @@ protected:
      friend class ForceSensorXMLReader;
 };
 
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 class OpenraveYarpForceSensorPlugin : public RavePlugin
 {
 public:
@@ -147,6 +140,5 @@ public:
     const InterfaceMap & GetInterfaces() const override;
     const std::string & GetPluginName() const override;
 };
-#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 
 #endif

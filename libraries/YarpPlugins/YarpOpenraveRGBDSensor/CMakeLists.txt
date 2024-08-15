@@ -16,21 +16,9 @@ if(NOT SKIP_YarpOpenraveRGBDSensor)
 
     target_link_libraries(YarpOpenraveRGBDSensor YARP::YARP_os
                                                  YARP::YARP_dev
+                                                 OpenRAVE::libopenrave
                                                  Boost::boost
                                                  YarpOpenraveBase)
-
-    if(OpenRAVE_VERSION VERSION_GREATER_EQUAL 0.114)
-        target_link_libraries(YarpOpenraveRGBDSensor OpenRAVE::libopenrave)
-    else()
-        link_directories(${OpenRAVE_LIBRARY_DIRS})
-
-        target_link_libraries(YarpOpenraveRGBDSensor ${OpenRAVE_LIBRARIES})
-
-        set_target_properties(YarpOpenraveRGBDSensor PROPERTIES COMPILE_OPTIONS "${OpenRAVE_CXX_FLAGS}"
-                                                                LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
-
-        target_include_directories(YarpOpenraveRGBDSensor PRIVATE ${OpenRAVE_INCLUDE_DIRS})
-    endif()
 
     yarp_install(TARGETS YarpOpenraveRGBDSensor
                  LIBRARY DESTINATION ${ROBOTICSLAB-OPENRAVE-YARP-PLUGINS_DYNAMIC_PLUGINS_INSTALL_DIR}

@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 
-#include <openrave/config.h>
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
 
@@ -154,11 +153,7 @@ public:
 
         {
 // lock the environment!
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 68, 0)
             OpenRAVE::EnvironmentLock lock(_penv->GetMutex());
-#else
-            OpenRAVE::EnvironmentMutex::scoped_lock lock(_penv->GetMutex());
-#endif
 
             double tableX = 0.4;
             double tableY = 0.4;
@@ -182,11 +177,7 @@ public:
                         objName.append(s.str());
                         objKinBodyPtr->SetName(objName);
                         objKinBodyPtr->GetLinks()[0]->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(1.0, 1.0, 1.0));
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
                         _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
-#else
-                        _penv->Add(objKinBodyPtr, true);
-#endif
                         _objKinBodyPtrs.push_back(objKinBodyPtr);
                     }
                 }
@@ -211,11 +202,7 @@ public:
                         objName.append(s.str());
                         objKinBodyPtr->SetName(objName);
                         objKinBodyPtr->GetLinks()[0]->GetGeometry(0)->SetDiffuseColor(OpenRAVE::RaveVector<float>(0.0, 0.0, 1.0));
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
                         _penv->Add(objKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
-#else
-                        _penv->Add(objKinBodyPtr, true);
-#endif
                         _objKinBodyPtrs.push_back(objKinBodyPtr);
                     }
                 }
@@ -235,11 +222,8 @@ public:
         eeKinBodyPtr->InitFromBoxes(boxes,true);
         std::string objName("myee");
         eeKinBodyPtr->SetName(objName);
-        #if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 67, 0)
-            _penv->Add(eeKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
-        #else
-            _penv->Add(eeKinBodyPtr, true);
-        #endif*/
+        _penv->Add(eeKinBodyPtr, OpenRAVE::IAM_AllowRenaming);
+        */
 
         this->start(); // start yarp::os::PeriodicThread (calls run periodically)
 
@@ -339,7 +323,6 @@ private:
     }
 };
 
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 class OpenraveYarpIroningPlugin : public RavePlugin
 {
 public:
@@ -372,33 +355,7 @@ public:
     }
 };
 
-// -----------------------------------------------------------------------------
-
 OPENRAVE_PLUGIN_API RavePlugin *CreatePlugin()
 {
     return new OpenraveYarpIroningPlugin();
 }
-#else  // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
-OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type,
-                                                    const std::string &interfacename,
-                                                    std::istream &sinput,
-                                                    OpenRAVE::EnvironmentBasePtr penv)
-{
-    if (type == OpenRAVE::PT_Module && interfacename == "openraveyarpironing")
-    {
-        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpIroning(penv));
-    }
-
-    return OpenRAVE::InterfaceBasePtr();
-}
-
-void GetPluginAttributesValidated(OpenRAVE::PLUGININFO &info)
-{
-    info.interfacenames[OpenRAVE::PT_Module].emplace_back("OpenraveYarpIroning");
-}
-
-OPENRAVE_PLUGIN_API void DestroyPlugin()
-{
-    RAVELOG_INFO("destroying plugin\n");
-}
-#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)

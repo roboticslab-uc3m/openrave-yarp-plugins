@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 
-#include <openrave/config.h>
 #include <openrave/openrave.h>
 #include <openrave/plugin.h>
 
@@ -201,11 +200,7 @@ public:
         std::cout << "Robot 0: " << robots.at(0)->GetName() << std::endl;  // default: teo
         OpenRAVE::RobotBasePtr probot = robots.at(0);
         probot->SetActiveManipulator("rightArm");
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 101, 0)
         probot->Grab(_objPtr, rapidjson::Value());
-#else
-        probot->Grab(_objPtr);
-#endif
 
         sqPainted.resize(squares);
 
@@ -379,7 +374,6 @@ private:
     int brushColour = 1; //Init to cyan colour as default.
 };
 
-#if OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
 class OpenraveYarpPaintSquaresPlugin : public RavePlugin
 {
 public:
@@ -412,32 +406,6 @@ public:
     }
 };
 
-// -----------------------------------------------------------------------------
-
 OPENRAVE_PLUGIN_API RavePlugin * CreatePlugin() {
     return new OpenraveYarpPaintSquaresPlugin();
 }
-#else // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
-OpenRAVE::InterfaceBasePtr CreateInterfaceValidated(OpenRAVE::InterfaceType type,
-                                                    const std::string & interfacename,
-                                                    std::istream & sinput,
-                                                    OpenRAVE::EnvironmentBasePtr penv)
-{
-    if (type == OpenRAVE::PT_Module && interfacename == "openraveyarppaintsquares")
-    {
-        return OpenRAVE::InterfaceBasePtr(new OpenraveYarpPaintSquares(penv));
-    }
-
-    return OpenRAVE::InterfaceBasePtr();
-}
-
-void GetPluginAttributesValidated(OpenRAVE::PLUGININFO& info)
-{
-    info.interfacenames[OpenRAVE::PT_Module].emplace_back("OpenraveYarpPaintSquares");
-}
-
-OPENRAVE_PLUGIN_API void DestroyPlugin()
-{
-    RAVELOG_INFO("destroying plugin\n");
-}
-#endif // OPENRAVE_VERSION >= OPENRAVE_VERSION_COMBINED(0, 105, 0)
