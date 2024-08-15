@@ -27,7 +27,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 # Hard dependencies.
 find_package(YCM 0.11 REQUIRED)
-find_package(OpenRAVE 0.114 REQUIRED)
+find_package(OpenRAVE 0.115 REQUIRED)
 find_package(Boost "${OpenRAVE_Boost_VERSION}" REQUIRED COMPONENTS thread)
 find_package(YARP 3.8 REQUIRED COMPONENTS os dev sig)
 

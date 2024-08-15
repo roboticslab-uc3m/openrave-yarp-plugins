@@ -271,7 +271,7 @@ world draw 0/1 (radius r g b).");
                 }
                 else if((request.get(2).asString() == "cyl")||(request.get(2).asString() == "scyl"))
                 {
-                    std::list<OpenRAVE::KinBody::GeometryInfo> scylInfoList;
+                    std::vector<OpenRAVE::KinBody::GeometryInfo> scylInfoList;
                     OpenRAVE::KinBody::GeometryInfo scylInfo;
                     scylInfo._type = OpenRAVE::GeometryType::GT_Cylinder;
                     OpenRAVE::Transform pose(OpenRAVE::Vector(1,0,0,0),OpenRAVE::Vector(request.get(5).asFloat64(),request.get(6).asFloat64(),request.get(7).asFloat64()));
