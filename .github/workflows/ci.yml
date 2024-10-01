@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04]
+        os: [ubuntu-22.04, ubuntu-24.04]
         robotology:
         - { yarp: yarp-3.8, cmake: 3.16.x }
         - { yarp: yarp-3.9, cmake: 3.16.x }
@@ -75,6 +75,14 @@ jobs:
         repository: rdiankov/openrave
         path: .deps/openrave
 
+    - name: Check out SWIG
+      if: ${{matrix.os == 'ubuntu-24.04'}}
+      uses: actions/checkout@v4
+      with:
+        repository: swig/swig
+        ref: v4.2.1
+        path: .deps/swig
+
     - name: Check out asrob-uc3m/yarp-devices
       uses: actions/checkout@v4
       with:
@@ -94,7 +102,7 @@ jobs:
         path: .deps/kinematics-dynamics
 
     - name: Install dependencies via apt
-      run: sudo apt-get update && sudo apt-get install -qq ccache libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libboost-date-time-dev libxml2-dev libpcl-dev swig
+      run: sudo apt-get update && sudo apt-get install -qq ccache libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-iostreams-dev libboost-date-time-dev libxml2-dev libpcl-dev
 
     - name: Set up CMake
       uses: jwlawson/actions-setup-cmake@v2
@@ -134,6 +142,14 @@ jobs:
         CFLAGS=-w CXXFLAGS=-w cmake -S .deps/openrave -B .deps/openrave/build $CMAKE_CCACHE_LAUNCHER -DOPT_VIDEORECORDING=OFF -DOPT_PLUGINS=OFF -DOPT_PYTHON=OFF -DOPT_PYTHON3=OFF -DOPT_COLLADA=OFF -DOPT_CBINDINGS=OFF -DOPT_MSGPACK=OFF -DOPT_ENCRYPTION=OFF
         cmake --build .deps/openrave/build
         sudo cmake --install .deps/openrave/build
+
+    - name: Build SWIG
+      if: ${{matrix.os == 'ubuntu-24.04'}}
+      run: |
+        cmake -S .deps/swig -B .deps/swig/build $CMAKE_CCACHE_LAUNCHER
+        cmake --build .deps/swig/build
+        sudo cmake --install .deps/swig/build
+        sudo ln -s /usr/local/bin/swig /usr/local/bin/swig4.0 # shadows /usr/bin/swig4.0
 
     - name: Build asrob-uc3m/yarp-devices
       run: |
