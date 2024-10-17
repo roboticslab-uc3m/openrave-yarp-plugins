@@ -120,7 +120,7 @@ public:
         RAVELOG_INFO("module unloaded from environment\n");
     }
 
-    int main(const std::string &cmd)
+    int main(const std::string &cmd) override
     {
         RAVELOG_INFO("module initialized with \"%s\"\n", cmd.c_str());
         // hard-coding "open"
