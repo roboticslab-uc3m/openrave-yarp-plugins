@@ -11,7 +11,8 @@ on:
   workflow_dispatch:
 
 env:
-  CMAKE_CCACHE_LAUNCHER: -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+  CMAKE_C_COMPILER_LAUNCHER: ccache
+  CMAKE_CXX_COMPILER_LAUNCHER: ccache
 
 jobs:
   maybe_skip:
@@ -35,8 +36,8 @@ jobs:
       matrix:
         os: [ubuntu-22.04, ubuntu-24.04]
         robotology:
-        - { yarp: yarp-3.8, cmake: 3.16.x }
-        - { yarp: yarp-3.9, cmake: 3.16.x }
+        - { yarp: yarp-3.10, cmake: 3.19.x }
+        - { yarp: yarp-3.11, cmake: 3.19.x }
         - { yarp: master, cmake: 3.19.x }
         compiler:
         - { cc: gcc, cxx: g++ }
@@ -127,50 +128,50 @@ jobs:
 
     - name: Build YARP
       run: |
-        cmake -S .deps/yarp -B .deps/yarp/build $CMAKE_CCACHE_LAUNCHER -DSKIP_ACE=ON -DYARP_DISABLE_VERSION_SOURCE=ON
+        cmake -S .deps/yarp -B .deps/yarp/build -DSKIP_ACE=ON -DYARP_DISABLE_VERSION_SOURCE=ON
         cmake --build .deps/yarp/build
         sudo cmake --install .deps/yarp/build
 
     - name: Build RapidJSON
       run: |
-        cmake -S .deps/rapidjson -B .deps/rapidjson/build $CMAKE_CCACHE_LAUNCHER -DRAPIDJSON_BUILD_DOC=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_TESTS=OFF
+        cmake -S .deps/rapidjson -B .deps/rapidjson/build -DRAPIDJSON_BUILD_DOC=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_TESTS=OFF
         cmake --build .deps/rapidjson/build
         sudo cmake --install .deps/rapidjson/build
 
     - name: Build OpenRAVE
       run: |
-        CFLAGS=-w CXXFLAGS=-w cmake -S .deps/openrave -B .deps/openrave/build $CMAKE_CCACHE_LAUNCHER -DOPT_VIDEORECORDING=OFF -DOPT_PLUGINS=OFF -DOPT_PYTHON=OFF -DOPT_PYTHON3=OFF -DOPT_COLLADA=OFF -DOPT_CBINDINGS=OFF -DOPT_MSGPACK=OFF -DOPT_ENCRYPTION=OFF
+        CFLAGS=-w CXXFLAGS=-w cmake -S .deps/openrave -B .deps/openrave/build -DOPT_VIDEORECORDING=OFF -DOPT_PLUGINS=OFF -DOPT_PYTHON=OFF -DOPT_PYTHON3=OFF -DOPT_COLLADA=OFF -DOPT_CBINDINGS=OFF -DOPT_MSGPACK=OFF -DOPT_ENCRYPTION=OFF
         cmake --build .deps/openrave/build
         sudo cmake --install .deps/openrave/build
 
     - name: Build SWIG
       if: ${{matrix.os == 'ubuntu-24.04'}}
       run: |
-        cmake -S .deps/swig -B .deps/swig/build $CMAKE_CCACHE_LAUNCHER
+        cmake -S .deps/swig -B .deps/swig/build
         cmake --build .deps/swig/build
         sudo cmake --install .deps/swig/build
         sudo ln -s /usr/local/bin/swig /usr/local/bin/swig4.0 # shadows /usr/bin/swig4.0
 
     - name: Build asrob-uc3m/yarp-devices
       run: |
-        cmake -S .deps/yarp-devices -B .deps/yarp-devices/build $CMAKE_CCACHE_LAUNCHER
+        cmake -S .deps/yarp-devices -B .deps/yarp-devices/build
         cmake --build .deps/yarp-devices/build
         sudo cmake --install .deps/yarp-devices/build
 
     - name: Build roboticslab-uc3m/vision
       run: |
-        cmake -S .deps/vision -B .deps/vision/build $CMAKE_CCACHE_LAUNCHER -DDOWNLOAD_MODELS=OFF
+        cmake -S .deps/vision -B .deps/vision/build -DDOWNLOAD_MODELS=OFF
         cmake --build .deps/vision/build
         sudo cmake --install .deps/vision/build
 
     - name: Build roboticslab-uc3m/kinematics-dynamics
       run: |
-        cmake -S .deps/kinematics-dynamics -B .deps/kinematics-dynamics/build $CMAKE_CCACHE_LAUNCHER
+        cmake -S .deps/kinematics-dynamics -B .deps/kinematics-dynamics/build
         cmake --build .deps/kinematics-dynamics/build
         sudo cmake --install .deps/kinematics-dynamics/build
 
     - name: Configure openrave-yarp-plugins
-      run: cmake -S . -B build $CMAKE_CCACHE_LAUNCHER -DCREATE_BINDINGS_PYTHON=ON -DENABLE_examples=ON
+      run: cmake -S . -B build -DCREATE_BINDINGS_PYTHON=ON -DENABLE_examples=ON
 
     - name: Compile openrave-yarp-plugins
       run: cmake --build build

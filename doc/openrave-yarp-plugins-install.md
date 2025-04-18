@@ -1,9 +1,9 @@
 # openrave-yarp-plugins: Installation from Source Code
 
 First install the dependencies:
-- [Install CMake 3.16+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-cmake.md)
+- [Install CMake 3.19+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-cmake.md)
 - [Install YCM 0.11+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-ycm.md)
-- [Install YARP 3.8+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-yarp.md)
+- [Install YARP 3.10+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-yarp.md)
 - [Install OpenRAVE 0.115+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-openrave.md)
 - [Install Boost](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-boost.md) (implicitly required by OpenRAVE)
     - Compiled components: Boost.Thread
@@ -28,9 +28,4 @@ sudo ldconfig  # Just in case...
 cd  # go home
 ```
 
-For CMake `find_package(ROBOTICSLAB_OPENRAVE_YARP_PLUGINS REQUIRED)`, you may also be interested in adding the following to your `~/.bashrc` or `~/.profile`:
-```bash
-export ROBOTICSLAB_OPENRAVE_YARP_PLUGINS_DIR=$HOME/repos/openrave-yarp-plugins/build  # Points to where OPENRAVE_YARP_PLUGINSConfig.cmake is generated upon running CMake
-```
-
-For additional options use `ccmake` instead of `cmake`.
+For additional options, use `ccmake` instead of `cmake`.
