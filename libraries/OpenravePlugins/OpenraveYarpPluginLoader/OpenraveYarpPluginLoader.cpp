@@ -26,6 +26,8 @@ namespace
         if (options.check("wrap"))
         {
             yCInfo(ORYPL) << "Requested subdevice wrapping mode";
+            options.put("wrapping_enabled", 1);
+            options.unput("wrap");
             return driver->open(options);
         }
 

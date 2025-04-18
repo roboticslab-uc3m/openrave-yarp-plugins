@@ -18,7 +18,7 @@ These examples use the `yarpdev` executable to load `YarpOpenraveAnalogSensors` 
 Open `YarpOpenraveAnalogSensors` device with the `physicsRobot.env.xml` environment provided upon installation, apply to robot index `0` and force/torque sensor index `0` (`name` and `view` are required):
 
 ```bash
-yarpdev --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices 0 --period 50 --env openrave/physicsRobot.env.xml --name /Physicsbot --view
+yarpdev --device YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices 0 --period 50 --env openrave/physicsRobot.env.xml --name /Physicsbot --view
 ```
 
 Read from port:
