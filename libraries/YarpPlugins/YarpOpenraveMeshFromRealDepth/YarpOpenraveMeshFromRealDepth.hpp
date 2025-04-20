@@ -43,9 +43,6 @@ public:
     YarpOpenraveMeshFromRealDepth() : yarp::os::PeriodicThread(DEFAULT_PERIOD)
     {}
 
-    ~YarpOpenraveMeshFromRealDepth()
-    { close(); }
-
     // ------- DeviceDriver declarations. Implementation in DeviceDriverImpl.cpp -------
     bool open(yarp::os::Searchable & config) override;
     bool close() override;
