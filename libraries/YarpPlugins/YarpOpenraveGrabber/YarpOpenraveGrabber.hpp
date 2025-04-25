@@ -8,7 +8,9 @@
 #include <yarp/dev/IFrameGrabberImage.h>
 #include <yarp/dev/IFrameGrabberControls.h>
 
-#include <yarp/dev/IVisualParams.h>
+#include <yarp/dev/IFrameGrabberImage.h>
+#include <yarp/dev/IFrameGrabberControls.h>
+#include <yarp/dev/IRgbVisualParams.h>
 
 #include <openrave/openrave.h>
 
