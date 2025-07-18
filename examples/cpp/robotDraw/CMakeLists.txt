@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.19)
 
 project(robotDraw LANGUAGES CXX)
 
 if(NOT YARP_FOUND)
-    find_package(YARP 3.6 REQUIRED COMPONENTS os dev)
+    find_package(YARP 3.11 REQUIRED COMPONENTS os dev)
 endif()
 
 find_package(ROBOTICSLAB_KINEMATICS_DYNAMICS REQUIRED)

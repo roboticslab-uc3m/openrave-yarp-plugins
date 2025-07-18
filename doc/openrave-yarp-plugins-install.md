@@ -3,7 +3,7 @@
 First install the dependencies:
 - [Install CMake 3.19+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-cmake.md)
 - [Install YCM 0.11+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-ycm.md)
-- [Install YARP 3.10+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-yarp.md)
+- [Install YARP 3.11+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-yarp.md)
 - [Install OpenRAVE 0.115+](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-openrave.md)
 - [Install Boost](https://github.com/roboticslab-uc3m/installation-guides/blob/master/docs/install-boost.md) (implicitly required by OpenRAVE)
     - Compiled components: Boost.Thread
