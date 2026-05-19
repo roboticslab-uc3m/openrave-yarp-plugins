@@ -170,7 +170,7 @@ jobs:
 
     - name: Build roboticslab-uc3m/kinematics-dynamics
       run: |
-        cmake -S .deps/kinematics-dynamics -B .deps/kinematics-dynamics/build
+        cmake -S .deps/kinematics-dynamics -B .deps/kinematics-dynamics/build -DALLOW_DEVICE_PARAM_PARSER_GENERATION=ON
         cmake --build .deps/kinematics-dynamics/build
         sudo cmake --install .deps/kinematics-dynamics/build
 
