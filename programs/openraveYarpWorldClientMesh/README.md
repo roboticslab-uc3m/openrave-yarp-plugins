@@ -17,7 +17,7 @@ yarpdev --context sensors --from asus-xtion.ini
 
 Terminal 3 (requires [roboticslab-uc3m/teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)):
 ```bash
-openrave /usr/local/share/teo-openrave-models/openrave/teo_lacqueyFetch.robot.xml --module OpenraveYarpWorld
+openrave /usr/local/share/teo-openrave-models/teo_lacqueyFetch.robot.xml --module OpenraveYarpWorld
 ```
 
 Terminal 4:

@@ -42,7 +42,7 @@ yarp connect /BarrettWAM/depthImage:o /yarpview/depth/img:i udp+recv.portmonitor
 ## Example 2 (no RGB)
 
 ```bash
-yarpdev --device YarpOpenraveRGBDSensor --env openrave/mapping_room.env.xml --robotIndex 0 --depthSensorIndex 0 --view --name /ecroSim --collision ode
+yarpdev --device YarpOpenraveRGBDSensor --env mapping_room.env.xml --robotIndex 0 --depthSensorIndex 0 --view --name /ecroSim --collision ode
 ```
 
 Python equivalent: [examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py](../../../examples/python/openraveYarpPluginLoader-rgbdsensor-noRGB.py)

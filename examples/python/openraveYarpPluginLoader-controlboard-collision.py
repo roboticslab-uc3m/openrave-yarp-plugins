@@ -11,7 +11,7 @@ try:
 
     env=Environment()
     env.SetViewer('qtcoin')
-    env.Load('/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml')
+    env.Load('/usr/local/share/teo-openrave-models/teo/teo.robot.xml')
 
     OpenraveYarpPluginLoader = RaveCreateModule(env,'OpenraveYarpPluginLoader')
     print OpenraveYarpPluginLoader.SendCommand('open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --robotIndex 0 --manipulatorIndex 0 --collision')
@@ -41,4 +41,3 @@ try:
 
 finally:
     RaveDestroy()
-

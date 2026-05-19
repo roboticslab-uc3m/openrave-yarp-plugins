@@ -20,7 +20,7 @@ try:
     example = "default"  # "default" or "teo"
 
     if example == "teo":
-        env.Load('/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml')
+        env.Load('/usr/local/share/teo-openrave-models/teo/teo.robot.xml')
     else:
         env.Load('../../share/openrave/physicsRobot.env.xml')
 

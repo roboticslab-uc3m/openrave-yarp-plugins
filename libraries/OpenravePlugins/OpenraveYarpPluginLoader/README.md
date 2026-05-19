@@ -21,7 +21,7 @@ Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/Ya
 ### Example 1
 The [first example](../../YarpPlugins/YarpOpenraveAnalogSensors#example-1) becomes (note that `name` and `view` parameters are no longer required):
 ```bash
-openrave --module OpenraveYarpPluginLoader "env openrave/physicsRobot.env.xml open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices 0 --period 50"
+openrave --module OpenraveYarpPluginLoader "env physicsRobot.env.xml open --device multipleanalogsensorsserver --subdevice YarpOpenraveAnalogSensors --robotIndex 0 --ftSensorIndices 0 --period 50"
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-analogsensors.py](../../../examples/python/openraveYarpPluginLoader-analogsensors.py)
 
@@ -52,7 +52,7 @@ The equivalent Python script can be found at: [../../../examples/python/openrave
 We can also do funky commands like the following, with concatenated `env` and several `open` commands:
 ```bash
 # Requires [teo-openrave-models](https://github.com/roboticslab-uc3m/teo-openrave-models)
-openrave --module OpenraveYarpPluginLoader "env openrave/teo/teo.robot.xml open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --robotIndex 0 --manipulatorIndex 0 open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --robotIndex 0 --manipulatorIndex 2"
+openrave --module OpenraveYarpPluginLoader "env teo/teo.robot.xml open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --robotIndex 0 --manipulatorIndex 0 open --device controlBoard_nws_yarp --subdevice YarpOpenraveControlBoard --robotIndex 0 --manipulatorIndex 2"
 ```
 
 
@@ -92,7 +92,7 @@ Use `OpenraveYarpPluginLoader` to replicate any example of [../../YarpPlugins/Ya
 The [first example](../../YarpPlugins/YarpOpenraveRobotManager#example-1) becomes (note that `name` and `view` parameters are no longer required):
 ```bash
 # requires [asrob-uc3m/robotDevastation-openrave-models](https://github.com/asrob-uc3m/robotDevastation-openrave-models)
-openrave --module OpenraveYarpPluginLoader "env openrave/mapping_room.env.xml open --device RobotServer --subdevice YarpOpenraveRobotManager --robotIndex 0"
+openrave --module OpenraveYarpPluginLoader "env mapping_room.env.xml open --device RobotServer --subdevice YarpOpenraveRobotManager --robotIndex 0"
 ```
 The equivalent Python script can be found at: [../../../examples/python/openraveYarpPluginLoader-robotmanager.py](../../../examples/python/openraveYarpPluginLoader-robotmanager.py)
 

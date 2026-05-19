@@ -15,9 +15,9 @@ try:
     example = "default"  # "default" or "asibot" or "ecro"
 
     if example == "asibot":
-        env.Load('/usr/local/share/asibot/openrave/models/asibot_kitchen_cameras.env.xml')
+        env.Load('/usr/local/share/asibot/models/asibot_kitchen_cameras.env.xml')
     elif example == "ecro":
-        env.Load('/usr/local/share/robotDevastation-openrave-models/openrave/mapping_room.env.xml')
+        env.Load('/usr/local/share/robotDevastation-openrave-models/mapping_room.env.xml')
     else:
         env.Load('data/testwamcamera.env.xml')
 
@@ -35,4 +35,3 @@ try:
 
 finally:
     RaveDestroy()
-

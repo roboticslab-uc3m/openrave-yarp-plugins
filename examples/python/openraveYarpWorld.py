@@ -8,7 +8,7 @@ try:
 
     if not RaveLoadPlugin('OpenraveYarpWorld'):
         raveLogError("Plugin not correctly loaded")
-        
+
     env=Environment()
     env.SetViewer('qtcoin')
 
@@ -16,7 +16,7 @@ try:
     example = "default"  # "default" or "teo"
 
     if example == "teo":
-        env.Load('/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml')
+        env.Load('/usr/local/share/teo-openrave-models/teo/teo.robot.xml')
     else:
         env.Load('data/lab1.env.xml')
 
@@ -28,4 +28,3 @@ try:
 
 finally:
     RaveDestroy()
-

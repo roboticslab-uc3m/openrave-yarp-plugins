@@ -75,7 +75,7 @@ yarp rpc /safe/teo/[kinematic chain name]/rpc:i
 The following commands explain how to use openrave to create a 3D model (`.pp`) of the collision space that OpenRAVE uses to calculate collisions. Whereas OpenRAVE uses it continuously, here we can save the 3D files to use them.
 
 ```bash
-openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml # --padding=PADDING --maxHullVertices=MAXHULLVERTICES --mergeThresholdPercent=MERGETHRESHOLDPERCENT
+openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/teo/teo.robot.xml # --padding=PADDING --maxHullVertices=MAXHULLVERTICES --mergeThresholdPercent=MERGETHRESHOLDPERCENT
 ```
 
 At the time of generating the `.pp` file, different parameters can be set. In our case, the most relevant parameters are the **padding**, the **maxHullVertices** and the **mergeThresholdPercent**. **padding** represents the distance from the real plane to the one generated. The last two are used to reduce the number of triangles generated in the model.
@@ -84,7 +84,7 @@ More options can be found [here](http://openrave.org/docs/0.8.0/openravepy/datab
 
 ```bash
 # To check the results, execute the following command. It is worth noting that, the triangle count is not correct, this was contrasted using other tool.
-openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/openrave/teo/teo.robot.xml --show
+openrave.py --database convexdecomposition --robot=/usr/local/share/teo-openrave-models/teo/teo.robot.xml --show
 ```
 
 To convert the generated `.pp` file into an `.stl` file that can be used by other programs, [openrave-pp-to-stl.py](https://github.com/roboticslab-uc3m/openrave-tools/blob/master/openrave-pp-to-stl.py) ([perma](https://github.com/roboticslab-uc3m/openrave-tools/blob/bd078f6d64478ca3c1b911599df56b9dc6051797/openrave-pp-to-stl.py)) can be used.
