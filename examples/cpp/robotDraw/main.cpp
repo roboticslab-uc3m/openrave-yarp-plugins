@@ -101,8 +101,8 @@ int main(int argc, char *argv[])
     yarp::os::Property options;
     options.fromString(rf.toString());
     options.put("device", "CartesianControlClient");
-    options.put("cartesianLocal", prefix + "/cartesianClient");
-    options.put("cartesianRemote", cartesianRemote);
+    options.put("local", prefix + "/cartesianClient");
+    options.put("remote", cartesianRemote);
 
     yarp::dev::PolyDriver cartesianDevice(options);
 
