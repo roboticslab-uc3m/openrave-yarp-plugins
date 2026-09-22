@@ -34,6 +34,7 @@
 #include <yarp/os/ResourceFinder.h>
 #include <yarp/os/RpcClient.h>
 #include <yarp/os/RpcServer.h>
+#include <yarp/os/SystemClock.h>
 #include <yarp/os/Vocab.h>
 
 #include <yarp/dev/PolyDriver.h>
@@ -44,6 +45,26 @@ constexpr auto DEFAULT_PREFIX = "/robotDraw";
 constexpr auto DEFAULT_CARTESIAN_REMOTE = "/asibotSim/CartesianControl";
 constexpr auto DEFAULT_WORLD_RESPONDER = "/OpenraveYarpWorldRpcResponder";
 constexpr auto DEFAULT_HEIGHT = 0.4;
+
+namespace
+{
+    void awaitMotionCompletion(roboticslab::ICartesianControl * iCartesianControl)
+    {
+        roboticslab::ICartesianControl::ControllerState state;
+
+        do
+        {
+            yarp::os::SystemClock::delaySystem(0.1);
+
+            if (!iCartesianControl->getState(state))
+            {
+                yError() << "Failed to get controller state";
+                return;
+            }
+        }
+        while (state.mode != roboticslab::ICartesianControl::Mode::NONE);
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -145,24 +166,14 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    std::vector<double> home(5);
-    home[0] = 0.0;
-    home[1] = -0.1;
-    home[2] = 0.9;
-    home[3] = 90.0;
-    home[4] = 0.0;
+    std::vector<double> home = {0.0, -0.1, 0.9, 90.0, 0.0};
 
     yInfo() << "Homing";
 
-    iCartesianControl->movj(home);
-    iCartesianControl->wait();
+    iCartesianControl->moveJoint(home);
+    awaitMotionCompletion(iCartesianControl);
 
-    std::vector<double> targets(5);
-    targets[0] = 0.0;
-    targets[1] = -0.45;
-    targets[2] = height;
-    targets[3] = 180.0;
-    targets[4] = 0.0;
+    std::vector<double> targets = {0.0, -0.45, height, 180.0, 0.0};
 
     while (true)
     {
@@ -179,29 +190,31 @@ int main(int argc, char *argv[])
         pointsOut.addVocab32('o', 'k');
         pointsRpcServer.reply(pointsOut);
 
-        std::vector<double> aprox0(5);
-        aprox0[0] = targets[0] + pointsIn.get(5).asFloat64();
-        aprox0[1] = targets[1] + pointsIn.get(6).asFloat64();
-        aprox0[2] = targets[2] + 0.1;
-        aprox0[3] = targets[3];
-        aprox0[4] = targets[4];
+        std::vector<double> aprox0 = {
+            targets[0] + pointsIn.get(5).asFloat64(),
+            targets[1] + pointsIn.get(6).asFloat64(),
+            targets[2] + 0.1,
+            targets[3],
+            targets[4]
+        };
 
         yInfo() << "Moving to aprox0";
 
-        iCartesianControl->movj(aprox0);
-        iCartesianControl->wait();
+        iCartesianControl->moveJoint(aprox0);
+        awaitMotionCompletion(iCartesianControl);
 
-        std::vector<double> p0(5);
-        p0[0] = targets[0] + pointsIn.get(5).asFloat64();
-        p0[1] = targets[1] + pointsIn.get(6).asFloat64();
-        p0[2] = targets[2];
-        p0[3] = targets[3];
-        p0[4] = targets[4];
+        std::vector<double> p0 = {
+            targets[0] + pointsIn.get(5).asFloat64(),
+            targets[1] + pointsIn.get(6).asFloat64(),
+            targets[2],
+            targets[3],
+            targets[4]
+        };
 
         yInfo() << "Moving to p0";
 
-        iCartesianControl->movj(p0);
-        iCartesianControl->wait();
+        iCartesianControl->moveJoint(p0);
+        awaitMotionCompletion(iCartesianControl);
 
         yarp::os::Bottle worldOut, worldIn;
 
@@ -216,18 +229,18 @@ int main(int argc, char *argv[])
 
         worldRpcClient.write(worldOut, worldIn);
 
-//        for (int i=3; i<(bIn.size());i=i+2) {
         for (unsigned int i = 7; i < pointsIn.size(); i += 2)
         {
-            std::vector<double> tmpTargets(5);
-            tmpTargets[0] = targets[0] + pointsIn.get(i).asFloat64();
-            tmpTargets[1] = targets[1] + pointsIn.get(i + 1).asFloat64();
-            tmpTargets[2] = targets[2];
-            tmpTargets[3] = targets[3];
-            tmpTargets[4] = targets[4];
+            std::vector<double> tmpTargets = {
+                targets[0] + pointsIn.get(i).asFloat64(),
+                targets[1] + pointsIn.get(i + 1).asFloat64(),
+                targets[2],
+                targets[3],
+                targets[4]
+            };
 
-            iCartesianControl->movj(tmpTargets);
-            iCartesianControl->wait();
+            iCartesianControl->moveJoint(tmpTargets);
+            awaitMotionCompletion(iCartesianControl);
         }
 
         worldOut.clear();
@@ -237,22 +250,23 @@ int main(int argc, char *argv[])
 
         worldRpcClient.write(worldOut, worldIn);
 
-        std::vector<double> aproxN(5);
-        aproxN[0] = targets[0] + pointsIn.get(pointsIn.size() - 2).asFloat64();
-        aproxN[1] = targets[1] + pointsIn.get(pointsIn.size() - 1).asFloat64();
-        aproxN[2] = height + 0.1;
-        aproxN[3] = targets[3];
-        aproxN[4] = targets[4];
+        std::vector<double> aproxN = {
+            targets[0] + pointsIn.get(pointsIn.size() - 2).asFloat64(),
+            targets[1] + pointsIn.get(pointsIn.size() - 1).asFloat64(),
+            height + 0.1,
+            targets[3],
+            targets[4]
+        };
 
         yInfo() << "Moving to aproxN";
 
-        iCartesianControl->movj(aproxN);
-        iCartesianControl->wait();
+        iCartesianControl->moveJoint(aproxN);
+        awaitMotionCompletion(iCartesianControl);
 
         yInfo() << "Homing";
 
-        iCartesianControl->movj(home);
-        iCartesianControl->wait();
+        iCartesianControl->moveJoint(home);
+        awaitMotionCompletion(iCartesianControl);
     }
 
     worldRpcClient.close();
