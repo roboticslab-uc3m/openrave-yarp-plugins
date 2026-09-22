@@ -17,7 +17,7 @@ yarp::dev::ReturnValue YarpOpenraveGrabber::getCameraDescription(yarp::dev::Came
     return yarp::dev::ReturnValue::return_code::return_value_ok;
 }
 #else
-bool YarpOpenraveGrabber::getCameraDescription(yarp::dev::CameraDescriptor * camera)
+bool YarpOpenraveGrabber::getCameraDescription(CameraDescriptor * camera)
 {
     *camera = cameraDescriptor;
     return true;
@@ -302,7 +302,7 @@ bool YarpOpenraveGrabber::hasOnePush(int feature, bool * hasOnePush)
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
 yarp::dev::ReturnValue YarpOpenraveGrabber::setMode(yarp::dev::cameraFeature_id_t feature, yarp::dev::FeatureMode mode)
 #else
-bool YarpOpenraveGrabber::setMode(int feature, yarp::dev::FeatureMode mode)
+bool YarpOpenraveGrabber::setMode(int feature, FeatureMode mode)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
@@ -317,7 +317,7 @@ bool YarpOpenraveGrabber::setMode(int feature, yarp::dev::FeatureMode mode)
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
 yarp::dev::ReturnValue YarpOpenraveGrabber::getMode(yarp::dev::cameraFeature_id_t feature, yarp::dev::FeatureMode & mode)
 #else
-bool YarpOpenraveGrabber::getMode(int feature, yarp::dev::FeatureMode * mode)
+bool YarpOpenraveGrabber::getMode(int feature, FeatureMode * mode)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)

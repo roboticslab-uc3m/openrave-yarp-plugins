@@ -98,7 +98,11 @@ bool YarpOpenraveControlBoard::getControlModes(int n_joint, const int * joints, 
     for (unsigned int i = 0; i < n_joint; i++)
 #endif
     {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
         ok &= getControlMode(joints[i], modes[i]);
+#else
+        ok &= getControlMode(joints[i], &modes[i]);
+#endif
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)

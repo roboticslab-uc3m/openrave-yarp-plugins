@@ -64,7 +64,7 @@ public:
     yarp::dev::ReturnValue getMode(yarp::dev::cameraFeature_id_t feature, yarp::dev::FeatureMode & mode) override;
     yarp::dev::ReturnValue setOnePush(yarp::dev::cameraFeature_id_t feature) override;
 #else
-    bool getCameraDescription(yarp::dev::CameraDescriptor * camera) override;
+    bool getCameraDescription(CameraDescriptor * camera) override;
     bool hasFeature(int feature, bool * hasFeature) override;
     bool setFeature(int feature, double value) override;
     bool getFeature(int feature, double * value) override;
@@ -76,8 +76,8 @@ public:
     bool hasAuto(int feature, bool * hasAuto) override;
     bool hasManual(int feature, bool * hasManual) override;
     bool hasOnePush(int feature, bool * hasOnePush) override;
-    bool setMode(int feature, yarp::dev::FeatureMode mode) override;
-    bool getMode(int feature, yarp::dev::FeatureMode * mode) override;
+    bool setMode(int feature, FeatureMode mode) override;
+    bool getMode(int feature, FeatureMode * mode) override;
     bool setOnePush(int feature) override;
 #endif
 
@@ -123,7 +123,11 @@ private:
     boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData> modGeomDataPtr;
 
     // YARP
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
     yarp::dev::CameraDescriptor cameraDescriptor;
+#else
+    CameraDescriptor cameraDescriptor;
+#endif
 };
 
 } // namespace roboticslab
