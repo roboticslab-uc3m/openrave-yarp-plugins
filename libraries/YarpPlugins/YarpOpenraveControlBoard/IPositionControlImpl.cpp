@@ -14,24 +14,47 @@ using namespace roboticslab;
 
 // ------------------- IPositionControl Related --------------------------------
 
-bool YarpOpenraveControlBoard::getAxes(int *ax)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getAxes(std::size_t & ax)
+{
+    ax = axes;
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+}
+#else
+bool YarpOpenraveControlBoard::getAxes(int * ax)
 {
     *ax = axes;
-    yCInfo(YORCB) << "Reporting" << axes << "axes are present";
     return true;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::positionMove(int j, double ref)
+#else
 bool YarpOpenraveControlBoard::positionMove(int j, double ref)
+#endif
 {
-    yCTrace(YORCB) << j << ref;
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "positionMove: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
 
     //-- Check if we are in position mode.
     if (controlModes[j] != VOCAB_CM_POSITION)
     {
         yCError(YORCB) << "Will not positionMove() as joint" << j << "not in positionMode";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_not_ready;
+#else
         return false;
+#endif
     }
 
     OpenRAVE::dReal dofTargetRads = degToRadIfNotPrismatic(j, ref); // ref comes in exposed
@@ -43,7 +66,11 @@ bool YarpOpenraveControlBoard::positionMove(int j, double ref)
     if (refSpeeds[j] == 0)
     {
         yCDebug(YORCB, "[%d] (refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true", j);
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
         return true;
+#endif
     }
 
     {
@@ -59,7 +86,11 @@ bool YarpOpenraveControlBoard::positionMove(int j, double ref)
             std::vector<OpenRAVE::dReal> tmp;
             tmp.push_back(dofTargetRads);
             pcontrols[j]->SetDesired(tmp);
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+            return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
             return true;
+#endif
         }
 
         //--- Console output robot active DOF
@@ -119,7 +150,7 @@ bool YarpOpenraveControlBoard::positionMove(int j, double ref)
 
         OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
 
-        OpenRAVE::dReal dofTime = std::abs(( dofTargetRads - dofCurrentRads ) / degToRadIfNotPrismatic(j, refSpeeds[j])); // Time in seconds
+        OpenRAVE::dReal dofTime = std::abs((dofTargetRads - dofCurrentRads) / degToRadIfNotPrismatic(j, refSpeeds[j])); // Time in seconds
 
         yCDebug(YORCB, "[%d] abs(target-current)/vel = abs(%f-%f)/%f = %f [s]", j, ref,radToDegIfNotPrismatic(j, dofCurrentRads), refSpeeds[j], dofTime);
 
@@ -141,25 +172,78 @@ bool YarpOpenraveControlBoard::positionMove(int j, double ref)
         pcontrols[j]->SetPath(ptraj);
     }
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::positionMove(const double *refs)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::positionMove(const double * refs)
+#else
+bool YarpOpenraveControlBoard::positionMove(const double * refs)
+#endif
 {
-    yCTrace(YORCB);
     bool ok = true;
+
     for (unsigned int i = 0; i < axes; i++)
+    {
         ok &= positionMove(i, refs[i]);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::relativeMove(int j, double delta)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::positionMove(int n_joint, const int * joints, const double * refs)
+#else
+bool YarpOpenraveControlBoard::positionMove(int n_joint, const int * joints, const double * refs)
+#endif
 {
-    yCTrace(YORCB) << j << delta;
+    bool ok = true;
+
+    for (int i = 0; i < n_joint; i++)
+    {
+        ok &= positionMove(joints[i], refs[i]);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
+    return ok;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::relativeMove(int j, double delta)
+#else
+bool YarpOpenraveControlBoard::relativeMove(int j, double delta)
+#endif
+{
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "relativeMove: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
 
     double v = radToDegIfNotPrismatic(j, vectorOfJointPtr[j]->GetValue(0) );
 
@@ -168,45 +252,162 @@ bool YarpOpenraveControlBoard::relativeMove(int j, double delta)
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::relativeMove(const double *deltas)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::relativeMove(const double * deltas)
+#else
+bool YarpOpenraveControlBoard::relativeMove(const double * deltas)
+#endif
 {
-    yCTrace(YORCB);
     bool ok = true;
+
     for (unsigned int i = 0; i < axes; i++)
+    {
         ok &= relativeMove(i, deltas[i]);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::checkMotionDone(int j, bool *flag)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::relativeMove(int n_joint, const int * joints, const double * deltas)
+#else
+bool YarpOpenraveControlBoard::relativeMove(int n_joint, const int * joints, const double * deltas)
+#endif
 {
-    yCTrace(YORCB) << j;
+    bool ok = true;
+
+    for (int i = 0; i < n_joint; i++)
+    {
+        ok &= relativeMove(joints[i], deltas[i]);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
+    return ok;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::checkMotionDone(int j, bool & flag)
+#else
+bool YarpOpenraveControlBoard::checkMotionDone(int j, bool * flag)
+#endif
+{
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "checkMotionDone: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    flag = pcontrols[j]->IsDone();
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     *flag = pcontrols[j]->IsDone();
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::checkMotionDone(bool *flag)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::checkMotionDone(bool & flag)
+#else
+bool YarpOpenraveControlBoard::checkMotionDone(bool * flag)
+#endif
 {
-    yCTrace(YORCB);
     bool done = true;
+
     for (unsigned int j = 0; j < axes; j++)
     {
         bool tmpDone;
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        checkMotionDone(j, tmpDone);
+#else
         checkMotionDone(j, &tmpDone);
+#endif
         done &= tmpDone;
     }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    flag = done;
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     *flag = done;
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::setRefSpeed(int j, double sp)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::checkMotionDone(const std::vector<int> & joints, bool & flag)
+#else
+bool YarpOpenraveControlBoard::checkMotionDone(int n_joint, const int * joints, bool * flag)
+#endif
 {
-    yCTrace(YORCB) << j << sp;
+    bool ok = true;
+    bool done = true;
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    for (int i = 0; i < joints.size(); i++)
+#else
+    for (int i = 0; i < n_joint; i++)
+#endif
+    {
+        bool tmpDone;
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        ok &= checkMotionDone(joints[i], tmpDone);
+#else
+        ok &= checkMotionDone(joints[i], &tmpDone);
+#endif
+        done &= tmpDone;
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    flag = done;
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
+    *flag = done;
+    return true;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::setTrajSpeed(int j, double sp)
+#else
+bool YarpOpenraveControlBoard::setRefSpeed(int j, double sp)
+#endif
+{
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "setTrajSpeed: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
     double min, max;
     getVelLimits(j, &min, &max);
 
@@ -216,223 +417,424 @@ bool YarpOpenraveControlBoard::setRefSpeed(int j, double sp)
     }
 
     refSpeeds[j] = sp;
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::setRefSpeeds(const double *spds)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::setTrajSpeeds(const double * spds)
+#else
+bool YarpOpenraveControlBoard::setRefSpeeds(const double * spds)
+#endif
 {
-    yCTrace(YORCB);
     bool ok = true;
+
     for (unsigned int i = 0; i < axes; i++)
+    {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        ok &= setTrajSpeed(i, spds[i]);
+#else
         ok &= setRefSpeed(i, spds[i]);
+#endif
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::setRefAcceleration(int j, double acc)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::setTrajSpeeds(int n_joint, const int * joints, const double * spds)
+#else
+bool YarpOpenraveControlBoard::setRefSpeeds(int n_joint, const int * joints, const double * spds)
+#endif
 {
-    yCError(YORCB) << "setRefAcceleration() not implemented";
-    return false;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveControlBoard::setRefAccelerations(const double *accs)
-{
-    yCError(YORCB) << "setRefAccelerations() not implemented";
-    return false;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveControlBoard::getRefSpeed(int j, double *ref)
-{
-    yCTrace(YORCB) << j;
-    *ref = refSpeeds[j];
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveControlBoard::getRefSpeeds(double *spds)
-{
-    yCTrace(YORCB);
     bool ok = true;
-    for (unsigned int i = 0; i < axes; i++)
-        ok &= getRefSpeed(i, &spds[i]);
+
+    for (int i = 0; i < n_joint; i++)
+    {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        ok &= setTrajSpeed(joints[i], spds[i]);
+#else
+        ok &= setRefSpeed(joints[i], spds[i]);
+#endif
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getRefAcceleration(int j, double *acc)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::setTrajAcceleration(int j, double acc)
+#else
+bool YarpOpenraveControlBoard::setRefAcceleration(int j, double acc)
+#endif
 {
-    yCError(YORCB) << "getRefAcceleration() not implemented";
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "setTrajAcceleration: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
+    yCError(YORCB) << "setTrajAcceleration() not implemented";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getRefAccelerations(double *accs)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::setTrajAccelerations(const double * accs)
+#else
+bool YarpOpenraveControlBoard::setRefAccelerations(const double * accs)
+#endif
 {
-    yCError(YORCB) << "getRefAccelerations() not implemented";
+    yCError(YORCB) << "setTrajAccelerations() not implemented";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::setTrajAccelerations(int n_joint, const int * joints, const double * accs)
+#else
+bool YarpOpenraveControlBoard::setRefAccelerations(int n_joint, const int * joints, const double * accs)
+#endif
+{
+    bool ok = true;
+
+    for (int i = 0; i < n_joint; i++)
+    {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        ok &= setTrajAcceleration(joints[i], accs[i]);
+#else
+        ok &= setRefAcceleration(joints[i], accs[i]);
+#endif
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
+    return ok;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTrajSpeed(int j, double *ref)
+#else
+bool YarpOpenraveControlBoard::getRefSpeed(int j, double *ref)
+#endif
+{
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "getTrajSpeed: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
+    *ref = refSpeeds[j];
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
+    return true;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTrajSpeeds(double * spds)
+#else
+bool YarpOpenraveControlBoard::getRefSpeeds(double * spds)
+#endif
+{
+    bool ok = true;
+
+    for (unsigned int i = 0; i < axes; i++)
+    {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        ok &= getTrajSpeed(i, &spds[i]);
+#else
+        ok &= getRefSpeed(i, &spds[i]);
+#endif
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
+    return ok;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTrajSpeeds(int n_joint, const int * joints, double * spds)
+#else
+bool YarpOpenraveControlBoard::getRefSpeeds(int n_joint, const int * joints, double * spds)
+#endif
+{
+    bool ok = true;
+
+    for (int i = 0; i < n_joint; i++)
+    {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        ok &= getTrajSpeed(joints[i], &spds[i]);
+#else
+        ok &= getRefSpeed(joints[i], &spds[i]);
+#endif
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
+    return ok;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTrajAcceleration(int j, double * acc)
+#else
+bool YarpOpenraveControlBoard::getRefAcceleration(int j, double * acc)
+#endif
+{
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "getTrajAcceleration: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
+    yCError(YORCB) << "getTrajAcceleration() not implemented";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
+    return false;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTrajAccelerations(double * accs)
+#else
+bool YarpOpenraveControlBoard::getRefAccelerations(double * accs)
+#endif
+{
+    yCError(YORCB) << "getTrajAccelerations() not implemented";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
+    return false;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTrajAccelerations(int n_joint, const int * joints, double * accs)
+#else
+bool YarpOpenraveControlBoard::getRefAccelerations(int n_joint, const int * joints, double * accs)
+#endif
+{
+    bool ok = true;
+
+    for (int i = 0; i < n_joint; i++)
+    {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        ok &= getTrajAcceleration(joints[i], &accs[i]);
+#else
+        ok &= getRefAcceleration(joints[i], &accs[i]);
+#endif
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
+    return ok;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::stop(int j)
+#else
 bool YarpOpenraveControlBoard::stop(int j)
+#endif
 {
-    yCTrace(YORCB) << j;
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "stop: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
     OpenRAVE::dReal dofCurrentRads = vectorOfJointPtr[j]->GetValue(0);
     std::vector<OpenRAVE::dReal> tmp;
     tmp.push_back(dofCurrentRads);
     pcontrols[j]->SetDesired(tmp);
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::stop()
+#else
 bool YarpOpenraveControlBoard::stop()
+#endif
 {
-    yCTrace(YORCB);
     bool ok = true;
+
     for (unsigned int i = 0; i < axes; i++)
+    {
         ok &= stop(i);
-    return ok;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveControlBoard::positionMove(const int n_joint, const int *joints, const double *refs)
-{
-    yCTrace(YORCB) << n_joint;
-    bool ok = true;
-    for (int i = 0; i < n_joint; i++)
-    {
-        ok &= positionMove(joints[i], refs[i]);
     }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::relativeMove(const int n_joint, const int *joints, const double *deltas)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::stop(int n_joint, const int * joints)
+#else
+bool YarpOpenraveControlBoard::stop(int n_joint, const int * joints)
+#endif
 {
-    yCTrace(YORCB) << n_joint;
     bool ok = true;
-    for (int i = 0; i < n_joint; i++)
-    {
-        ok &= relativeMove(joints[i], deltas[i]);
-    }
-    return ok;
-}
 
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveControlBoard::checkMotionDone(const int n_joint, const int *joints, bool *flag)
-{
-    yCTrace(YORCB) << n_joint;
-    bool ok = true;
-    bool done = true;
-    for (int i = 0; i < n_joint; i++)
-    {
-        bool tmpDone;
-        ok &= checkMotionDone(joints[i], &tmpDone);
-        done &= tmpDone;
-    }
-    *flag = done;
-    return true;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveControlBoard::setRefSpeeds(const int n_joint, const int *joints, const double *spds)
-{
-    yCTrace(YORCB) << n_joint;
-    bool ok = true;
-    for (int i = 0; i < n_joint; i++)
-    {
-        ok &= setRefSpeed(joints[i], spds[i]);
-    }
-    return ok;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveControlBoard::setRefAccelerations(const int n_joint, const int *joints, const double *accs)
-{
-    yCTrace(YORCB) << n_joint;
-    bool ok = true;
-    for (int i = 0; i < n_joint; i++)
-    {
-        ok &= setRefAcceleration(joints[i], accs[i]);
-    }
-    return ok;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveControlBoard::getRefSpeeds(const int n_joint, const int *joints, double *spds)
-{
-    yCTrace(YORCB) << n_joint;
-    bool ok = true;
-    for (int i = 0; i < n_joint; i++)
-    {
-        ok &= getRefSpeed(joints[i], &spds[i]);
-    }
-    return ok;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveControlBoard::getRefAccelerations(const int n_joint, const int *joints, double *accs)
-{
-    yCTrace(YORCB) << n_joint;
-    bool ok = true;
-    for (int i = 0; i < n_joint; i++)
-    {
-        ok &= getRefAcceleration(joints[i], &accs[i]);
-    }
-    return ok;
-}
-
-// -----------------------------------------------------------------------------
-
-bool YarpOpenraveControlBoard::stop(const int n_joint, const int *joints)
-{
-    yCTrace(YORCB) << n_joint;
-    bool ok = true;
     for (unsigned int i = 0; i < n_joint; i++)
+    {
         ok &= stop(joints[i]);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getTargetPosition(const int joint, double *ref)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTargetPosition(int j, double * ref)
+#else
+bool YarpOpenraveControlBoard::getTargetPosition(int j, double * ref)
+#endif
 {
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "getTargetPosition: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
     yCError(YORCB) << "getTargetPosition() not implemented";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getTargetPositions(double *refs)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTargetPositions(double * refs)
+#else
+bool YarpOpenraveControlBoard::getTargetPositions(double * refs)
+#endif
 {
     yCError(YORCB) << "getTargetPositions() not implemented";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getTargetPositions(const int n_joint, const int *joints, double *refs)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTargetPositions(int n_joint, const int * joints, double * refs)
+#else
+bool YarpOpenraveControlBoard::getTargetPositions(int n_joint, const int * joints, double * refs)
+#endif
 {
     yCError(YORCB) << "getTargetPositions() not implemented";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // -----------------------------------------------------------------------------

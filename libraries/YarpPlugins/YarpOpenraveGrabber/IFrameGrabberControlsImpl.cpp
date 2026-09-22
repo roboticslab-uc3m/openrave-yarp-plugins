@@ -10,29 +10,63 @@ using namespace roboticslab;
 
 // ------------------ IFrameGrabberControls Related ----------------------------------------
 
-bool YarpOpenraveGrabber::getCameraDescription(CameraDescriptor *camera)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::getCameraDescription(yarp::dev::CameraDescriptor & camera)
+{
+    camera = cameraDescriptor;
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+}
+#else
+bool YarpOpenraveGrabber::getCameraDescription(CameraDescriptor * camera)
 {
     *camera = cameraDescriptor;
     return true;
 }
+#endif
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::hasFeature(int feature, bool *hasFeature)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::hasFeature(yarp::dev::cameraFeature_id_t feature, bool & hasFeature)
+#else
+bool YarpOpenraveGrabber::hasFeature(int feature, bool * hasFeature)
+#endif
 {
-    *hasFeature = false;
-
-    if (YARP_FEATURE_GAIN == feature || YARP_FEATURE_ZOOM == feature)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    if (feature == yarp::dev::cameraFeature_id_t::YARP_FEATURE_GAIN || feature == yarp::dev::cameraFeature_id_t::YARP_FEATURE_ZOOM)
+#else
+    if (feature == YARP_FEATURE_GAIN || feature == YARP_FEATURE_ZOOM)
+#endif
     {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        hasFeature = true;
+#else
         *hasFeature = true;
+#endif
+    }
+    else
+    {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        hasFeature = false;
+#else
+        *hasFeature = false;
+#endif
     }
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::setFeature(yarp::dev::cameraFeature_id_t feature, double value)
+#else
 bool YarpOpenraveGrabber::setFeature(int feature, double value)
+#endif
 {
     // Instead we could
     // - http://www.openrave.org/docs/latest_stable/interface_types/sensor/basecamera/
@@ -42,7 +76,7 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
     //             - sensor.SendCommand('setintrinsic 529 525 328 267 0.01 10')
     //     - setdims
     // - Clone() (???)
-    boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> origGeomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
+    auto origGeomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
     modGeomDataPtr.reset(new OpenRAVE::SensorBase::CameraGeomData);
     modGeomDataPtr->intrinsics = origGeomDataPtr->intrinsics;
     modGeomDataPtr->width = origGeomDataPtr->width;
@@ -51,15 +85,22 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
     modGeomDataPtr->measurement_time = origGeomDataPtr->measurement_time;
     modGeomDataPtr->gain = origGeomDataPtr->gain;
 
-    if (YARP_FEATURE_GAIN == feature)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    if (feature == yarp::dev::cameraFeature_id_t::YARP_FEATURE_GAIN)
+#else
+    if (feature == YARP_FEATURE_GAIN)
+#endif
     {
         modGeomDataPtr->gain = value;
         boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> constModGeomDataPtr(modGeomDataPtr);
         sensorBasePtr->SetSensorGeometry(constModGeomDataPtr);
         yCInfo(YORG) << "Gain set to" << value << "(no visual effect observed at time of writing)";
-        return true;
     }
-    else if (YARP_FEATURE_ZOOM == feature)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    else if (feature == yarp::dev::cameraFeature_id_t::YARP_FEATURE_ZOOM)
+#else
+    else if (feature == YARP_FEATURE_ZOOM)
+#endif
     {
         modGeomDataPtr->intrinsics.focal_length = value;
         modGeomDataPtr->intrinsics.fx = value * origGeomDataPtr->width;
@@ -67,107 +108,238 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
         boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> constModGeomDataPtr(modGeomDataPtr);
         sensorBasePtr->SetSensorGeometry(constModGeomDataPtr);
         yCInfo(YORG) << "Zoom set to" << value;
-        return true;
+    }
+    else
+    {
+        yCError(YORG) << "Feature not recognized";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
+        return false;
+#endif
     }
 
-    // else...
-    return false;
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
+    return true;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::getFeature(int feature, double *value)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::getFeature(yarp::dev::cameraFeature_id_t feature, double & value)
+#else
+bool YarpOpenraveGrabber::getFeature(int feature, double * value)
+#endif
 {
-    boost::shared_ptr<OpenRAVE::SensorBase::CameraGeomData const> geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
+    auto geomDataPtr = boost::dynamic_pointer_cast<OpenRAVE::SensorBase::CameraGeomData const>(sensorBasePtr->GetSensorGeometry(OpenRAVE::SensorBase::ST_Camera));
 
-    if (YARP_FEATURE_GAIN == feature)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    if (feature == yarp::dev::cameraFeature_id_t::YARP_FEATURE_GAIN)
+#else
+    if (feature == YARP_FEATURE_GAIN)
+#endif
     {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        value = geomDataPtr->gain;
+#else
         *value = geomDataPtr->gain;
-        return true;
+#endif
     }
-    else if (YARP_FEATURE_ZOOM == feature)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    else if (feature == yarp::dev::cameraFeature_id_t::YARP_FEATURE_ZOOM)
+#else
+    else if (feature == YARP_FEATURE_ZOOM)
+#endif
     {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        value = geomDataPtr->intrinsics.focal_length;
+#else
         *value = geomDataPtr->intrinsics.focal_length;
-        return true;
+#endif
     }
-    return false;
+    else
+    {
+        yCError(YORG) << "Feature not recognized";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
+        return false;
+#endif
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
+    return true;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::setFeature(int feature, double  value1, double  value2)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::setFeature(yarp::dev::cameraFeature_id_t feature, double value1, double value2)
+#else
+bool YarpOpenraveGrabber::setFeature(int feature, double value1, double value2)
+#endif
 {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::getFeature(int feature, double *value1, double *value2)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::getFeature(yarp::dev::cameraFeature_id_t feature, double & value1, double & value2)
+#else
+bool YarpOpenraveGrabber::getFeature(int feature, double * value1, double * value2)
+#endif
 {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::hasOnOff(int feature, bool *HasOnOff)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::hasOnOff(yarp::dev::cameraFeature_id_t feature, bool & hasOnOff)
+#else
+bool YarpOpenraveGrabber::hasOnOff(int feature, bool * hasOnOff)
+#endif
 {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::setActive(yarp::dev::cameraFeature_id_t feature, bool onoff)
+#else
 bool YarpOpenraveGrabber::setActive(int feature, bool onoff)
+#endif
 {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::getActive(int feature, bool *isActive)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::getActive(yarp::dev::cameraFeature_id_t feature, bool & isActive)
+#else
+bool YarpOpenraveGrabber::getActive(int feature, bool * isActive)
+#endif
 {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::hasAuto(int feature, bool *hasAuto)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::hasAuto(yarp::dev::cameraFeature_id_t feature, bool & hasAuto)
+#else
+bool YarpOpenraveGrabber::hasAuto(int feature, bool * hasAuto)
+#endif
 {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::hasManual(int feature, bool *hasManual)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::hasManual(yarp::dev::cameraFeature_id_t feature, bool & hasManual)
+#else
+bool YarpOpenraveGrabber::hasManual(int feature, bool * hasManual)
+#endif
 {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::hasOnePush(int feature, bool *hasOnePush)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::hasOnePush(yarp::dev::cameraFeature_id_t feature, bool & hasOnePush)
+#else
+bool YarpOpenraveGrabber::hasOnePush(int feature, bool * hasOnePush)
+#endif
 {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::setMode(yarp::dev::cameraFeature_id_t feature, yarp::dev::FeatureMode mode)
+#else
 bool YarpOpenraveGrabber::setMode(int feature, FeatureMode mode)
+#endif
 {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
-bool YarpOpenraveGrabber::getMode(int feature, FeatureMode *mode)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::getMode(yarp::dev::cameraFeature_id_t feature, yarp::dev::FeatureMode & mode)
+#else
+bool YarpOpenraveGrabber::getMode(int feature, FeatureMode * mode)
+#endif
 {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // ----------------------------------------------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::setOnePush(yarp::dev::cameraFeature_id_t feature)
+#else
 bool YarpOpenraveGrabber::setOnePush(int feature)
+#endif
 {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // ----------------------------------------------------------------------------

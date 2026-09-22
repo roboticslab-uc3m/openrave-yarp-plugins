@@ -14,15 +14,31 @@ using namespace roboticslab;
 
 // ------------------ IVelocity Related ----------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::velocityMove(int j, double sp)
+#else
 bool YarpOpenraveControlBoard::velocityMove(int j, double sp)
+#endif
 {
-    yCTrace(YORCB) << j << sp;
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "velocityMove: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
 
     //-- Check if we are in position mode.
     if (controlModes[j] != VOCAB_CM_VELOCITY)
     {
-        yCError(YORCB) << "Will not velocityMove() as joint" << j << "not in velocityMode";
-        return false;
+        yCError(YORCB) << "Will not velocityMove() as joint" << j << "not in velocity mode";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_ready;
+#else
+    return false;
+#endif
     }
 
     //-- Code from getLimits
@@ -45,8 +61,7 @@ bool YarpOpenraveControlBoard::velocityMove(int j, double sp)
         dofTargetRads = min;
     else
     {
-        stop(j);
-        return true;
+        return stop(j);
     }
 
     {
@@ -60,7 +75,11 @@ bool YarpOpenraveControlBoard::velocityMove(int j, double sp)
         if (sp > velMax)
         {
             yCWarning(YORCB, "Command exceeds joint speed limits (%f > %f))", sp, velMax);
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+            return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
             return true;
+#endif
         }
 
         //--- Console output robot active DOF
@@ -140,56 +159,119 @@ bool YarpOpenraveControlBoard::velocityMove(int j, double sp)
 
         //-- SetPath makes the controller perform the trajectory
         pcontrols[j]->SetPath(ptraj);
-
     }
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::velocityMove(const double *sp)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::velocityMove(const double * sp)
+#else
+bool YarpOpenraveControlBoard::velocityMove(const double * sp)
+#endif
 {
-    yCTrace(YORCB);
     bool ok = true;
+
     for (unsigned int i = 0; i < axes; i++)
+    {
         ok &= velocityMove(i, sp[i]);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::velocityMove(const int n_joint, const int *joints, const double *spds)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::velocityMove(int n_joint, const int * joints, const double * spds)
+#else
+bool YarpOpenraveControlBoard::velocityMove(int n_joint, const int * joints, const double * spds)
+#endif
 {
-    yCTrace(YORCB) << n_joint;
     bool ok = true;
+
     for (int i = 0; i < n_joint; i++)
+    {
         ok &= velocityMove(joints[i], spds[i]);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getRefVelocity(const int joint, double *vel)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTargetVelocity(int j, double * vel)
+#else
+bool YarpOpenraveControlBoard::getRefVelocity(int j, double * vel)
+#endif
 {
-    yCError(YORCB) << "getRefVelocity() not implemented";
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "getTargetVelocity: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
+    yCError(YORCB) << "getTargetVelocity() not implemented";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getRefVelocities(double *vels)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTargetVelocities(double * vels)
+#else
+bool YarpOpenraveControlBoard::getRefVelocities(double * vels)
+#endif
 {
-    yCError(YORCB) << "getRefVelocities() not implemented";
+    yCError(YORCB) << "getTargetVelocities() not implemented";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getRefVelocities(const int n_joint, const int *joints, double *vels)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getTargetVelocities(int n_joint, const int * joints, double * vels)
+#else
+bool YarpOpenraveControlBoard::getRefVelocities(int n_joint, const int * joints, double * vels)
+#endif
 {
-    yCError(YORCB) << "getRefVelocities() not implemented";
+    yCError(YORCB) << "getTargetVelocities() not implemented";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+#else
     return false;
+#endif
 }
 
 // -----------------------------------------------------------------------------

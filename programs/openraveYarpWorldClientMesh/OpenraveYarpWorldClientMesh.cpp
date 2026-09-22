@@ -5,7 +5,6 @@
 #include <yarp/os/LogComponent.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
-#include <yarp/os/PortablePair.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/Value.h>
 #include <yarp/os/Vocab.h>

@@ -10,31 +10,68 @@ using namespace roboticslab;
 
 // ------------------ IAxisInfo Related -----------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getAxisName(int axis, std::string & name)
+#else
 bool YarpOpenraveControlBoard::getAxisName(int axis, std::string& name)
+#endif
 {
-    yCTrace(YORCB);
-    if ((unsigned int)axis > axes) return false;
+    if (axis < 0 || (unsigned int)axis > axes)
+    {
+        yCError(YORCB) << "getAxisName: axis" << axis << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
     name = vectorOfJointPtr[axis]->GetName();
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getJointType(int axis, yarp::dev::JointTypeEnum & type)
+#else
 bool YarpOpenraveControlBoard::getJointType(int axis, yarp::dev::JointTypeEnum& type)
+#endif
 {
-    yCTrace(YORCB);
-    if ((unsigned int)axis > axes) return false;
+    if (axis < 0 || (unsigned int)axis > axes)
+    {
+        yCError(YORCB) << "getAxisName: axis" << axis << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
 
     OpenRAVE::RobotBase::JointPtr jointPtr = vectorOfJointPtr[axis];
 
     if (jointPtr->IsRevolute(0))
+    {
         type = yarp::dev::JointTypeEnum::VOCAB_JOINTTYPE_REVOLUTE;
+    }
     else if (jointPtr->IsPrismatic(0))
+    {
         type = yarp::dev::JointTypeEnum::VOCAB_JOINTTYPE_PRISMATIC;
+    }
     else
+    {
         type = yarp::dev::JointTypeEnum::VOCAB_JOINTTYPE_UNKNOWN;
+    }
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------

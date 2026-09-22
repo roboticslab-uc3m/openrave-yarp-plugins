@@ -49,7 +49,11 @@ bool YarpOpenraveGrabber::open(yarp::os::Searchable& config)
 
     yCInfo(YORG) << "Sensor" << sensorIndex << "name:" << sensorName;
     cameraDescriptor.deviceDescription = sensorName;
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    cameraDescriptor.busType = yarp::dev::BusType::BUS_UNKNOWN;
+#else
     cameraDescriptor.busType = BUS_UNKNOWN;
+#endif
 
     // printf("Sensor %d description: %s\n",sensorIter,psensorbase->GetDescription().c_str());
 

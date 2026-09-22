@@ -12,7 +12,11 @@ using namespace roboticslab;
 
 // ------------------ IFrameGrabberImage Related ----------------------------------------
 
-bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& image)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb> & image)
+#else
+bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb> & image)
+#endif
 {
     sensorBasePtr->GetSensorData(sensorDataPtr);
 
@@ -20,7 +24,11 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
 
     if (currentFrame.empty())
     {
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
         return false;
+#endif
     }
 
     //-- The following code works but provides a glitchy image on some machines, guess not thread safe.
@@ -45,7 +53,11 @@ bool YarpOpenraveGrabber::getImage(yarp::sig::ImageOf<yarp::sig::PixelRgb>& imag
         }
     }*/
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // ----------------------------------------------------------------------------
