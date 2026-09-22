@@ -11,127 +11,301 @@ using namespace roboticslab;
 
 // ------------------ IEncoders Related -----------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::resetEncoder(int j)
+#else
 bool YarpOpenraveControlBoard::resetEncoder(int j)
+#endif
 {
-    yCTrace(YORCB) << j;
-    if ((unsigned int)j > axes) return false;
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "resetEncoder: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
     return setEncoder(j, 0.0);
-  }
+}
 
 // -----------------------------------------------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::resetEncoders()
+#else
 bool YarpOpenraveControlBoard::resetEncoders()
+#endif
 {
-    yCTrace(YORCB);
     bool ok = true;
+
     for (unsigned int i = 0; i < axes; i++)
+    {
         ok &= resetEncoder(i);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::setEncoder(int j, double val)
+#else
 bool YarpOpenraveControlBoard::setEncoder(int j, double val)
+#endif
 {
-    yCTrace(YORCB) << j << val;
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "setEncoder: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::setEncoders(const double *vals)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::setEncoders(const double * vals)
+#else
+bool YarpOpenraveControlBoard::setEncoders(const double * vals)
+#endif
 {
-    yCTrace(YORCB);
     bool ok = true;
+
     for (unsigned int i = 0; i < axes; i++)
+    {
         ok &= setEncoder(i, vals[i]);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getEncoder(int j, double *v)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getEncoder(int j, double * v)
+#else
+bool YarpOpenraveControlBoard::getEncoder(int j, double * v)
+#endif
 {
-    yCTrace(YORCB) << j;
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "getEncoder: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
     *v = radToDegIfNotPrismatic(j, vectorOfJointPtr[j]->GetValue(0));
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getEncoders(double *encs)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getEncoders(double * encs)
+#else
+bool YarpOpenraveControlBoard::getEncoders(double * encs)
+#endif
 {
-    yCTrace(YORCB);
     bool ok = true;
+
     for (unsigned int i = 0; i < axes; i++)
+    {
         ok &= getEncoder(i, &encs[i]);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getEncoderSpeed(int j, double *sp)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getEncoderSpeed(int j, double * sp)
+#else
+bool YarpOpenraveControlBoard::getEncoderSpeed(int j, double * sp)
+#endif
 {
-    yCTrace(YORCB) << j;
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "getEncoderSpeed: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
     // Make it easy, give the current reference speed.
     *sp = 0;  // begins to look like we should use semaphores.
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getEncoderSpeeds(double *spds)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getEncoderSpeeds(double * spds)
+#else
+bool YarpOpenraveControlBoard::getEncoderSpeeds(double * spds)
+#endif
 {
-    yCTrace(YORCB);
     bool ok = true;
+
     for (unsigned int i = 0; i < axes; i++)
+    {
         ok &= getEncoderSpeed(i, &spds[i]);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getEncoderAcceleration(int j, double *spds)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getEncoderAcceleration(int j, double * spds)
+#else
+bool YarpOpenraveControlBoard::getEncoderAcceleration(int j, double * spds)
+#endif
 {
-    yCTrace(YORCB) << j;
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "getEncoderAcceleration: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
+
     // Make it easy, give the current reference acceleration.
     *spds = 0;  // begins to look like we should use semaphores.
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getEncoderAccelerations(double *accs)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getEncoderAccelerations(double * accs)
+#else
+bool YarpOpenraveControlBoard::getEncoderAccelerations(double * accs)
+#endif
 {
-    yCTrace(YORCB);
     bool ok = true;
+
     for (unsigned int i = 0; i < axes; i++)
+    {
         ok &= getEncoderAcceleration(i, &accs[i]);
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getEncodersTimed(double *encs, double *time)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getEncodersTimed(double * encs, double * time)
+#else
+bool YarpOpenraveControlBoard::getEncodersTimed(double * encs, double * time)
+#endif
 {
-    yCTrace(YORCB);
     bool ok = true;
+
     for (unsigned int i = 0; i < axes; i++)
+    {
         ok &= getEncoderTimed(i, &(encs[i]), &(time[i]));
+    }
+
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return ok
+        ? yarp::dev::ReturnValue::return_code::return_value_ok
+        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+#else
     return ok;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
-bool YarpOpenraveControlBoard::getEncoderTimed(int j, double *encs, double *time)
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+yarp::dev::ReturnValue YarpOpenraveControlBoard::getEncoderTimed(int j, double * encs, double * time)
+#else
+bool YarpOpenraveControlBoard::getEncoderTimed(int j, double * encs, double * time)
+#endif
 {
-    yCTrace(YORCB) << j;
+    if (j < 0 || (unsigned int)j > axes)
+    {
+        yCError(YORCB) << "getEncoderTimed: axis" << j << "is out of bounds";
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+#else
+        return false;
+#endif
+    }
 
     getEncoder(j, encs);
     *time = yarp::os::Time::now();
 
+#if YARP_VERSION_COMPARE(>=, 4, 0, 0)
+    return yarp::dev::ReturnValue::return_code::return_value_ok;
+#else
     return true;
+#endif
 }
 
 // -----------------------------------------------------------------------------
