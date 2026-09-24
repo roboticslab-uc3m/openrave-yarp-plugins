@@ -16,7 +16,7 @@ yarp::dev::ReturnValue YarpOpenraveControlBoard::getAvailableControlModes(int j,
     if (j < 0 || (unsigned int)j > axes)
     {
         yCError(YORCB) << "getAvailableControlModes: axis" << j << "is out of bounds";
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
     }
 
     avail = {
@@ -25,7 +25,7 @@ yarp::dev::ReturnValue YarpOpenraveControlBoard::getAvailableControlModes(int j,
         yarp::dev::SelectableControlModeEnum::VOCAB_CM_VELOCITY
     };
 
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 }
 #endif
 
@@ -41,7 +41,7 @@ bool YarpOpenraveControlBoard::getControlMode(int j, int * mode)
     {
         yCError(YORCB) << "getControlMode: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -49,7 +49,7 @@ bool YarpOpenraveControlBoard::getControlMode(int j, int * mode)
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
     mode = static_cast<yarp::dev::ControlModeEnum>(controlModes[j]);
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     *mode = controlModes[j];
     return true;
@@ -76,7 +76,7 @@ bool YarpOpenraveControlBoard::getControlModes(int * modes)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return ok;
 #endif
@@ -106,7 +106,7 @@ bool YarpOpenraveControlBoard::getControlModes(int n_joint, const int * joints, 
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return ok;
 #endif
@@ -124,7 +124,7 @@ bool YarpOpenraveControlBoard::setControlMode(int j, int mode)
     {
         yCError(YORCB) << "setControlMode: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -132,7 +132,7 @@ bool YarpOpenraveControlBoard::setControlMode(int j, int mode)
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
     controlModes[j] = static_cast<yarp::conf::vocab32_t>(mode);
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     controlModes[j] = mode;
     return true;
@@ -155,7 +155,7 @@ bool YarpOpenraveControlBoard::setControlModes(int * modes)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return ok;
 #endif
@@ -181,7 +181,7 @@ bool YarpOpenraveControlBoard::setControlModes(int n_joint, const int * joints, 
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return ok;
 #endif

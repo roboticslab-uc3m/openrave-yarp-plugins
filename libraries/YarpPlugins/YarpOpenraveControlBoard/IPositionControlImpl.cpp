@@ -18,7 +18,7 @@ using namespace roboticslab;
 yarp::dev::ReturnValue YarpOpenraveControlBoard::getAxes(std::size_t & ax)
 {
     ax = axes;
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 }
 #else
 bool YarpOpenraveControlBoard::getAxes(int * ax)
@@ -40,7 +40,7 @@ bool YarpOpenraveControlBoard::positionMove(int j, double ref)
     {
         yCError(YORCB) << "positionMove: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -51,7 +51,7 @@ bool YarpOpenraveControlBoard::positionMove(int j, double ref)
     {
         yCError(YORCB) << "Will not positionMove() as joint" << j << "not in positionMode";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_not_ready;
+        return yarp::dev::ReturnValue_error_not_ready;
 #else
         return false;
 #endif
@@ -67,7 +67,7 @@ bool YarpOpenraveControlBoard::positionMove(int j, double ref)
     {
         yCDebug(YORCB, "[%d] (refSpeeds[ j ] == 0) => Avoid division by 0 => Just act like blocked joint, return true", j);
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_ok;
+        return yarp::dev::ReturnValue_ok;
 #else
         return true;
 #endif
@@ -87,7 +87,7 @@ bool YarpOpenraveControlBoard::positionMove(int j, double ref)
             tmp.push_back(dofTargetRads);
             pcontrols[j]->SetDesired(tmp);
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-            return yarp::dev::ReturnValue::return_code::return_value_ok;
+            return yarp::dev::ReturnValue_ok;
 #else
             return true;
 #endif
@@ -173,7 +173,7 @@ bool YarpOpenraveControlBoard::positionMove(int j, double ref)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -195,9 +195,7 @@ bool YarpOpenraveControlBoard::positionMove(const double * refs)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -219,9 +217,7 @@ bool YarpOpenraveControlBoard::positionMove(int n_joint, const int * joints, con
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -239,7 +235,7 @@ bool YarpOpenraveControlBoard::relativeMove(int j, double delta)
     {
         yCError(YORCB) << "relativeMove: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -266,9 +262,7 @@ bool YarpOpenraveControlBoard::relativeMove(const double * deltas)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -290,9 +284,7 @@ bool YarpOpenraveControlBoard::relativeMove(int n_joint, const int * joints, con
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -310,7 +302,7 @@ bool YarpOpenraveControlBoard::checkMotionDone(int j, bool * flag)
     {
         yCError(YORCB) << "checkMotionDone: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -318,7 +310,7 @@ bool YarpOpenraveControlBoard::checkMotionDone(int j, bool * flag)
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
     flag = pcontrols[j]->IsDone();
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     *flag = pcontrols[j]->IsDone();
     return true;
@@ -348,7 +340,7 @@ bool YarpOpenraveControlBoard::checkMotionDone(bool * flag)
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
     flag = done;
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     *flag = done;
     return true;
@@ -383,7 +375,7 @@ bool YarpOpenraveControlBoard::checkMotionDone(int n_joint, const int * joints, 
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
     flag = done;
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     *flag = done;
     return true;
@@ -402,7 +394,7 @@ bool YarpOpenraveControlBoard::setRefSpeed(int j, double sp)
     {
         yCError(YORCB) << "setTrajSpeed: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -418,7 +410,7 @@ bool YarpOpenraveControlBoard::setRefSpeed(int j, double sp)
 
     refSpeeds[j] = sp;
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -444,9 +436,7 @@ bool YarpOpenraveControlBoard::setRefSpeeds(const double * spds)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -472,9 +462,7 @@ bool YarpOpenraveControlBoard::setRefSpeeds(int n_joint, const int * joints, con
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -492,7 +480,7 @@ bool YarpOpenraveControlBoard::setRefAcceleration(int j, double acc)
     {
         yCError(YORCB) << "setTrajAcceleration: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -500,7 +488,7 @@ bool YarpOpenraveControlBoard::setRefAcceleration(int j, double acc)
 
     yCError(YORCB) << "setTrajAcceleration() not implemented";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -516,7 +504,7 @@ bool YarpOpenraveControlBoard::setRefAccelerations(const double * accs)
 {
     yCError(YORCB) << "setTrajAccelerations() not implemented";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -542,9 +530,7 @@ bool YarpOpenraveControlBoard::setRefAccelerations(int n_joint, const int * join
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -562,7 +548,7 @@ bool YarpOpenraveControlBoard::getRefSpeed(int j, double *ref)
     {
         yCError(YORCB) << "getTrajSpeed: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -570,7 +556,7 @@ bool YarpOpenraveControlBoard::getRefSpeed(int j, double *ref)
 
     *ref = refSpeeds[j];
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -596,9 +582,7 @@ bool YarpOpenraveControlBoard::getRefSpeeds(double * spds)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -624,9 +608,7 @@ bool YarpOpenraveControlBoard::getRefSpeeds(int n_joint, const int * joints, dou
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -644,7 +626,7 @@ bool YarpOpenraveControlBoard::getRefAcceleration(int j, double * acc)
     {
         yCError(YORCB) << "getTrajAcceleration: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -652,7 +634,7 @@ bool YarpOpenraveControlBoard::getRefAcceleration(int j, double * acc)
 
     yCError(YORCB) << "getTrajAcceleration() not implemented";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -668,7 +650,7 @@ bool YarpOpenraveControlBoard::getRefAccelerations(double * accs)
 {
     yCError(YORCB) << "getTrajAccelerations() not implemented";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -694,9 +676,7 @@ bool YarpOpenraveControlBoard::getRefAccelerations(int n_joint, const int * join
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -714,7 +694,7 @@ bool YarpOpenraveControlBoard::stop(int j)
     {
         yCError(YORCB) << "stop: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -725,7 +705,7 @@ bool YarpOpenraveControlBoard::stop(int j)
     tmp.push_back(dofCurrentRads);
     pcontrols[j]->SetDesired(tmp);
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -747,9 +727,7 @@ bool YarpOpenraveControlBoard::stop()
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -771,9 +749,7 @@ bool YarpOpenraveControlBoard::stop(int n_joint, const int * joints)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -791,7 +767,7 @@ bool YarpOpenraveControlBoard::getTargetPosition(int j, double * ref)
     {
         yCError(YORCB) << "getTargetPosition: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -799,7 +775,7 @@ bool YarpOpenraveControlBoard::getTargetPosition(int j, double * ref)
 
     yCError(YORCB) << "getTargetPosition() not implemented";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -815,7 +791,7 @@ bool YarpOpenraveControlBoard::getTargetPositions(double * refs)
 {
     yCError(YORCB) << "getTargetPositions() not implemented";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -831,7 +807,7 @@ bool YarpOpenraveControlBoard::getTargetPositions(int n_joint, const int * joint
 {
     yCError(YORCB) << "getTargetPositions() not implemented";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif

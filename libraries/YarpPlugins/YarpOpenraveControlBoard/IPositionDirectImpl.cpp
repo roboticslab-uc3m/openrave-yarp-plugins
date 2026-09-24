@@ -22,7 +22,7 @@ bool YarpOpenraveControlBoard::setPosition(int j, double ref)
     {
         yCError(YORCB) << "setPosition: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -33,7 +33,7 @@ bool YarpOpenraveControlBoard::setPosition(int j, double ref)
     {
         yCError(YORCB) << "Will not setPosition() as joint" << j << "not in positionDirect mode";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_not_ready;
+        return yarp::dev::ReturnValue_error_not_ready;
 #else
         return false;
 #endif
@@ -50,7 +50,7 @@ bool YarpOpenraveControlBoard::setPosition(int j, double ref)
     pcontrols[j]->SetDesired(tmp);
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -72,9 +72,7 @@ bool YarpOpenraveControlBoard::setPositions(const double * refs)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -96,9 +94,7 @@ bool YarpOpenraveControlBoard::setPositions(int n_joint, const int * joints, con
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -116,7 +112,7 @@ bool YarpOpenraveControlBoard::getRefPosition(int j, double * ref)
     {
         yCError(YORCB) << "getRefPosition: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -127,7 +123,7 @@ bool YarpOpenraveControlBoard::getRefPosition(int j, double * ref)
     {
         yCError(YORCB) << "Not in positionDirect mode at joint" << j;
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_not_ready;
+        return yarp::dev::ReturnValue_error_not_ready;
 #else
         return false;
 #endif
@@ -135,7 +131,7 @@ bool YarpOpenraveControlBoard::getRefPosition(int j, double * ref)
 
     *ref = radToDegIfNotPrismatic(j, manipulatorTargetRads[j]);
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -157,9 +153,7 @@ bool YarpOpenraveControlBoard::getRefPositions(double * refs)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -181,9 +175,7 @@ bool YarpOpenraveControlBoard::getRefPositions(int n_joint, const int * joints, 
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif

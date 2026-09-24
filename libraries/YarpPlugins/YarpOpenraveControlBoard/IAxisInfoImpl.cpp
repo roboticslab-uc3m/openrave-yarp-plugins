@@ -20,7 +20,7 @@ bool YarpOpenraveControlBoard::getAxisName(int axis, std::string& name)
     {
         yCError(YORCB) << "getAxisName: axis" << axis << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -28,7 +28,7 @@ bool YarpOpenraveControlBoard::getAxisName(int axis, std::string& name)
 
     name = vectorOfJointPtr[axis]->GetName();
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -46,7 +46,7 @@ bool YarpOpenraveControlBoard::getJointType(int axis, yarp::dev::JointTypeEnum& 
     {
         yCError(YORCB) << "getAxisName: axis" << axis << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -68,7 +68,7 @@ bool YarpOpenraveControlBoard::getJointType(int axis, yarp::dev::JointTypeEnum& 
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif

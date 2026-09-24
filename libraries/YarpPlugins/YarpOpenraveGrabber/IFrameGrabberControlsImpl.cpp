@@ -14,7 +14,7 @@ using namespace roboticslab;
 yarp::dev::ReturnValue YarpOpenraveGrabber::getCameraDescription(yarp::dev::CameraDescriptor & camera)
 {
     camera = cameraDescriptor;
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 }
 #else
 bool YarpOpenraveGrabber::getCameraDescription(CameraDescriptor * camera)
@@ -54,7 +54,7 @@ bool YarpOpenraveGrabber::hasFeature(int feature, bool * hasFeature)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -113,14 +113,14 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value)
     {
         yCError(YORG) << "Feature not recognized";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+        return yarp::dev::ReturnValue_error_method_failed;
 #else
         return false;
 #endif
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -164,14 +164,14 @@ bool YarpOpenraveGrabber::getFeature(int feature, double * value)
     {
         yCError(YORG) << "Feature not recognized";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+        return yarp::dev::ReturnValue_error_method_failed;
 #else
         return false;
 #endif
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -186,7 +186,7 @@ bool YarpOpenraveGrabber::setFeature(int feature, double value1, double value2)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -201,7 +201,7 @@ bool YarpOpenraveGrabber::getFeature(int feature, double * value1, double * valu
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -216,7 +216,7 @@ bool YarpOpenraveGrabber::hasOnOff(int feature, bool * hasOnOff)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -231,7 +231,7 @@ bool YarpOpenraveGrabber::setActive(int feature, bool onoff)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -246,7 +246,7 @@ bool YarpOpenraveGrabber::getActive(int feature, bool * isActive)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -261,7 +261,7 @@ bool YarpOpenraveGrabber::hasAuto(int feature, bool * hasAuto)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -276,7 +276,7 @@ bool YarpOpenraveGrabber::hasManual(int feature, bool * hasManual)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -291,7 +291,7 @@ bool YarpOpenraveGrabber::hasOnePush(int feature, bool * hasOnePush)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -306,7 +306,7 @@ bool YarpOpenraveGrabber::setMode(int feature, FeatureMode mode)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -321,7 +321,7 @@ bool YarpOpenraveGrabber::getMode(int feature, FeatureMode * mode)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -336,7 +336,7 @@ bool YarpOpenraveGrabber::setOnePush(int feature)
 #endif
 {
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif

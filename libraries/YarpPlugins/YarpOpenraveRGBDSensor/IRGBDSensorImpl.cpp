@@ -31,7 +31,7 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage & rgbImage, yarp::
         yarp::sig::ImageOf<yarp::sig::PixelRgb> tmpImage;
         rgbImage.copy(tmpImage);
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_ok;
+        return yarp::dev::ReturnValue_ok;
 #else
         return true;
 #endif
@@ -41,7 +41,7 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage & rgbImage, yarp::
     {
         yCDebug(YORRS) << "RGB: GetSensorData() failed";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+        return yarp::dev::ReturnValue_error_method_failed;
 #else
         return false;
 #endif
@@ -53,7 +53,7 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage & rgbImage, yarp::
     {
         yCDebug(YORRS) << "RGB: currentFrame.size() == 0";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+        return yarp::dev::ReturnValue_error_method_failed;
 #else
         return false;
 #endif
@@ -66,7 +66,7 @@ bool YarpOpenraveRGBDSensor::getRgbImage(yarp::sig::FlexImage & rgbImage, yarp::
     rgbImage.copy(tmpImage);
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -86,7 +86,7 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
     {
         yCDebug(YORRS) << "Depth: GetSensorData() failed";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+        return yarp::dev::ReturnValue_error_method_failed;
 #else
         return false;
 #endif
@@ -145,7 +145,7 @@ bool YarpOpenraveRGBDSensor::getDepthImage(yarp::sig::ImageOf<yarp::sig::PixelFl
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -165,9 +165,7 @@ bool YarpOpenraveRGBDSensor::getImages(yarp::sig::FlexImage & colorFrame, yarp::
     ok &= getDepthImage(depthFrame, depthStamp);
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -199,7 +197,7 @@ yarp::dev::IRGBDSensor::RGBDSensor_status YarpOpenraveRGBDSensor::getSensorStatu
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #endif
 }
 

@@ -23,7 +23,7 @@ bool YarpOpenraveControlBoard::setLimits(int axis, double min, double max)
     {
         yCError(YORCB) << "getAxisName: axis" << axis << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -39,7 +39,7 @@ bool YarpOpenraveControlBoard::setLimits(int axis, double min, double max)
     vectorOfJointPtr[axis]->SetLimits(vLowerLimit, vUpperLimit);
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -57,7 +57,7 @@ bool YarpOpenraveControlBoard::getLimits(int axis, double * min, double * max)
     {
         yCError(YORCB) << "getAxisName: axis" << axis << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -75,7 +75,7 @@ bool YarpOpenraveControlBoard::getLimits(int axis, double * min, double * max)
 
     yCInfo(YORCB, "Limits %d: [%f, %f]", axis, *min, *max);
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -93,7 +93,7 @@ bool YarpOpenraveControlBoard::setVelLimits(int axis, double min, double max)
     {
         yCError(YORCB) << "getAxisName: axis" << axis << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -112,7 +112,7 @@ bool YarpOpenraveControlBoard::setVelLimits(int axis, double min, double max)
     vectorOfJointPtr[axis]->SetVelocityLimits(vUpperLimitVel);
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -130,7 +130,7 @@ bool YarpOpenraveControlBoard::getVelLimits(int axis, double * min, double * max
     {
         yCError(YORCB) << "getAxisName: axis" << axis << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -141,7 +141,7 @@ bool YarpOpenraveControlBoard::getVelLimits(int axis, double * min, double * max
     *max = radToDegIfNotPrismatic(axis, _max);
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif

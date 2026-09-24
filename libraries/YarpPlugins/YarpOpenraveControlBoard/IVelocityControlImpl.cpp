@@ -24,7 +24,7 @@ bool YarpOpenraveControlBoard::velocityMove(int j, double sp)
     {
         yCError(YORCB) << "velocityMove: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -35,7 +35,7 @@ bool YarpOpenraveControlBoard::velocityMove(int j, double sp)
     {
         yCError(YORCB) << "Will not velocityMove() as joint" << j << "not in velocity mode";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_ready;
+    return yarp::dev::ReturnValue_error_not_ready;
 #else
     return false;
 #endif
@@ -76,7 +76,7 @@ bool YarpOpenraveControlBoard::velocityMove(int j, double sp)
         {
             yCWarning(YORCB, "Command exceeds joint speed limits (%f > %f))", sp, velMax);
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-            return yarp::dev::ReturnValue::return_code::return_value_ok;
+            return yarp::dev::ReturnValue_ok;
 #else
             return true;
 #endif
@@ -162,7 +162,7 @@ bool YarpOpenraveControlBoard::velocityMove(int j, double sp)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_ok;
+    return yarp::dev::ReturnValue_ok;
 #else
     return true;
 #endif
@@ -184,9 +184,7 @@ bool YarpOpenraveControlBoard::velocityMove(const double * sp)
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -208,9 +206,7 @@ bool YarpOpenraveControlBoard::velocityMove(int n_joint, const int * joints, con
     }
 
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return ok
-        ? yarp::dev::ReturnValue::return_code::return_value_ok
-        : yarp::dev::ReturnValue::return_code::return_value_error_method_failed;
+    return ok ? yarp::dev::ReturnValue_ok : yarp::dev::ReturnValue_error_method_failed;
 #else
     return ok;
 #endif
@@ -228,7 +224,7 @@ bool YarpOpenraveControlBoard::getRefVelocity(int j, double * vel)
     {
         yCError(YORCB) << "getTargetVelocity: axis" << j << "is out of bounds";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-        return yarp::dev::ReturnValue::return_code::return_value_error_input_out_of_bounds;
+        return yarp::dev::ReturnValue_error_input_out_of_bounds;
 #else
         return false;
 #endif
@@ -236,7 +232,7 @@ bool YarpOpenraveControlBoard::getRefVelocity(int j, double * vel)
 
     yCError(YORCB) << "getTargetVelocity() not implemented";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -252,7 +248,7 @@ bool YarpOpenraveControlBoard::getRefVelocities(double * vels)
 {
     yCError(YORCB) << "getTargetVelocities() not implemented";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
@@ -268,7 +264,7 @@ bool YarpOpenraveControlBoard::getRefVelocities(int n_joint, const int * joints,
 {
     yCError(YORCB) << "getTargetVelocities() not implemented";
 #if YARP_VERSION_COMPARE(>=, 4, 0, 0)
-    return yarp::dev::ReturnValue::return_code::return_value_error_not_implemented_by_device;
+    return yarp::dev::ReturnValue_error_not_implemented_by_device;
 #else
     return false;
 #endif
