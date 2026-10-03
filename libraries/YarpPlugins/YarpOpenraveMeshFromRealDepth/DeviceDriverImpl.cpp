@@ -2,6 +2,8 @@
 
 #include "YarpOpenraveMeshFromRealDepth.hpp"
 
+#include <yarp/conf/version.h>
+
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Property.h>
 #include <yarp/os/Value.h>
@@ -62,6 +64,13 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
         return false;
     }
 
+#if YARP_VERSION_COMPARE(>=, 4, 1, 0) || defined(YARP_NEXT)
+    if (!iRGBDSensor->getDepthIntrinsicParam(depthIntrinsicParams))
+    {
+        yCError(YORMFRD) << "Unable to retrieve depth intrinsic params";
+        return false;
+    }
+#else
     yarp::os::Property depthIntrinsic;
 
     if (!iRGBDSensor->getDepthIntrinsicParam(depthIntrinsic))
@@ -71,6 +80,7 @@ bool YarpOpenraveMeshFromRealDepth::open(yarp::os::Searchable & config)
     }
 
     depthIntrinsicParams.fromProperty(depthIntrinsic);
+#endif
 
     if (config.check("roi", "ROI of depth frame encoded as (minX maxX minY maxY)"))
     {

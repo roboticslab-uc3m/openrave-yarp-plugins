@@ -2,6 +2,8 @@
 
 #include "OpenraveYarpWorldClientMesh.hpp"
 
+#include <yarp/conf/version.h>
+
 #include <yarp/os/LogComponent.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Network.h>
@@ -106,6 +108,13 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
             return false;
         }
 
+#if YARP_VERSION_COMPARE(>=, 4, 1, 0) || defined(YARP_NEXT)
+        if (!iRGBDSensor->getRgbIntrinsicParam(depthParams))
+        {
+            yCError(ORYWCM) << "Unable to retrieve depth intrinsic parameters";
+            return 1;
+        }
+#else
         yarp::os::Property intrinsic;
 
         if (!iRGBDSensor->getRgbIntrinsicParam(intrinsic))
@@ -115,6 +124,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
         }
 
         depthParams.fromProperty(intrinsic);
+#endif
 
         for (auto n = 0;; n++)
         {

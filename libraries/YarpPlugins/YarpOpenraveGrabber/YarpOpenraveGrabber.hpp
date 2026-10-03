@@ -97,7 +97,11 @@ public:
     yarp::dev::ReturnValue setRgbResolution(int width, int height) override { return ret_ok; }
     yarp::dev::ReturnValue getRgbFOV(double & horizontalFov, double & verticalFov) override { return ret_ok; }
     yarp::dev::ReturnValue setRgbFOV(double horizontalFov, double verticalFov) override { return ret_ok; }
+#if YARP_VERSION_COMPARE(>=, 4, 1, 0) || defined(YARP_NEXT)
+    yarp::dev::ReturnValue getRgbIntrinsicParam(yarp::sig::IntrinsicParams & intrinsic) override { return ret_ok; }
+#else
     yarp::dev::ReturnValue getRgbIntrinsicParam(yarp::os::Property & intrinsic) override { return ret_ok; }
+#endif
     yarp::dev::ReturnValue getRgbMirroring(bool & mirror) override { return ret_ok; }
     yarp::dev::ReturnValue setRgbMirroring(bool mirror) override { return ret_ok; }
 #else

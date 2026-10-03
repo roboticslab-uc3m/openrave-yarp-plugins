@@ -51,7 +51,11 @@ public:
     yarp::dev::ReturnValue setRgbResolution(int width, int height) override { return ret_not_ok; }
     yarp::dev::ReturnValue getRgbFOV(double & horizontalFov, double & verticalFov) override { return ret_not_ok; }
     yarp::dev::ReturnValue setRgbFOV(double horizontalFov, double verticalFov) override { return ret_not_ok; }
+#if YARP_VERSION_COMPARE(>=, 4, 1, 0) || defined(YARP_NEXT)
+    yarp::dev::ReturnValue getRgbIntrinsicParam(yarp::sig::IntrinsicParams & intrinsic) override { return ret_not_ok; }
+#else
     yarp::dev::ReturnValue getRgbIntrinsicParam(yarp::os::Property & intrinsic) override { return ret_not_ok; }
+#endif
     yarp::dev::ReturnValue getRgbMirroring(bool & mirror) override { return ret_not_ok; }
     yarp::dev::ReturnValue setRgbMirroring(bool mirror) override { return ret_not_ok; }
 #else
@@ -77,7 +81,11 @@ public:
     yarp::dev::ReturnValue setDepthAccuracy(double accuracy) override { return ret_not_ok; }
     yarp::dev::ReturnValue getDepthClipPlanes(double & nearPlane, double & farPlane) override { return ret_not_ok; }
     yarp::dev::ReturnValue setDepthClipPlanes(double nearPlane, double farPlane) override { return ret_not_ok; }
+#if YARP_VERSION_COMPARE(>=, 4, 1, 0) || defined(YARP_NEXT)
+    yarp::dev::ReturnValue getDepthIntrinsicParam(yarp::sig::IntrinsicParams & intrinsic) override { return ret_not_ok; }
+#else
     yarp::dev::ReturnValue getDepthIntrinsicParam(yarp::os::Property & intrinsic) override { return ret_not_ok; }
+#endif
     yarp::dev::ReturnValue getDepthMirroring(bool & mirror) override { return ret_not_ok; }
     yarp::dev::ReturnValue setDepthMirroring(bool mirror) override { return ret_not_ok; }
 #else
