@@ -181,7 +181,7 @@ bool OpenraveYarpWorldClientMesh::configure(yarp::os::ResourceFinder &rf)
 
     auto cloud = yarp::sig::utils::depthToPC(depthImage, depthParams, roi, stepX, stepY);
 
-    yarp::sig::VectorOf<yarp::os::Property> meshOptions {
+    std::vector<yarp::os::Property> meshOptions {
         {
             {"algorithm", yarp::os::Value("CropBox")},
             {"keepOrganized", yarp::os::Value(true)},

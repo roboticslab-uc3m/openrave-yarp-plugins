@@ -54,7 +54,7 @@ void YarpOpenraveMeshFromRealDepth::run()
         raveMesh.vertices.emplace_back(vertex.x, vertex.y, vertex.z);
     }
 
-    std::copy(meshIndices.cbegin(), meshIndices.cend(), std::back_inserter(raveMesh.indices));
+    std::copy(meshIndices.begin(), meshIndices.end(), std::back_inserter(raveMesh.indices));
 
     // Paint the mesh
     OpenRAVE::EnvironmentLock lock(penv->GetMutex());

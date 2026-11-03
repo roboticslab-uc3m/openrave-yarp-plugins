@@ -3,6 +3,8 @@
 #ifndef __YARP_OPENRAVE_MESH_FROM_REAL_DEPTH_HPP__
 #define __YARP_OPENRAVE_MESH_FROM_REAL_DEPTH_HPP__
 
+#include <vector>
+
 #include <yarp/os/PeriodicThread.h>
 #include <yarp/os/Property.h>
 
@@ -12,7 +14,6 @@
 
 #include <yarp/sig/IntrinsicParams.h>
 #include <yarp/sig/PointCloudUtils.h>
-#include <yarp/sig/Vector.h>
 
 #include <openrave/openrave.h>
 
@@ -55,7 +56,7 @@ private:
     yarp::dev::PolyDriver sensorDevice;
     yarp::dev::IRGBDSensor * iRGBDSensor {nullptr};
     yarp::sig::IntrinsicParams depthIntrinsicParams;
-    yarp::sig::VectorOf<yarp::os::Property> meshOptions;
+    std::vector<yarp::os::Property> meshOptions;
 
     OpenRAVE::KinBodyPtr previousMesh {nullptr};
     OpenRAVE::RobotBase::AttachedSensorPtr depthSensor;
